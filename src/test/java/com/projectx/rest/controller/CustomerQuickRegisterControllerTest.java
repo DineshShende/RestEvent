@@ -15,9 +15,9 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
-import com.projectx.rest.controller.CustomerQuickRegister;
+import com.projectx.rest.controller.EmailController;
 import com.projectx.rest.domain.Email;
-import com.projectx.services.CustomerQuickRegisterService;
+import com.projectx.rest.services.EmailService;
 
 
 
@@ -30,10 +30,10 @@ import com.projectx.services.CustomerQuickRegisterService;
 public class CustomerQuickRegisterControllerTest {
 
 	@InjectMocks
-	CustomerQuickRegister customerQuickRegisterController;
+	EmailController customerQuickRegisterController;
 	
 	@Mock
-	CustomerQuickRegisterService  customerQuickRegisterService;
+	EmailService  customerQuickRegisterService;
 	
 	private MockMvc mockMvc;;
 	

@@ -1,14 +1,19 @@
 package com.projectx.rest.repository;
 
-import java.util.List;
+import org.springframework.stereotype.Component;
 
-import com.projectx.rest.domain.Email;
+import com.projectx.rest.domain.CustomerQuickRegisterEntity;
+import com.projectx.rest.domain.CustomerQuickRegisterKey;
 
+@Component
 public interface CustomerQuickRegisterRepository {
 
-	List<Email> getAllEmails();
+	CustomerQuickRegisterEntity save(CustomerQuickRegisterEntity customer);
 	
-	void addEmail(Email email);
+	Boolean checkIfAlreadyExist(CustomerQuickRegisterKey key);
 	
-	Boolean checkEmailExisted(Email email);
+	CustomerQuickRegisterEntity getByKey(CustomerQuickRegisterKey key);
+	
+	void clearCustomerQuickRegister();
+	
 }
