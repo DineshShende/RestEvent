@@ -14,6 +14,6 @@ public interface CustomerQuickRegisterRepository {
 	
 	CustomerQuickRegisterEntity getByKey(CustomerQuickRegisterKey key);
 	
-	void clearCustomerQuickRegister();
+//	void clearCustomerQuickRegister();
 	
 }

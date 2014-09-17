@@ -112,6 +112,19 @@ public class CustomerQuickRegisterHandler implements
 	}
 
 	@Override
+	public Boolean verifyEmail(String email, Long emailHash) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Boolean verifyMobile(Long mobile, Integer mobilePin) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	
+	@Override
 	public String composeSMS(CustomerQuickRegisterEntity customer) {
 		// TODO Auto-generated method stub
 		return null;
@@ -135,5 +148,6 @@ public class CustomerQuickRegisterHandler implements
 		return null;
 	}
 
+	
 	
 }

@@ -2,7 +2,6 @@ package com.projectx.rest.repository;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
@@ -46,7 +45,7 @@ public class CustomerQuickRegisterMemRepository implements
 		
 	}
 
-	@Override
+//	@Override
 	public void clearCustomerQuickRegister() {
 		customerList.clear();
 		

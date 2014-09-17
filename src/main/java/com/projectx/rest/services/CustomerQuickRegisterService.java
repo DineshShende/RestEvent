@@ -27,5 +27,10 @@ public interface CustomerQuickRegisterService {
 	Boolean sendPinSMS();
 	
 	Boolean sendHashEmail();
+	
+	Boolean verifyEmail(String email,Long emailHash);
+	
+	Boolean verifyMobile(Long mobile,Integer mobilePin);
+	
 
 }
