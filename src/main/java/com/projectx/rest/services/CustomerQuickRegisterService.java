@@ -1,18 +1,19 @@
 package com.projectx.rest.services;
 
 import com.projectx.rest.domain.CustomerQuickRegisterEntity;
-import com.projectx.rest.domain.CustomerQuickRegisterKey;
 import com.projectx.web.domain.CustomerQuickRegisterEntityDTO;
 
 public interface CustomerQuickRegisterService {
 	
-	Boolean checkIfAlreadyRegistered(CustomerQuickRegisterEntityDTO customer);
+	Boolean checkIfAlreadyRegistered(CustomerQuickRegisterEntityDTO customer) throws Exception;
 	
 	CustomerQuickRegisterEntityDTO populateStatus(CustomerQuickRegisterEntityDTO customer) throws Exception;
 	
-	CustomerQuickRegisterEntity saveNewCustomerQuickRegisterEntity(CustomerQuickRegisterEntity customer);
+	CustomerQuickRegisterEntity saveNewCustomerQuickRegisterEntity(CustomerQuickRegisterEntity customer) throws Exception;
 	
-	CustomerQuickRegisterEntity getCustomerQuickRegisterEntityByKey(CustomerQuickRegisterKey key);
+	CustomerQuickRegisterEntity getCustomerQuickRegisterEntityByEmail(String email);
+	
+	CustomerQuickRegisterEntity getCustomerQuickRegisterEntityByMobile(Long mobile);
 	
 	CustomerQuickRegisterEntity handleNewCustomerQuickRegistration(CustomerQuickRegisterEntityDTO customer);
 	

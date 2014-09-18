@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.projectx.rest.domain.CustomerQuickRegisterEntity;
-import com.projectx.rest.domain.CustomerQuickRegisterKey;
 import com.projectx.rest.repository.CustomerQuickRegisterRepository;
 import com.projectx.rest.services.CustomerQuickRegisterService;
 import com.projectx.web.domain.CustomerQuickRegisterEntityDTO;
@@ -18,11 +17,26 @@ public class CustomerQuickRegisterHandler implements
 
 	@Override
 	public Boolean checkIfAlreadyRegistered(
-			CustomerQuickRegisterEntityDTO customer) {
-		CustomerQuickRegisterKey key = new CustomerQuickRegisterKey(
-				customer.getEmail(), customer.getMobile());
+			CustomerQuickRegisterEntityDTO customer) throws Exception {
 
-		if (customerQuickRegisterRepository.checkIfAlreadyExist(key))
+		Boolean emailAlreadyExist = false;
+
+		Boolean mobileAlreadyExist = false;
+
+		if (customer.getEmail() == null && customer.getMobile() == null)
+			throw new Exception();
+
+		if (customer.getEmail() != null
+				&& customerQuickRegisterRepository.countByEmail(customer
+						.getEmail()) > 0)
+			emailAlreadyExist = true;
+
+		if (customer.getMobile() != null
+				&& customerQuickRegisterRepository.countByMobile(customer
+						.getMobile()) > 0)
+			mobileAlreadyExist = true;
+
+		if (emailAlreadyExist || mobileAlreadyExist)
 			return true;
 		else
 			return false;
@@ -35,16 +49,14 @@ public class CustomerQuickRegisterHandler implements
 
 		String status = null;
 
-		if (customer.getEmail().equalsIgnoreCase("")
-				&& customer.getMobile() == 0L)
+		if (customer.getEmail() == null && customer.getMobile() == null)
 			throw new Exception();
 
-		if (!customer.getEmail().equalsIgnoreCase("")
-				&& customer.getMobile() != 0L) {
+		if (customer.getEmail() != null && customer.getMobile() != null) {
 			status = "EmailMobileVerificationPending";
-		} else if (!customer.getEmail().equalsIgnoreCase("")) {
+		} else if (customer.getEmail() != null) {
 			status = "EmailVerificationPending";
-		} else if (customer.getMobile() != 0L) {
+		} else if (customer.getMobile() != null) {
 			status = "MobileVerificationPending";
 		}
 
@@ -53,21 +65,12 @@ public class CustomerQuickRegisterHandler implements
 		return customer;
 	}
 
-
-
 	@Override
 	public CustomerQuickRegisterEntity handleNewCustomerQuickRegistration(
 			CustomerQuickRegisterEntityDTO customer) {
 
-		CustomerQuickRegisterEntity customerToProcess = new CustomerQuickRegisterEntity();
-
-		customerToProcess.setFirstName(customer.getFirstName());
-		customerToProcess.setLastName(customer.getLastName());
-		customerToProcess.setKey(new CustomerQuickRegisterKey(customer
-				.getEmail(), customer.getMobile()));
-		customerToProcess.setPin(customer.getPin());
-		customerToProcess.setStatus(customer.getStatus());
-
+		CustomerQuickRegisterEntity customerToProcess = customer.toCustomerQuickRegisterEntity();
+				
 		if (customerToProcess.getStatus().equals(
 				"EmailMobileVerificationPending")) {
 			customerToProcess.setEmailHash(generateEmailHash(customer));
@@ -82,22 +85,27 @@ public class CustomerQuickRegisterHandler implements
 
 		return customerToProcess;
 	}
-	
-	
-	
+
 	@Override
 	public CustomerQuickRegisterEntity saveNewCustomerQuickRegisterEntity(
-			CustomerQuickRegisterEntity customer) {
+			CustomerQuickRegisterEntity customer) throws Exception {
 
 		return customerQuickRegisterRepository.save(customer);
 	}
-	
+
 	@Override
-	public CustomerQuickRegisterEntity getCustomerQuickRegisterEntityByKey(
-			CustomerQuickRegisterKey key) {
-		return customerQuickRegisterRepository.getByKey(key);
+	public CustomerQuickRegisterEntity getCustomerQuickRegisterEntityByEmail(
+			String email) {
+		return customerQuickRegisterRepository.findByEmail(email);
 	}
 
+	@Override
+	public CustomerQuickRegisterEntity getCustomerQuickRegisterEntityByMobile(
+			Long mobile) {
+		return customerQuickRegisterRepository.findByMobile(mobile);
+	}
+	
+	
 
 	@Override
 	public Long generateEmailHash(CustomerQuickRegisterEntityDTO customer) {
@@ -123,7 +131,6 @@ public class CustomerQuickRegisterHandler implements
 		return null;
 	}
 
-	
 	@Override
 	public String composeSMS(CustomerQuickRegisterEntity customer) {
 		// TODO Auto-generated method stub
@@ -149,5 +156,5 @@ public class CustomerQuickRegisterHandler implements
 	}
 
 	
-	
+
 }

@@ -2,11 +2,15 @@ package com.projectx.rest.domain;
 
 public class CustomerQuickRegisterEntity {
 
-	private CustomerQuickRegisterKey key;
+	//private CustomerQuickRegisterKey key;
 
 	private String firstName;
 	private String lastName;
 
+	private String email;
+	
+	private Long mobile;
+	
 	private Integer pin;
 
 	private String status;
@@ -19,19 +23,21 @@ public class CustomerQuickRegisterEntity {
 	
 	
 	
-	public CustomerQuickRegisterEntity(CustomerQuickRegisterKey key,
-			String firstName, String lastName, Integer pin, String status,
+	
+	public CustomerQuickRegisterEntity(String firstName, String lastName,
+			String email, Long mobile, Integer pin, String status,
 			Integer mobilePin, Long emailHash) {
 		super();
-		this.key = key;
 		this.firstName = firstName;
 		this.lastName = lastName;
+		this.email = email;
+		this.mobile = mobile;
 		this.pin = pin;
 		this.status = status;
 		this.mobilePin = mobilePin;
 		this.emailHash = emailHash;
 	}
-	
+
 	public CustomerQuickRegisterEntity() {
 		// TODO Auto-generated constructor stub
 	}
@@ -68,15 +74,6 @@ public class CustomerQuickRegisterEntity {
 		return status == "EmailMobileVerificationPending";
 	}
 
-	
-	public CustomerQuickRegisterKey getKey() {
-		return key;
-	}
-
-	public void setKey(CustomerQuickRegisterKey key) {
-		this.key = key;
-	}
-
 	public String getFirstName() {
 		return firstName;
 	}
@@ -91,6 +88,22 @@ public class CustomerQuickRegisterEntity {
 
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public Long getMobile() {
+		return mobile;
+	}
+
+	public void setMobile(Long mobile) {
+		this.mobile = mobile;
 	}
 
 	public Integer getPin() {
@@ -129,13 +142,14 @@ public class CustomerQuickRegisterEntity {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result + ((email == null) ? 0 : email.hashCode());
 		result = prime * result
 				+ ((emailHash == null) ? 0 : emailHash.hashCode());
 		result = prime * result
 				+ ((firstName == null) ? 0 : firstName.hashCode());
-		result = prime * result + ((key == null) ? 0 : key.hashCode());
 		result = prime * result
 				+ ((lastName == null) ? 0 : lastName.hashCode());
+		result = prime * result + ((mobile == null) ? 0 : mobile.hashCode());
 		result = prime * result
 				+ ((mobilePin == null) ? 0 : mobilePin.hashCode());
 		result = prime * result + ((pin == null) ? 0 : pin.hashCode());
@@ -152,6 +166,11 @@ public class CustomerQuickRegisterEntity {
 		if (getClass() != obj.getClass())
 			return false;
 		CustomerQuickRegisterEntity other = (CustomerQuickRegisterEntity) obj;
+		if (email == null) {
+			if (other.email != null)
+				return false;
+		} else if (!email.equals(other.email))
+			return false;
 		if (emailHash == null) {
 			if (other.emailHash != null)
 				return false;
@@ -162,15 +181,15 @@ public class CustomerQuickRegisterEntity {
 				return false;
 		} else if (!firstName.equals(other.firstName))
 			return false;
-		if (key == null) {
-			if (other.key != null)
-				return false;
-		} else if (!key.equals(other.key))
-			return false;
 		if (lastName == null) {
 			if (other.lastName != null)
 				return false;
 		} else if (!lastName.equals(other.lastName))
+			return false;
+		if (mobile == null) {
+			if (other.mobile != null)
+				return false;
+		} else if (!mobile.equals(other.mobile))
 			return false;
 		if (mobilePin == null) {
 			if (other.mobilePin != null)
@@ -190,7 +209,6 @@ public class CustomerQuickRegisterEntity {
 		return true;
 	}
 
-	
-	
+		
 	
 }

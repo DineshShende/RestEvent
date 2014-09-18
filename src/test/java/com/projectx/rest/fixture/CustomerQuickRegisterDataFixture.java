@@ -1,7 +1,6 @@
 package com.projectx.rest.fixture;
 
 import com.projectx.rest.domain.CustomerQuickRegisterEntity;
-import com.projectx.rest.domain.CustomerQuickRegisterKey;
 import com.projectx.web.domain.CustomerQuickRegisterEntityDTO;
 
 
@@ -22,6 +21,7 @@ public class CustomerQuickRegisterDataFixture {
 	public static Integer CUST_MOBILEPIN=101010;
 	public static Long CUST_EMAILHASH=1010101010L;
 
+	/*
 	public static CustomerQuickRegisterKey standardEmailMobileCustomerKey()
 	{
 		return new CustomerQuickRegisterKey(CUST_EMAIL, CUST_MOBILE);
@@ -37,34 +37,33 @@ public class CustomerQuickRegisterDataFixture {
 	{
 		return new CustomerQuickRegisterKey("", CUST_MOBILE);
 	}
-	
+	*/
 	
 	public static CustomerQuickRegisterEntity standardEmailMobileCustomer()
 	{
-		return new CustomerQuickRegisterEntity(standardEmailMobileCustomerKey(),CUST_FIRSTNAME, CUST_LASTNAME, CUST_PIN,CUST_STATUS_EMAILMOBILE, CUST_MOBILEPIN, CUST_EMAILHASH);
-		
+		return new CustomerQuickRegisterEntity(CUST_FIRSTNAME, CUST_LASTNAME,CUST_EMAIL,CUST_MOBILE, CUST_PIN,CUST_STATUS_EMAILMOBILE, CUST_MOBILEPIN, CUST_EMAILHASH);
 	}
 	
 	public static CustomerQuickRegisterEntity standardMobileCustomer()
 	{
-		return new CustomerQuickRegisterEntity(standardMobileCustomerKey(),CUST_FIRSTNAME, CUST_LASTNAME,  CUST_PIN,CUST_STATUS_MOBILE, CUST_MOBILEPIN, null);
+		return new CustomerQuickRegisterEntity(CUST_FIRSTNAME, CUST_LASTNAME,null,CUST_MOBILE, CUST_PIN,CUST_STATUS_MOBILE, CUST_MOBILEPIN, null);
 		
 	}
 	
 	public static CustomerQuickRegisterEntity standardEmailCustomer()
 	{
-		return new CustomerQuickRegisterEntity(standardEmailCustomerKey(),CUST_FIRSTNAME, CUST_LASTNAME,  CUST_PIN,CUST_STATUS_EMAIL, null, CUST_EMAILHASH);
+		return new CustomerQuickRegisterEntity(CUST_FIRSTNAME, CUST_LASTNAME,CUST_EMAIL,null, CUST_PIN,CUST_STATUS_EMAIL, null, CUST_EMAILHASH);
 		
 	}
 	
 	public static CustomerQuickRegisterEntityDTO standardEmailCustomerDTO()
 	{
-		return new CustomerQuickRegisterEntityDTO(CUST_FIRSTNAME,CUST_LASTNAME,CUST_EMAIL,0L,CUST_PIN,CUST_STATUS_EMAIL);
+		return new CustomerQuickRegisterEntityDTO(CUST_FIRSTNAME,CUST_LASTNAME,CUST_EMAIL,null,CUST_PIN,CUST_STATUS_EMAIL);
 	}
 	
 	public static CustomerQuickRegisterEntityDTO standardMobileCustomerDTO()
 	{
-		return new CustomerQuickRegisterEntityDTO(CUST_FIRSTNAME,CUST_LASTNAME,"",CUST_MOBILE,CUST_PIN,CUST_STATUS_MOBILE);
+		return new CustomerQuickRegisterEntityDTO(CUST_FIRSTNAME,CUST_LASTNAME,null,CUST_MOBILE,CUST_PIN,CUST_STATUS_MOBILE);
 	}
 	
 	public static CustomerQuickRegisterEntityDTO standardEmailMobileCustomerDTO()
@@ -75,17 +74,17 @@ public class CustomerQuickRegisterDataFixture {
 	
 	public static CustomerQuickRegisterEntityDTO standardEmailCustomerDTOWithOutStatus()
 	{
-		return new CustomerQuickRegisterEntityDTO(CUST_FIRSTNAME,CUST_LASTNAME,CUST_EMAIL,0L,CUST_PIN,"");
+		return new CustomerQuickRegisterEntityDTO(CUST_FIRSTNAME,CUST_LASTNAME,CUST_EMAIL,null,CUST_PIN,null);
 	}
 	
 	public static CustomerQuickRegisterEntityDTO standardMobileCustomerDTOWithOutStatus()
 	{
-		return new CustomerQuickRegisterEntityDTO(CUST_FIRSTNAME,CUST_LASTNAME,"",CUST_MOBILE,CUST_PIN,"");
+		return new CustomerQuickRegisterEntityDTO(CUST_FIRSTNAME,CUST_LASTNAME,null,CUST_MOBILE,CUST_PIN,null);
 	}
 	
 	public static CustomerQuickRegisterEntityDTO standardEmailMobileCustomerDTOWithOutStatus()
 	{
-		return new CustomerQuickRegisterEntityDTO(CUST_FIRSTNAME,CUST_LASTNAME,CUST_EMAIL,CUST_MOBILE,CUST_PIN,"");
+		return new CustomerQuickRegisterEntityDTO(CUST_FIRSTNAME,CUST_LASTNAME,CUST_EMAIL,CUST_MOBILE,CUST_PIN,null);
 	}
 	
 

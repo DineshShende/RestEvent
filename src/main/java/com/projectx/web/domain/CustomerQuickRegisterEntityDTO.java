@@ -1,5 +1,7 @@
 package com.projectx.web.domain;
 
+import com.projectx.rest.domain.CustomerQuickRegisterEntity;
+
 public class CustomerQuickRegisterEntityDTO {
 	
 	private String firstName;
@@ -23,6 +25,21 @@ public class CustomerQuickRegisterEntityDTO {
 		this.pin = pin;
 		this.status = status;
 	}
+	
+	public CustomerQuickRegisterEntity toCustomerQuickRegisterEntity()
+	{
+		CustomerQuickRegisterEntity newCustomer=new CustomerQuickRegisterEntity();
+		newCustomer.setFirstName(this.firstName);
+		newCustomer.setLastName(this.lastName);
+		newCustomer.setEmail(this.email);
+		newCustomer.setMobile(this.mobile);
+		newCustomer.setPin(this.pin);
+		newCustomer.setStatus(this.status);
+		
+		return newCustomer;
+		
+	}
+	
 	public String getFirstName() {
 		return firstName;
 	}
