@@ -54,7 +54,7 @@ public class CustomerQuickRegisterMemRepository implements
 		CustomerQuickRegisterEntity resultEntity = null;
 
 		for (int i = 0; i < customerList.size(); i++) {
-			if (customerList.get(i).getMobile() == mobile)
+			if (customerList.get(i).getMobile().equals(mobile))
 				resultEntity = customerList.get(i);
 		}
 
@@ -126,5 +126,67 @@ public class CustomerQuickRegisterMemRepository implements
 		customerList.clear();
 		
 	}
+
+	@Override
+	public String fetchStatusByEmail(String email) throws Exception {
+		
+		for(int i=0;i<customerList.size();i++)
+		{
+			if(customerList.get(i).getEmail().equalsIgnoreCase(email))
+			{
+				return customerList.get(i).getStatus();
+			}
+		}
+			
+		throw new Exception();
+	}
+
+	@Override
+	public String fetchStatusByMobile(Long mobile) throws Exception {
+		for(int i=0;i<customerList.size();i++)
+		{
+			if(customerList.get(i).getMobile().equals(mobile))
+			{
+				return customerList.get(i).getStatus();
+			}
+		}
+			
+		throw new Exception();
+	}
+	
+	@Override
+	public Integer updateStatusAfterMobileVerification(Long mobile,
+			String status) {
+		for (int i = 0; i < customerList.size(); i++) {
+			if (customerList.get(i).getMobile() == mobile)
+			{
+				CustomerQuickRegisterEntity customer=customerList.get(i);
+				deleteByMobile(mobile);
+				customer.setStatus(status);
+				customerList.add(customer);
+				return new Integer(1);
+			}
+		}
+		return new Integer(0);
+	}
+
+	@Override
+	public Integer updateStatusAfterEmailVerfication(String email,
+			String status) {
+		
+		for (int i = 0; i < customerList.size(); i++) {
+			if (customerList.get(i).getEmail().equalsIgnoreCase(email)) {
+				CustomerQuickRegisterEntity customer=customerList.get(i);
+				deleteByEmail(email);
+				customer.setStatus(status);
+				customerList.add(customer);
+				return new Integer(1);
+			}
+		}
+		
+		return new Integer(0);
+	}
+
+
 
 }

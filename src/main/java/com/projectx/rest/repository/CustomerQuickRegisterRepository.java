@@ -27,6 +27,14 @@ public interface CustomerQuickRegisterRepository {
 	
 	 void clearCustomerQuickRegister(); 
 	 
+	 String fetchStatusByEmail(String email) throws Exception;
+	 
+	 String fetchStatusByMobile(Long mobile) throws Exception;
+	 
+	 Integer updateStatusAfterMobileVerification(Long mobile,String status);
+	 
+	 Integer updateStatusAfterEmailVerfication(String email,String status);
+	 
 	
 /*
 	 void clearCustomerQuickRegister();

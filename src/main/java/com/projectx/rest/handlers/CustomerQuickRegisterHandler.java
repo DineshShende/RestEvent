@@ -8,6 +8,8 @@ import com.projectx.rest.repository.CustomerQuickRegisterRepository;
 import com.projectx.rest.services.CustomerQuickRegisterService;
 import com.projectx.web.domain.CustomerQuickRegisterEntityDTO;
 
+import static com.projectx.rest.fixtures.CustomerQuickRegisterDataFixture.*;
+
 @Component
 public class CustomerQuickRegisterHandler implements
 		CustomerQuickRegisterService {
@@ -16,9 +18,11 @@ public class CustomerQuickRegisterHandler implements
 	CustomerQuickRegisterRepository customerQuickRegisterRepository;
 
 	@Override
-	public Boolean checkIfAlreadyRegistered(
+	public String checkIfAlreadyRegistered(
 			CustomerQuickRegisterEntityDTO customer) throws Exception {
 
+		String status=null;
+		
 		Boolean emailAlreadyExist = false;
 
 		Boolean mobileAlreadyExist = false;
@@ -36,11 +40,16 @@ public class CustomerQuickRegisterHandler implements
 						.getMobile()) > 0)
 			mobileAlreadyExist = true;
 
-		if (emailAlreadyExist || mobileAlreadyExist)
-			return true;
-		else
-			return false;
-
+		if (emailAlreadyExist && mobileAlreadyExist)
+			status=REGISTER_EMAIL_MOBILE_ALREADY_REGISTERED;
+		else if(!emailAlreadyExist && mobileAlreadyExist)
+			status=REGISTER_MOBILE_ALREADY_REGISTERED;
+		else if(emailAlreadyExist && !mobileAlreadyExist)
+			status=REGISTER_EMAIL_ALREADY_REGISTERED;
+		else if(!emailAlreadyExist && !mobileAlreadyExist)
+			status=REGISTER_NOT_REGISTERED;
+		
+		return status;
 	}
 
 	@Override
@@ -121,14 +130,72 @@ public class CustomerQuickRegisterHandler implements
 
 	@Override
 	public Boolean verifyEmail(String email, Long emailHash) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		CustomerQuickRegisterEntity fetchedEntity=getCustomerQuickRegisterEntityByEmail(email);//
+		
+		if(fetchedEntity==null)
+			return false;
+		
+		if(fetchedEntity.getEmailHash().equals(emailHash))
+		{
+							
+			if(fetchedEntity.isMobileVerifiedEmailVerficationPending())
+			{
+				fetchedEntity.setStatusEmailMobileVerified();
+			}
+			else if(fetchedEntity.isEmailMobileVerificationPending())
+			{
+				fetchedEntity.setStatusEmailVerifiedMobileVerficationPending();
+			}
+			else if(fetchedEntity.isEmailVerificationPending())
+			{
+				fetchedEntity.setStatusEmailVerified();
+			}
+			
+			int updatedStatus=customerQuickRegisterRepository.updateStatusAfterEmailVerfication(fetchedEntity.getEmail(), 
+																									fetchedEntity.getStatus()).intValue();
+			
+			if(updatedStatus==1)
+				return true;
+			else
+				return false;
+		}
+		else
+		{
+			return false;
+		}
+		
 	}
 
 	@Override
 	public Boolean verifyMobile(Long mobile, Integer mobilePin) {
-		// TODO Auto-generated method stub
-		return null;
+	
+		CustomerQuickRegisterEntity fetchedEntity=customerQuickRegisterRepository.findByMobile(mobile);
+		
+		if(fetchedEntity==null)
+			return false;
+		
+		if(fetchedEntity.getMobilePin().equals(mobilePin))
+		{
+			if(fetchedEntity.isEmailMobileVerificationPending())
+				fetchedEntity.setStatusMobileVerifiedEmailVerficationPending();
+			else if(fetchedEntity.isEmailVerifiedMobileVerficationPending())
+				fetchedEntity.setStatusEmailMobileVerified();
+			else if(fetchedEntity.isMobileVerificationPending())
+				fetchedEntity.setStatusMobileVerified();
+		
+			int updatedStatus=customerQuickRegisterRepository.updateStatusAfterMobileVerification(fetchedEntity.getMobile(),
+																						fetchedEntity.getStatus()).intValue();
+			if(updatedStatus==1)
+				return true;
+			else
+				return false;
+		}
+		else
+		{
+			return false;
+		}
+		
 	}
 
 	@Override
@@ -153,6 +220,13 @@ public class CustomerQuickRegisterHandler implements
 	public Boolean sendHashEmail() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public void clearDataForTesting() {
+		customerQuickRegisterRepository.clearCustomerQuickRegister();
+
+		
 	}
 
 	

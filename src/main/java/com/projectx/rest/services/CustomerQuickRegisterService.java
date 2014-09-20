@@ -5,17 +5,17 @@ import com.projectx.web.domain.CustomerQuickRegisterEntityDTO;
 
 public interface CustomerQuickRegisterService {
 	
-	Boolean checkIfAlreadyRegistered(CustomerQuickRegisterEntityDTO customer) throws Exception;
+	String checkIfAlreadyRegistered(CustomerQuickRegisterEntityDTO customer) throws Exception;
 	
 	CustomerQuickRegisterEntityDTO populateStatus(CustomerQuickRegisterEntityDTO customer) throws Exception;
+	
+	CustomerQuickRegisterEntity handleNewCustomerQuickRegistration(CustomerQuickRegisterEntityDTO customer);
 	
 	CustomerQuickRegisterEntity saveNewCustomerQuickRegisterEntity(CustomerQuickRegisterEntity customer) throws Exception;
 	
 	CustomerQuickRegisterEntity getCustomerQuickRegisterEntityByEmail(String email);
 	
 	CustomerQuickRegisterEntity getCustomerQuickRegisterEntityByMobile(Long mobile);
-	
-	CustomerQuickRegisterEntity handleNewCustomerQuickRegistration(CustomerQuickRegisterEntityDTO customer);
 	
 	Long generateEmailHash(CustomerQuickRegisterEntityDTO customer);
 	
@@ -32,6 +32,8 @@ public interface CustomerQuickRegisterService {
 	Boolean verifyEmail(String email,Long emailHash);
 	
 	Boolean verifyMobile(Long mobile,Integer mobilePin);
+	
+	void clearDataForTesting();
 	
 
 }

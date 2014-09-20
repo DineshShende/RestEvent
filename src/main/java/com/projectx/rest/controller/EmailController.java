@@ -38,7 +38,7 @@ public class EmailController {
 		
 	}
     
-    /*
+    
     @RequestMapping(value="/checkemail",method=RequestMethod.POST)
     public Email redirectEmail(@RequestBody Email email)
     {
@@ -46,6 +46,6 @@ public class EmailController {
     	return email;
     	
     }
-    */
+    
     
 }

@@ -162,5 +162,65 @@ public class CustomerQuickRegisterRepositoryTest {
 		assertNull(customerQuickRegisterMemRepository.findByMobile(CUST_MOBILE));
 		
 	}
+	
+	@Test
+	public void fetchStatusByEmailWithEmailCustomer() throws Exception
+	{
+		customerQuickRegisterMemRepository.save(standardEmailCustomer());
+				
+		assertEquals(CUST_STATUS_EMAIL,customerQuickRegisterMemRepository.fetchStatusByEmail(CUST_EMAIL));
+		
+		customerQuickRegisterMemRepository.updateStatusAfterEmailVerfication(CUST_EMAIL, STATUS_EMAIL_VERFIED);
+		
+		assertEquals(STATUS_EMAIL_VERFIED,customerQuickRegisterMemRepository.fetchStatusByEmail(CUST_EMAIL));
+	}
 
+	@Test
+	public void fetchStatusByMobileWithMobileCustomer() throws Exception
+	{
+		customerQuickRegisterMemRepository.save(standardMobileCustomer());
+				
+		assertEquals(CUST_STATUS_MOBILE,customerQuickRegisterMemRepository.fetchStatusByMobile(CUST_MOBILE));
+		
+		customerQuickRegisterMemRepository.updateStatusAfterMobileVerification(CUST_MOBILE, STATUS_MOBILE_VERFIED);
+		
+		assertEquals(STATUS_MOBILE_VERFIED,customerQuickRegisterMemRepository.fetchStatusByMobile(CUST_MOBILE));
+	}
+
+	
+	@Test
+	public void updateStatusAfterMobileVerificationWithMobileCustomer() throws Exception
+	{
+		customerQuickRegisterMemRepository.save(standardMobileCustomer());
+		
+		assertEquals(CUST_STATUS_MOBILE, customerQuickRegisterMemRepository.findByMobile(CUST_MOBILE).getStatus());
+		
+		assertEquals(1,customerQuickRegisterMemRepository.updateStatusAfterMobileVerification(CUST_MOBILE, STATUS_MOBILE_VERFIED).intValue());
+		
+		assertEquals(STATUS_MOBILE_VERFIED, customerQuickRegisterMemRepository.findByMobile(CUST_MOBILE).getStatus());
+		
+	}
+	
+	@Test
+	public void updateStatusAfterEmailVerificationWithEmailCustomer() throws Exception
+	{
+		customerQuickRegisterMemRepository.save(standardEmailCustomer());
+		
+		assertEquals(CUST_STATUS_EMAIL, customerQuickRegisterMemRepository.findByEmail(CUST_EMAIL).getStatus());
+		
+		assertEquals(1,customerQuickRegisterMemRepository.updateStatusAfterEmailVerfication(CUST_EMAIL, STATUS_EMAIL_VERFIED).intValue());
+		
+		assertEquals(STATUS_EMAIL_VERFIED, customerQuickRegisterMemRepository.findByEmail(CUST_EMAIL).getStatus());
+		
+	}
+	
+	@Test
+	public void updateStatusAfterEmailAndMobileVerificationFailedCase()
+	{
+		assertEquals(0,customerQuickRegisterMemRepository.updateStatusAfterMobileVerification(CUST_MOBILE, STATUS_MOBILE_VERFIED).intValue());
+		
+		assertEquals(0,customerQuickRegisterMemRepository.updateStatusAfterEmailVerfication(CUST_EMAIL, STATUS_EMAIL_VERFIED).intValue());
+	}
+	
+	
 }

@@ -14,6 +14,10 @@ public class CustomerQuickRegisterEntityDTO {
 	private String status;
 	
 	
+	public CustomerQuickRegisterEntityDTO()
+	{
+		
+	}
 	
 	public CustomerQuickRegisterEntityDTO(String firstName, String lastName,
 			String email, Long mobile, Integer pin, String status) {

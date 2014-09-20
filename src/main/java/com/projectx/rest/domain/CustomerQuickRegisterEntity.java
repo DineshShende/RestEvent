@@ -41,6 +41,8 @@ public class CustomerQuickRegisterEntity {
 	public CustomerQuickRegisterEntity() {
 		// TODO Auto-generated constructor stub
 	}
+	
+	
 
 	public boolean isEmailVerificationPending() {
 		return status == "EmailVerificationPending";
@@ -50,29 +52,51 @@ public class CustomerQuickRegisterEntity {
 		return status == "MobileVerificationPending";
 	}
 
+	public boolean isEmailMobileVerificationPending() {
+		return status == "EmailMobileVerificationPending";
+	}
+	
 	public boolean isEmailVerifiedMobileVerficationPending() {
 		return status == "EmailVerifiedMobileVerficationPending";
+	}
+	
+	public void setStatusEmailVerifiedMobileVerficationPending() {
+		this.status = "EmailVerifiedMobileVerficationPending";
 	}
 
 	public boolean isMobileVerifiedEmailVerficationPending() {
 		return status == "MobileVerifiedEmailVerficationPending";
 	}
 
+	public void setStatusMobileVerifiedEmailVerficationPending() {
+		this.status = "MobileVerifiedEmailVerficationPending";
+	}
+	
 	public boolean isMobileVerified() {
 		return status == "MobileVerified";
+	}
+	
+	public void setStatusMobileVerified() {
+		this.status = "MobileVerified";
 	}
 
 	public boolean isEmailVerified() {
 		return status == "EmailVerified";
 	}
+	
+	public void setStatusEmailVerified() {
+		this.status = "EmailVerified";
+	}
 
 	public boolean isEmailMobileVerified() {
 		return status == "EmailMobileVerified";
 	}
-
-	public boolean isEmailMobileVerificationPending() {
-		return status == "EmailMobileVerificationPending";
+	
+	public void setStatusEmailMobileVerified() {
+		this.status = "EmailMobileVerified";
 	}
+
+	
 
 	public String getFirstName() {
 		return firstName;

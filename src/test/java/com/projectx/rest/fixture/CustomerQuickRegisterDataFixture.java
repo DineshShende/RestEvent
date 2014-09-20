@@ -2,6 +2,9 @@ package com.projectx.rest.fixture;
 
 import com.projectx.rest.domain.CustomerQuickRegisterEntity;
 import com.projectx.web.domain.CustomerQuickRegisterEntityDTO;
+import com.projectx.web.domain.GetByEmailDTO;
+import com.projectx.web.domain.GetByMobileDTO;
+import com.projectx.web.domain.VerifyMobileDTO;
 
 
 public class CustomerQuickRegisterDataFixture {
@@ -17,6 +20,18 @@ public class CustomerQuickRegisterDataFixture {
 	public static String CUST_STATUS_EMAILMOBILE="EmailMobileVerificationPending";
 	public static String CUST_STATUS_EMAIL="EmailVerificationPending";
 	public static String CUST_STATUS_MOBILE="MobileVerificationPending";
+	
+	public static String STATUS_EMAIL_VERFIED_MOBILE_PENDING="EmailVerifiedMobileVerficationPending";
+	public static String STATUS_MOBILE_VERFIED_EMAIL_PENDING="MobileVerifiedEmailVerficationPending";
+	public static String STATUS_EMAIL_MOBILE_VERIFIED="EmailMobileVerified";
+	public static String STATUS_MOBILE_VERFIED="MobileVerified";
+	public static String STATUS_EMAIL_VERFIED="EmailVerified";
+	
+	public static String REGISTER_NOT_REGISTERED="NOT_REGISTERED";
+	public static String REGISTER_EMAIL_MOBILE_ALREADY_REGISTERED="EMAIL_MOBILE_ALREADY_REGISTERED";
+	public static String REGISTER_MOBILE_ALREADY_REGISTERED="MOBILE_ALREADY_REGISTERED";
+	public static String REGISTER_EMAIL_ALREADY_REGISTERED="EMAIL_ALREADY_REGISTERED";
+	
 
 	public static Integer CUST_MOBILEPIN=101010;
 	public static Long CUST_EMAILHASH=1010101010L;
@@ -88,6 +103,52 @@ public class CustomerQuickRegisterDataFixture {
 	}
 	
 
+	public static String standardJsonEmailMobileCustomer()
+	{
+		return "{\"firstName\":\"dinesh\",\"lastName\":\"shende\",\"email\":\"dineshshe@gmail.com\",\"mobile\":99608821869,\"pin\":413133}";
+		//return "{\"firstName\":\"dinesh\",\"lastName\":\"shende\",\"email\":\"dineshshe@gmail.com\",\"mobile\":\"9960821869\",\"pin\":\"413133\",\"status\":\"\"}";
+		        	
+	}
 	
+	public static String standardJsonEmailCustomer()
+	{
+		return "{\"firstName\":\"dinesh\",\"lastName\":\"shende\",\"email\":\"dineshshe@gmail.com\",\"pin\":413133}";
+	}
+	
+	public static String standardJsonMobileCustomer()
+	{
+		return "{\"firstName\":\"dinesh\",\"lastName\":\"shende\",\"mobile\":99608821869,\"pin\":413133}";
+	}
+	
+	public static GetByEmailDTO standardGetByEmailDTO()
+	{
+		return new GetByEmailDTO(CUST_EMAIL);
+	}
+	
+	public static GetByMobileDTO standardGetByMobile()
+	{
+		return new GetByMobileDTO(CUST_MOBILE);
+	}
+	
+	public static VerifyMobileDTO standardVerifyMobileDTO()
+	{
+		return new VerifyMobileDTO(CUST_MOBILE, CUST_MOBILEPIN);
+	}
+	
+	public static String standardJsonGetByEmailDTO()
+	{
+		return "{\"email\":\"dineshshe@gmail.com\"}";
+	}
+	
+	public static String standardJsonGetByMobileDTO()
+	{
+		return "{\"mobile\":9960821869}";
+	}
+	
+	public static String standardJsonVerifyMobileDTO()
+	{
+		return "{\"mobile\":9960821869,\"mobilePin\":101010}";
+		       
+	}
 	
 }
