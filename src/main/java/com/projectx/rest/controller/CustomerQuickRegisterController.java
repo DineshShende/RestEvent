@@ -45,6 +45,7 @@ public class CustomerQuickRegisterController {
 
 	
 	@RequestMapping(value="/verifyemail/{email}/hashValue/{emailHash}",method=RequestMethod.GET)
+	@ResponseBody
 	public Boolean verifyEmail(@PathVariable Long emailHash,@PathVariable String email)
 	{
 		if(customerQuickRegisterService.verifyEmail(email, emailHash))
@@ -54,10 +55,9 @@ public class CustomerQuickRegisterController {
 	}
 	
 	@RequestMapping(value="/verifymobile",method=RequestMethod.POST)
+	@ResponseBody
 	public Boolean verifyMobile(@RequestBody VerifyMobileDTO verifyMobile)
 	{
-		System.out.println(verifyMobile.getMobile());
-		
 		if(customerQuickRegisterService.verifyMobile(verifyMobile.getMobile(), verifyMobile.getMobilePin()))
 			return true;
 		else
@@ -88,13 +88,17 @@ public class CustomerQuickRegisterController {
 		customerQuickRegisterService.clearDataForTesting();
 	}
 	
+	//public Integer updateMobilePin()
 	
+	//public Integer updateEmailHash()
+	
+	/*
 	@ResponseBody
 	@RequestMapping(method=RequestMethod.GET)
 	public VerifyMobileDTO returnCustomerWithEmailMobileCheck()
 	{
 		return new VerifyMobileDTO(9960821869L, 101010);
 	}
-	
+	*/
 	
 }

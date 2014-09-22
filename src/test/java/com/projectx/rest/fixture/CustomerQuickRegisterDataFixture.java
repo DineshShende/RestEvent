@@ -105,7 +105,7 @@ public class CustomerQuickRegisterDataFixture {
 
 	public static String standardJsonEmailMobileCustomer()
 	{
-		return "{\"firstName\":\"dinesh\",\"lastName\":\"shende\",\"email\":\"dineshshe@gmail.com\",\"mobile\":99608821869,\"pin\":413133}";
+		return "{\"firstName\":\"dinesh\",\"lastName\":\"shende\",\"email\":\"dineshshe@gmail.com\",\"mobile\":9960821869,\"pin\":413133}";
 		//return "{\"firstName\":\"dinesh\",\"lastName\":\"shende\",\"email\":\"dineshshe@gmail.com\",\"mobile\":\"9960821869\",\"pin\":\"413133\",\"status\":\"\"}";
 		        	
 	}
@@ -115,9 +115,14 @@ public class CustomerQuickRegisterDataFixture {
 		return "{\"firstName\":\"dinesh\",\"lastName\":\"shende\",\"email\":\"dineshshe@gmail.com\",\"pin\":413133}";
 	}
 	
+	public static String standardJsonEmailCustomerForEmailVerification()
+	{
+		return "{\"firstName\":\"dinesh\",\"lastName\":\"shende\",\"email\":\"dineshshe\",\"pin\":413133}";
+	}
+	
 	public static String standardJsonMobileCustomer()
 	{
-		return "{\"firstName\":\"dinesh\",\"lastName\":\"shende\",\"mobile\":99608821869,\"pin\":413133}";
+		return "{\"firstName\":\"dinesh\",\"lastName\":\"shende\",\"mobile\":9960821869,\"pin\":413133}";
 	}
 	
 	public static GetByEmailDTO standardGetByEmailDTO()
@@ -138,6 +143,11 @@ public class CustomerQuickRegisterDataFixture {
 	public static String standardJsonGetByEmailDTO()
 	{
 		return "{\"email\":\"dineshshe@gmail.com\"}";
+	}
+	
+	public static String standardJsonGetByEmailDTOForEmailVerification()
+	{
+		return "{\"email\":\"dineshshe\"}";
 	}
 	
 	public static String standardJsonGetByMobileDTO()
