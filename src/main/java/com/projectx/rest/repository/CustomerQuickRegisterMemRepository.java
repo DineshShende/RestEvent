@@ -54,7 +54,7 @@ public class CustomerQuickRegisterMemRepository implements
 		CustomerQuickRegisterEntity resultEntity = null;
 
 		for (int i = 0; i < customerList.size(); i++) {
-			if (customerList.get(i).getMobile().equals(mobile))
+			if (customerList.get(i).getMobile()!=null && customerList.get(i).getMobile().equals(mobile))
 				resultEntity = customerList.get(i);
 		}
 
@@ -85,7 +85,7 @@ public class CustomerQuickRegisterMemRepository implements
 		int count = 0;
 
 		for (int i = 0; i < customerList.size(); i++) {
-			if (customerList.get(i).getMobile() == mobile)
+			if (customerList.get(i).getMobile()!=null &&customerList.get(i).getMobile().equals(mobile) )
 				count++;
 		}
 
@@ -98,7 +98,7 @@ public class CustomerQuickRegisterMemRepository implements
 		Long count = 0L;
 
 		for (int i = 0; i < customerList.size(); i++) {
-			if (customerList.get(i).getEmail().equalsIgnoreCase(email)) {
+			if (customerList.get(i).getEmail()!=null&&customerList.get(i).getEmail().equalsIgnoreCase(email)) {
 				customerList.remove(i);
 				count++;
 			}
@@ -112,7 +112,7 @@ public class CustomerQuickRegisterMemRepository implements
 		Long count = 0L;
 
 		for (int i = 0; i < customerList.size(); i++) {
-			if (customerList.get(i).getMobile() == mobile) {
+			if (customerList.get(i).getMobile()!=null && customerList.get(i).getMobile().equals(mobile)) {
 				customerList.remove(i);
 				count++;
 			}
@@ -132,7 +132,7 @@ public class CustomerQuickRegisterMemRepository implements
 		
 		for(int i=0;i<customerList.size();i++)
 		{
-			if(customerList.get(i).getEmail().equalsIgnoreCase(email))
+			if(customerList.get(i).getEmail()!=null && customerList.get(i).getEmail().equalsIgnoreCase(email))
 			{
 				return customerList.get(i).getStatus();
 			}
@@ -145,7 +145,7 @@ public class CustomerQuickRegisterMemRepository implements
 	public String fetchStatusByMobile(Long mobile) throws Exception {
 		for(int i=0;i<customerList.size();i++)
 		{
-			if(customerList.get(i).getMobile().equals(mobile))
+			if(customerList.get(i).getMobile()!=null && customerList.get(i).getMobile().equals(mobile))
 			{
 				return customerList.get(i).getStatus();
 			}
@@ -158,7 +158,7 @@ public class CustomerQuickRegisterMemRepository implements
 	public Integer updateStatusAfterMobileVerification(Long mobile,
 			String status) {
 		for (int i = 0; i < customerList.size(); i++) {
-			if (customerList.get(i).getMobile() == mobile)
+			if (customerList.get(i).getMobile()!=null && customerList.get(i).getMobile().equals(mobile))
 			{
 				CustomerQuickRegisterEntity customer=customerList.get(i);
 				deleteByMobile(mobile);
@@ -175,7 +175,7 @@ public class CustomerQuickRegisterMemRepository implements
 			String status) {
 		
 		for (int i = 0; i < customerList.size(); i++) {
-			if (customerList.get(i).getEmail().equalsIgnoreCase(email)) {
+			if (customerList.get(i).getEmail()!=null && customerList.get(i).getEmail().equalsIgnoreCase(email)) {
 				CustomerQuickRegisterEntity customer=customerList.get(i);
 				deleteByEmail(email);
 				customer.setStatus(status);

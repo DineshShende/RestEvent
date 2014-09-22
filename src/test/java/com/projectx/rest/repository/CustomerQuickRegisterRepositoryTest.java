@@ -29,6 +29,7 @@ public class CustomerQuickRegisterRepositoryTest {
 		customerQuickRegisterMemRepository.clearCustomerQuickRegister();
 	}
 	
+	
 	@Test
 	public void countByEmailMobileNewEmailMobileCustomer() throws Exception {
 		
@@ -110,6 +111,8 @@ public class CustomerQuickRegisterRepositoryTest {
 		
 		assertNull(customerQuickRegisterMemRepository.findByMobile(CUST_MOBILE));
 	}
+	
+	
 	
 	@Test
 	public void findByEmailMobileWithMobileCustomer() throws Exception {
