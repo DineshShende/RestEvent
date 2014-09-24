@@ -11,6 +11,10 @@ public interface CustomerQuickRegisterRepository {
 
 	 CustomerQuickRegisterEntity save(CustomerQuickRegisterEntity customer) throws Exception;
 	
+	 List<CustomerQuickRegisterEntity> findAll();
+	 
+	 
+	 
 	 CustomerQuickRegisterEntity findByEmail(String email);
 	
 	 CustomerQuickRegisterEntity findByMobile(Long mobile);
@@ -23,7 +27,7 @@ public interface CustomerQuickRegisterRepository {
 	 
 	 Integer updateStatusAfterEmailVerfication(String email,String status);
 	 
-	 List<CustomerQuickRegisterEntity> findAll();
+	 
 	 
 	 
 	 int countByEmail(String email);
