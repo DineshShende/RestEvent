@@ -13,9 +13,15 @@ public interface CustomerQuickRegisterService {
 	
 	CustomerQuickRegisterEntity saveNewCustomerQuickRegisterEntity(CustomerQuickRegisterEntity customer) throws Exception;
 	
-	CustomerQuickRegisterEntity getCustomerQuickRegisterEntityByEmail(String email);
+	CustomerQuickRegisterEntity getCustomerQuickRegisterEntityByCustomerId(Long customerId);
 	
-	CustomerQuickRegisterEntity getCustomerQuickRegisterEntityByMobile(Long mobile);
+	Integer updateEmailHash(Long customerId,Long emailHash);
+	
+	Integer updateMobilePin(Long customerId,Integer mobilePin);
+	
+	Boolean verifyEmailHash(Long customerId,Long emailHash);
+	
+	Boolean verifyMobilePin(Long customerId,Integer mobilePin);
 	
 	Long generateEmailHash(CustomerQuickRegisterEntityDTO customer);
 	
@@ -29,11 +35,13 @@ public interface CustomerQuickRegisterService {
 	
 	Boolean sendHashEmail();
 	
-	Boolean verifyEmail(String email,Long emailHash);
 	
-	Boolean verifyMobile(Long mobile,Integer mobilePin);
-	
+	//Testing
 	void clearDataForTesting();
 	
+	//CustomerQuickRegisterEntity getCustomerQuickRegisterEntityByEmail(String email);
+	
+	//CustomerQuickRegisterEntity getCustomerQuickRegisterEntityByMobile(Long mobile);
+		
 
 }

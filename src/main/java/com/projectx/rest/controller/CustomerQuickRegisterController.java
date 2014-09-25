@@ -1,21 +1,21 @@
 package com.projectx.rest.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.projectx.rest.domain.CustomerQuickRegisterEntity;
 import com.projectx.rest.services.CustomerQuickRegisterService;
 import com.projectx.web.domain.CustomerQuickRegisterEntityDTO;
-import com.projectx.web.domain.GetByEmailDTO;
-import com.projectx.web.domain.GetByMobileDTO;
-import com.projectx.web.domain.VerifyMobileDTO;
+import com.projectx.web.domain.GetByCustomerIdDTO;
+import com.projectx.web.domain.UpdateEmailHashDTO;
+import com.projectx.web.domain.UpdateMobilePinDTO;
+import com.projectx.web.domain.VerifyEmailHashDTO;
+import com.projectx.web.domain.VerifyMobilePinDTO;
 
-@Controller
+@RestController
 @RequestMapping(value="/customer/quickregister")
 public class CustomerQuickRegisterController {
 	
@@ -23,7 +23,6 @@ public class CustomerQuickRegisterController {
 	CustomerQuickRegisterService customerQuickRegisterService;
 	
 	@RequestMapping(value="/checkifexist",method=RequestMethod.POST)
-	@ResponseBody
 	public String checkIfCustomerAlreadyExist(@RequestBody CustomerQuickRegisterEntityDTO customer) throws Exception
 	{
 		return customerQuickRegisterService.checkIfAlreadyRegistered(customer);
@@ -31,7 +30,6 @@ public class CustomerQuickRegisterController {
 	
 	
 	@RequestMapping(method=RequestMethod.POST)
-	@ResponseBody
 	public CustomerQuickRegisterEntity addNewCustomerQuickRegister(@RequestBody CustomerQuickRegisterEntityDTO newCustomer) throws Exception
 	{
 		newCustomer=customerQuickRegisterService.populateStatus(newCustomer);
@@ -44,61 +42,50 @@ public class CustomerQuickRegisterController {
 	}
 
 	
-	@RequestMapping(value="/verifyemail/{email}/hashValue/{emailHash}",method=RequestMethod.GET)
-	@ResponseBody
-	public Boolean verifyEmail(@PathVariable Long emailHash,@PathVariable String email)
+	@RequestMapping(value="/verifyEmailHash",method=RequestMethod.POST)
+	public Boolean verifyEmailHash(@RequestBody VerifyEmailHashDTO verifyEmail)
 	{
-		if(customerQuickRegisterService.verifyEmail(email, emailHash))
+		if(customerQuickRegisterService.verifyEmailHash(verifyEmail.getCustomerId(), verifyEmail.getEmailHash()))
 			return true;
 		else
 			return false;
 	}
 	
-	@RequestMapping(value="/verifymobile",method=RequestMethod.POST)
-	@ResponseBody
-	public Boolean verifyMobile(@RequestBody VerifyMobileDTO verifyMobile)
+	@RequestMapping(value="/verifyMobilePin",method=RequestMethod.POST)
+	public Boolean verifyMobilePin(@RequestBody VerifyMobilePinDTO verifyMobile)
 	{
-		if(customerQuickRegisterService.verifyMobile(verifyMobile.getMobile(), verifyMobile.getMobilePin()))
+		if(customerQuickRegisterService.verifyMobilePin(verifyMobile.getCustomerId(), verifyMobile.getMobilePin()))
 			return true;
 		else
 			return false;
 	}
 	
-	@RequestMapping(value="/getByEmail",method=RequestMethod.POST)
-	@ResponseBody
-	public CustomerQuickRegisterEntity getCustomerByEmail(@RequestBody GetByEmailDTO emailDTO)
+	@RequestMapping(value="/getByCustomerId",method=RequestMethod.POST)
+	public CustomerQuickRegisterEntity getCustomerByEmail(@RequestBody GetByCustomerIdDTO customerIdDTO)
 	{
-		CustomerQuickRegisterEntity fetchedEntity=customerQuickRegisterService.getCustomerQuickRegisterEntityByEmail(emailDTO.getEmail());
+		CustomerQuickRegisterEntity fetchedEntity=customerQuickRegisterService.getCustomerQuickRegisterEntityByCustomerId(customerIdDTO.getCustomerId());
 		
 		return fetchedEntity;
 	}
+
 	
-	@RequestMapping(value="/getByMobile",method=RequestMethod.POST)
-	@ResponseBody
-	public CustomerQuickRegisterEntity getCustomerByMobile(@RequestBody GetByMobileDTO mobileDTO)
+	@RequestMapping(value="/updateMobilePin",method=RequestMethod.POST)
+	public Integer updateMobilePin(@RequestBody UpdateMobilePinDTO updateMobilePin)
 	{
-		CustomerQuickRegisterEntity fetchedEntity=customerQuickRegisterService.getCustomerQuickRegisterEntityByMobile(mobileDTO.getMobile());
-		
-		return fetchedEntity;
+		return customerQuickRegisterService.updateMobilePin(updateMobilePin.getCustomerId(),updateMobilePin.getMobilePin());
 	}
 	
+	@RequestMapping(value="/updateEmailHash",method=RequestMethod.POST)
+	public Integer updateEmailHash(@RequestBody UpdateEmailHashDTO updateEmailHash)
+	{
+		return customerQuickRegisterService.updateEmailHash(updateEmailHash.getCustomerId(),updateEmailHash.getEmailHash());
+	}
+		
 	@RequestMapping(value="/cleartestdata")
 	public void clearTestData()
 	{
 		customerQuickRegisterService.clearDataForTesting();
 	}
 	
-	//public Integer updateMobilePin()
-	
-	//public Integer updateEmailHash()
-	
-	/*
-	@ResponseBody
-	@RequestMapping(method=RequestMethod.GET)
-	public VerifyMobileDTO returnCustomerWithEmailMobileCheck()
-	{
-		return new VerifyMobileDTO(9960821869L, 101010);
-	}
-	*/
 	
 }

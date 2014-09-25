@@ -4,6 +4,8 @@ public class CustomerQuickRegisterEntity {
 
 	//private CustomerQuickRegisterKey key;
 
+	private Long customerId;
+	
 	private String firstName;
 	private String lastName;
 
@@ -24,10 +26,11 @@ public class CustomerQuickRegisterEntity {
 	
 	
 	
-	public CustomerQuickRegisterEntity(String firstName, String lastName,
+	public CustomerQuickRegisterEntity(Long customerId,String firstName, String lastName,
 			String email, Long mobile, Integer pin, String status,
 			Integer mobilePin, Long emailHash) {
 		super();
+		this.customerId=customerId;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.email = email;
@@ -162,10 +165,20 @@ public class CustomerQuickRegisterEntity {
 		this.emailHash = emailHash;
 	}
 
+	public Long getCustomerId() {
+		return customerId;
+	}
+
+	public void setCustomerId(Long customerId) {
+		this.customerId = customerId;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result
+				+ ((customerId == null) ? 0 : customerId.hashCode());
 		result = prime * result + ((email == null) ? 0 : email.hashCode());
 		result = prime * result
 				+ ((emailHash == null) ? 0 : emailHash.hashCode());
@@ -190,6 +203,11 @@ public class CustomerQuickRegisterEntity {
 		if (getClass() != obj.getClass())
 			return false;
 		CustomerQuickRegisterEntity other = (CustomerQuickRegisterEntity) obj;
+		if (customerId == null) {
+			if (other.customerId != null)
+				return false;
+		} else if (!customerId.equals(other.customerId))
+			return false;
 		if (email == null) {
 			if (other.email != null)
 				return false;
@@ -233,6 +251,6 @@ public class CustomerQuickRegisterEntity {
 		return true;
 	}
 
-		
+	
 	
 }

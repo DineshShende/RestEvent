@@ -13,35 +13,47 @@ public interface CustomerQuickRegisterRepository {
 	
 	 List<CustomerQuickRegisterEntity> findAll();
 	 
+	 CustomerQuickRegisterEntity findByCustomerId(Long customerId);
 	 
+	 Integer countByEmail(String email);
 	 
-	 CustomerQuickRegisterEntity findByEmail(String email);
+	 Integer countByMobile(Long mobile);
+	 
+	 Integer verifyEmailHash(Long customerId,Long emailHash);
+	 
+	 Integer verifyMobilePin(Long customerId,Integer mobilePin);
+	 
+	 String getStatusByCustomerId(Long customerId);
+	 
+	 Integer updateStatusByCustomerId(Long customerId,String status);
+	 
+	 Integer updateEmailHash(Long customerId,Long emailHash);
+	 
+	 Integer updateMobilePin(Long customerId,Integer mobilePin);
+	 
+	 void clearCustomerQuickRegister();
+
+	 //For testing implementations
+	 Long deleteByCustomerId(Long customerId); 
+	 
+
+	 //CustomerQuickRegisterEntity findByEmail(String email);
 	
-	 CustomerQuickRegisterEntity findByMobile(Long mobile);
-	 
-	 String fetchStatusByEmail(String email) throws Exception;
-	 
-	 String fetchStatusByMobile(Long mobile) throws Exception;
-	 
-	 Integer updateStatusAfterMobileVerification(Long mobile,String status);
-	 
-	 Integer updateStatusAfterEmailVerfication(String email,String status);
-	 
-	 
-	 
-	 
-	 int countByEmail(String email);
-	 
-	 int countByMobile(Long mobile);
-	 
-	 Long deleteByEmail(String email);
-	 
-	 Long deleteByMobile(Long mobile);
+	 //CustomerQuickRegisterEntity findByMobile(Long mobile);
 	
-	 void clearCustomerQuickRegister(); 
 	 
+	 //Long deleteByEmail(String email);
 	 
+	 //Long deleteByMobile(Long mobile);
 	
+	 //String fetchStatusByEmail(String email) throws Exception;
+	 
+	 //String fetchStatusByMobile(Long mobile) throws Exception;
+	 
+	 //Integer updateStatusAfterMobileVerification(Long mobile,String status);
+	 
+	 //Integer updateStatusAfterEmailVerfication(String email,String status);
+ 	
 /*
 	 void clearCustomerQuickRegister();
 	 Boolean checkIfAlreadyExist(CustomerQuickRegisterKey key);

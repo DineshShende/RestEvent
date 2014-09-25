@@ -1,10 +1,12 @@
 package com.projectx.rest.controller;
 
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
+import static org.mockito.Mockito.*;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.setup.MockMvcBuilders.*;
+import static org.mockito.Matchers.*;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -38,7 +40,7 @@ public class EmailStandAloneControllerTest {
 	    this.mockMvc = standaloneSetup(customerQuickRegisterController)
 	    		.build();
 		
-	    when(customerQuickRegisterService.addEmail(new Email("dineshshe@gmail.com","dinesh"))).thenReturn(new Email("dineshshe@gmail.com","dinesh"));
+	    when(customerQuickRegisterService.addEmail(any(Email.class))).thenReturn(new Email("dineshshe@gmail.com","dinesh"));
 	}
 	
 	
@@ -51,7 +53,7 @@ public class EmailStandAloneControllerTest {
 	                    .contentType(MediaType.APPLICATION_JSON)
 	                    .accept(MediaType.APPLICATION_JSON))
 	            .andDo(print())
-	            .andExpect(status().isOk());
+	            .andExpect(status().isCreated());
 	            //.andDo();
 		
 		

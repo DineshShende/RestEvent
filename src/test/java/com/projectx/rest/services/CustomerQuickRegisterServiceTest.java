@@ -14,6 +14,7 @@ import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.projectx.rest.config.Application;
+import com.projectx.rest.domain.CustomerQuickRegisterEntity;
 import com.projectx.rest.repository.CustomerQuickRegisterRepository;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -123,171 +124,153 @@ public class CustomerQuickRegisterServiceTest {
 						.populateStatus(standardMobileCustomerDTOWithOutStatus())));
 
 	}
-
-	@Test
-	public void handleNewCustomerQuickRegistrationWithEmail() {
-
-
-		assertEquals(
-				standardEmailCustomer(),
-				customerQuickRegisterHandler
-						.handleNewCustomerQuickRegistration(standardEmailCustomerDTO()));
-	}
-
-	@Test
-	public void handleNewCustomerQuickRegistrationWithMobile() {
-
-		assertEquals(
-				standardMobileCustomer(),
-				customerQuickRegisterHandler
-						.handleNewCustomerQuickRegistration(standardMobileCustomerDTO()));
-	}
-
-	@Test
-	public void handleNewCustomerQuickRegistrationWithEmailMobile() {
-		assertEquals(
-				standardEmailMobileCustomer(),
-				customerQuickRegisterHandler
-						.handleNewCustomerQuickRegistration(standardEmailMobileCustomerDTO()));
-
-	}
-
 	
 	@Test
-	public void getCustomerByEmailMobileWithEmailMobileCustomer() throws Exception {
-		
-		assertNull(customerQuickRegisterHandler.getCustomerQuickRegisterEntityByEmail(CUST_EMAIL));
+	public void handleNewCustomerQuickRegistrationWithEmailMobileCustomer() {
 
-		assertNull(customerQuickRegisterHandler.getCustomerQuickRegisterEntityByMobile(CUST_MOBILE));
+		CustomerQuickRegisterEntity handledEntity=customerQuickRegisterHandler
+						.handleNewCustomerQuickRegistration(standardEmailMobileCustomerDTO());
 		
+		assertNull(handledEntity.getCustomerId());
+		assertEquals(CUST_FIRSTNAME,handledEntity.getFirstName());
+		assertEquals(CUST_LASTNAME,handledEntity.getLastName());
+		assertEquals(CUST_EMAIL,handledEntity.getEmail());
+		assertEquals(CUST_MOBILE,handledEntity.getMobile());
+		assertEquals(CUST_PIN,handledEntity.getPin());
+		assertEquals(CUST_EMAILHASH,handledEntity.getEmailHash());
+		assertEquals(CUST_MOBILEPIN,handledEntity.getMobilePin());
+		
+	}
+
+	@Test
+	public void handleNewCustomerQuickRegistrationWithEmailCustomer() {
+
+		CustomerQuickRegisterEntity handledEntity=customerQuickRegisterHandler
+						.handleNewCustomerQuickRegistration(standardEmailCustomerDTO());
+		
+		assertNull(handledEntity.getCustomerId());
+		assertEquals(CUST_FIRSTNAME,handledEntity.getFirstName());
+		assertEquals(CUST_LASTNAME,handledEntity.getLastName());
+		assertEquals(CUST_EMAIL,handledEntity.getEmail());
+		assertNull(handledEntity.getMobile());
+		assertEquals(CUST_PIN,handledEntity.getPin());
+		assertEquals(CUST_EMAILHASH,handledEntity.getEmailHash());
+		assertNull(handledEntity.getMobilePin());
+		
+	}
+
+	@Test
+	public void handleNewCustomerQuickRegistrationWithMobileCustomer() {
+
+		CustomerQuickRegisterEntity handledEntity=customerQuickRegisterHandler
+						.handleNewCustomerQuickRegistration(standardMobileCustomerDTO());
+		
+		assertNull(handledEntity.getCustomerId());
+		assertEquals(CUST_FIRSTNAME,handledEntity.getFirstName());
+		assertEquals(CUST_LASTNAME,handledEntity.getLastName());
+		assertNull(handledEntity.getEmail());
+		assertEquals(CUST_MOBILE,handledEntity.getMobile());
+		assertEquals(CUST_PIN,handledEntity.getPin());
+		assertNull(handledEntity.getEmailHash());
+		assertEquals(CUST_MOBILEPIN,handledEntity.getMobilePin());
+		
+	}
+
+		
+	@Test 
+	public void getCustomerByCustomerIdWithEmailMobileCustomer() throws Exception
+	{
+		
+		assertNull(customerQuickRegisterHandler.getCustomerQuickRegisterEntityByCustomerId(CUST_ID));
+		
+
 		customerQuickRegisterHandler
 				.saveNewCustomerQuickRegisterEntity(customerQuickRegisterHandler
 						.handleNewCustomerQuickRegistration(standardEmailMobileCustomerDTO()));
 		
-		assertEquals(standardEmailMobileCustomer(),customerQuickRegisterHandler.getCustomerQuickRegisterEntityByEmail(CUST_EMAIL));
-
-		assertEquals(standardEmailMobileCustomer(),customerQuickRegisterHandler.getCustomerQuickRegisterEntityByMobile(CUST_MOBILE));
-				
-	}
-
-	@Test
-	public void getCustomerByEmailMobileWithEmailCustomer() throws Exception {
+		assertEquals(standardEmailMobileCustomer(),customerQuickRegisterHandler.getCustomerQuickRegisterEntityByCustomerId(CUST_ID));
 		
-		assertNull(customerQuickRegisterHandler.getCustomerQuickRegisterEntityByEmail(CUST_EMAIL));
-
-		assertNull(customerQuickRegisterHandler.getCustomerQuickRegisterEntityByMobile(CUST_MOBILE));
-		
-		customerQuickRegisterHandler
-				.saveNewCustomerQuickRegisterEntity(customerQuickRegisterHandler
-						.handleNewCustomerQuickRegistration(standardEmailCustomerDTO()));
-		
-		assertEquals(standardEmailCustomer(),customerQuickRegisterHandler.getCustomerQuickRegisterEntityByEmail(CUST_EMAIL));
-
-		assertNull(customerQuickRegisterHandler.getCustomerQuickRegisterEntityByMobile(CUST_MOBILE));
-				
 	}
 	
-	@Test
-	public void getCustomerByEmailMobileWithMobileCustomer() throws Exception {
-		
-		assertNull(customerQuickRegisterHandler.getCustomerQuickRegisterEntityByEmail(CUST_EMAIL));
 
-		assertNull(customerQuickRegisterHandler.getCustomerQuickRegisterEntityByMobile(CUST_MOBILE));
-		
-		customerQuickRegisterHandler
-				.saveNewCustomerQuickRegisterEntity(customerQuickRegisterHandler
-						.handleNewCustomerQuickRegistration(standardMobileCustomerDTO()));
-		
-		assertNull(customerQuickRegisterHandler.getCustomerQuickRegisterEntityByEmail(CUST_EMAIL));
-
-		assertEquals(standardMobileCustomer(),customerQuickRegisterHandler.getCustomerQuickRegisterEntityByMobile(CUST_MOBILE));
-				
-	}
 	
 	@Test 
-	public void verifyEmailMobileWithEmailMobileCustomer() throws Exception
+	public void verifyEmailHashMobilePinWithEmailMobileCustomer() throws Exception
 	{
-		assertNull(customerQuickRegisterHandler.getCustomerQuickRegisterEntityByEmail(CUST_EMAIL));
+		assertNull(customerQuickRegisterHandler.getCustomerQuickRegisterEntityByCustomerId(CUST_ID));
 
-		assertNull(customerQuickRegisterHandler.getCustomerQuickRegisterEntityByMobile(CUST_MOBILE));
-		
 		customerQuickRegisterHandler
 		.saveNewCustomerQuickRegisterEntity(customerQuickRegisterHandler
 				.handleNewCustomerQuickRegistration(standardEmailMobileCustomerDTO()));
 		
+		assertTrue(customerQuickRegisterHandler.verifyEmailHash(CUST_ID, CUST_EMAILHASH));
 		
-
-		assertTrue(customerQuickRegisterHandler.verifyEmail(CUST_EMAIL, CUST_EMAILHASH));
+		assertEquals(STATUS_EMAIL_VERFIED_MOBILE_PENDING,customerQuickRegisterHandler.getCustomerQuickRegisterEntityByCustomerId(CUST_ID).getStatus());
 		
-		assertEquals(STATUS_EMAIL_VERFIED_MOBILE_PENDING,customerQuickRegisterHandler.getCustomerQuickRegisterEntityByEmail(CUST_EMAIL).getStatus());
+		customerQuickRegisterHandler.verifyMobilePin(CUST_ID, CUST_MOBILEPIN);
 		
-		customerQuickRegisterHandler.verifyMobile(CUST_MOBILE, CUST_MOBILEPIN);
-		
-		assertEquals(STATUS_EMAIL_MOBILE_VERIFIED,customerQuickRegisterHandler.getCustomerQuickRegisterEntityByEmail(CUST_EMAIL).getStatus());
+		assertEquals(STATUS_EMAIL_MOBILE_VERIFIED,customerQuickRegisterHandler.getCustomerQuickRegisterEntityByCustomerId(CUST_ID).getStatus());
 		
 	}
+	
 	
 	@Test 
 	public void verifyMobileEmailWithEmailMobileCustomer() throws Exception
 	{
-		assertNull(customerQuickRegisterHandler.getCustomerQuickRegisterEntityByEmail(CUST_EMAIL));
+		assertNull(customerQuickRegisterHandler.getCustomerQuickRegisterEntityByCustomerId(CUST_ID));
 
-		assertNull(customerQuickRegisterHandler.getCustomerQuickRegisterEntityByMobile(CUST_MOBILE));
-		
 		customerQuickRegisterHandler
 		.saveNewCustomerQuickRegisterEntity(customerQuickRegisterHandler
 				.handleNewCustomerQuickRegistration(standardEmailMobileCustomerDTO()));
 		
-		assertTrue(customerQuickRegisterHandler.verifyMobile(CUST_MOBILE, CUST_MOBILEPIN));
+		assertTrue(customerQuickRegisterHandler.verifyMobilePin(CUST_ID, CUST_MOBILEPIN));
 		
-		assertEquals(STATUS_MOBILE_VERFIED_EMAIL_PENDING,customerQuickRegisterHandler.getCustomerQuickRegisterEntityByEmail(CUST_EMAIL).getStatus());
+		assertEquals(STATUS_MOBILE_VERFIED_EMAIL_PENDING,customerQuickRegisterHandler.getCustomerQuickRegisterEntityByCustomerId(CUST_ID).getStatus());
 		
-		assertTrue(customerQuickRegisterHandler.verifyEmail(CUST_EMAIL, CUST_EMAILHASH));
+		assertTrue(customerQuickRegisterHandler.verifyEmailHash(CUST_ID, CUST_EMAILHASH));
 		
-		assertEquals(STATUS_EMAIL_MOBILE_VERIFIED,customerQuickRegisterHandler.getCustomerQuickRegisterEntityByEmail(CUST_EMAIL).getStatus());
+		assertEquals(STATUS_EMAIL_MOBILE_VERIFIED,customerQuickRegisterHandler.getCustomerQuickRegisterEntityByCustomerId(CUST_ID).getStatus());
 		
 	}
 	
 	@Test 
 	public void verifyMobileWithMobileCustomer() throws Exception
 	{
-		assertNull(customerQuickRegisterHandler.getCustomerQuickRegisterEntityByEmail(CUST_EMAIL));
+		assertNull(customerQuickRegisterHandler.getCustomerQuickRegisterEntityByCustomerId(CUST_ID));
 
-		assertNull(customerQuickRegisterHandler.getCustomerQuickRegisterEntityByMobile(CUST_MOBILE));
-		
 		customerQuickRegisterHandler
 		.saveNewCustomerQuickRegisterEntity(customerQuickRegisterHandler
 				.handleNewCustomerQuickRegistration(standardMobileCustomerDTO()));
 		
-		assertTrue(customerQuickRegisterHandler.verifyMobile(CUST_MOBILE, CUST_MOBILEPIN));
+		assertTrue(customerQuickRegisterHandler.verifyMobilePin(CUST_ID, CUST_MOBILEPIN));
 		
-		assertEquals(STATUS_MOBILE_VERFIED,customerQuickRegisterHandler.getCustomerQuickRegisterEntityByMobile(CUST_MOBILE).getStatus());
+		assertEquals(STATUS_MOBILE_VERFIED,customerQuickRegisterHandler.getCustomerQuickRegisterEntityByCustomerId(CUST_ID).getStatus());
 		
 	}
 
 	@Test 
 	public void verifyEmailWithEmailCustomer() throws Exception
 	{
-		assertNull(customerQuickRegisterHandler.getCustomerQuickRegisterEntityByEmail(CUST_EMAIL));
+		assertNull(customerQuickRegisterHandler.getCustomerQuickRegisterEntityByCustomerId(CUST_ID));
 
-		assertNull(customerQuickRegisterHandler.getCustomerQuickRegisterEntityByMobile(CUST_MOBILE));
-		
 		customerQuickRegisterHandler
 		.saveNewCustomerQuickRegisterEntity(customerQuickRegisterHandler
 				.handleNewCustomerQuickRegistration(standardEmailCustomerDTO()));
 		
-		assertTrue(customerQuickRegisterHandler.verifyEmail(CUST_EMAIL, CUST_EMAILHASH));
+		assertTrue(customerQuickRegisterHandler.verifyEmailHash(CUST_ID, CUST_EMAILHASH));
 		
-		assertEquals(STATUS_EMAIL_VERFIED,customerQuickRegisterHandler.getCustomerQuickRegisterEntityByEmail(CUST_EMAIL).getStatus());
+		assertEquals(STATUS_EMAIL_VERFIED,customerQuickRegisterHandler.getCustomerQuickRegisterEntityByCustomerId(CUST_ID).getStatus());
 		
 	}
 	
 	@Test
 	public void verifyEmailAndMobileFailedCase()
 	{
-		assertFalse(customerQuickRegisterHandler.verifyEmail(CUST_EMAIL, CUST_EMAILHASH));
+		assertFalse(customerQuickRegisterHandler.verifyEmailHash(CUST_ID, CUST_EMAILHASH));
 		
-		assertFalse(customerQuickRegisterHandler.verifyMobile(CUST_MOBILE, CUST_MOBILEPIN));
+		assertFalse(customerQuickRegisterHandler.verifyMobilePin(CUST_ID, CUST_MOBILEPIN));
 	}
+	
+	
 	
 }
