@@ -1,5 +1,10 @@
 package com.projectx.rest.handlers;
 
+import static com.projectx.rest.fixtures.CustomerQuickRegisterDataFixture.REGISTER_EMAIL_ALREADY_REGISTERED;
+import static com.projectx.rest.fixtures.CustomerQuickRegisterDataFixture.REGISTER_EMAIL_MOBILE_ALREADY_REGISTERED;
+import static com.projectx.rest.fixtures.CustomerQuickRegisterDataFixture.REGISTER_MOBILE_ALREADY_REGISTERED;
+import static com.projectx.rest.fixtures.CustomerQuickRegisterDataFixture.REGISTER_NOT_REGISTERED;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -8,9 +13,8 @@ import com.projectx.rest.repository.CustomerQuickRegisterRepository;
 import com.projectx.rest.services.CustomerQuickRegisterService;
 import com.projectx.web.domain.CustomerQuickRegisterEntityDTO;
 
-import static com.projectx.rest.fixtures.CustomerQuickRegisterDataFixture.*;
-
 @Component
+//@ActiveProfiles(value="Dev")
 public class CustomerQuickRegisterHandler implements
 		CustomerQuickRegisterService {
 
@@ -128,7 +132,7 @@ public class CustomerQuickRegisterHandler implements
 		
 		CustomerQuickRegisterEntity fetchedEntity=getCustomerQuickRegisterEntityByCustomerId(customerId);//
 		
-		if(fetchedEntity==null)
+		if(fetchedEntity.getCustomerId()==null)
 			return false;
 		
 		if(fetchedEntity.getEmailHash().equals(emailHash))
@@ -165,9 +169,9 @@ public class CustomerQuickRegisterHandler implements
 	@Override
 	public Boolean verifyMobilePin(Long customerId, Integer mobilePin) {
 	
-		CustomerQuickRegisterEntity fetchedEntity=customerQuickRegisterRepository.findByCustomerId(customerId);
+		CustomerQuickRegisterEntity fetchedEntity=getCustomerQuickRegisterEntityByCustomerId(customerId);
 		
-		if(fetchedEntity==null)
+		if(fetchedEntity.getCustomerId()==null)
 			return false;
 		
 		if(fetchedEntity.getMobilePin().equals(mobilePin))

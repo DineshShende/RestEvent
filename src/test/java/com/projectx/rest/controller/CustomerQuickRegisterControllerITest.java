@@ -1,20 +1,38 @@
 package com.projectx.rest.controller;
 
-import static com.projectx.rest.fixture.CustomerQuickRegisterDataFixture.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static com.projectx.rest.fixture.CustomerQuickRegisterDataFixture.CUST_EMAIL;
+import static com.projectx.rest.fixture.CustomerQuickRegisterDataFixture.CUST_FIRSTNAME;
+import static com.projectx.rest.fixture.CustomerQuickRegisterDataFixture.CUST_LASTNAME;
+import static com.projectx.rest.fixture.CustomerQuickRegisterDataFixture.CUST_MOBILEPIN;
+import static com.projectx.rest.fixture.CustomerQuickRegisterDataFixture.CUST_MOBILEPIN_UPDATED;
+import static com.projectx.rest.fixture.CustomerQuickRegisterDataFixture.CUST_PIN;
+import static com.projectx.rest.fixture.CustomerQuickRegisterDataFixture.CUST_STATUS_EMAILMOBILE;
+import static com.projectx.rest.fixture.CustomerQuickRegisterDataFixture.REGISTER_NOT_REGISTERED;
+import static com.projectx.rest.fixture.CustomerQuickRegisterDataFixture.STATUS_EMAIL_VERFIED;
+import static com.projectx.rest.fixture.CustomerQuickRegisterDataFixture.STATUS_MOBILE_VERFIED;
+import static com.projectx.rest.fixture.CustomerQuickRegisterDataFixture.standardJsonEmailCustomer;
+import static com.projectx.rest.fixture.CustomerQuickRegisterDataFixture.standardJsonEmailMobileCustomer;
+import static com.projectx.rest.fixture.CustomerQuickRegisterDataFixture.standardJsonGetByCustomerIdDTO;
+import static com.projectx.rest.fixture.CustomerQuickRegisterDataFixture.standardJsonMobileCustomer;
+import static com.projectx.rest.fixture.CustomerQuickRegisterDataFixture.standardJsonUpdateEmailHashDTO;
+import static com.projectx.rest.fixture.CustomerQuickRegisterDataFixture.standardJsonUpdateMobilePinDTO;
+import static com.projectx.rest.fixture.CustomerQuickRegisterDataFixture.standardJsonVerifyEmailHashDTO;
+import static com.projectx.rest.fixture.CustomerQuickRegisterDataFixture.standardJsonVerifyMobilePinDTO;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import org.hamcrest.Matcher;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Matchers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.http.MediaType;
-import org.springframework.test.annotation.Rollback;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
@@ -28,7 +46,7 @@ import com.projectx.rest.config.Application;
 @WebAppConfiguration
 
 
-//@ActiveProfiles("Test")
+@ActiveProfiles("Dev")
 public class CustomerQuickRegisterControllerITest {
 	
 	@Autowired
@@ -94,6 +112,8 @@ public class CustomerQuickRegisterControllerITest {
 	                    .content(standardJsonEmailMobileCustomer())
 	                    .contentType(MediaType.APPLICATION_JSON)
 	                    .accept(MediaType.APPLICATION_JSON));
+	                    
+						
 		
 		this.mockMvc.perform(
 	            post("/customer/quickregister/getByCustomerId")

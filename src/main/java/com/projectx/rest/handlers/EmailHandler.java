@@ -15,7 +15,7 @@ import com.projectx.rest.services.EmailService;
 
 @Component
 @PropertySource(value="classpath:/application.properties")
-@Profile("Prod")
+@Profile("Dev")
 public class EmailHandler implements
 		EmailService {
 

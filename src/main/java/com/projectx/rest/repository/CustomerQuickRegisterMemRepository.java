@@ -4,11 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.context.annotation.Profile;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
 import com.projectx.rest.domain.CustomerQuickRegisterEntity;
 
-@Repository
+@Component
 @Profile("Test")
 public class CustomerQuickRegisterMemRepository implements
 		CustomerQuickRegisterRepository {
@@ -51,7 +52,10 @@ public class CustomerQuickRegisterMemRepository implements
 			if (customerList.get(i).getCustomerId().equals(customerId))
 				resultEntity = customerList.get(i);
 		}
-
+		
+		if(resultEntity==null)
+			return new CustomerQuickRegisterEntity();
+			
 		return resultEntity;
 	}
 

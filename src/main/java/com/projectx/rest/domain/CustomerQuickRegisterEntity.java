@@ -1,29 +1,51 @@
 package com.projectx.rest.domain;
 
+import com.projectx.web.domain.CustomerQuickRegisterSaveDTO;
+
 public class CustomerQuickRegisterEntity {
 
 	//private CustomerQuickRegisterKey key;
-
 	private Long customerId;
 	
 	private String firstName;
+	
 	private String lastName;
-
+	
 	private String email;
 	
 	private Long mobile;
 	
 	private Integer pin;
-
+	
 	private String status;
 
 	private Integer mobilePin;
-
+	
 	private Long emailHash;
 
-
+	public CustomerQuickRegisterEntity() {
+		
+		super();
+		// TODO Auto-generated constructor stub
+	}
 	
 	
+	
+	public CustomerQuickRegisterSaveDTO toCustomerQuickRegisterDTO()
+	{
+		CustomerQuickRegisterSaveDTO  customerQuickRegisterDTO1=new CustomerQuickRegisterSaveDTO();
+		//customerQuickRegisterDTO1.setCustomerId(this.customerId);
+		customerQuickRegisterDTO1.setFirstName(this.firstName);
+		customerQuickRegisterDTO1.setLastName(this.lastName);
+		customerQuickRegisterDTO1.setEmail(this.email);
+		customerQuickRegisterDTO1.setMobile(this.mobile);
+		customerQuickRegisterDTO1.setPin(this.pin);
+		customerQuickRegisterDTO1.setStatus(this.status);
+		customerQuickRegisterDTO1.setMobilePin(this.mobilePin);
+		customerQuickRegisterDTO1.setEmailHash(this.emailHash);
+		
+		return customerQuickRegisterDTO1;
+	}
 	
 	
 	public CustomerQuickRegisterEntity(Long customerId,String firstName, String lastName,
@@ -41,26 +63,23 @@ public class CustomerQuickRegisterEntity {
 		this.emailHash = emailHash;
 	}
 
-	public CustomerQuickRegisterEntity() {
-		// TODO Auto-generated constructor stub
-	}
 	
 	
 
 	public boolean isEmailVerificationPending() {
-		return status == "EmailVerificationPending";
+		return this.status.equals("EmailVerificationPending");
 	}
 
 	public boolean isMobileVerificationPending() {
-		return status == "MobileVerificationPending";
+		return this.status.equals("MobileVerificationPending");
 	}
 
 	public boolean isEmailMobileVerificationPending() {
-		return status == "EmailMobileVerificationPending";
+		return this.status.equals("EmailMobileVerificationPending");
 	}
 	
 	public boolean isEmailVerifiedMobileVerficationPending() {
-		return status == "EmailVerifiedMobileVerficationPending";
+		return this.status.equals("EmailVerifiedMobileVerficationPending");
 	}
 	
 	public void setStatusEmailVerifiedMobileVerficationPending() {
@@ -68,32 +87,36 @@ public class CustomerQuickRegisterEntity {
 	}
 
 	public boolean isMobileVerifiedEmailVerficationPending() {
-		return status == "MobileVerifiedEmailVerficationPending";
+		return this.status.equals("MobileVerifiedEmailVerficationPending");
 	}
 
+	public boolean isMobileVerified() {
+		return this.status.equals("MobileVerified");
+	}
+
+	public boolean isEmailMobileVerified() {
+		return this.status.equals("EmailMobileVerified");
+	}
+
+	public boolean isEmailVerified() {
+		return this.status.equals("EmailVerified");
+	}
+
+	
 	public void setStatusMobileVerifiedEmailVerficationPending() {
 		this.status = "MobileVerifiedEmailVerficationPending";
 	}
 	
-	public boolean isMobileVerified() {
-		return status == "MobileVerified";
-	}
 	
 	public void setStatusMobileVerified() {
 		this.status = "MobileVerified";
 	}
 
-	public boolean isEmailVerified() {
-		return status == "EmailVerified";
-	}
 	
 	public void setStatusEmailVerified() {
 		this.status = "EmailVerified";
 	}
 
-	public boolean isEmailMobileVerified() {
-		return status == "EmailMobileVerified";
-	}
 	
 	public void setStatusEmailMobileVerified() {
 		this.status = "EmailMobileVerified";
@@ -249,6 +272,18 @@ public class CustomerQuickRegisterEntity {
 		} else if (!status.equals(other.status))
 			return false;
 		return true;
+	}
+
+
+
+
+	@Override
+	public String toString() {
+		return "CustomerQuickRegisterEntity [customerId=" + customerId
+				+ ", firstName=" + firstName + ", lastName=" + lastName
+				+ ", email=" + email + ", mobile=" + mobile + ", pin=" + pin
+				+ ", status=" + status + ", mobilePin=" + mobilePin
+				+ ", emailHash=" + emailHash + "]";
 	}
 
 	

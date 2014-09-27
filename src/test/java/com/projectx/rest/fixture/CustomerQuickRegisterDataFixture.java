@@ -1,12 +1,12 @@
 package com.projectx.rest.fixture;
 
+import com.projectx.data.domain.UpdateEmailHashDTO;
+import com.projectx.data.domain.UpdateMobilePinDTO;
+import com.projectx.data.domain.VerifyEmailHashDTO;
+import com.projectx.data.domain.VerifyMobilePinDTO;
 import com.projectx.rest.domain.CustomerQuickRegisterEntity;
 import com.projectx.web.domain.CustomerQuickRegisterEntityDTO;
 import com.projectx.web.domain.GetByCustomerIdDTO;
-import com.projectx.web.domain.UpdateEmailHashDTO;
-import com.projectx.web.domain.UpdateMobilePinDTO;
-import com.projectx.web.domain.VerifyEmailHashDTO;
-import com.projectx.web.domain.VerifyMobilePinDTO;
 
 
 public class CustomerQuickRegisterDataFixture {

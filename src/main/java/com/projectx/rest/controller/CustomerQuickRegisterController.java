@@ -6,14 +6,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.projectx.data.domain.UpdateEmailHashDTO;
+import com.projectx.data.domain.UpdateMobilePinDTO;
+import com.projectx.data.domain.VerifyEmailHashDTO;
+import com.projectx.data.domain.VerifyMobilePinDTO;
 import com.projectx.rest.domain.CustomerQuickRegisterEntity;
 import com.projectx.rest.services.CustomerQuickRegisterService;
 import com.projectx.web.domain.CustomerQuickRegisterEntityDTO;
 import com.projectx.web.domain.GetByCustomerIdDTO;
-import com.projectx.web.domain.UpdateEmailHashDTO;
-import com.projectx.web.domain.UpdateMobilePinDTO;
-import com.projectx.web.domain.VerifyEmailHashDTO;
-import com.projectx.web.domain.VerifyMobilePinDTO;
 
 @RestController
 @RequestMapping(value="/customer/quickregister")

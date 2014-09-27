@@ -22,7 +22,7 @@
 <tr>
 <td>
 <div class="infoBox" id="tests">
-<div class="counter">8</div>
+<div class="counter">11</div>
 <p>tests</p>
 </div>
 </td>
@@ -40,7 +40,7 @@
 </td>
 <td>
 <div class="infoBox" id="duration">
-<div class="counter">3.566s</div>
+<div class="counter">2.985s</div>
 <p>duration</p>
 </div>
 </td>
@@ -78,7 +78,7 @@
 </thead>
 <tr>
 <td class="success">countByEmailMobileNewEmailCustomer</td>
-<td>0.002s</td>
+<td>0.001s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
@@ -92,27 +92,42 @@
 <td class="success">passed</td>
 </tr>
 <tr>
-<td class="success">deleteByEmailWithEmailCustomer</td>
-<td>3.558s</td>
-<td class="success">passed</td>
-</tr>
-<tr>
-<td class="success">deleteByMobileWithMobileCustomer</td>
+<td class="success">findAllWithEmailMobileCustomer</td>
 <td>0.001s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
-<td class="success">findByEmailMobileWithEmailCustomer</td>
+<td class="success">findByCustomerIdWithEmailMobileCustomer</td>
+<td>2.978s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">getStatusByCustomerIdWithEmailCustomer</td>
+<td>0s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">updateEmailHash</td>
+<td>0s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">updateMobilePin</td>
 <td>0.001s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
-<td class="success">findByEmailMobileWithEmailMobileCustomer</td>
+<td class="success">updateStatusByCustomerId</td>
+<td>0s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">verifyEmailHash</td>
 <td>0.001s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
-<td class="success">findByEmailMobileWithMobileCustomer</td>
+<td class="success">verifyMobilePin</td>
 <td>0.001s</td>
 <td class="success">passed</td>
 </tr>
@@ -121,23 +136,23 @@
 <div id="tab1" class="tab">
 <h2>Standard output</h2>
 <span class="code">
-<pre>17:02:26.651 [Test worker] DEBUG o.s.t.c.j.SpringJUnit4ClassRunner - SpringJUnit4ClassRunner constructor called with [class com.projectx.rest.repository.CustomerQuickRegisterRepositoryTest].
-17:02:26.837 [Test worker] DEBUG o.s.test.context.ContextLoaderUtils - Found explicit ContextLoader class [org.springframework.boot.test.SpringApplicationContextLoader] for context configuration attributes [ContextConfigurationAttributes@8e2b14 declaringClass = 'com.projectx.rest.repository.CustomerQuickRegisterRepositoryTest', locations = '{}', classes = '{class com.projectx.rest.config.Application}', inheritLocations = true, initializers = '{}', inheritInitializers = true, name = [null], contextLoaderClass = 'org.springframework.boot.test.SpringApplicationContextLoader']
-17:02:26.852 [Test worker] DEBUG o.s.test.context.TestContextManager - @TestExecutionListeners is not present for class [com.projectx.rest.repository.CustomerQuickRegisterRepositoryTest]: using defaults.
-17:02:26.861 [Test worker] INFO  o.s.test.context.TestContextManager - Could not instantiate TestExecutionListener [org.springframework.test.context.transaction.TransactionalTestExecutionListener]. Specify custom listener classes or make the default listener classes (and their required dependencies) available. Offending class: [org/springframework/transaction/interceptor/TransactionAttribute]
-17:02:26.864 [Test worker] DEBUG o.s.t.annotation.ProfileValueUtils - Retrieved @ProfileValueSourceConfiguration [null] for test class [com.projectx.rest.repository.CustomerQuickRegisterRepositoryTest]
-17:02:26.866 [Test worker] DEBUG o.s.t.annotation.ProfileValueUtils - Retrieved ProfileValueSource type [class org.springframework.test.annotation.SystemProfileValueSource] for class [com.projectx.rest.repository.CustomerQuickRegisterRepositoryTest]
-17:02:26.870 [Test worker] DEBUG o.s.t.annotation.ProfileValueUtils - Retrieved @ProfileValueSourceConfiguration [null] for test class [com.projectx.rest.repository.CustomerQuickRegisterRepositoryTest]
-17:02:26.871 [Test worker] DEBUG o.s.t.annotation.ProfileValueUtils - Retrieved ProfileValueSource type [class org.springframework.test.annotation.SystemProfileValueSource] for class [com.projectx.rest.repository.CustomerQuickRegisterRepositoryTest]
-17:02:26.872 [Test worker] DEBUG o.s.t.annotation.ProfileValueUtils - Retrieved @ProfileValueSourceConfiguration [null] for test class [com.projectx.rest.repository.CustomerQuickRegisterRepositoryTest]
-17:02:26.874 [Test worker] DEBUG o.s.t.annotation.ProfileValueUtils - Retrieved ProfileValueSource type [class org.springframework.test.annotation.SystemProfileValueSource] for class [com.projectx.rest.repository.CustomerQuickRegisterRepositoryTest]
-17:02:26.877 [Test worker] DEBUG o.s.t.annotation.ProfileValueUtils - Retrieved @ProfileValueSourceConfiguration [null] for test class [com.projectx.rest.repository.CustomerQuickRegisterRepositoryTest]
-17:02:26.877 [Test worker] DEBUG o.s.t.annotation.ProfileValueUtils - Retrieved ProfileValueSource type [class org.springframework.test.annotation.SystemProfileValueSource] for class [com.projectx.rest.repository.CustomerQuickRegisterRepositoryTest]
-17:02:26.884 [Test worker] DEBUG o.s.t.c.s.DependencyInjectionTestExecutionListener - Performing dependency injection for test context [[DefaultTestContext@185555c testClass = CustomerQuickRegisterRepositoryTest, testInstance = com.projectx.rest.repository.CustomerQuickRegisterRepositoryTest@a71b2e, testMethod = [null], testException = [null], mergedContextConfiguration = [MergedContextConfiguration@e99fb6 testClass = CustomerQuickRegisterRepositoryTest, locations = '{}', classes = '{class com.projectx.rest.config.Application}', contextInitializerClasses = '[]', activeProfiles = '{Test}', contextLoader = 'org.springframework.boot.test.SpringApplicationContextLoader', parent = [null]]]].
-17:02:27.015 [Test worker] DEBUG o.s.core.env.StandardEnvironment - Adding [systemProperties] PropertySource with lowest search precedence
-17:02:27.018 [Test worker] DEBUG o.s.core.env.StandardEnvironment - Adding [systemEnvironment] PropertySource with lowest search precedence
-17:02:27.018 [Test worker] DEBUG o.s.core.env.StandardEnvironment - Initialized StandardEnvironment with PropertySources [systemProperties,systemEnvironment]
-17:02:27.020 [Test worker] DEBUG o.s.core.env.StandardEnvironment - Adding [integrationTest] PropertySource with search precedence immediately lower than [systemEnvironment]
+<pre>00:37:12.888 [Test worker] DEBUG o.s.t.c.j.SpringJUnit4ClassRunner - SpringJUnit4ClassRunner constructor called with [class com.projectx.rest.repository.CustomerQuickRegisterRepositoryTest].
+00:37:13.021 [Test worker] DEBUG o.s.test.context.ContextLoaderUtils - Found explicit ContextLoader class [org.springframework.boot.test.SpringApplicationContextLoader] for context configuration attributes [ContextConfigurationAttributes@e71b2c declaringClass = 'com.projectx.rest.repository.CustomerQuickRegisterRepositoryTest', locations = '{}', classes = '{class com.projectx.rest.config.Application}', inheritLocations = true, initializers = '{}', inheritInitializers = true, name = [null], contextLoaderClass = 'org.springframework.boot.test.SpringApplicationContextLoader']
+00:37:13.036 [Test worker] DEBUG o.s.test.context.TestContextManager - @TestExecutionListeners is not present for class [com.projectx.rest.repository.CustomerQuickRegisterRepositoryTest]: using defaults.
+00:37:13.044 [Test worker] INFO  o.s.test.context.TestContextManager - Could not instantiate TestExecutionListener [org.springframework.test.context.transaction.TransactionalTestExecutionListener]. Specify custom listener classes or make the default listener classes (and their required dependencies) available. Offending class: [org/springframework/transaction/interceptor/TransactionAttribute]
+00:37:13.047 [Test worker] DEBUG o.s.t.annotation.ProfileValueUtils - Retrieved @ProfileValueSourceConfiguration [null] for test class [com.projectx.rest.repository.CustomerQuickRegisterRepositoryTest]
+00:37:13.048 [Test worker] DEBUG o.s.t.annotation.ProfileValueUtils - Retrieved ProfileValueSource type [class org.springframework.test.annotation.SystemProfileValueSource] for class [com.projectx.rest.repository.CustomerQuickRegisterRepositoryTest]
+00:37:13.051 [Test worker] DEBUG o.s.t.annotation.ProfileValueUtils - Retrieved @ProfileValueSourceConfiguration [null] for test class [com.projectx.rest.repository.CustomerQuickRegisterRepositoryTest]
+00:37:13.052 [Test worker] DEBUG o.s.t.annotation.ProfileValueUtils - Retrieved ProfileValueSource type [class org.springframework.test.annotation.SystemProfileValueSource] for class [com.projectx.rest.repository.CustomerQuickRegisterRepositoryTest]
+00:37:13.053 [Test worker] DEBUG o.s.t.annotation.ProfileValueUtils - Retrieved @ProfileValueSourceConfiguration [null] for test class [com.projectx.rest.repository.CustomerQuickRegisterRepositoryTest]
+00:37:13.054 [Test worker] DEBUG o.s.t.annotation.ProfileValueUtils - Retrieved ProfileValueSource type [class org.springframework.test.annotation.SystemProfileValueSource] for class [com.projectx.rest.repository.CustomerQuickRegisterRepositoryTest]
+00:37:13.057 [Test worker] DEBUG o.s.t.annotation.ProfileValueUtils - Retrieved @ProfileValueSourceConfiguration [null] for test class [com.projectx.rest.repository.CustomerQuickRegisterRepositoryTest]
+00:37:13.057 [Test worker] DEBUG o.s.t.annotation.ProfileValueUtils - Retrieved ProfileValueSource type [class org.springframework.test.annotation.SystemProfileValueSource] for class [com.projectx.rest.repository.CustomerQuickRegisterRepositoryTest]
+00:37:13.066 [Test worker] DEBUG o.s.t.c.s.DependencyInjectionTestExecutionListener - Performing dependency injection for test context [[DefaultTestContext@185a2a8 testClass = CustomerQuickRegisterRepositoryTest, testInstance = com.projectx.rest.repository.CustomerQuickRegisterRepositoryTest@79cc94, testMethod = [null], testException = [null], mergedContextConfiguration = [MergedContextConfiguration@6637fa testClass = CustomerQuickRegisterRepositoryTest, locations = '{}', classes = '{class com.projectx.rest.config.Application}', contextInitializerClasses = '[]', activeProfiles = '{Test}', contextLoader = 'org.springframework.boot.test.SpringApplicationContextLoader', parent = [null]]]].
+00:37:13.201 [Test worker] DEBUG o.s.core.env.StandardEnvironment - Adding [systemProperties] PropertySource with lowest search precedence
+00:37:13.204 [Test worker] DEBUG o.s.core.env.StandardEnvironment - Adding [systemEnvironment] PropertySource with lowest search precedence
+00:37:13.205 [Test worker] DEBUG o.s.core.env.StandardEnvironment - Initialized StandardEnvironment with PropertySources [systemProperties,systemEnvironment]
+00:37:13.207 [Test worker] DEBUG o.s.core.env.StandardEnvironment - Adding [integrationTest] PropertySource with search precedence immediately lower than [systemEnvironment]
 
   .   ____          _            __ _ _
  /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
@@ -147,16 +162,17 @@
  =========|_|==============|___/=/_/_/_/
  :: Spring Boot ::        (v1.1.5.RELEASE)
 
-2014-09-19 17:02:27.829  INFO 16188 --- [    Test worker] o.s.boot.SpringApplication               : Starting application on dinesh with PID 16188 (/home/dinesh/.m2/repository/org/springframework/boot/spring-boot/1.1.5.RELEASE/spring-boot-1.1.5.RELEASE.jar started by dinesh in /home/dinesh/NewWorkspace/RestEvent)
-2014-09-19 17:02:27.938  INFO 16188 --- [    Test worker] s.c.a.AnnotationConfigApplicationContext : Refreshing org.springframework.context.annotation.AnnotationConfigApplicationContext@f3424a: startup date [Fri Sep 19 17:02:27 IST 2014]; root of context hierarchy
-2014-09-19 17:02:30.428  INFO 16188 --- [    Test worker] o.s.boot.SpringApplication               : Started application in 3.406 seconds (JVM running for 7.088)
+2014-09-27 00:37:14.056  INFO 15389 --- [    Test worker] o.s.boot.SpringApplication               : Starting application on dinesh with PID 15389 (/home/dinesh/.m2/repository/org/springframework/boot/spring-boot/1.1.5.RELEASE/spring-boot-1.1.5.RELEASE.jar started by dinesh in /home/dinesh/NewWorkspace/RestEvent)
+2014-09-27 00:37:14.099  INFO 15389 --- [    Test worker] s.c.a.AnnotationConfigApplicationContext : Refreshing org.springframework.context.annotation.AnnotationConfigApplicationContext@1891328: startup date [Sat Sep 27 00:37:14 IST 2014]; root of context hierarchy
+2014-09-27 00:37:15.992  INFO 15389 --- [    Test worker] o.s.boot.SpringApplication               : Started application in 2.782 seconds (JVM running for 7.606)
+CustomerQuickRegisterEntity [customerId=212, firstName=dinesh, lastName=shende, email=dineshshe@gmail.com, mobile=9960821869, pin=413133, status=EmailMobileVerificationPending, mobilePin=101010, emailHash=1010101010]
 </pre>
 </span>
 </div>
 </div>
 <div id="footer">
 <p>Generated by 
-<a href="http://www.gradle.org">Gradle 1.11</a> at 19 Sep, 2014 5:02:41 PM</p>
+<a href="http://www.gradle.org">Gradle 1.11</a> at 27 Sep, 2014 12:37:26 AM</p>
 </div>
 </div>
 </body>
