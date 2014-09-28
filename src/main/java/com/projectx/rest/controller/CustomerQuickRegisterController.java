@@ -61,7 +61,7 @@ public class CustomerQuickRegisterController {
 	}
 	
 	@RequestMapping(value="/getByCustomerId",method=RequestMethod.POST)
-	public CustomerQuickRegisterEntity getCustomerByEmail(@RequestBody GetByCustomerIdDTO customerIdDTO)
+	public CustomerQuickRegisterEntity getCustomerByCustomerId(@RequestBody GetByCustomerIdDTO customerIdDTO)
 	{
 		CustomerQuickRegisterEntity fetchedEntity=customerQuickRegisterService.getCustomerQuickRegisterEntityByCustomerId(customerIdDTO.getCustomerId());
 		
@@ -69,13 +69,13 @@ public class CustomerQuickRegisterController {
 	}
 
 	
-	@RequestMapping(value="/updateMobilePin",method=RequestMethod.POST)
+	@RequestMapping(value="/resendMobilePin",method=RequestMethod.POST)
 	public Integer updateMobilePin(@RequestBody UpdateMobilePinDTO updateMobilePin)
 	{
 		return customerQuickRegisterService.updateMobilePin(updateMobilePin.getCustomerId(),updateMobilePin.getMobilePin());
 	}
 	
-	@RequestMapping(value="/updateEmailHash",method=RequestMethod.POST)
+	@RequestMapping(value="/resendEmailHash",method=RequestMethod.POST)
 	public Integer updateEmailHash(@RequestBody UpdateEmailHashDTO updateEmailHash)
 	{
 		return customerQuickRegisterService.updateEmailHash(updateEmailHash.getCustomerId(),updateEmailHash.getEmailHash());

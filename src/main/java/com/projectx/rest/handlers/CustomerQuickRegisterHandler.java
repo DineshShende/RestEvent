@@ -5,6 +5,10 @@ import static com.projectx.rest.fixtures.CustomerQuickRegisterDataFixture.REGIST
 import static com.projectx.rest.fixtures.CustomerQuickRegisterDataFixture.REGISTER_MOBILE_ALREADY_REGISTERED;
 import static com.projectx.rest.fixtures.CustomerQuickRegisterDataFixture.REGISTER_NOT_REGISTERED;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -118,12 +122,59 @@ public class CustomerQuickRegisterHandler implements
 	@Override
 	public Long generateEmailHash(CustomerQuickRegisterEntityDTO customer) {
 
-		return 1010101010L;
+		String allPossibleChar="01234567789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+		
+		StringBuilder sb=new StringBuilder();
+		SecureRandom secureRandom=new SecureRandom();
+		
+		for(int i=0;i<10;i++)
+		{
+			sb.append(allPossibleChar.charAt(secureRandom.nextInt(allPossibleChar.length())));
+		}
+		
+		String password=sb.toString();
+		
+		MessageDigest md = null;
+		try {
+				md = MessageDigest.getInstance("SHA-256");
+		}
+		catch (NoSuchAlgorithmException e)
+		{
+			
+			e.printStackTrace();
+		}
+        md.update(password.getBytes());
+ 
+        byte byteData[] = md.digest();
+ 
+        
+        StringBuffer sbNew = new StringBuffer();
+        for (int i = 0; i < byteData.length; i++) {
+        	sbNew.append(Integer.toString((byteData[i] & 0xff) + 0x100, 16).substring(1));
+        }
+		
+        String emailHash=sbNew.toString();
+        
+        System.out.println(emailHash);
+        
+        System.out.println(emailHash.length());
+        
+		return null;
+		
 	}
 
 	@Override
 	public Integer genarateMobilePin(CustomerQuickRegisterEntityDTO customer) {
 
+		SecureRandom secureRandom=new SecureRandom();
+		int number=0;
+		
+		for(int i=0;i<6;i++)
+		{
+			number=(number*10)+secureRandom.nextInt(10);
+		}	
+				
+		System.out.println(number);
 		return 101010;
 	}
 

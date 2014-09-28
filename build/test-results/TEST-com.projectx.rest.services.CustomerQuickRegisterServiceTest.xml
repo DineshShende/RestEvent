@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.projectx.rest.services.CustomerQuickRegisterServiceTest" tests="15" failures="0" errors="0" timestamp="2014-09-26T19:07:16" hostname="dinesh" time="4.182">
+<testsuite name="com.projectx.rest.services.CustomerQuickRegisterServiceTest" tests="15" failures="0" errors="0" timestamp="2014-09-27T10:35:24" hostname="dinesh" time="10.386">
   <properties/>
-  <testcase name="checkIfEmailMobileCustomerExist" classname="com.projectx.rest.services.CustomerQuickRegisterServiceTest" time="1.307"/>
-  <testcase name="populateStatusMobileCustomer" classname="com.projectx.rest.services.CustomerQuickRegisterServiceTest" time="0.087"/>
-  <testcase name="checkIfEmailCustomerExist" classname="com.projectx.rest.services.CustomerQuickRegisterServiceTest" time="0.225"/>
-  <testcase name="handleNewCustomerQuickRegistrationWithEmailCustomer" classname="com.projectx.rest.services.CustomerQuickRegisterServiceTest" time="0.044"/>
-  <testcase name="verifyMobileWithMobileCustomer" classname="com.projectx.rest.services.CustomerQuickRegisterServiceTest" time="0.365"/>
-  <testcase name="getCustomerByCustomerIdWithEmailMobileCustomer" classname="com.projectx.rest.services.CustomerQuickRegisterServiceTest" time="0.156"/>
-  <testcase name="verifyEmailAndMobileFailedCase" classname="com.projectx.rest.services.CustomerQuickRegisterServiceTest" time="0.067"/>
-  <testcase name="checkIfMobileCustomerExist" classname="com.projectx.rest.services.CustomerQuickRegisterServiceTest" time="0.609"/>
-  <testcase name="handleNewCustomerQuickRegistrationWithMobileCustomer" classname="com.projectx.rest.services.CustomerQuickRegisterServiceTest" time="0.066"/>
-  <testcase name="verifyMobileEmailWithEmailMobileCustomer" classname="com.projectx.rest.services.CustomerQuickRegisterServiceTest" time="0.232"/>
-  <testcase name="populateStatusEmailMobileCustomer" classname="com.projectx.rest.services.CustomerQuickRegisterServiceTest" time="0.057"/>
-  <testcase name="handleNewCustomerQuickRegistrationWithEmailMobileCustomer" classname="com.projectx.rest.services.CustomerQuickRegisterServiceTest" time="0.111"/>
-  <testcase name="verifyEmailWithEmailCustomer" classname="com.projectx.rest.services.CustomerQuickRegisterServiceTest" time="0.479"/>
-  <testcase name="populateStatusEmailCustomer" classname="com.projectx.rest.services.CustomerQuickRegisterServiceTest" time="0.043"/>
-  <testcase name="verifyEmailHashMobilePinWithEmailMobileCustomer" classname="com.projectx.rest.services.CustomerQuickRegisterServiceTest" time="0.323"/>
-  <system-out><![CDATA[2014-09-27 00:37:16.080  INFO 15389 --- [    Test worker] o.s.test.context.TestContextManager      : Could not instantiate TestExecutionListener [org.springframework.test.context.transaction.TransactionalTestExecutionListener]. Specify custom listener classes or make the default listener classes (and their required dependencies) available. Offending class: [org/springframework/transaction/interceptor/TransactionAttribute]
+  <testcase name="checkIfEmailMobileCustomerExist" classname="com.projectx.rest.services.CustomerQuickRegisterServiceTest" time="3.109"/>
+  <testcase name="populateStatusMobileCustomer" classname="com.projectx.rest.services.CustomerQuickRegisterServiceTest" time="0.163"/>
+  <testcase name="checkIfEmailCustomerExist" classname="com.projectx.rest.services.CustomerQuickRegisterServiceTest" time="0.419"/>
+  <testcase name="handleNewCustomerQuickRegistrationWithEmailCustomer" classname="com.projectx.rest.services.CustomerQuickRegisterServiceTest" time="0.136"/>
+  <testcase name="verifyMobileWithMobileCustomer" classname="com.projectx.rest.services.CustomerQuickRegisterServiceTest" time="4.341"/>
+  <testcase name="getCustomerByCustomerIdWithEmailMobileCustomer" classname="com.projectx.rest.services.CustomerQuickRegisterServiceTest" time="0.171"/>
+  <testcase name="verifyEmailAndMobileFailedCase" classname="com.projectx.rest.services.CustomerQuickRegisterServiceTest" time="0.09"/>
+  <testcase name="checkIfMobileCustomerExist" classname="com.projectx.rest.services.CustomerQuickRegisterServiceTest" time="0.398"/>
+  <testcase name="handleNewCustomerQuickRegistrationWithMobileCustomer" classname="com.projectx.rest.services.CustomerQuickRegisterServiceTest" time="0.079"/>
+  <testcase name="verifyMobileEmailWithEmailMobileCustomer" classname="com.projectx.rest.services.CustomerQuickRegisterServiceTest" time="0.525"/>
+  <testcase name="populateStatusEmailMobileCustomer" classname="com.projectx.rest.services.CustomerQuickRegisterServiceTest" time="0.063"/>
+  <testcase name="handleNewCustomerQuickRegistrationWithEmailMobileCustomer" classname="com.projectx.rest.services.CustomerQuickRegisterServiceTest" time="0.058"/>
+  <testcase name="verifyEmailWithEmailCustomer" classname="com.projectx.rest.services.CustomerQuickRegisterServiceTest" time="0.366"/>
+  <testcase name="populateStatusEmailCustomer" classname="com.projectx.rest.services.CustomerQuickRegisterServiceTest" time="0.123"/>
+  <testcase name="verifyEmailHashMobilePinWithEmailMobileCustomer" classname="com.projectx.rest.services.CustomerQuickRegisterServiceTest" time="0.333"/>
+  <system-out><![CDATA[2014-09-27 16:05:24.180  INFO 5897 --- [    Test worker] o.s.test.context.TestContextManager      : Could not instantiate TestExecutionListener [org.springframework.test.context.transaction.TransactionalTestExecutionListener]. Specify custom listener classes or make the default listener classes (and their required dependencies) available. Offending class: [org/springframework/transaction/interceptor/TransactionAttribute]
 
   .   ____          _            __ _ _
  /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
@@ -26,9 +26,9 @@
  =========|_|==============|___/=/_/_/_/
  :: Spring Boot ::        (v1.1.5.RELEASE)
 
-2014-09-27 00:37:16.256  INFO 15389 --- [    Test worker] o.s.boot.SpringApplication               : Starting application on dinesh with PID 15389 (/home/dinesh/.m2/repository/org/springframework/boot/spring-boot/1.1.5.RELEASE/spring-boot-1.1.5.RELEASE.jar started by dinesh in /home/dinesh/NewWorkspace/RestEvent)
-2014-09-27 00:37:16.259  INFO 15389 --- [    Test worker] s.c.a.AnnotationConfigApplicationContext : Refreshing org.springframework.context.annotation.AnnotationConfigApplicationContext@ba5422: startup date [Sat Sep 27 00:37:16 IST 2014]; root of context hierarchy
-2014-09-27 00:37:16.829  INFO 15389 --- [    Test worker] o.s.boot.SpringApplication               : Started application in 0.723 seconds (JVM running for 8.443)
+2014-09-27 16:05:24.431  INFO 5897 --- [    Test worker] o.s.boot.SpringApplication               : Starting application on dinesh with PID 5897 (/home/dinesh/.m2/repository/org/springframework/boot/spring-boot/1.1.5.RELEASE/spring-boot-1.1.5.RELEASE.jar started by dinesh in /home/dinesh/NewWorkspace/RestEvent)
+2014-09-27 16:05:24.447  INFO 5897 --- [    Test worker] s.c.a.AnnotationConfigApplicationContext : Refreshing org.springframework.context.annotation.AnnotationConfigApplicationContext@d6c355: startup date [Sat Sep 27 16:05:24 IST 2014]; root of context hierarchy
+2014-09-27 16:05:24.838  INFO 5897 --- [    Test worker] o.s.boot.SpringApplication               : Started application in 0.643 seconds (JVM running for 14.533)
 ]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

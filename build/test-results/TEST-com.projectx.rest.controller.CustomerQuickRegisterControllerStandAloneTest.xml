@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.projectx.rest.controller.CustomerQuickRegisterControllerStandAloneTest" tests="5" failures="0" errors="0" timestamp="2014-09-27T10:35:40" hostname="dinesh" time="0.344">
+  <properties/>
+  <testcase name="verifyEmailHashForEmailCustomer" classname="com.projectx.rest.controller.CustomerQuickRegisterControllerStandAloneTest" time="0.229"/>
+  <testcase name="updateEmailHash" classname="com.projectx.rest.controller.CustomerQuickRegisterControllerStandAloneTest" time="0.03"/>
+  <testcase name="verifyMobilePinForMobileCustomer" classname="com.projectx.rest.controller.CustomerQuickRegisterControllerStandAloneTest" time="0.027"/>
+  <testcase name="getByCustomerIdWithEmailMobileCustomer" classname="com.projectx.rest.controller.CustomerQuickRegisterControllerStandAloneTest" time="0.03"/>
+  <testcase name="updateMobilePin" classname="com.projectx.rest.controller.CustomerQuickRegisterControllerStandAloneTest" time="0.027"/>
+  <system-out><![CDATA[2014-09-27 16:05:40.193  INFO 5897 --- [    Test worker] ilder$StaticRequestMappingHandlerMapping : Mapped "{[/customer/quickregister/updateEmailHash],methods=[POST],params=[],headers=[],consumes=[],produces=[],custom=[]}" onto public java.lang.Integer com.projectx.rest.controller.CustomerQuickRegisterController.updateEmailHash(com.projectx.data.domain.UpdateEmailHashDTO)
+2014-09-27 16:05:40.193  INFO 5897 --- [    Test worker] ilder$StaticRequestMappingHandlerMapping : Mapped "{[/customer/quickregister/updateMobilePin],methods=[POST],params=[],headers=[],consumes=[],produces=[],custom=[]}" onto public java.lang.Integer com.projectx.rest.controller.CustomerQuickRegisterController.updateMobilePin(com.projectx.data.domain.UpdateMobilePinDTO)
+2014-09-27 16:05:40.194  INFO 5897 --- [    Test worker] ilder$StaticRequestMappingHandlerMapping : Mapped "{[/customer/quickregister/verifyEmailHash],methods=[POST],params=[],headers=[],consumes=[],produces=[],custom=[]}" onto public java.lang.Boolean com.projectx.rest.controller.CustomerQuickRegisterController.verifyEmailHash(com.projectx.data.domain.VerifyEmailHashDTO)
+2014-09-27 16:05:40.194  INFO 5897 --- [    Test worker] ilder$StaticRequestMappingHandlerMapping : Mapped "{[/customer/quickregister/verifyMobilePin],methods=[POST],params=[],headers=[],consumes=[],produces=[],custom=[]}" onto public java.lang.Boolean com.projectx.rest.controller.CustomerQuickRegisterController.verifyMobilePin(com.projectx.data.domain.VerifyMobilePinDTO)
+2014-09-27 16:05:40.194  INFO 5897 --- [    Test worker] ilder$StaticRequestMappingHandlerMapping : Mapped "{[/customer/quickregister/getByCustomerId],methods=[POST],params=[],headers=[],consumes=[],produces=[],custom=[]}" onto public com.projectx.rest.domain.CustomerQuickRegisterEntity com.projectx.rest.controller.CustomerQuickRegisterController.getCustomerByCustomerId(com.projectx.web.domain.GetByCustomerIdDTO)
+2014-09-27 16:05:40.194  INFO 5897 --- [    Test worker] ilder$StaticRequestMappingHandlerMapping : Mapped "{[/customer/quickregister/cleartestdata],methods=[],params=[],headers=[],consumes=[],produces=[],custom=[]}" onto public void com.projectx.rest.controller.CustomerQuickRegisterController.clearTestData()
+2014-09-27 16:05:40.195  INFO 5897 --- [    Test worker] ilder$StaticRequestMappingHandlerMapping : Mapped "{[/customer/quickregister],methods=[POST],params=[],headers=[],consumes=[],produces=[],custom=[]}" onto public com.projectx.rest.domain.CustomerQuickRegisterEntity com.projectx.rest.controller.CustomerQuickRegisterController.addNewCustomerQuickRegister(com.projectx.web.domain.CustomerQuickRegisterEntityDTO) throws java.lang.Exception
+2014-09-27 16:05:40.195  INFO 5897 --- [    Test worker] ilder$StaticRequestMappingHandlerMapping : Mapped "{[/customer/quickregister/checkifexist],methods=[POST],params=[],headers=[],consumes=[],produces=[],custom=[]}" onto public java.lang.String com.projectx.rest.controller.CustomerQuickRegisterController.checkIfCustomerAlreadyExist(com.projectx.web.domain.CustomerQuickRegisterEntityDTO) throws java.lang.Exception
+2014-09-27 16:05:40.209  INFO 5897 --- [    Test worker] o.s.mock.web.MockServletContext          : Initializing Spring FrameworkServlet ''
+2014-09-27 16:05:40.210  INFO 5897 --- [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : FrameworkServlet '': initialization started
+2014-09-27 16:05:40.210  INFO 5897 --- [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : FrameworkServlet '': initialization completed in 0 ms
+
+MockHttpServletRequest:
+         HTTP Method = POST
+         Request URI = /customer/quickregister/verifyEmailHash
+          Parameters = {}
+             Headers = {Content-Type=[application/json], Accept=[application/json]}
+
+             Handler:
+                Type = com.projectx.rest.controller.CustomerQuickRegisterController
+              Method = public java.lang.Boolean com.projectx.rest.controller.CustomerQuickRegisterController.verifyEmailHash(com.projectx.data.domain.VerifyEmailHashDTO)
+
+               Async:
+   Was async started = false
+        Async result = null
+
+  Resolved Exception:
+                Type = null
+
+        ModelAndView:
+           View name = null
+                View = null
+               Model = null
+
+            FlashMap:
+
+MockHttpServletResponse:
+              Status = 200
+       Error message = null
+             Headers = {Content-Type=[application/json;charset=UTF-8]}
+        Content type = application/json;charset=UTF-8
+                Body = true
+       Forwarded URL = null
+      Redirected URL = null
+             Cookies = []
+2014-09-27 16:05:40.243  INFO 5897 --- [    Test worker] ilder$StaticRequestMappingHandlerMapping : Mapped "{[/customer/quickregister/updateEmailHash],methods=[POST],params=[],headers=[],consumes=[],produces=[],custom=[]}" onto public java.lang.Integer com.projectx.rest.controller.CustomerQuickRegisterController.updateEmailHash(com.projectx.data.domain.UpdateEmailHashDTO)
+2014-09-27 16:05:40.243  INFO 5897 --- [    Test worker] ilder$StaticRequestMappingHandlerMapping : Mapped "{[/customer/quickregister/updateMobilePin],methods=[POST],params=[],headers=[],consumes=[],produces=[],custom=[]}" onto public java.lang.Integer com.projectx.rest.controller.CustomerQuickRegisterController.updateMobilePin(com.projectx.data.domain.UpdateMobilePinDTO)
+2014-09-27 16:05:40.245  INFO 5897 --- [    Test worker] ilder$StaticRequestMappingHandlerMapping : Mapped "{[/customer/quickregister/verifyEmailHash],methods=[POST],params=[],headers=[],consumes=[],produces=[],custom=[]}" onto public java.lang.Boolean com.projectx.rest.controller.CustomerQuickRegisterController.verifyEmailHash(com.projectx.data.domain.VerifyEmailHashDTO)
+2014-09-27 16:05:40.246  INFO 5897 --- [    Test worker] ilder$StaticRequestMappingHandlerMapping : Mapped "{[/customer/quickregister/verifyMobilePin],methods=[POST],params=[],headers=[],consumes=[],produces=[],custom=[]}" onto public java.lang.Boolean com.projectx.rest.controller.CustomerQuickRegisterController.verifyMobilePin(com.projectx.data.domain.VerifyMobilePinDTO)
+2014-09-27 16:05:40.246  INFO 5897 --- [    Test worker] ilder$StaticRequestMappingHandlerMapping : Mapped "{[/customer/quickregister/getByCustomerId],methods=[POST],params=[],headers=[],consumes=[],produces=[],custom=[]}" onto public com.projectx.rest.domain.CustomerQuickRegisterEntity com.projectx.rest.controller.CustomerQuickRegisterController.getCustomerByCustomerId(com.projectx.web.domain.GetByCustomerIdDTO)
+2014-09-27 16:05:40.246  INFO 5897 --- [    Test worker] ilder$StaticRequestMappingHandlerMapping : Mapped "{[/customer/quickregister/cleartestdata],methods=[],params=[],headers=[],consumes=[],produces=[],custom=[]}" onto public void com.projectx.rest.controller.CustomerQuickRegisterController.clearTestData()
+2014-09-27 16:05:40.247  INFO 5897 --- [    Test worker] ilder$StaticRequestMappingHandlerMapping : Mapped "{[/customer/quickregister],methods=[POST],params=[],headers=[],consumes=[],produces=[],custom=[]}" onto public com.projectx.rest.domain.CustomerQuickRegisterEntity com.projectx.rest.controller.CustomerQuickRegisterController.addNewCustomerQuickRegister(com.projectx.web.domain.CustomerQuickRegisterEntityDTO) throws java.lang.Exception
+2014-09-27 16:05:40.247  INFO 5897 --- [    Test worker] ilder$StaticRequestMappingHandlerMapping : Mapped "{[/customer/quickregister/checkifexist],methods=[POST],params=[],headers=[],consumes=[],produces=[],custom=[]}" onto public java.lang.String com.projectx.rest.controller.CustomerQuickRegisterController.checkIfCustomerAlreadyExist(com.projectx.web.domain.CustomerQuickRegisterEntityDTO) throws java.lang.Exception
+2014-09-27 16:05:40.262  INFO 5897 --- [    Test worker] o.s.mock.web.MockServletContext          : Initializing Spring FrameworkServlet ''
+2014-09-27 16:05:40.263  INFO 5897 --- [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : FrameworkServlet '': initialization started
+2014-09-27 16:05:40.263  INFO 5897 --- [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : FrameworkServlet '': initialization completed in 0 ms
+
+MockHttpServletRequest:
+         HTTP Method = POST
+         Request URI = /customer/quickregister/updateEmailHash
+          Parameters = {}
+             Headers = {Content-Type=[application/json], Accept=[application/json]}
+
+             Handler:
+                Type = com.projectx.rest.controller.CustomerQuickRegisterController
+              Method = public java.lang.Integer com.projectx.rest.controller.CustomerQuickRegisterController.updateEmailHash(com.projectx.data.domain.UpdateEmailHashDTO)
+
+               Async:
+   Was async started = false
+        Async result = null
+
+  Resolved Exception:
+                Type = null
+
+        ModelAndView:
+           View name = null
+                View = null
+               Model = null
+
+            FlashMap:
+
+MockHttpServletResponse:
+              Status = 200
+       Error message = null
+             Headers = {Content-Type=[application/json;charset=UTF-8]}
+        Content type = application/json;charset=UTF-8
+                Body = 1
+       Forwarded URL = null
+      Redirected URL = null
+             Cookies = []
+2014-09-27 16:05:40.272  INFO 5897 --- [    Test worker] ilder$StaticRequestMappingHandlerMapping : Mapped "{[/customer/quickregister/updateEmailHash],methods=[POST],params=[],headers=[],consumes=[],produces=[],custom=[]}" onto public java.lang.Integer com.projectx.rest.controller.CustomerQuickRegisterController.updateEmailHash(com.projectx.data.domain.UpdateEmailHashDTO)
+2014-09-27 16:05:40.272  INFO 5897 --- [    Test worker] ilder$StaticRequestMappingHandlerMapping : Mapped "{[/customer/quickregister/updateMobilePin],methods=[POST],params=[],headers=[],consumes=[],produces=[],custom=[]}" onto public java.lang.Integer com.projectx.rest.controller.CustomerQuickRegisterController.updateMobilePin(com.projectx.data.domain.UpdateMobilePinDTO)
+2014-09-27 16:05:40.272  INFO 5897 --- [    Test worker] ilder$StaticRequestMappingHandlerMapping : Mapped "{[/customer/quickregister/verifyEmailHash],methods=[POST],params=[],headers=[],consumes=[],produces=[],custom=[]}" onto public java.lang.Boolean com.projectx.rest.controller.CustomerQuickRegisterController.verifyEmailHash(com.projectx.data.domain.VerifyEmailHashDTO)
+2014-09-27 16:05:40.273  INFO 5897 --- [    Test worker] ilder$StaticRequestMappingHandlerMapping : Mapped "{[/customer/quickregister/verifyMobilePin],methods=[POST],params=[],headers=[],consumes=[],produces=[],custom=[]}" onto public java.lang.Boolean com.projectx.rest.controller.CustomerQuickRegisterController.verifyMobilePin(com.projectx.data.domain.VerifyMobilePinDTO)
+2014-09-27 16:05:40.273  INFO 5897 --- [    Test worker] ilder$StaticRequestMappingHandlerMapping : Mapped "{[/customer/quickregister/getByCustomerId],methods=[POST],params=[],headers=[],consumes=[],produces=[],custom=[]}" onto public com.projectx.rest.domain.CustomerQuickRegisterEntity com.projectx.rest.controller.CustomerQuickRegisterController.getCustomerByCustomerId(com.projectx.web.domain.GetByCustomerIdDTO)
+2014-09-27 16:05:40.273  INFO 5897 --- [    Test worker] ilder$StaticRequestMappingHandlerMapping : Mapped "{[/customer/quickregister/cleartestdata],methods=[],params=[],headers=[],consumes=[],produces=[],custom=[]}" onto public void com.projectx.rest.controller.CustomerQuickRegisterController.clearTestData()
+2014-09-27 16:05:40.273  INFO 5897 --- [    Test worker] ilder$StaticRequestMappingHandlerMapping : Mapped "{[/customer/quickregister],methods=[POST],params=[],headers=[],consumes=[],produces=[],custom=[]}" onto public com.projectx.rest.domain.CustomerQuickRegisterEntity com.projectx.rest.controller.CustomerQuickRegisterController.addNewCustomerQuickRegister(com.projectx.web.domain.CustomerQuickRegisterEntityDTO) throws java.lang.Exception
+2014-09-27 16:05:40.273  INFO 5897 --- [    Test worker] ilder$StaticRequestMappingHandlerMapping : Mapped "{[/customer/quickregister/checkifexist],methods=[POST],params=[],headers=[],consumes=[],produces=[],custom=[]}" onto public java.lang.String com.projectx.rest.controller.CustomerQuickRegisterController.checkIfCustomerAlreadyExist(com.projectx.web.domain.CustomerQuickRegisterEntityDTO) throws java.lang.Exception
+2014-09-27 16:05:40.289  INFO 5897 --- [    Test worker] o.s.mock.web.MockServletContext          : Initializing Spring FrameworkServlet ''
+2014-09-27 16:05:40.289  INFO 5897 --- [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : FrameworkServlet '': initialization started
+2014-09-27 16:05:40.290  INFO 5897 --- [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : FrameworkServlet '': initialization completed in 0 ms
+
+MockHttpServletRequest:
+         HTTP Method = POST
+         Request URI = /customer/quickregister/verifyMobilePin
+          Parameters = {}
+             Headers = {Content-Type=[application/json], Accept=[application/json]}
+
+             Handler:
+                Type = com.projectx.rest.controller.CustomerQuickRegisterController
+              Method = public java.lang.Boolean com.projectx.rest.controller.CustomerQuickRegisterController.verifyMobilePin(com.projectx.data.domain.VerifyMobilePinDTO)
+
+               Async:
+   Was async started = false
+        Async result = null
+
+  Resolved Exception:
+                Type = null
+
+        ModelAndView:
+           View name = null
+                View = null
+               Model = null
+
+            FlashMap:
+
+MockHttpServletResponse:
+              Status = 200
+       Error message = null
+             Headers = {Content-Type=[application/json;charset=UTF-8]}
+        Content type = application/json;charset=UTF-8
+                Body = true
+       Forwarded URL = null
+      Redirected URL = null
+             Cookies = []
+2014-09-27 16:05:40.299  INFO 5897 --- [    Test worker] ilder$StaticRequestMappingHandlerMapping : Mapped "{[/customer/quickregister/updateEmailHash],methods=[POST],params=[],headers=[],consumes=[],produces=[],custom=[]}" onto public java.lang.Integer com.projectx.rest.controller.CustomerQuickRegisterController.updateEmailHash(com.projectx.data.domain.UpdateEmailHashDTO)
+2014-09-27 16:05:40.300  INFO 5897 --- [    Test worker] ilder$StaticRequestMappingHandlerMapping : Mapped "{[/customer/quickregister/updateMobilePin],methods=[POST],params=[],headers=[],consumes=[],produces=[],custom=[]}" onto public java.lang.Integer com.projectx.rest.controller.CustomerQuickRegisterController.updateMobilePin(com.projectx.data.domain.UpdateMobilePinDTO)
+2014-09-27 16:05:40.300  INFO 5897 --- [    Test worker] ilder$StaticRequestMappingHandlerMapping : Mapped "{[/customer/quickregister/verifyEmailHash],methods=[POST],params=[],headers=[],consumes=[],produces=[],custom=[]}" onto public java.lang.Boolean com.projectx.rest.controller.CustomerQuickRegisterController.verifyEmailHash(com.projectx.data.domain.VerifyEmailHashDTO)
+2014-09-27 16:05:40.300  INFO 5897 --- [    Test worker] ilder$StaticRequestMappingHandlerMapping : Mapped "{[/customer/quickregister/verifyMobilePin],methods=[POST],params=[],headers=[],consumes=[],produces=[],custom=[]}" onto public java.lang.Boolean com.projectx.rest.controller.CustomerQuickRegisterController.verifyMobilePin(com.projectx.data.domain.VerifyMobilePinDTO)
+2014-09-27 16:05:40.300  INFO 5897 --- [    Test worker] ilder$StaticRequestMappingHandlerMapping : Mapped "{[/customer/quickregister/getByCustomerId],methods=[POST],params=[],headers=[],consumes=[],produces=[],custom=[]}" onto public com.projectx.rest.domain.CustomerQuickRegisterEntity com.projectx.rest.controller.CustomerQuickRegisterController.getCustomerByCustomerId(com.projectx.web.domain.GetByCustomerIdDTO)
+2014-09-27 16:05:40.300  INFO 5897 --- [    Test worker] ilder$StaticRequestMappingHandlerMapping : Mapped "{[/customer/quickregister/cleartestdata],methods=[],params=[],headers=[],consumes=[],produces=[],custom=[]}" onto public void com.projectx.rest.controller.CustomerQuickRegisterController.clearTestData()
+2014-09-27 16:05:40.300  INFO 5897 --- [    Test worker] ilder$StaticRequestMappingHandlerMapping : Mapped "{[/customer/quickregister],methods=[POST],params=[],headers=[],consumes=[],produces=[],custom=[]}" onto public com.projectx.rest.domain.CustomerQuickRegisterEntity com.projectx.rest.controller.CustomerQuickRegisterController.addNewCustomerQuickRegister(com.projectx.web.domain.CustomerQuickRegisterEntityDTO) throws java.lang.Exception
+2014-09-27 16:05:40.301  INFO 5897 --- [    Test worker] ilder$StaticRequestMappingHandlerMapping : Mapped "{[/customer/quickregister/checkifexist],methods=[POST],params=[],headers=[],consumes=[],produces=[],custom=[]}" onto public java.lang.String com.projectx.rest.controller.CustomerQuickRegisterController.checkIfCustomerAlreadyExist(com.projectx.web.domain.CustomerQuickRegisterEntityDTO) throws java.lang.Exception
+2014-09-27 16:05:40.313  INFO 5897 --- [    Test worker] o.s.mock.web.MockServletContext          : Initializing Spring FrameworkServlet ''
+2014-09-27 16:05:40.314  INFO 5897 --- [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : FrameworkServlet '': initialization started
+2014-09-27 16:05:40.314  INFO 5897 --- [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : FrameworkServlet '': initialization completed in 0 ms
+
+MockHttpServletRequest:
+         HTTP Method = POST
+         Request URI = /customer/quickregister/getByCustomerId
+          Parameters = {}
+             Headers = {Content-Type=[application/json], Accept=[application/json]}
+
+             Handler:
+                Type = com.projectx.rest.controller.CustomerQuickRegisterController
+              Method = public com.projectx.rest.domain.CustomerQuickRegisterEntity com.projectx.rest.controller.CustomerQuickRegisterController.getCustomerByCustomerId(com.projectx.web.domain.GetByCustomerIdDTO)
+
+               Async:
+   Was async started = false
+        Async result = null
+
+  Resolved Exception:
+                Type = null
+
+        ModelAndView:
+           View name = null
+                View = null
+               Model = null
+
+            FlashMap:
+
+MockHttpServletResponse:
+              Status = 200
+       Error message = null
+             Headers = {Content-Type=[application/json;charset=UTF-8]}
+        Content type = application/json;charset=UTF-8
+                Body = {"customerId":212,"firstName":"dinesh","lastName":"shende","email":"dineshshe@gmail.com","mobile":9960821869,"pin":413133,"status":"EmailMobileVerificationPending","mobilePin":101010,"emailHash":1010101010,"mobileVerified":false,"emailMobileVerified":false,"emailVerified":false,"mobileVerifiedEmailVerficationPending":false,"emailMobileVerificationPending":true,"emailVerificationPending":false,"emailVerifiedMobileVerficationPending":false,"mobileVerificationPending":false}
+       Forwarded URL = null
+      Redirected URL = null
+             Cookies = []
+2014-09-27 16:05:40.329  INFO 5897 --- [    Test worker] ilder$StaticRequestMappingHandlerMapping : Mapped "{[/customer/quickregister/updateEmailHash],methods=[POST],params=[],headers=[],consumes=[],produces=[],custom=[]}" onto public java.lang.Integer com.projectx.rest.controller.CustomerQuickRegisterController.updateEmailHash(com.projectx.data.domain.UpdateEmailHashDTO)
+2014-09-27 16:05:40.330  INFO 5897 --- [    Test worker] ilder$StaticRequestMappingHandlerMapping : Mapped "{[/customer/quickregister/updateMobilePin],methods=[POST],params=[],headers=[],consumes=[],produces=[],custom=[]}" onto public java.lang.Integer com.projectx.rest.controller.CustomerQuickRegisterController.updateMobilePin(com.projectx.data.domain.UpdateMobilePinDTO)
+2014-09-27 16:05:40.330  INFO 5897 --- [    Test worker] ilder$StaticRequestMappingHandlerMapping : Mapped "{[/customer/quickregister/verifyEmailHash],methods=[POST],params=[],headers=[],consumes=[],produces=[],custom=[]}" onto public java.lang.Boolean com.projectx.rest.controller.CustomerQuickRegisterController.verifyEmailHash(com.projectx.data.domain.VerifyEmailHashDTO)
+2014-09-27 16:05:40.330  INFO 5897 --- [    Test worker] ilder$StaticRequestMappingHandlerMapping : Mapped "{[/customer/quickregister/verifyMobilePin],methods=[POST],params=[],headers=[],consumes=[],produces=[],custom=[]}" onto public java.lang.Boolean com.projectx.rest.controller.CustomerQuickRegisterController.verifyMobilePin(com.projectx.data.domain.VerifyMobilePinDTO)
+2014-09-27 16:05:40.330  INFO 5897 --- [    Test worker] ilder$StaticRequestMappingHandlerMapping : Mapped "{[/customer/quickregister/getByCustomerId],methods=[POST],params=[],headers=[],consumes=[],produces=[],custom=[]}" onto public com.projectx.rest.domain.CustomerQuickRegisterEntity com.projectx.rest.controller.CustomerQuickRegisterController.getCustomerByCustomerId(com.projectx.web.domain.GetByCustomerIdDTO)
+2014-09-27 16:05:40.331  INFO 5897 --- [    Test worker] ilder$StaticRequestMappingHandlerMapping : Mapped "{[/customer/quickregister/cleartestdata],methods=[],params=[],headers=[],consumes=[],produces=[],custom=[]}" onto public void com.projectx.rest.controller.CustomerQuickRegisterController.clearTestData()
+2014-09-27 16:05:40.331  INFO 5897 --- [    Test worker] ilder$StaticRequestMappingHandlerMapping : Mapped "{[/customer/quickregister],methods=[POST],params=[],headers=[],consumes=[],produces=[],custom=[]}" onto public com.projectx.rest.domain.CustomerQuickRegisterEntity com.projectx.rest.controller.CustomerQuickRegisterController.addNewCustomerQuickRegister(com.projectx.web.domain.CustomerQuickRegisterEntityDTO) throws java.lang.Exception
+2014-09-27 16:05:40.331  INFO 5897 --- [    Test worker] ilder$StaticRequestMappingHandlerMapping : Mapped "{[/customer/quickregister/checkifexist],methods=[POST],params=[],headers=[],consumes=[],produces=[],custom=[]}" onto public java.lang.String com.projectx.rest.controller.CustomerQuickRegisterController.checkIfCustomerAlreadyExist(com.projectx.web.domain.CustomerQuickRegisterEntityDTO) throws java.lang.Exception
+2014-09-27 16:05:40.345  INFO 5897 --- [    Test worker] o.s.mock.web.MockServletContext          : Initializing Spring FrameworkServlet ''
+2014-09-27 16:05:40.345  INFO 5897 --- [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : FrameworkServlet '': initialization started
+2014-09-27 16:05:40.346  INFO 5897 --- [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : FrameworkServlet '': initialization completed in 1 ms
+
+MockHttpServletRequest:
+         HTTP Method = POST
+         Request URI = /customer/quickregister/updateMobilePin
+          Parameters = {}
+             Headers = {Content-Type=[application/json], Accept=[application/json]}
+
+             Handler:
+                Type = com.projectx.rest.controller.CustomerQuickRegisterController
+              Method = public java.lang.Integer com.projectx.rest.controller.CustomerQuickRegisterController.updateMobilePin(com.projectx.data.domain.UpdateMobilePinDTO)
+
+               Async:
+   Was async started = false
+        Async result = null
+
+  Resolved Exception:
+                Type = null
+
+        ModelAndView:
+           View name = null
+                View = null
+               Model = null
+
+            FlashMap:
+
+MockHttpServletResponse:
+              Status = 200
+       Error message = null
+             Headers = {Content-Type=[application/json;charset=UTF-8]}
+        Content type = application/json;charset=UTF-8
+                Body = 1
+       Forwarded URL = null
+      Redirected URL = null
+             Cookies = []
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

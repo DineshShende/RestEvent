@@ -35,7 +35,7 @@ public class CustomerQuickRegisterServiceTest {
 		customerQuickRegisterRepository.clearCustomerQuickRegister();
 	}
 
-	
+/*	
 	@Test
 	public void checkIfEmailCustomerExist() throws Exception {
 
@@ -289,5 +289,19 @@ public class CustomerQuickRegisterServiceTest {
 	//public void UpdateEmailHash()
 	
 	//public void UpdateMobilePin()
+	
+	
+	@Test
+	public void generateMobilePin()
+	{
+		customerQuickRegisterHandler.genarateMobilePin(standardEmailCustomerDTO());
+	}
+	*/
+
+	@Test
+	public void generateEmailHash()
+	{
+		customerQuickRegisterHandler.generateEmailHash(standardEmailCustomerDTO());
+	}
 	
 }

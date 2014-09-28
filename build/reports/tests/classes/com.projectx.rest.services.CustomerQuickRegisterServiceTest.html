@@ -40,7 +40,7 @@
 </td>
 <td>
 <div class="infoBox" id="duration">
-<div class="counter">4.171s</div>
+<div class="counter">10.374s</div>
 <p>duration</p>
 </div>
 </td>
@@ -78,77 +78,77 @@
 </thead>
 <tr>
 <td class="success">checkIfEmailCustomerExist</td>
-<td>0.225s</td>
+<td>0.419s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">checkIfEmailMobileCustomerExist</td>
-<td>1.307s</td>
+<td>3.109s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">checkIfMobileCustomerExist</td>
-<td>0.609s</td>
+<td>0.398s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">getCustomerByCustomerIdWithEmailMobileCustomer</td>
-<td>0.156s</td>
+<td>0.171s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">handleNewCustomerQuickRegistrationWithEmailCustomer</td>
-<td>0.044s</td>
+<td>0.136s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">handleNewCustomerQuickRegistrationWithEmailMobileCustomer</td>
-<td>0.111s</td>
+<td>0.058s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">handleNewCustomerQuickRegistrationWithMobileCustomer</td>
-<td>0.066s</td>
+<td>0.079s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">populateStatusEmailCustomer</td>
-<td>0.043s</td>
+<td>0.123s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">populateStatusEmailMobileCustomer</td>
-<td>0.057s</td>
+<td>0.063s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">populateStatusMobileCustomer</td>
-<td>0.087s</td>
+<td>0.163s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">verifyEmailAndMobileFailedCase</td>
-<td>0.067s</td>
+<td>0.090s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">verifyEmailHashMobilePinWithEmailMobileCustomer</td>
-<td>0.323s</td>
+<td>0.333s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">verifyEmailWithEmailCustomer</td>
-<td>0.479s</td>
+<td>0.366s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">verifyMobileEmailWithEmailMobileCustomer</td>
-<td>0.232s</td>
+<td>0.525s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">verifyMobileWithMobileCustomer</td>
-<td>0.365s</td>
+<td>4.341s</td>
 <td class="success">passed</td>
 </tr>
 </table>
@@ -156,7 +156,7 @@
 <div id="tab1" class="tab">
 <h2>Standard output</h2>
 <span class="code">
-<pre>2014-09-27 00:37:16.080  INFO 15389 --- [    Test worker] o.s.test.context.TestContextManager      : Could not instantiate TestExecutionListener [org.springframework.test.context.transaction.TransactionalTestExecutionListener]. Specify custom listener classes or make the default listener classes (and their required dependencies) available. Offending class: [org/springframework/transaction/interceptor/TransactionAttribute]
+<pre>2014-09-27 16:05:24.180  INFO 5897 --- [    Test worker] o.s.test.context.TestContextManager      : Could not instantiate TestExecutionListener [org.springframework.test.context.transaction.TransactionalTestExecutionListener]. Specify custom listener classes or make the default listener classes (and their required dependencies) available. Offending class: [org/springframework/transaction/interceptor/TransactionAttribute]
 
   .   ____          _            __ _ _
  /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
@@ -166,16 +166,16 @@
  =========|_|==============|___/=/_/_/_/
  :: Spring Boot ::        (v1.1.5.RELEASE)
 
-2014-09-27 00:37:16.256  INFO 15389 --- [    Test worker] o.s.boot.SpringApplication               : Starting application on dinesh with PID 15389 (/home/dinesh/.m2/repository/org/springframework/boot/spring-boot/1.1.5.RELEASE/spring-boot-1.1.5.RELEASE.jar started by dinesh in /home/dinesh/NewWorkspace/RestEvent)
-2014-09-27 00:37:16.259  INFO 15389 --- [    Test worker] s.c.a.AnnotationConfigApplicationContext : Refreshing org.springframework.context.annotation.AnnotationConfigApplicationContext@ba5422: startup date [Sat Sep 27 00:37:16 IST 2014]; root of context hierarchy
-2014-09-27 00:37:16.829  INFO 15389 --- [    Test worker] o.s.boot.SpringApplication               : Started application in 0.723 seconds (JVM running for 8.443)
+2014-09-27 16:05:24.431  INFO 5897 --- [    Test worker] o.s.boot.SpringApplication               : Starting application on dinesh with PID 5897 (/home/dinesh/.m2/repository/org/springframework/boot/spring-boot/1.1.5.RELEASE/spring-boot-1.1.5.RELEASE.jar started by dinesh in /home/dinesh/NewWorkspace/RestEvent)
+2014-09-27 16:05:24.447  INFO 5897 --- [    Test worker] s.c.a.AnnotationConfigApplicationContext : Refreshing org.springframework.context.annotation.AnnotationConfigApplicationContext@d6c355: startup date [Sat Sep 27 16:05:24 IST 2014]; root of context hierarchy
+2014-09-27 16:05:24.838  INFO 5897 --- [    Test worker] o.s.boot.SpringApplication               : Started application in 0.643 seconds (JVM running for 14.533)
 </pre>
 </span>
 </div>
 </div>
 <div id="footer">
 <p>Generated by 
-<a href="http://www.gradle.org">Gradle 1.11</a> at 27 Sep, 2014 12:37:26 AM</p>
+<a href="http://www.gradle.org">Gradle 1.11</a> at 27 Sep, 2014 4:05:41 PM</p>
 </div>
 </div>
 </body>
