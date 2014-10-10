@@ -47,7 +47,7 @@ import com.projectx.rest.config.Application;
 @WebAppConfiguration
 
 
-@ActiveProfiles("Dev")
+@ActiveProfiles("Test")
 public class CustomerQuickRegisterControllerITest {
 	
 	@Autowired

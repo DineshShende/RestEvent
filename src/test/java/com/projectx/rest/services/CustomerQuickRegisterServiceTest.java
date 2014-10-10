@@ -20,7 +20,7 @@ import com.projectx.rest.repository.CustomerQuickRegisterRepository;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
-@ActiveProfiles(value="Dev")
+@ActiveProfiles(value="Test")
 public class CustomerQuickRegisterServiceTest {
 
 	@Autowired
