@@ -1,5 +1,6 @@
 package com.projectx.rest.repository;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.stereotype.Component;
@@ -19,17 +20,16 @@ public interface CustomerQuickRegisterRepository {
 	 
 	 Integer countByMobile(Long mobile);
 	 
-	 Integer verifyEmailHash(Long customerId,Long emailHash);
+	// Integer verifyEmailHash(Long customerId,Long emailHash);
 	 
-	 Integer verifyMobilePin(Long customerId,Integer mobilePin);
+	// Integer verifyMobilePin(Long customerId,Integer mobilePin);
 	 
-	 String getStatusByCustomerId(Long customerId);
+	 Integer updateStatusAndMobileVerificationAttemptsByCustomerId(Long customerId,String status,Date lastStatusChaneTime,
+			 										Integer mobileVerificationAttempts);
 	 
-	 Integer updateStatusByCustomerId(Long customerId,String status);
+	 Integer updateEmailHash(Long customerId,String emailHash,Date updateTime);
 	 
-	 Integer updateEmailHash(Long customerId,Long emailHash);
-	 
-	 Integer updateMobilePin(Long customerId,Integer mobilePin);
+	 Integer updateMobilePin(Long customerId,Integer mobilePin,Date updateTime);
 	 
 	 void clearCustomerQuickRegister();
 

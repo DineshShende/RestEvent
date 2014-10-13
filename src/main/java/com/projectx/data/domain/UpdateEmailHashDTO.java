@@ -3,13 +3,13 @@ package com.projectx.data.domain;
 public class UpdateEmailHashDTO {
 
 	private Long customerId;
-	private Long emailHash;
+	private String emailHash;
 	
 	public UpdateEmailHashDTO() {
 	
 	}
 	
-	public UpdateEmailHashDTO(Long customerId, Long emailHash) {
+	public UpdateEmailHashDTO(Long customerId, String emailHash) {
 		super();
 		this.customerId = customerId;
 		this.emailHash = emailHash;
@@ -23,11 +23,11 @@ public class UpdateEmailHashDTO {
 		this.customerId = customerId;
 	}
 
-	public Long getEmailHash() {
+	public String getEmailHash() {
 		return emailHash;
 	}
 
-	public void setEmailHash(Long emailHash) {
+	public void setEmailHash(String emailHash) {
 		this.emailHash = emailHash;
 	}
 	

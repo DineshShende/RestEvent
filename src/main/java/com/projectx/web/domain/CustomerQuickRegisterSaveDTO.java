@@ -18,7 +18,9 @@ public class CustomerQuickRegisterSaveDTO {
 
 	private Integer mobilePin;
 	
-	private Long emailHash;
+	private String emailHash;
+	
+	
 
 	
 	
@@ -30,7 +32,7 @@ public class CustomerQuickRegisterSaveDTO {
 
 	public CustomerQuickRegisterSaveDTO(Long customerId, String firstName,
 			String lastName, String email, Long mobile, Integer pin,
-			String status, Integer mobilePin, Long emailHash) {
+			String status, Integer mobilePin, String emailHash) {
 		super();
 		this.customerId = customerId;
 		this.firstName = firstName;
@@ -141,13 +143,13 @@ public class CustomerQuickRegisterSaveDTO {
 
 
 
-	public Long getEmailHash() {
+	public String getEmailHash() {
 		return emailHash;
 	}
 
 
 
-	public void setEmailHash(Long emailHash) {
+	public void setEmailHash(String emailHash) {
 		this.emailHash = emailHash;
 	}
 

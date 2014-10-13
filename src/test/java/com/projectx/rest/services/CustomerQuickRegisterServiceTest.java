@@ -296,12 +296,18 @@ public class CustomerQuickRegisterServiceTest {
 	{
 		customerQuickRegisterHandler.genarateMobilePin(standardEmailCustomerDTO());
 	}
-	*/
+	
 
 	@Test
 	public void generateEmailHash()
 	{
 		customerQuickRegisterHandler.generateEmailHash(standardEmailCustomerDTO());
+	}
+	*/
+	@Test
+	public void composeEmail()
+	{
+		customerQuickRegisterHandler.composeEmail(standardEmailCustomer());
 	}
 	
 }

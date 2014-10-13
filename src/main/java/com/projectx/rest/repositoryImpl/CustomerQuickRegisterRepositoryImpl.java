@@ -1,5 +1,6 @@
 package com.projectx.rest.repositoryImpl;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -86,7 +87,7 @@ public class CustomerQuickRegisterRepositoryImpl implements
 		return mobileCount;
 	}
 
-	@Override
+/*	@Override
 	public Integer verifyEmailHash(Long customerId, Long emailHash) {
 		VerifyEmailHashDTO verifyEmailHashDTO=new VerifyEmailHashDTO(customerId, emailHash);
 		
@@ -106,18 +107,7 @@ public class CustomerQuickRegisterRepositoryImpl implements
 				verifyMobilePinDTO, Integer.class);
 		
 		return mobileCount;
-	}
-
-	@Override
-	public String getStatusByCustomerId(Long customerId) {
-		
-		CustomerIdDTO customerIdDTO=new CustomerIdDTO(customerId);
-		
-		String status=restTemplate.postForObject(env.getProperty("data.url")+"/customer/quickregister/getStatusByCustomerId",
-																		customerIdDTO, String.class);
-		return status;
-		
-	}
+	}*/
 
 	@Override
 	public Integer updateStatusByCustomerId(Long customerId, String status) {
@@ -131,7 +121,7 @@ public class CustomerQuickRegisterRepositoryImpl implements
 	}
 
 	@Override
-	public Integer updateEmailHash(Long customerId, Long emailHash) {
+	public Integer updateEmailHash(Long customerId, String emailHash) {
 		
 		UpdateEmailHashDTO updateHashDTO=new UpdateEmailHashDTO(customerId, emailHash);
 		
@@ -161,6 +151,14 @@ public class CustomerQuickRegisterRepositoryImpl implements
 
 	@Override
 	public Long deleteByCustomerId(Long customerId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Integer updateStatusAndMobileVerificationAttemptsByCustomerId(
+			Long customerId, String status, Date lastStatusChaneTime,
+			Integer mobileVerificationAttempts) {
 		// TODO Auto-generated method stub
 		return null;
 	}

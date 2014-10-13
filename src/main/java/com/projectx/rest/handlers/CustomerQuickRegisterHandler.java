@@ -5,26 +5,39 @@ import static com.projectx.rest.fixtures.CustomerQuickRegisterDataFixture.REGIST
 import static com.projectx.rest.fixtures.CustomerQuickRegisterDataFixture.REGISTER_MOBILE_ALREADY_REGISTERED;
 import static com.projectx.rest.fixtures.CustomerQuickRegisterDataFixture.REGISTER_NOT_REGISTERED;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
+import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import com.projectx.rest.domain.CustomerQuickRegisterEntity;
 import com.projectx.rest.repository.CustomerQuickRegisterRepository;
 import com.projectx.rest.services.CustomerQuickRegisterService;
+import com.projectx.rest.utils.HandleCustomerVerification;
 import com.projectx.web.domain.CustomerQuickRegisterEntityDTO;
 
 @Component
 //@ActiveProfiles(value="Dev")
+@PropertySource(value="classpath:/application.properties")
 public class CustomerQuickRegisterHandler implements
 		CustomerQuickRegisterService {
 
 	@Autowired
 	CustomerQuickRegisterRepository customerQuickRegisterRepository;
+	
+	@Autowired 
+	HandleCustomerVerification handleCustomerVerification;
 
+	@Autowired
+	Environment env;
+	
+	private final int EMAIL_VALIDITY_TIME_IN_HRS=24;
+	private final int UPDATE_SUCESS=1;
+	private final int MAX_MOBILE_VERIFICATION_ATTEMPTS=3;
+	
+	
 	@Override
 	public String checkIfAlreadyRegistered(
 			CustomerQuickRegisterEntityDTO customer) throws Exception {
@@ -90,14 +103,14 @@ public class CustomerQuickRegisterHandler implements
 				
 		if (customerToProcess.getStatus().equals(
 				"EmailMobileVerificationPending")) {
-			customerToProcess.setEmailHash(generateEmailHash(customer));
-			customerToProcess.setMobilePin(genarateMobilePin(customer));
+			customerToProcess.setEmailHash(handleCustomerVerification.generateEmailHash());
+			customerToProcess.setMobilePin(handleCustomerVerification.genarateMobilePin());
 		} else if (customerToProcess.getStatus().equals(
 				"EmailVerificationPending")) {
-			customerToProcess.setEmailHash(generateEmailHash(customer));
+			customerToProcess.setEmailHash(handleCustomerVerification.generateEmailHash());
 		} else if (customerToProcess.getStatus().equals(
 				"MobileVerificationPending")) {
-			customerToProcess.setMobilePin(genarateMobilePin(customer));
+			customerToProcess.setMobilePin(handleCustomerVerification.genarateMobilePin());
 		}
 
 		return customerToProcess;
@@ -119,8 +132,172 @@ public class CustomerQuickRegisterHandler implements
 	}
 
 
+
 	@Override
-	public Long generateEmailHash(CustomerQuickRegisterEntityDTO customer) {
+	public Boolean verifyEmailHash(Long customerId, String emailHash) {
+		
+		CustomerQuickRegisterEntity fetchedEntity=getCustomerQuickRegisterEntityByCustomerId(customerId);
+	
+		
+		
+		if(fetchedEntity.getCustomerId()==null)
+			return false;
+	
+		Date emailHashSentTime=fetchedEntity.getEmailHashSentTime();
+		
+		Date verificationTime=new Date();
+		
+		long dateDiffernce=verificationTime.getTime()-emailHashSentTime.getTime();
+		
+		long diffHours = dateDiffernce / (60 * 60 * 1000);
+		
+		
+		if(fetchedEntity.getEmailHash().equals(emailHash) && diffHours<=EMAIL_VALIDITY_TIME_IN_HRS)
+		{
+							
+			if(fetchedEntity.isMobileVerifiedEmailVerficationPending())
+			{
+				fetchedEntity.setStatusEmailMobileVerified();
+			}
+			else if(fetchedEntity.isEmailMobileVerificationPending())
+			{
+				fetchedEntity.setStatusEmailVerifiedMobileVerficationPending();
+			}
+			else if(fetchedEntity.isEmailVerificationPending())
+			{
+				fetchedEntity.setStatusEmailVerified();
+			}
+			
+			fetchedEntity.setLastStatusChangedTime(new Date());
+			
+			int updatedStatus=customerQuickRegisterRepository.updateStatusAndMobileVerificationAttemptsByCustomerId(customerId, fetchedEntity.getStatus(), 
+						fetchedEntity.getLastStatusChangedTime(), fetchedEntity.getMobileVerificationAttempts());
+										
+			
+			if(updatedStatus==UPDATE_SUCESS)
+				return true;
+			else
+				return false;
+		}
+		else
+		{
+			return false;
+		}
+		
+	}
+
+	@Override
+	public Boolean verifyMobilePin(Long customerId, Integer mobilePin) {
+	
+		CustomerQuickRegisterEntity fetchedEntity=getCustomerQuickRegisterEntityByCustomerId(customerId);
+		
+		Date lastStatusChangedTime=fetchedEntity.getLastStatusChangedTime();
+		
+		if(fetchedEntity.getCustomerId()==null)
+			return false;
+		
+		
+		
+		if(fetchedEntity.getMobilePin().equals(mobilePin) && fetchedEntity.getMobileVerificationAttempts()<MAX_MOBILE_VERIFICATION_ATTEMPTS)
+		{
+			if(fetchedEntity.isEmailMobileVerificationPending())
+				fetchedEntity.setStatusMobileVerifiedEmailVerficationPending();
+			else if(fetchedEntity.isEmailVerifiedMobileVerficationPending())
+				fetchedEntity.setStatusEmailMobileVerified();
+			else if(fetchedEntity.isMobileVerificationPending())
+				fetchedEntity.setStatusMobileVerified();
+		
+			
+			lastStatusChangedTime=new Date();
+		//	int updatedStatus=customerQuickRegisterRepository.
+		//								updateStatusByCustomerId(fetchedEntity.getCustomerId(),fetchedEntity.getStatus()).intValue();
+		//	if(updatedStatus==UPDATE_SUCESS)
+		//		return true;
+		//	else
+		//		return false;
+		}
+		else
+		{
+			int currentAttemptCount=fetchedEntity.getMobileVerificationAttempts();
+			fetchedEntity.setMobileVerificationAttempts(currentAttemptCount++);
+			//return false;
+		}
+		
+		fetchedEntity.setLastStatusChangedTime(lastStatusChangedTime);
+		
+		int updatedStatus=customerQuickRegisterRepository.updateStatusAndMobileVerificationAttemptsByCustomerId(customerId, fetchedEntity.getStatus(), 
+				fetchedEntity.getLastStatusChangedTime(), fetchedEntity.getMobileVerificationAttempts());
+	
+		if(updatedStatus==UPDATE_SUCESS)
+			return true;
+		else
+			return false;
+		
+	}
+
+	@Override
+	public Integer updateEmailHash(Long customerId) {
+		
+		String emailHash=handleCustomerVerification.generateEmailHash();
+		
+		return customerQuickRegisterRepository.updateEmailHash(customerId, emailHash,new Date());
+		
+	}
+
+	@Override
+	public Integer updateMobilePin(Long customerId) {
+		
+		Integer mobilePin=handleCustomerVerification.genarateMobilePin();
+		
+		return customerQuickRegisterRepository.updateMobilePin(customerId, mobilePin,new Date());
+	}
+
+	
+	@Override
+	public String composeSMS(CustomerQuickRegisterEntity customer) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String composeEmail(CustomerQuickRegisterEntity customer) {
+		
+		StringBuilder messageBuilder=new StringBuilder();
+		
+		messageBuilder.append("Hi "+customer.getFirstName()+" "+customer.getLastName()+"\n");
+		messageBuilder.append("Thanks for connecting with us!!\n Please Click Below link to activate your account\n");
+		messageBuilder.append(env.getProperty("mvc.url")+"/"+customer.getCustomerId()+"/verifyEmail/"+customer.getEmailHash());
+		
+		System.out.println(messageBuilder.toString());
+		
+		return messageBuilder.toString();
+	}
+
+	@Override
+	public void sendPinSMS(CustomerQuickRegisterEntity customer) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void sendHashEmail(CustomerQuickRegisterEntity customer) {
+		
+		String message=composeEmail(customer);
+		
+		handleCustomerVerification.sendEmailHash(customer.getEmail(), message);
+	}
+
+	@Override
+	public void clearDataForTesting() {
+		customerQuickRegisterRepository.clearCustomerQuickRegister();
+
+		
+	}
+	
+	/*
+
+	@Override
+	public String generateEmailHash() {
 
 		String allPossibleChar="01234567789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 		
@@ -155,16 +332,13 @@ public class CustomerQuickRegisterHandler implements
 		
         String emailHash=sbNew.toString();
         
-        System.out.println(emailHash);
         
-        System.out.println(emailHash.length());
-        
-		return null;
+		return emailHash;
 		
 	}
 
 	@Override
-	public Integer genarateMobilePin(CustomerQuickRegisterEntityDTO customer) {
+	public Integer genarateMobilePin() {
 
 		SecureRandom secureRandom=new SecureRandom();
 		int number=0;
@@ -173,126 +347,12 @@ public class CustomerQuickRegisterHandler implements
 		{
 			number=(number*10)+secureRandom.nextInt(10);
 		}	
-				
-		System.out.println(number);
-		return 101010;
+		
+		return number;
 	}
 
-	@Override
-	public Boolean verifyEmailHash(Long customerId, Long emailHash) {
-		
-		CustomerQuickRegisterEntity fetchedEntity=getCustomerQuickRegisterEntityByCustomerId(customerId);//
-		
-		if(fetchedEntity.getCustomerId()==null)
-			return false;
-		
-		if(fetchedEntity.getEmailHash().equals(emailHash))
-		{
-							
-			if(fetchedEntity.isMobileVerifiedEmailVerficationPending())
-			{
-				fetchedEntity.setStatusEmailMobileVerified();
-			}
-			else if(fetchedEntity.isEmailMobileVerificationPending())
-			{
-				fetchedEntity.setStatusEmailVerifiedMobileVerficationPending();
-			}
-			else if(fetchedEntity.isEmailVerificationPending())
-			{
-				fetchedEntity.setStatusEmailVerified();
-			}
-			
-			int updatedStatus=customerQuickRegisterRepository.
-										updateStatusByCustomerId(fetchedEntity.getCustomerId(), fetchedEntity.getStatus()).intValue();
-			
-			if(updatedStatus==1)
-				return true;
-			else
-				return false;
-		}
-		else
-		{
-			return false;
-		}
-		
-	}
-
-	@Override
-	public Boolean verifyMobilePin(Long customerId, Integer mobilePin) {
+	*/
 	
-		CustomerQuickRegisterEntity fetchedEntity=getCustomerQuickRegisterEntityByCustomerId(customerId);
-		
-		if(fetchedEntity.getCustomerId()==null)
-			return false;
-		
-		if(fetchedEntity.getMobilePin().equals(mobilePin))
-		{
-			if(fetchedEntity.isEmailMobileVerificationPending())
-				fetchedEntity.setStatusMobileVerifiedEmailVerficationPending();
-			else if(fetchedEntity.isEmailVerifiedMobileVerficationPending())
-				fetchedEntity.setStatusEmailMobileVerified();
-			else if(fetchedEntity.isMobileVerificationPending())
-				fetchedEntity.setStatusMobileVerified();
-		
-			int updatedStatus=customerQuickRegisterRepository.
-										updateStatusByCustomerId(fetchedEntity.getCustomerId(),fetchedEntity.getStatus()).intValue();
-			if(updatedStatus==1)
-				return true;
-			else
-				return false;
-		}
-		else
-		{
-			return false;
-		}
-		
-	}
-
-	@Override
-	public Integer updateEmailHash(Long customerId, Long emailHash) {
-		
-		return customerQuickRegisterRepository.updateEmailHash(customerId, emailHash);
-		
-	}
-
-	@Override
-	public Integer updateMobilePin(Long customerId, Integer mobilePin) {
-		
-		return customerQuickRegisterRepository.updateMobilePin(customerId, mobilePin);
-	}
-
-	
-	@Override
-	public String composeSMS(CustomerQuickRegisterEntity customer) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public String composeEmail(CustomerQuickRegisterEntity customer) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Boolean sendPinSMS() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Boolean sendHashEmail() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void clearDataForTesting() {
-		customerQuickRegisterRepository.clearCustomerQuickRegister();
-
-		
-	}
-
 	/*AFTER USER SUBMITS FORM WITH DETAILS WE WILL CHECK IF CUSTOMER(EMAIL,MOBILE) IS
 	 *ALREADY REGISTERED,IF NOT REGISTERED POPULATE THE STATUS OF CUSTOMER,,DEPENDING ON  
 	 * STATUS SEND VERIFICATION EMAIL AND MOBILE PIN DEPENDING ON PROVIDED INFORMATION 

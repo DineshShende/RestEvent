@@ -15,25 +15,25 @@ public interface CustomerQuickRegisterService {
 	
 	CustomerQuickRegisterEntity getCustomerQuickRegisterEntityByCustomerId(Long customerId);
 	
-	Integer updateEmailHash(Long customerId,Long emailHash);
+	Integer updateEmailHash(Long customerId);
 	
-	Integer updateMobilePin(Long customerId,Integer mobilePin);
+	Integer updateMobilePin(Long customerId);
 	
-	Boolean verifyEmailHash(Long customerId,Long emailHash);
+	Boolean verifyEmailHash(Long customerId,String emailHash);
 	
 	Boolean verifyMobilePin(Long customerId,Integer mobilePin);
 	
-	Long generateEmailHash(CustomerQuickRegisterEntityDTO customer);
+	//String generateEmailHash();
 	
-	Integer genarateMobilePin(CustomerQuickRegisterEntityDTO customer);
+	//Integer genarateMobilePin();
 	
 	String composeSMS(CustomerQuickRegisterEntity customer);
 	
 	String composeEmail(CustomerQuickRegisterEntity customer);
 	
-	Boolean sendPinSMS();
+	void sendPinSMS(CustomerQuickRegisterEntity customer);
 	
-	Boolean sendHashEmail();
+	void sendHashEmail(CustomerQuickRegisterEntity customer);
 	
 	
 	//Testing

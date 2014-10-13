@@ -1,6 +1,7 @@
 package com.projectx.rest.repository;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.context.annotation.Profile;
@@ -92,68 +93,12 @@ public class CustomerQuickRegisterMemRepository implements
 		
 	}
 
-	@Override
-	public String getStatusByCustomerId(Long customerId) {
-		String status=null;
-		
-		for(int i=0;i<customerList.size();i++)
-		{
-			if(customerList.get(i).getCustomerId().equals(customerId))
-			{
-				status= customerList.get(i).getStatus();
-			}
-		}
-			
-		return status;
-	}
 
 	
 	
-	@Override
-	public Integer updateStatusByCustomerId(Long customerId,
-			String status) {
-		for (int i = 0; i < customerList.size(); i++) {
-			if (customerList.get(i).getCustomerId().equals(customerId))
-			{
-				CustomerQuickRegisterEntity customer=customerList.get(i);
-				deleteByCustomerId(customer.getCustomerId());
-				customer.setStatus(status);
-				customerList.add(customer);
-				return new Integer(1);
-			}
-		}
-		return new Integer(0);
-	}
-
-	@Override
-	public Integer verifyEmailHash(Long customerId,Long emailHash)
-	{
-		for(int i=0;i<customerList.size();i++)
-		{
-			if(customerList.get(i).getCustomerId().equals(customerId) && customerList.get(i).getEmailHash().equals(emailHash))
-			{
-				return 1;
-			}
-		}
-		return 0;
-	}
 	
 	@Override
-	public Integer verifyMobilePin(Long customerId,Integer mobilePin)
-	{
-		for(int i=0;i<customerList.size();i++)
-		{
-			if(customerList.get(i).getCustomerId().equals(customerId) && customerList.get(i).getMobilePin().equals(mobilePin))
-			{
-				return 1;
-			}
-		}
-		return 0;
-	}
-	
-
-	@Override
-	public Integer updateEmailHash(Long customerId, Long emailHash) {
+	public Integer updateEmailHash(Long customerId, String emailHash) {
 		for(int i=0;i<customerList.size();i++)
 		{
 			if(customerList.get(i).getCustomerId().equals(customerId))
@@ -194,7 +139,46 @@ public class CustomerQuickRegisterMemRepository implements
 			return count;
 		}
 
+	@Override
+	public Integer updateStatusAndMobileVerificationAttemptsByCustomerId(
+			Long customerId, String status, Date lastStatusChaneTime,
+			Integer mobileVerificationAttempts) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
+
+
+
+	/*
+	@Override
+	public Integer verifyEmailHash(Long customerId,Long emailHash)
+	{
+		for(int i=0;i<customerList.size();i++)
+		{
+			if(customerList.get(i).getCustomerId().equals(customerId) && customerList.get(i).getEmailHash().equals(emailHash))
+			{
+				return 1;
+			}
+		}
+		return 0;
+	}
+	
+	@Override
+	public Integer verifyMobilePin(Long customerId,Integer mobilePin)
+	{
+		for(int i=0;i<customerList.size();i++)
+		{
+			if(customerList.get(i).getCustomerId().equals(customerId) && customerList.get(i).getMobilePin().equals(mobilePin))
+			{
+				return 1;
+			}
+		}
+		return 0;
+	}
+*/	
+
+	
 	/* 
 	@Override
 	public Integer updateStatusAfterEmailVerfication(String email,

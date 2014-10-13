@@ -3,13 +3,13 @@ package com.projectx.data.domain;
 public class VerifyEmailHashDTO {
 
 	private Long customerId;
-	private Long emailHash;
+	private String emailHash;
 	
 	public VerifyEmailHashDTO() {
 	
 	}
 	
-	public VerifyEmailHashDTO(Long customerId, Long emailHash) {
+	public VerifyEmailHashDTO(Long customerId, String emailHash) {
 		super();
 		this.customerId = customerId;
 		this.emailHash = emailHash;
@@ -23,11 +23,11 @@ public class VerifyEmailHashDTO {
 		this.customerId = customerId;
 	}
 
-	public Long getEmailHash() {
+	public String getEmailHash() {
 		return emailHash;
 	}
 
-	public void setEmailHash(Long emailHash) {
+	public void setEmailHash(String emailHash) {
 		this.emailHash = emailHash;
 	}
 	
