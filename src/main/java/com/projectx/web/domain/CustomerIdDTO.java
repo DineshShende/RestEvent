@@ -1,15 +1,15 @@
 package com.projectx.web.domain;
 
-public class GetByCustomerIdDTO {
+public class CustomerIdDTO {
 
 	Long customerId;
 
-	public GetByCustomerIdDTO() {
+	public CustomerIdDTO() {
 		
 	}
 
 	
-	public GetByCustomerIdDTO(Long customerId) {
+	public CustomerIdDTO(Long customerId) {
 		super();
 		this.customerId = customerId;
 	}

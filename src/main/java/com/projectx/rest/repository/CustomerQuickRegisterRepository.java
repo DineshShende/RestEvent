@@ -19,11 +19,7 @@ public interface CustomerQuickRegisterRepository {
 	 Integer countByEmail(String email);
 	 
 	 Integer countByMobile(Long mobile);
-	 
-	// Integer verifyEmailHash(Long customerId,Long emailHash);
-	 
-	// Integer verifyMobilePin(Long customerId,Integer mobilePin);
-	 
+ 
 	 Integer updateStatusAndMobileVerificationAttemptsByCustomerId(Long customerId,String status,Date lastStatusChaneTime,
 			 										Integer mobileVerificationAttempts);
 	 
@@ -31,35 +27,11 @@ public interface CustomerQuickRegisterRepository {
 	 
 	 Integer updateMobilePin(Long customerId,Integer mobilePin,Date updateTime);
 	 
+	 Integer updatePassword(Long customerId,String password,String passwordType);
+	 
+	 Integer updateEmailHashAndMobilePinSentTime(Long customerId,Date emailHashSentTine,Date mobilePinSentTime);
+	 
 	 void clearCustomerQuickRegister();
 
-	 //For testing implementations
-	 Long deleteByCustomerId(Long customerId); 
-	 
-
-	 //CustomerQuickRegisterEntity findByEmail(String email);
-	
-	 //CustomerQuickRegisterEntity findByMobile(Long mobile);
-	
-	 
-	 //Long deleteByEmail(String email);
-	 
-	 //Long deleteByMobile(Long mobile);
-	
-	 //String fetchStatusByEmail(String email) throws Exception;
-	 
-	 //String fetchStatusByMobile(Long mobile) throws Exception;
-	 
-	 //Integer updateStatusAfterMobileVerification(Long mobile,String status);
-	 
-	 //Integer updateStatusAfterEmailVerfication(String email,String status);
- 	
-/*
-	 void clearCustomerQuickRegister();
-	 Boolean checkIfAlreadyExist(CustomerQuickRegisterKey key);
-	 CustomerQuickRegisterEntity getByKey(CustomerQuickRegisterKey key);
-*/	 
-		
-	 
-	
+	 	
 }

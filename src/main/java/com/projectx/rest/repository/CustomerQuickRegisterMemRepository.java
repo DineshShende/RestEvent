@@ -2,11 +2,14 @@ package com.projectx.rest.repository;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Repository;
+
+import static com.projectx.rest.fixtures.CustomerQuickRegisterDataFixture.*;
 
 import com.projectx.rest.domain.CustomerQuickRegisterEntity;
 
@@ -15,279 +18,182 @@ import com.projectx.rest.domain.CustomerQuickRegisterEntity;
 public class CustomerQuickRegisterMemRepository implements
 		CustomerQuickRegisterRepository {
 
-	List<CustomerQuickRegisterEntity> customerList;
-
+	Map<Long,CustomerQuickRegisterEntity> customerList;
+	
+	
 	public CustomerQuickRegisterMemRepository() {
-
-		this.customerList = new ArrayList<CustomerQuickRegisterEntity>();
+	
+		this.customerList = new HashMap<Long,CustomerQuickRegisterEntity>();
 	}
 
 	@Override
-	public CustomerQuickRegisterEntity save(CustomerQuickRegisterEntity customer) throws Exception {
-		if(countByEmail(customer.getEmail())==0 && countByMobile(customer.getMobile())==0)
-		{
-			if(customer.getCustomerId()==null)
-				customer.setCustomerId(212L);
-			customerList.add(customer);
-			return customer;
-		}			
-		else
-		{
-			throw new Exception();
-		}
-			
+	public CustomerQuickRegisterEntity save(CustomerQuickRegisterEntity customer)
+			throws Exception {
 		
+		if(customer.getCustomerId()==null)
+			customer.setCustomerId(CUST_ID);
+		
+		 customerList.put(customer.getCustomerId(), customer);
+		
+		return customer;
+		 
 	}
-	
+
 	@Override
 	public List<CustomerQuickRegisterEntity> findAll() {
 
-		return this.customerList;
-	}
-	
-	@Override
-	public CustomerQuickRegisterEntity findByCustomerId(Long customerId)
-	{
-		CustomerQuickRegisterEntity resultEntity = null;	
-		for (int i = 0; i < customerList.size(); i++) {
-			if (customerList.get(i).getCustomerId().equals(customerId))
-				resultEntity = customerList.get(i);
+		List<CustomerQuickRegisterEntity> customerArrayList=new ArrayList<CustomerQuickRegisterEntity>();
+		
+		
+		for(Long key:customerList.keySet())
+		{
+			customerArrayList.add(customerList.get(key));
 		}
 		
-		if(resultEntity==null)
-			return new CustomerQuickRegisterEntity();
-			
-		return resultEntity;
+		return customerArrayList;
 	}
 
+	@Override
+	public CustomerQuickRegisterEntity findByCustomerId(Long customerId) {
+		
+		CustomerQuickRegisterEntity fetchedEntity= customerList.get(customerId);
+		
+		if(fetchedEntity==null)
+			fetchedEntity=new CustomerQuickRegisterEntity();
+		
+		return fetchedEntity;
+	}
 
 	@Override
 	public Integer countByEmail(String email) {
-		int count = 0;
-
-		for (int i = 0; i < customerList.size(); i++) {
-			if (customerList.get(i).getEmail()!=null && customerList.get(i).getEmail().equalsIgnoreCase(email))
+		
+		int count=0;
+		for(Long key:customerList.keySet())
+		{
+			if(customerList.get(key).getEmail()!=null && customerList.get(key).getEmail().equals(email))
 				count++;
 		}
-
+		
 		return count;
 	}
 
 	@Override
 	public Integer countByMobile(Long mobile) {
-
-		int count = 0;
-
-		for (int i = 0; i < customerList.size(); i++) {
-			if (customerList.get(i).getMobile()!=null &&customerList.get(i).getMobile().equals(mobile) )
+		int count=0;
+		for(Long key:customerList.keySet())
+		{
+			if(customerList.get(key).getMobile()!=null && customerList.get(key).getMobile().equals(mobile))
 				count++;
 		}
-
+		
 		return count;
-
 	}
-	
+
+	@Override
+	public Integer updateStatusAndMobileVerificationAttemptsByCustomerId(
+			Long customerId, String status, Date lastStatusChangedTime,
+			Integer mobileVerificationAttempts) {
+		
+		CustomerQuickRegisterEntity oldRecord=customerList.get(customerId);
+		if(oldRecord!=null)
+		{	
+			customerList.remove(customerId);
+		
+			oldRecord.setStatus(status);
+			oldRecord.setLastStatusChangedTime(lastStatusChangedTime);
+			oldRecord.setMobileVerificationAttempts(mobileVerificationAttempts);
+		
+			customerList.put(customerId, oldRecord);
+		
+			return 1;
+		}
+		else
+			return 0;
+	}
+
+	@Override
+	public Integer updateEmailHash(Long customerId, String emailHash,
+			Date updateTime) {
+		CustomerQuickRegisterEntity oldRecord=customerList.get(customerId);
+		if(oldRecord!=null)
+		{	
+			customerList.remove(customerId);
+		
+			oldRecord.setEmailHash(emailHash);
+			oldRecord.setEmailHashSentTime(updateTime);
+					
+			customerList.put(customerId, oldRecord);
+		
+			return 1;
+		}
+		else
+			return 0;
+	}
+
+	@Override
+	public Integer updateMobilePin(Long customerId, Integer mobilePin,
+			Date updateTime) {
+		CustomerQuickRegisterEntity oldRecord=customerList.get(customerId);
+		if(oldRecord!=null)
+		{	
+			customerList.remove(customerId);
+		
+			oldRecord.setMobilePin(mobilePin);
+			oldRecord.setMobilePinSentTime(updateTime);
+					
+			customerList.put(customerId, oldRecord);
+		
+			return 1;
+		}
+		else
+			return 0;
+	}
+
+	@Override
+	public Integer updatePassword(Long customerId, String password,
+			String passwordType) {
+		CustomerQuickRegisterEntity oldRecord=customerList.get(customerId);
+		if(oldRecord!=null)
+		{	
+			customerList.remove(customerId);
+		
+			oldRecord.setPassword(password);
+			oldRecord.setPasswordType(passwordType);;
+					
+			customerList.put(customerId, oldRecord);
+		
+			return 1;
+		}
+		else
+			return 0;
+	}
+
 	@Override
 	public void clearCustomerQuickRegister() {
 		customerList.clear();
 		
 	}
 
-
-	
-	
-	
 	@Override
-	public Integer updateEmailHash(Long customerId, String emailHash) {
-		for(int i=0;i<customerList.size();i++)
-		{
-			if(customerList.get(i).getCustomerId().equals(customerId))
-			{
-				customerList.get(i).setEmailHash(emailHash);
-				return 1;
-			}
-		}
-		return 0;
-	}
+	public Integer updateEmailHashAndMobilePinSentTime(Long customerId,
+			Date emailHashSentTine, Date mobilePinSentTime) {
 
-	@Override
-	public Integer updateMobilePin(Long customerId, Integer mobilePin) {
-		
-		for(int i=0;i<customerList.size();i++)
-		{
-			if(customerList.get(i).getCustomerId().equals(customerId))
-			{
-				customerList.get(i).setMobilePin(mobilePin);
-				return 1;
-			}
-		}
-		return 0;
-	}
-	 
-	
-	@Override
-	public Long deleteByCustomerId(Long customerId) {
-		Long count = 0L;
-
-			for(int i = 0; i < customerList.size(); i++) {
-				if (customerList.get(i).getCustomerId().equals(customerId)) {
-					customerList.remove(i);
-					count++;
-				}
-			}
-
-			return count;
-		}
-
-	@Override
-	public Integer updateStatusAndMobileVerificationAttemptsByCustomerId(
-			Long customerId, String status, Date lastStatusChaneTime,
-			Integer mobileVerificationAttempts) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-
-
-
-	/*
-	@Override
-	public Integer verifyEmailHash(Long customerId,Long emailHash)
-	{
-		for(int i=0;i<customerList.size();i++)
-		{
-			if(customerList.get(i).getCustomerId().equals(customerId) && customerList.get(i).getEmailHash().equals(emailHash))
-			{
-				return 1;
-			}
-		}
-		return 0;
-	}
-	
-	@Override
-	public Integer verifyMobilePin(Long customerId,Integer mobilePin)
-	{
-		for(int i=0;i<customerList.size();i++)
-		{
-			if(customerList.get(i).getCustomerId().equals(customerId) && customerList.get(i).getMobilePin().equals(mobilePin))
-			{
-				return 1;
-			}
-		}
-		return 0;
-	}
-*/	
-
-	
-	/* 
-	@Override
-	public Integer updateStatusAfterEmailVerfication(String email,
-			String status) {
-		
-		for (int i = 0; i < customerList.size(); i++) {
-			if (customerList.get(i).getEmail()!=null && customerList.get(i).getEmail().equalsIgnoreCase(email)) {
-				CustomerQuickRegisterEntity customer=customerList.get(i);
-				deleteByCustomerId(customerId);
-				customer.setStatus(status);
-				customerList.add(customer);
-				return new Integer(1);
-			}
-		}
-		
-		return new Integer(0);
-	}
-
-
-
-	
-	@Override
-	public String fetchStatusByEmail(String email) throws Exception {
-		
-		for(int i=0;i<customerList.size();i++)
-		{
-			if(customerList.get(i).getEmail()!=null && customerList.get(i).getEmail().equalsIgnoreCase(email))
-			{
-				return customerList.get(i).getStatus();
-			}
-		}
+			CustomerQuickRegisterEntity oldRecord=customerList.get(customerId);
+			if(oldRecord!=null)
+			{	
+				customerList.remove(customerId);
 			
-		throw new Exception();
-	}
-
-	@Override
-	public String fetchStatusByMobile(Long mobile) throws Exception {
-		for(int i=0;i<customerList.size();i++)
-		{
-			if(customerList.get(i).getMobile()!=null && customerList.get(i).getMobile().equals(mobile))
-			{
-				return customerList.get(i).getStatus();
-			}
-		}
+				oldRecord.setEmailHashSentTime(emailHashSentTine);
+				oldRecord.setMobilePinSentTime(mobilePinSentTime);
+						
+				customerList.put(customerId, oldRecord);
 			
-		throw new Exception();
-	}
-	*/
-
-	/*
-
-	@Override
-	public CustomerQuickRegisterEntity findByEmail(String email) {
-
-		CustomerQuickRegisterEntity resultEntity = null;
-
-		for (int i = 0; i < customerList.size(); i++) {
-			if (customerList.get(i).getEmail()!=null &&customerList.get(i).getEmail().equalsIgnoreCase(email))
-				resultEntity = customerList.get(i);
+				return 1;
+			}
+			else
+				return 0;
 		}
-
-		return resultEntity;
-	}
-
-	@Override
-	public CustomerQuickRegisterEntity findByMobile(Long mobile) {
-
-		CustomerQuickRegisterEntity resultEntity = null;
-
-		for (int i = 0; i < customerList.size(); i++) {
-			if (customerList.get(i).getMobile()!=null && customerList.get(i).getMobile().equals(mobile))
-				resultEntity = customerList.get(i);
-		}
-
-		return resultEntity;
-	}
 	
 
-
-
-
-	@Override
-	public Long deleteByEmail(String email) {
-		Long count = 0L;
-
-		for (int i = 0; i < customerList.size(); i++) {
-			if (customerList.get(i).getEmail()!=null&&customerList.get(i).getEmail().equalsIgnoreCase(email)) {
-				customerList.remove(i);
-				count++;
-			}
-		}
-
-		return count;
-	}
-
-	@Override
-	public Long deleteByMobile(Long mobile) {
-		Long count = 0L;
-
-		for (int i = 0; i < customerList.size(); i++) {
-			if (customerList.get(i).getMobile()!=null && customerList.get(i).getMobile().equals(mobile)) {
-				customerList.remove(i);
-				count++;
-			}
-		}
-
-		return count;
-	}
-
-	*/
-
+	
 }

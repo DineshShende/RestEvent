@@ -1,5 +1,7 @@
 package com.projectx.rest.services;
 
+import com.mashape.unirest.http.exceptions.UnirestException;
+import com.projectx.rest.domain.CustomerQuickDetailsSentStatusEntity;
 import com.projectx.rest.domain.CustomerQuickRegisterEntity;
 import com.projectx.web.domain.CustomerQuickRegisterEntityDTO;
 
@@ -7,11 +9,13 @@ public interface CustomerQuickRegisterService {
 	
 	String checkIfAlreadyRegistered(CustomerQuickRegisterEntityDTO customer) throws Exception;
 	
-	CustomerQuickRegisterEntityDTO populateStatus(CustomerQuickRegisterEntityDTO customer) throws Exception;
+	CustomerQuickRegisterEntity populateStatus(CustomerQuickRegisterEntityDTO customer) throws Exception;
 	
-	CustomerQuickRegisterEntity handleNewCustomerQuickRegistration(CustomerQuickRegisterEntityDTO customer);
+	CustomerQuickRegisterEntity initializeNewCustomerQuickRegistrationEntity(CustomerQuickRegisterEntity customer);
 	
 	CustomerQuickRegisterEntity saveNewCustomerQuickRegisterEntity(CustomerQuickRegisterEntity customer) throws Exception;
+	
+	CustomerQuickDetailsSentStatusEntity handleNewCustomerQuickRegister(CustomerQuickRegisterEntityDTO customer) throws Exception;
 	
 	CustomerQuickRegisterEntity getCustomerQuickRegisterEntityByCustomerId(Long customerId);
 	
@@ -22,23 +26,29 @@ public interface CustomerQuickRegisterService {
 	Boolean verifyEmailHash(Long customerId,String emailHash);
 	
 	Boolean verifyMobilePin(Long customerId,Integer mobilePin);
-	
-	//String generateEmailHash();
-	
-	//Integer genarateMobilePin();
-	
+			
 	String composeSMS(CustomerQuickRegisterEntity customer);
 	
 	String composeEmail(CustomerQuickRegisterEntity customer);
 	
-	void sendPinSMS(CustomerQuickRegisterEntity customer);
+	Boolean sendPinSMS(CustomerQuickRegisterEntity customer) throws UnirestException;
 	
-	void sendHashEmail(CustomerQuickRegisterEntity customer);
+	Boolean sendHashEmail(CustomerQuickRegisterEntity customer);
+	
+	CustomerQuickDetailsSentStatusEntity sendVerificationDetails(CustomerQuickRegisterEntity customer) throws UnirestException;
+	
+	Boolean reSendEmailHash(Long customerId);
+	
+	Boolean reSendMobilePin(Long customerId) throws UnirestException;
 	
 	
 	//Testing
 	void clearDataForTesting();
 	
+	//String generateEmailHash();
+	
+	//Integer genarateMobilePin();
+
 	//CustomerQuickRegisterEntity getCustomerQuickRegisterEntityByEmail(String email);
 	
 	//CustomerQuickRegisterEntity getCustomerQuickRegisterEntityByMobile(Long mobile);

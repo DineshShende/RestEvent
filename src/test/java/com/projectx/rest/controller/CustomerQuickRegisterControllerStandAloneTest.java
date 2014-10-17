@@ -105,34 +105,34 @@ public class CustomerQuickRegisterControllerStandAloneTest {
 	
 	
 	@Test
-	public void updateMobilePin() throws Exception
+	public void reSendMobilePin() throws Exception
 	{
-		when(customerQuickRegisterService.updateMobilePin(CUST_ID, CUST_MOBILEPIN_UPDATED)).thenReturn(1);
+		when(customerQuickRegisterService.reSendMobilePin(CUST_ID)).thenReturn(true);
 		
 		this.mockMvc.perform(
 	            post("/customer/quickregister/resendMobilePin")
-	                    .content(standardJsonUpdateMobilePinDTO())
+	                    .content(standardJsonCustomerIdDTO())
 	                    .contentType(MediaType.APPLICATION_JSON)
 	                    .accept(MediaType.APPLICATION_JSON))
 	            .andDo(print())
 	            .andExpect(status().isOk())
-	            .andExpect(content().string("1"));
+	            .andExpect(content().string("true"));
 		
 	}
 	
 	@Test
-	public void updateEmailHash() throws Exception
+	public void reSendEmailHash() throws Exception
 	{
-		when(customerQuickRegisterService.updateEmailHash(CUST_ID, CUST_EMAILHASH_UPDATED)).thenReturn(1);
+		when(customerQuickRegisterService.reSendEmailHash(CUST_ID)).thenReturn(true);
 		
 		this.mockMvc.perform(
 	            post("/customer/quickregister/resendEmailHash")
-	                    .content(standardJsonUpdateEmailHashDTO())
+	                    .content(standardJsonCustomerIdDTO())
 	                    .contentType(MediaType.APPLICATION_JSON)
 	                    .accept(MediaType.APPLICATION_JSON))
 	            .andDo(print())
 	            .andExpect(status().isOk())
-	            .andExpect(content().string("1"));
+	            .andExpect(content().string("true"));
 		
 	}
 	

@@ -14,8 +14,7 @@ import static com.projectx.rest.fixture.CustomerQuickRegisterDataFixture.standar
 import static com.projectx.rest.fixture.CustomerQuickRegisterDataFixture.standardJsonEmailMobileCustomer;
 import static com.projectx.rest.fixture.CustomerQuickRegisterDataFixture.standardJsonGetByCustomerIdDTO;
 import static com.projectx.rest.fixture.CustomerQuickRegisterDataFixture.standardJsonMobileCustomer;
-import static com.projectx.rest.fixture.CustomerQuickRegisterDataFixture.standardJsonUpdateEmailHashDTO;
-import static com.projectx.rest.fixture.CustomerQuickRegisterDataFixture.standardJsonUpdateMobilePinDTO;
+
 import static com.projectx.rest.fixture.CustomerQuickRegisterDataFixture.standardJsonVerifyEmailHashDTO;
 import static com.projectx.rest.fixture.CustomerQuickRegisterDataFixture.standardJsonVerifyMobilePinDTO;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -99,13 +98,13 @@ public class CustomerQuickRegisterControllerITest {
 	                    .accept(MediaType.APPLICATION_JSON))
 	            .andDo(print())
 	            .andExpect(status().isOk())
-	            .andExpect(jsonPath("$.firstName").value(CUST_FIRSTNAME))
-	            .andExpect(jsonPath("$.lastName").value(CUST_LASTNAME))
+	            //.andExpect(jsonPath("$.firstName").value(CUST_FIRSTNAME))
+	            //.andExpect(jsonPath("$.lastName").value(CUST_LASTNAME))
 	           // .andExpect(jsonPath("$.mobile").value(CUST_MOBILE.longValue()))
-	            .andExpect(jsonPath("$.email").value(CUST_EMAIL))
-	            .andExpect(jsonPath("$.pin").value(CUST_PIN))
-				.andExpect(jsonPath("$.status").value(CUST_STATUS_EMAILMOBILE))
-				.andExpect(jsonPath("$.mobilePin").value(CUST_MOBILEPIN));
+	            .andExpect(jsonPath("$.customer.email").value(CUST_EMAIL))
+	           // .andExpect(jsonPath("$.pin").value(CUST_PIN))
+			//	.andExpect(jsonPath("$.status").value(CUST_STATUS_EMAILMOBILE))
+				.andExpect(jsonPath("$.status").value(true));
 			  //.andExpect(jsonPath("$.emailHash").value(CUST_EMAILHASH));
 		    		
 	}
