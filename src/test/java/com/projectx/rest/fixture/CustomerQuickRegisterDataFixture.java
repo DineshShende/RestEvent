@@ -4,8 +4,6 @@ import java.util.Date;
 
 import com.projectx.data.domain.UpdateEmailHashDTO;
 import com.projectx.data.domain.UpdateMobilePinDTO;
-import com.projectx.data.domain.VerifyEmailHashDTO;
-import com.projectx.data.domain.VerifyMobilePinDTO;
 import com.projectx.rest.domain.CustomerQuickRegisterEntity;
 import com.projectx.web.domain.CustomerQuickRegisterEntityDTO;
 import com.projectx.web.domain.CustomerIdDTO;
@@ -60,19 +58,19 @@ public class CustomerQuickRegisterDataFixture {
 	public static CustomerQuickRegisterEntity standardEmailMobileCustomer()
 	{
 		return new CustomerQuickRegisterEntity(CUST_ID,CUST_FIRSTNAME, CUST_LASTNAME,CUST_EMAIL,CUST_MOBILE, CUST_PIN,CUST_STATUS_EMAILMOBILE, CUST_MOBILEPIN, CUST_EMAILHASH,CUST_MOBILE_VERIFICATION_ATTEMPTS,
-																															CUST_MOBILE_PIN_SENT_TIME,CUST_EMAIL_HASH_SENT_TIME,CUST_LAST_STATUS_CHANGE_TIME,CUST_PASSWORD_DEFAULT,CUST_PASSWORD_TYPE_DEFAULT);
+																															CUST_MOBILE_PIN_SENT_TIME,CUST_EMAIL_HASH_SENT_TIME,CUST_LAST_STATUS_CHANGE_TIME,null,null);
 	}
 	
 	public static CustomerQuickRegisterEntity standardMobileCustomer()
 	{
 		return new CustomerQuickRegisterEntity(CUST_ID,CUST_FIRSTNAME, CUST_LASTNAME,null,CUST_MOBILE, CUST_PIN,CUST_STATUS_MOBILE, CUST_MOBILEPIN, null,CUST_MOBILE_VERIFICATION_ATTEMPTS,
-				CUST_MOBILE_PIN_SENT_TIME,null,CUST_LAST_STATUS_CHANGE_TIME,CUST_PASSWORD_DEFAULT,CUST_PASSWORD_TYPE_DEFAULT);
+				CUST_MOBILE_PIN_SENT_TIME,null,CUST_LAST_STATUS_CHANGE_TIME,null,null);
 	}
 	
 	public static CustomerQuickRegisterEntity standardEmailCustomer()
 	{
 		return new CustomerQuickRegisterEntity(CUST_ID,CUST_FIRSTNAME, CUST_LASTNAME,CUST_EMAIL,null, CUST_PIN,CUST_STATUS_EMAIL, null, CUST_EMAILHASH,null,
-				null,CUST_EMAIL_HASH_SENT_TIME,CUST_LAST_STATUS_CHANGE_TIME,CUST_PASSWORD_DEFAULT,CUST_PASSWORD_TYPE_DEFAULT);
+				null,CUST_EMAIL_HASH_SENT_TIME,CUST_LAST_STATUS_CHANGE_TIME,null,null);
 		
 	}
 
@@ -212,6 +210,13 @@ public class CustomerQuickRegisterDataFixture {
 		        	
 	}
 	
+	public static String standardJsonEmailMobileCustomerOther()
+	{
+		return "{\"firstName\":\"dinesh\",\"lastName\":\"shende\",\"email\":\"dineshshende@gmail.com\",\"mobile\":8598058044,\"pin\":413133}";
+
+		        	
+	}
+	
 	public static String standardJsonEmailCustomer()
 	{
 		return "{\"firstName\":\"dinesh\",\"lastName\":\"shende\",\"email\":\"dineshshe@gmail.com\",\"pin\":413133}";
@@ -232,7 +237,7 @@ public class CustomerQuickRegisterDataFixture {
 		return new CustomerIdDTO(CUST_ID);
 	}
 	
-	
+/*	
 	public static VerifyMobilePinDTO standardVerifyMobilePinDTO()
 	{
 		return new VerifyMobilePinDTO(CUST_ID, CUST_MOBILEPIN);
@@ -243,7 +248,7 @@ public class CustomerQuickRegisterDataFixture {
 	{
 		return new VerifyEmailHashDTO(CUST_ID, CUST_EMAILHASH);
 	}
-
+*/
 	public static String standardJsonGetByCustomerIdDTO()
 	{
 		return "{\"customerId\":212}";

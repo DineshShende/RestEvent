@@ -8,9 +8,11 @@ import static com.projectx.rest.fixtures.CustomerQuickRegisterDataFixture.REGIST
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
+
 
 import com.mashape.unirest.http.exceptions.UnirestException;
 import com.projectx.rest.domain.CustomerQuickDetailsSentStatusEntity;
@@ -21,7 +23,7 @@ import com.projectx.rest.utils.HandleCustomerVerification;
 import com.projectx.web.domain.CustomerQuickRegisterEntityDTO;
 
 @Component
-//@ActiveProfiles(value="Dev")
+@Profile(value={"Dev","Test"})
 @PropertySource(value="classpath:/application.properties")
 public class CustomerQuickRegisterHandler implements
 		CustomerQuickRegisterService {

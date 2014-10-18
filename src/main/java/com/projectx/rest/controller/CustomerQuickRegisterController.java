@@ -7,13 +7,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mashape.unirest.http.exceptions.UnirestException;
-import com.projectx.data.domain.VerifyEmailHashDTO;
-import com.projectx.data.domain.VerifyMobilePinDTO;
 import com.projectx.rest.domain.CustomerQuickDetailsSentStatusEntity;
 import com.projectx.rest.domain.CustomerQuickRegisterEntity;
 import com.projectx.rest.services.CustomerQuickRegisterService;
 import com.projectx.web.domain.CustomerQuickRegisterEntityDTO;
 import com.projectx.web.domain.CustomerIdDTO;
+import com.projectx.web.domain.VerifyEmailHashDTO;
+import com.projectx.web.domain.VerifyMobilePinDTO;
+//import static com.projectx.rest.fixture.CustomerQuickRegisterDataFixture.*;
 
 @RestController
 @RequestMapping(value="/customer/quickregister")
@@ -83,5 +84,10 @@ public class CustomerQuickRegisterController {
 		customerQuickRegisterService.clearDataForTesting();
 	}
 	
+//	@RequestMapping(value="/customer")
+//	public CustomerQuickRegisterEntity show()
+//	{
+//		return standardEmailMobileCustomer();
+//	}
 	
 }

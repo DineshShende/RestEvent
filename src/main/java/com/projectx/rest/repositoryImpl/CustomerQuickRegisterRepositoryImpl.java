@@ -11,17 +11,17 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 import com.projectx.data.domain.CustomerIdDTO;
+import com.projectx.data.domain.CustomerQuickEntitySaveDTO;
 import com.projectx.data.domain.GetEmailCountDTO;
 import com.projectx.data.domain.GetMobileCountDTO;
 import com.projectx.data.domain.ResponseCustomerList;
+import com.projectx.data.domain.UpdateEmailHashAndMobilePinSentTimeDTO;
 import com.projectx.data.domain.UpdateEmailHashDTO;
 import com.projectx.data.domain.UpdateMobilePinDTO;
-import com.projectx.data.domain.UpdateStatusByCustomerId;
-import com.projectx.data.domain.VerifyEmailHashDTO;
-import com.projectx.data.domain.VerifyMobilePinDTO;
+import com.projectx.data.domain.UpdatePasswordDTO;
+import com.projectx.data.domain.UpdateStatusAndMobileVerificationAttemptsWithCustomerIdDTO;
 import com.projectx.rest.domain.CustomerQuickRegisterEntity;
 import com.projectx.rest.repository.CustomerQuickRegisterRepository;
-import com.projectx.web.domain.CustomerQuickRegisterSaveDTO;
 
 @Component
 @Profile("Dev")
@@ -39,7 +39,7 @@ public class CustomerQuickRegisterRepositoryImpl implements
 	public CustomerQuickRegisterEntity save(CustomerQuickRegisterEntity customer)
 			throws Exception {
 		
-	   CustomerQuickRegisterSaveDTO customerToDTO=customer.toCustomerQuickRegisterDTO();
+		CustomerQuickEntitySaveDTO customerToDTO=customer.toCustomerQuickRegisterDTO();
 		
 		CustomerQuickRegisterEntity savedEntity=restTemplate.postForObject(env.getProperty("data.url")+"/customer/quickregister", 
 				customerToDTO, CustomerQuickRegisterEntity.class);
@@ -87,80 +87,74 @@ public class CustomerQuickRegisterRepositoryImpl implements
 		return mobileCount;
 	}
 
-/*	@Override
-	public Integer verifyEmailHash(Long customerId, Long emailHash) {
-		VerifyEmailHashDTO verifyEmailHashDTO=new VerifyEmailHashDTO(customerId, emailHash);
+	@Override
+	public Integer updateStatusAndMobileVerificationAttemptsByCustomerId(
+			Long customerId, String status, Date lastStatusChaneTime,
+			Integer mobileVerificationAttempts) {
 		
-		Integer  mobileCount=restTemplate.postForObject(env.getProperty("data.url")+"/customer/quickregister/verifyEmailHash", 
-				verifyEmailHashDTO, Integer.class);
+		UpdateStatusAndMobileVerificationAttemptsWithCustomerIdDTO updateStatusMobileVerification=
+				new UpdateStatusAndMobileVerificationAttemptsWithCustomerIdDTO(customerId,status,lastStatusChaneTime,mobileVerificationAttempts);
 		
-		return mobileCount;
+		Integer updateStatus=restTemplate.postForObject(env.getProperty("data.url")+"/customer/quickregister/updateStatusAndMobileVerificationAttempts", 
+															updateStatusMobileVerification, Integer.class);
+		
+		return updateStatus;
+	}
+
+	@Override
+	public Integer updateEmailHash(Long customerId, String emailHash,
+			Date updateTime) {
+		UpdateEmailHashDTO emailHashDTO=new UpdateEmailHashDTO(customerId, emailHash, updateTime);
+		
+		Integer updateStatus=restTemplate.postForObject(env.getProperty("data.url")+"/customer/quickregister/updateEmailHash", emailHashDTO, Integer.class);
+
+		return updateStatus;
+	}
+
+	@Override
+	public Integer updateMobilePin(Long customerId, Integer mobilePin,
+			Date updateTime) {
+		UpdateMobilePinDTO mobilePinDTO=new UpdateMobilePinDTO(customerId, mobilePin, updateTime);
+		
+		Integer updateStatus=restTemplate.postForObject(env.getProperty("data.url")+"/customer/quickregister/updateMobilePin", mobilePinDTO, Integer.class);
+
+		return updateStatus;
+	}
+
+	@Override
+	public Integer updatePassword(Long customerId, String password,
+			String passwordType) {
+		
+		UpdatePasswordDTO passwordDTO=new UpdatePasswordDTO(customerId, password, passwordType);
+		
+		Integer updateStatus=restTemplate.postForObject(env.getProperty("data.url")+"/customer/quickregister/updatePassword", passwordDTO, Integer.class);
+
+		return updateStatus;
+	}
+
+	@Override
+	public Integer updateEmailHashAndMobilePinSentTime(Long customerId,
+			Date emailHashSentTime, Date mobilePinSentTime) {
+		UpdateEmailHashAndMobilePinSentTimeDTO emailHashAndMobilePinSentTimeDTO=
+				new UpdateEmailHashAndMobilePinSentTimeDTO(customerId, emailHashSentTime, mobilePinSentTime);
+		
+		Integer updateStatus=restTemplate.postForObject(env.getProperty("data.url")+"/customer/quickregister/updateEmailHashAndMobilePinSentTime", emailHashAndMobilePinSentTimeDTO, Integer.class);
+
+		return updateStatus;
 	}
 
 	
-	@Override
-	public Integer verifyMobilePin(Long customerId, Integer mobilePin) {
-		
-		VerifyMobilePinDTO verifyMobilePinDTO=new VerifyMobilePinDTO(customerId, mobilePin);
-		
-		Integer  mobileCount=restTemplate.postForObject(env.getProperty("data.url")+"/customer/quickregister/verifyMobilePin", 
-				verifyMobilePinDTO, Integer.class);
-		
-		return mobileCount;
-	}*/
-
-	@Override
-	public Integer updateStatusByCustomerId(Long customerId, String status) {
-
-		UpdateStatusByCustomerId updateStatusDTO=new UpdateStatusByCustomerId(customerId, status);
-		
-		Integer result=restTemplate.postForObject(env.getProperty("data.url")+"/customer/quickregister/updateStatusByCustomerId",
-				updateStatusDTO, Integer.class);
-				
-		return result;
-	}
-
-	@Override
-	public Integer updateEmailHash(Long customerId, String emailHash) {
-		
-		UpdateEmailHashDTO updateHashDTO=new UpdateEmailHashDTO(customerId, emailHash);
-		
-		Integer result=restTemplate.postForObject(env.getProperty("data.url")+"/customer/quickregister/updateEmailHash",
-				updateHashDTO, Integer.class);
-				
-		return result;
-	}
-
-	@Override
-	public Integer updateMobilePin(Long customerId, Integer mobilePin) {
-
-		UpdateMobilePinDTO updatePinDTO=new UpdateMobilePinDTO(customerId, mobilePin);
-		
-		Integer result=restTemplate.postForObject(env.getProperty("data.url")+"/customer/quickregister/updateMobilePin",
-				updatePinDTO, Integer.class);
-				
-		return result;	
-
-	}
-
 	@Override
 	public void clearCustomerQuickRegister() {
 		restTemplate.getForObject(env.getProperty("data.url")+"/customer/quickregister/clearForTesting", Boolean.class);
 
 	}
 
-	@Override
-	public Long deleteByCustomerId(Long customerId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+//	@Override
+//	public Long deleteByCustomerId(Long customerId) {
+//		// TODO Auto-generated method stub
+//		return null;
+//	}
 
-	@Override
-	public Integer updateStatusAndMobileVerificationAttemptsByCustomerId(
-			Long customerId, String status, Date lastStatusChaneTime,
-			Integer mobileVerificationAttempts) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
+	
 }

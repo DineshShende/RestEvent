@@ -2,7 +2,7 @@ package com.projectx.rest.domain;
 
 import java.util.Date;
 
-import com.projectx.web.domain.CustomerQuickRegisterSaveDTO;
+import com.projectx.data.domain.CustomerQuickEntitySaveDTO;
 
 public class CustomerQuickRegisterEntity {
 
@@ -39,15 +39,13 @@ public class CustomerQuickRegisterEntity {
 	
 	public CustomerQuickRegisterEntity() {
 		
-		super();
-		// TODO Auto-generated constructor stub
+		
 	}
 	
 	
-	
-	public CustomerQuickRegisterSaveDTO toCustomerQuickRegisterDTO()
+	public CustomerQuickEntitySaveDTO toCustomerQuickRegisterDTO()
 	{
-		CustomerQuickRegisterSaveDTO  customerQuickRegisterDTO1=new CustomerQuickRegisterSaveDTO();
+		CustomerQuickEntitySaveDTO  customerQuickRegisterDTO1=new CustomerQuickEntitySaveDTO();
 		//customerQuickRegisterDTO1.setCustomerId(this.customerId);
 		customerQuickRegisterDTO1.setFirstName(this.firstName);
 		customerQuickRegisterDTO1.setLastName(this.lastName);
@@ -57,6 +55,12 @@ public class CustomerQuickRegisterEntity {
 		customerQuickRegisterDTO1.setStatus(this.status);
 		customerQuickRegisterDTO1.setMobilePin(this.mobilePin);
 		customerQuickRegisterDTO1.setEmailHash(this.emailHash);
+		customerQuickRegisterDTO1.setMobileVerificationAttempts(this.mobileVerificationAttempts);
+		customerQuickRegisterDTO1.setMobilePinSentTime(this.mobilePinSentTime);
+		customerQuickRegisterDTO1.setEmailHashSentTime(this.emailHashSentTime);
+		customerQuickRegisterDTO1.setLastStatusChangedTime(this.lastStatusChangedTime);
+		customerQuickRegisterDTO1.setPassword(this.password);
+		customerQuickRegisterDTO1.setPasswordType(this.passwordType);
 		//customerQuickRegisterDTO1.setEmailHash(this.emailHash);
 		//customerQuickRegisterDTO1.setEmailHash(this.emailHash);
 		
@@ -65,6 +69,27 @@ public class CustomerQuickRegisterEntity {
 	}
 	
 
+	public CustomerQuickRegisterEntity createCopy()
+	{
+		CustomerQuickRegisterEntity customerQuickRegisterDTO1=new CustomerQuickRegisterEntity();
+		customerQuickRegisterDTO1.setCustomerId(this.customerId);
+		customerQuickRegisterDTO1.setFirstName(this.firstName);
+		customerQuickRegisterDTO1.setLastName(this.lastName);
+		customerQuickRegisterDTO1.setEmail(this.email);
+		customerQuickRegisterDTO1.setMobile(this.mobile);
+		customerQuickRegisterDTO1.setPin(this.pin);
+		customerQuickRegisterDTO1.setStatus(this.status);
+		customerQuickRegisterDTO1.setMobilePin(this.mobilePin);
+		customerQuickRegisterDTO1.setEmailHash(this.emailHash);
+		customerQuickRegisterDTO1.setMobileVerificationAttempts(this.mobileVerificationAttempts);
+		customerQuickRegisterDTO1.setMobilePinSentTime(this.mobilePinSentTime);
+		customerQuickRegisterDTO1.setEmailHashSentTime(this.emailHashSentTime);
+		customerQuickRegisterDTO1.setLastStatusChangedTime(this.lastStatusChangedTime);
+		customerQuickRegisterDTO1.setPassword(this.password);
+		customerQuickRegisterDTO1.setPasswordType(this.passwordType);
+		
+		return customerQuickRegisterDTO1;
+	}
 	
 	
 
@@ -92,6 +117,22 @@ public class CustomerQuickRegisterEntity {
 	}
 
 
+	
+	public boolean isMobileVerifiedEmailVerficationPending() {
+		return this.status.equals("MobileVerifiedEmailVerficationPending");
+	}
+
+	public boolean isMobileVerified() {
+		return this.status.equals("MobileVerified");
+	}
+
+	public boolean isEmailMobileVerified() {
+		return this.status.equals("EmailMobileVerified");
+	}
+
+	public boolean isEmailVerified() {
+		return this.status.equals("EmailVerified");
+	}
 
 	public boolean isEmailVerificationPending() {
 		return this.status.equals("EmailVerificationPending");
@@ -113,21 +154,7 @@ public class CustomerQuickRegisterEntity {
 		this.status = "EmailVerifiedMobileVerficationPending";
 	}
 
-	public boolean isMobileVerifiedEmailVerficationPending() {
-		return this.status.equals("MobileVerifiedEmailVerficationPending");
-	}
 
-	public boolean isMobileVerified() {
-		return this.status.equals("MobileVerified");
-	}
-
-	public boolean isEmailMobileVerified() {
-		return this.status.equals("EmailMobileVerified");
-	}
-
-	public boolean isEmailVerified() {
-		return this.status.equals("EmailVerified");
-	}
 
 	
 	public void setStatusMobileVerifiedEmailVerficationPending() {
@@ -328,7 +355,9 @@ public class CustomerQuickRegisterEntity {
 
 	public void setPasswordType(String passwordType) {
 		this.passwordType = passwordType;
+
 	}
+
 
 
 
@@ -403,7 +432,7 @@ public class CustomerQuickRegisterEntity {
 		if (customerId == null) {
 			if (other.customerId != null)
 				return false;
-		} else if (!customerId.equals(other.customerId))
+		} else if (!(customerId!=null && other.customerId!=null))
 			return false;
 		if (email == null) {
 			if (other.email != null)

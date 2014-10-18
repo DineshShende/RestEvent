@@ -1,22 +1,7 @@
 package com.projectx.rest.controller;
 
-import static com.projectx.rest.fixture.CustomerQuickRegisterDataFixture.CUST_EMAIL;
-import static com.projectx.rest.fixture.CustomerQuickRegisterDataFixture.CUST_FIRSTNAME;
-import static com.projectx.rest.fixture.CustomerQuickRegisterDataFixture.CUST_LASTNAME;
-import static com.projectx.rest.fixture.CustomerQuickRegisterDataFixture.CUST_MOBILEPIN;
-import static com.projectx.rest.fixture.CustomerQuickRegisterDataFixture.CUST_MOBILEPIN_UPDATED;
-import static com.projectx.rest.fixture.CustomerQuickRegisterDataFixture.CUST_PIN;
-import static com.projectx.rest.fixture.CustomerQuickRegisterDataFixture.CUST_STATUS_EMAILMOBILE;
-import static com.projectx.rest.fixture.CustomerQuickRegisterDataFixture.REGISTER_NOT_REGISTERED;
-import static com.projectx.rest.fixture.CustomerQuickRegisterDataFixture.STATUS_EMAIL_VERFIED;
-import static com.projectx.rest.fixture.CustomerQuickRegisterDataFixture.STATUS_MOBILE_VERFIED;
-import static com.projectx.rest.fixture.CustomerQuickRegisterDataFixture.standardJsonEmailCustomer;
-import static com.projectx.rest.fixture.CustomerQuickRegisterDataFixture.standardJsonEmailMobileCustomer;
-import static com.projectx.rest.fixture.CustomerQuickRegisterDataFixture.standardJsonGetByCustomerIdDTO;
-import static com.projectx.rest.fixture.CustomerQuickRegisterDataFixture.standardJsonMobileCustomer;
 
-import static com.projectx.rest.fixture.CustomerQuickRegisterDataFixture.standardJsonVerifyEmailHashDTO;
-import static com.projectx.rest.fixture.CustomerQuickRegisterDataFixture.standardJsonVerifyMobilePinDTO;
+import static com.projectx.rest.fixture.CustomerQuickRegisterDataFixture.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -46,7 +31,7 @@ import com.projectx.rest.config.Application;
 @WebAppConfiguration
 
 
-@ActiveProfiles("Test")
+@ActiveProfiles("Dev")
 public class CustomerQuickRegisterControllerITest {
 	
 	@Autowired
@@ -70,22 +55,17 @@ public class CustomerQuickRegisterControllerITest {
 	
 	@Test
 	public void checkIfExistStatusWithEmailMobileCustomer() throws Exception {
-		
-		Long arg0 = null;
-		
+					
 		this.mockMvc.perform(
 	            post("/customer/quickregister/checkifexist")
-	                    .content(standardJsonEmailMobileCustomer())
+	                    .content(standardJsonEmailMobileCustomerOther())
 	                    .contentType(MediaType.APPLICATION_JSON)
 	                    .accept(MediaType.APPLICATION_JSON))
 	            .andDo(print())
 	            .andExpect(status().isOk())
 	            
 	            .andExpect(content().string(REGISTER_NOT_REGISTERED));
-	           // .andReturn().getResponse().getContentAsString().toString().;
-		
-		System.out.println(arg0);
-	 	
+			 	
 	}
 	
 	@Test
@@ -98,15 +78,21 @@ public class CustomerQuickRegisterControllerITest {
 	                    .accept(MediaType.APPLICATION_JSON))
 	            .andDo(print())
 	            .andExpect(status().isOk())
-	            //.andExpect(jsonPath("$.firstName").value(CUST_FIRSTNAME))
-	            //.andExpect(jsonPath("$.lastName").value(CUST_LASTNAME))
-	           // .andExpect(jsonPath("$.mobile").value(CUST_MOBILE.longValue()))
-	            .andExpect(jsonPath("$.customer.email").value(CUST_EMAIL))
-	           // .andExpect(jsonPath("$.pin").value(CUST_PIN))
-			//	.andExpect(jsonPath("$.status").value(CUST_STATUS_EMAILMOBILE))
-				.andExpect(jsonPath("$.status").value(true));
-			  //.andExpect(jsonPath("$.emailHash").value(CUST_EMAILHASH));
-		    		
+	            .andExpect(jsonPath("status").value(true))
+	            .andExpect(jsonPath("$.customer.firstName").value(standardEmailMobileCustomer().getFirstName()))
+	            .andExpect(jsonPath("$.customer.lastName").value(standardEmailMobileCustomer().getLastName()))
+	            .andExpect(jsonPath("$.customer.mobile").value(standardEmailMobileCustomer().getMobile()))
+	            .andExpect(jsonPath("$.customer.email").value(standardEmailMobileCustomer().getEmail()))
+	            .andExpect(jsonPath("$.customer.pin").value(standardEmailMobileCustomer().getPin()))
+				.andExpect(jsonPath("$.customer.status").value(standardEmailMobileCustomer().getStatus()))
+				.andExpect(jsonPath("$.customer.mobilePin").exists())
+			    .andExpect(jsonPath("$.customer.emailHash").exists())
+				.andExpect(jsonPath("$.customer.mobileVerificationAttempts").value(standardEmailMobileCustomer().getMobileVerificationAttempts()))
+				.andExpect(jsonPath("$.customer.mobilePinSentTime").exists())
+				.andExpect(jsonPath("$.customer.emailHashSentTime").exists())
+				.andExpect(jsonPath("$.customer.lastStatusChangedTime").exists())
+				.andExpect(jsonPath("$.customer.password").value(standardEmailMobileCustomer().getPassword()))
+				.andExpect(jsonPath("$.customer.passwordType").value(standardEmailMobileCustomer().getPasswordType()));	
 	}
 	//Cannot run in 'Dev' mode  but can run in 'Test' mode
 	/*

@@ -21,7 +21,7 @@ import com.projectx.rest.domain.CustomerQuickRegisterEntity;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes=Application.class)
-@ActiveProfiles("Test")
+@ActiveProfiles("Dev")
 public class CustomerQuickRegisterRepositoryTest {
 
 	@Autowired
@@ -184,9 +184,9 @@ public class CustomerQuickRegisterRepositoryTest {
 		
 		CustomerQuickRegisterEntity savedEntity=customerQuickRegisterMemRepository.save(standardMobileCustomer());
 		
-		assertEquals(CUST_PASSWORD_DEFAULT,customerQuickRegisterMemRepository.findByCustomerId(savedEntity.getCustomerId()).getPassword());
+		assertEquals(null,customerQuickRegisterMemRepository.findByCustomerId(savedEntity.getCustomerId()).getPassword());
 		
-		assertEquals(CUST_PASSWORD_TYPE_DEFAULT,customerQuickRegisterMemRepository.findByCustomerId(savedEntity.getCustomerId()).getPasswordType());
+		assertEquals(null,customerQuickRegisterMemRepository.findByCustomerId(savedEntity.getCustomerId()).getPasswordType());
 		
 		assertEquals(new Integer(1), customerQuickRegisterMemRepository.updatePassword(savedEntity.getCustomerId(),CUST_PASSWORD_CHANGED, CUST_PASSWORD_TYPE_CHANGED));
 		
