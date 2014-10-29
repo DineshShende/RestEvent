@@ -4,6 +4,7 @@ import static com.projectx.rest.fixture.CustomerQuickRegisterDataFixture.*;
 import static org.junit.Assert.*;
 
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +29,7 @@ public class CustomerQuickRegisterServiceTest {
 	@Autowired
 	public CustomerQuickRegisterRepository customerQuickRegisterRepository;
 	
-	@After
+	@Before
 	public void cleanAllRecords()
 	{
 		customerQuickRegisterRepository.clearCustomerQuickRegister();
@@ -419,8 +420,35 @@ public class CustomerQuickRegisterServiceTest {
 		
 	}
 
+
+	
+	@Test
+	public void verifyMobilePinWithFailingCase() throws Exception
+	{
+		assertNull(customerQuickRegisterHandler.getCustomerQuickRegisterEntityByCustomerId(CUST_ID).getCustomerId());
+
+		CustomerQuickDetailsSentStatusEntity handledEntity=customerQuickRegisterHandler
+				.handleNewCustomerQuickRegister(standardEmailMobileCustomerDTO());
+		
+		assertFalse(customerQuickRegisterHandler.verifyMobilePin(handledEntity.getCustomer().getCustomerId(), 101010));
+		
+		assertFalse(customerQuickRegisterHandler.verifyMobilePin(handledEntity.getCustomer().getCustomerId(), 101010));
+		
+		assertFalse(customerQuickRegisterHandler.verifyMobilePin(handledEntity.getCustomer().getCustomerId(), 101010));
+
+		assertFalse(customerQuickRegisterHandler.verifyMobilePin(handledEntity.getCustomer().getCustomerId(), 101010));
+		
+		assertFalse(customerQuickRegisterHandler.verifyMobilePin(handledEntity.getCustomer().getCustomerId(), handledEntity.getCustomer().getMobilePin()));
+		
+		assertTrue(customerQuickRegisterHandler.reSendMobilePin(handledEntity.getCustomer().getCustomerId()));
+		
+		CustomerQuickRegisterEntity fetchedEntity=customerQuickRegisterHandler.getCustomerQuickRegisterEntityByCustomerId(handledEntity.getCustomer().getCustomerId());
+		
+		assertTrue(customerQuickRegisterHandler.verifyMobilePin(handledEntity.getCustomer().getCustomerId(), fetchedEntity.getMobilePin()));
+	}
 	
 	
+
 	@Test 
 	public void verifyEmailWithEmailCustomer() throws Exception
 	{

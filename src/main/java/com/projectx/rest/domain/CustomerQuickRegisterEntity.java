@@ -2,6 +2,7 @@ package com.projectx.rest.domain;
 
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.projectx.data.domain.CustomerQuickEntitySaveDTO;
 
 public class CustomerQuickRegisterEntity {
@@ -117,39 +118,39 @@ public class CustomerQuickRegisterEntity {
 	}
 
 
-	
+	@JsonIgnore
 	public boolean isMobileVerifiedEmailVerficationPending() {
 		return this.status.equals("MobileVerifiedEmailVerficationPending");
 	}
-
+	@JsonIgnore
 	public boolean isMobileVerified() {
 		return this.status.equals("MobileVerified");
 	}
-
+	@JsonIgnore
 	public boolean isEmailMobileVerified() {
 		return this.status.equals("EmailMobileVerified");
 	}
-
+	@JsonIgnore
 	public boolean isEmailVerified() {
 		return this.status.equals("EmailVerified");
 	}
-
+	@JsonIgnore
 	public boolean isEmailVerificationPending() {
 		return this.status.equals("EmailVerificationPending");
 	}
-
+	@JsonIgnore
 	public boolean isMobileVerificationPending() {
 		return this.status.equals("MobileVerificationPending");
 	}
-
+	@JsonIgnore
 	public boolean isEmailMobileVerificationPending() {
 		return this.status.equals("EmailMobileVerificationPending");
 	}
-	
+	@JsonIgnore
 	public boolean isEmailVerifiedMobileVerficationPending() {
 		return this.status.equals("EmailVerifiedMobileVerficationPending");
 	}
-	
+	@JsonIgnore
 	public void setStatusEmailVerifiedMobileVerficationPending() {
 		this.status = "EmailVerifiedMobileVerficationPending";
 	}

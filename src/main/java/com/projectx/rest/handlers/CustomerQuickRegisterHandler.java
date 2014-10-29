@@ -252,6 +252,8 @@ public class CustomerQuickRegisterHandler implements
 		
 		Date lastStatusChangedTime=fetchedEntity.getLastStatusChangedTime();
 		
+		Boolean verificationStatus=false;
+		
 		if(fetchedEntity.getCustomerId()==null)
 			return false;
 		
@@ -266,6 +268,7 @@ public class CustomerQuickRegisterHandler implements
 			else if(fetchedEntity.isMobileVerificationPending())
 				fetchedEntity.setStatusMobileVerified();
 		
+			verificationStatus=true;
 			
 			lastStatusChangedTime=new Date();
 				
@@ -273,7 +276,7 @@ public class CustomerQuickRegisterHandler implements
 		else
 		{
 			int currentAttemptCount=fetchedEntity.getMobileVerificationAttempts();
-			fetchedEntity.setMobileVerificationAttempts(currentAttemptCount++);
+			fetchedEntity.setMobileVerificationAttempts(currentAttemptCount+1);
 		
 		}
 		
@@ -282,7 +285,7 @@ public class CustomerQuickRegisterHandler implements
 		int updatedStatus=customerQuickRegisterRepository.updateStatusAndMobileVerificationAttemptsByCustomerId(customerId, fetchedEntity.getStatus(), 
 				fetchedEntity.getLastStatusChangedTime(), fetchedEntity.getMobileVerificationAttempts());
 	
-		if(updatedStatus==UPDATE_SUCESS)
+		if(updatedStatus==UPDATE_SUCESS && verificationStatus)
 			return true;
 		else
 			return false;

@@ -45,8 +45,8 @@ public class CustomerQuickRegisterControllerITest {
 		this.mockMvc=MockMvcBuilders.webAppContextSetup(wac).build();
 	}
 	
-	
 	@After
+	@Before
 	public void clearTestData() throws Exception
 	{
 		this.mockMvc.perform(get("/customer/quickregister/cleartestdata"));
@@ -58,7 +58,7 @@ public class CustomerQuickRegisterControllerITest {
 					
 		this.mockMvc.perform(
 	            post("/customer/quickregister/checkifexist")
-	                    .content(standardJsonEmailMobileCustomerOther())
+	                    .content(standardJsonEmailMobileCustomer())
 	                    .contentType(MediaType.APPLICATION_JSON)
 	                    .accept(MediaType.APPLICATION_JSON))
 	            .andDo(print())

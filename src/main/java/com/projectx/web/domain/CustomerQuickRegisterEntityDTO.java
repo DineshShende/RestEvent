@@ -135,6 +135,13 @@ public class CustomerQuickRegisterEntityDTO {
 			return false;
 		return true;
 	}
+
+	@Override
+	public String toString() {
+		return "CustomerQuickRegisterEntityDTO [firstName=" + firstName
+				+ ", lastName=" + lastName + ", email=" + email + ", mobile="
+				+ mobile + ", pin=" + pin + ", status=" + status + "]";
+	}
 	
 	
 	

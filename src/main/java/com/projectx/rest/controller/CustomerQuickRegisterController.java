@@ -79,9 +79,10 @@ public class CustomerQuickRegisterController {
 	}
 		
 	@RequestMapping(value="/cleartestdata")
-	public void clearTestData()
+	public Boolean clearTestData()
 	{
 		customerQuickRegisterService.clearDataForTesting();
+		return true;
 	}
 	
 //	@RequestMapping(value="/customer")
