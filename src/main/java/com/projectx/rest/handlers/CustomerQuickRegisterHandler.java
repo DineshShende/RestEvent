@@ -156,18 +156,18 @@ public class CustomerQuickRegisterHandler implements
 		
 		if (customer.getStatus().equals(
 				"EmailMobileVerificationPending")) {
-			//emailSentStatus=sendHashEmail(customer);
+			emailSentStatus=sendHashEmail(customer);
 			customer.setEmailHashSentTime(new Date());
-			//mobileSentStatus=sendPinSMS(customer);
+			mobileSentStatus=sendPinSMS(customer);
 			customer.setMobilePinSentTime(new Date());
 			
 		} else if (customer.getStatus().equals(
 				"EmailVerificationPending")) {
-			//emailSentStatus=sendHashEmail(customer);
+			emailSentStatus=sendHashEmail(customer);
 			customer.setEmailHashSentTime(new Date());
 		} else if (customer.getStatus().equals(
 				"MobileVerificationPending")) {
-			//mobileSentStatus=sendPinSMS(customer);
+			mobileSentStatus=sendPinSMS(customer);
 			customer.setMobilePinSentTime(new Date());
 		}
 		
@@ -294,15 +294,15 @@ public class CustomerQuickRegisterHandler implements
 
 
 	@Override
-	public String composeEmail(CustomerQuickRegisterEntity customer) {
+	public String composeEmailWithEmailHash(CustomerQuickRegisterEntity customer) {
 		
 		StringBuilder messageBuilder=new StringBuilder();
 		
 		messageBuilder.append("Hi "+customer.getFirstName()+" "+customer.getLastName()+"\n");
 		messageBuilder.append("Thanks for connecting with us!!\n Please Click Below link to activate your account\n");
-		messageBuilder.append(env.getProperty("mvc.url")+"/"+customer.getCustomerId()+"/verifyEmail/"+customer.getEmailHash());
+		messageBuilder.append(env.getProperty("mvc.url")+"/customer/quickregister/verifyEmailHash/"+customer.getCustomerId()+"/"+customer.getEmailHash());
 		
-		System.out.println(messageBuilder.toString());
+		//System.out.println(messageBuilder.toString());
 		
 		return messageBuilder.toString();
 	}
@@ -310,21 +310,23 @@ public class CustomerQuickRegisterHandler implements
 	@Override
 	public Boolean sendHashEmail(CustomerQuickRegisterEntity customer) {
 		
-		String message=composeEmail(customer);
+		String message=composeEmailWithEmailHash(customer);
 		
-		return handleCustomerVerification.sendEmailHash(customer.getEmail(), message);
+		return handleCustomerVerification.sendEmail(customer.getEmail(), message);
 	}
 
+
+	
 	
 	@Override
-	public String composeSMS(CustomerQuickRegisterEntity customer) {
+	public String composeSMSWithMobilePin(CustomerQuickRegisterEntity customer) {
 		
 		StringBuilder messageBuilder=new StringBuilder();
 		
 		messageBuilder.append("Hi "+customer.getFirstName()+" "+customer.getLastName()+"\n");
 		messageBuilder.append("Thanks for connecting with us!!\n Enter given OTP in provided textbox.OTP="+customer.getMobilePin());
 		
-		System.out.println(messageBuilder.toString());
+		//System.out.println(messageBuilder.toString());
 		
 		return messageBuilder.toString();
 	}
@@ -332,12 +334,51 @@ public class CustomerQuickRegisterHandler implements
 	@Override
 	public Boolean sendPinSMS(CustomerQuickRegisterEntity customer) throws UnirestException {
 		
-		String message=composeSMS(customer);
+		String message=composeSMSWithMobilePin(customer);
 		
-		return handleCustomerVerification.sendMobilePin(customer.getMobile(), message);
+		return handleCustomerVerification.sendSMS(customer.getMobile(), message);
 		
 	}
+
+	@Override
+	public String composeMessageWithPassword(CustomerQuickRegisterEntity customer)
+	{
+		StringBuilder messageBuilder=new StringBuilder();
+		
+		messageBuilder.append("Hi "+customer.getFirstName()+" "+customer.getLastName()+"\n");
+		messageBuilder.append("Your login password is="+customer.getPassword());
+		
+		return null;
+	}
 	
+	@Override
+	public Boolean sendPasswordSMS(CustomerQuickRegisterEntity customer) throws UnirestException
+	{
+		String message=composeMessageWithPassword(customer);
+		
+		return handleCustomerVerification.sendSMS(customer.getMobile(), message);
+	}
+	
+	
+	@Override
+	public Boolean sendPasswordEmail(CustomerQuickRegisterEntity customer)
+	{
+		String message=composeMessageWithPassword(customer);
+		
+		return handleCustomerVerification.sendEmail(customer.getEmail(), message);
+	}
+	
+	
+	@Override
+	public Boolean sendDefaultPassword(CustomerQuickRegisterEntity customer)
+	{
+		//TODO
+		String password=handleCustomerVerification.generatePassword();
+		customer.setPassword(password);
+		
+		
+		return null;
+	}
 	
 	@Override
 	public Integer updateEmailHash(Long customerId) {
@@ -356,15 +397,7 @@ public class CustomerQuickRegisterHandler implements
 		return customerQuickRegisterRepository.updateMobilePin(customerId, mobilePin,new Date());
 	}
 
-	
-	
-	@Override
-	public void clearDataForTesting() {
-		customerQuickRegisterRepository.clearCustomerQuickRegister();
-
 		
-	}
-	
 	@Override
 	public Boolean reSendMobilePin(Long customerId) throws UnirestException {
 	
@@ -401,6 +434,15 @@ public class CustomerQuickRegisterHandler implements
 			return true;
 		else
 			return false;
+	}
+
+
+	
+	@Override
+	public void clearDataForTesting() {
+		customerQuickRegisterRepository.clearCustomerQuickRegister();
+
+		
 	}
 
 

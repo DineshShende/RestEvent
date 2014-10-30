@@ -24,6 +24,9 @@ public class HandleCustomerVerification {
 	@Autowired
 	private  MailSender mailSender;
 	
+	
+	private final int PASSWORD_LENGTH=6;
+	
 	public  String generateEmailHash() {
 
 		String allPossibleChar="01234567789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -64,7 +67,6 @@ public class HandleCustomerVerification {
 		
 	}
 
-	
 	public  Integer genarateMobilePin() {
 
 		SecureRandom secureRandom=new SecureRandom();
@@ -78,8 +80,27 @@ public class HandleCustomerVerification {
 		return number;
 	}
 
+	public String generatePassword()
+	{
+		StringBuilder passwordBuilder=new StringBuilder();
+		SecureRandom secureRandom=new SecureRandom();
+		
+		String allPossibleChar="01234567789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+		
+		for(int i=0;i<PASSWORD_LENGTH;i++)
+		{
+			passwordBuilder.append(allPossibleChar.charAt(secureRandom.nextInt(allPossibleChar.length())));
+		}
+			
+		System.out.println(passwordBuilder.toString());
 	
-	public Boolean sendEmailHash(String email,String message)
+		return passwordBuilder.toString();
+	}
+	
+	
+	
+	
+	public Boolean sendEmail(String email,String message)
 	{
 		SimpleMailMessage mailMessage=new SimpleMailMessage();
 		
@@ -92,7 +113,7 @@ public class HandleCustomerVerification {
 		return true;
 	}
 	
-	public Boolean sendMobilePin(Long mobile,String message) throws UnirestException
+	public Boolean sendSMS(Long mobile,String message) throws UnirestException
 	{
 		String processedMessage=message.replace(" ", "+");
 		
@@ -102,20 +123,23 @@ public class HandleCustomerVerification {
 		requestBuilder.append(processedMessage);
 		requestBuilder.append("&phone=");
 		requestBuilder.append(mobile);
-		requestBuilder.append("&pwd=projectx&uid=9960821869");
+		requestBuilder.append("&pwd=projectx&uid=9766460156");
 		
 		System.out.println(requestBuilder.toString());
+		
 		
 		HttpResponse<JsonNode> response = Unirest.get(requestBuilder.toString())
 				.header("X-Mashape-Key", "sTnPJWur9ZmshvwqGPSriebc0XbKp1l7AWBjsn0ID2ca6pEmZD")
 				.asJson();
 		
+		
+		
 		/*
 		HttpResponse<JsonNode> response = Unirest.get("https://site2sms.p.mashape.com/index.php?msg=Hi+how+r+u&phone=9960821869&pwd=projectx&uid=9960821869")
 				.header("X-Mashape-Key", "sTnPJWur9ZmshvwqGPSriebc0XbKp1l7AWBjsn0ID2ca6pEmZD")
 				.asJson();
-		*/
 		
+		*/
 		
 		System.out.println(response.getBody());
 		

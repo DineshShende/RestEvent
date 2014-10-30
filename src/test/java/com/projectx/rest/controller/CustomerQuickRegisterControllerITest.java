@@ -52,7 +52,7 @@ public class CustomerQuickRegisterControllerITest {
 		this.mockMvc.perform(get("/customer/quickregister/cleartestdata"));
 	}
 	
-	
+	/*
 	@Test
 	public void checkIfExistStatusWithEmailMobileCustomer() throws Exception {
 					
@@ -93,6 +93,34 @@ public class CustomerQuickRegisterControllerITest {
 				.andExpect(jsonPath("$.customer.lastStatusChangedTime").exists())
 				.andExpect(jsonPath("$.customer.password").value(standardEmailMobileCustomer().getPassword()))
 				.andExpect(jsonPath("$.customer.passwordType").value(standardEmailMobileCustomer().getPasswordType()));	
+	}
+	
+*/
+	@Test
+	public void AddCustomerQuickRegisterWithMobileCustomer() throws Exception {
+		
+		this.mockMvc.perform(
+	            post("/customer/quickregister")
+	                    .content(standardJsonMobileCustomer())
+	                    .contentType(MediaType.APPLICATION_JSON)
+	                    .accept(MediaType.APPLICATION_JSON))
+	            .andDo(print())
+	            .andExpect(status().isOk())
+	            .andExpect(jsonPath("status").value(true))
+	            .andExpect(jsonPath("$.customer.firstName").value(standardMobileCustomer().getFirstName()))
+	            .andExpect(jsonPath("$.customer.lastName").value(standardMobileCustomer().getLastName()))
+	            .andExpect(jsonPath("$.customer.mobile").value(standardMobileCustomer().getMobile()))
+	            //.andExpect(jsonPath("$.customer.email").value(standardEmailMobileCustomer().getEmail()))
+	            .andExpect(jsonPath("$.customer.pin").value(standardMobileCustomer().getPin()))
+				.andExpect(jsonPath("$.customer.status").value(standardMobileCustomer().getStatus()))
+				.andExpect(jsonPath("$.customer.mobilePin").exists())
+			    //.andExpect(jsonPath("$.customer.emailHash").exists())
+				.andExpect(jsonPath("$.customer.mobileVerificationAttempts").value(standardMobileCustomer().getMobileVerificationAttempts()))
+				.andExpect(jsonPath("$.customer.mobilePinSentTime").exists())
+				//.andExpect(jsonPath("$.customer.emailHashSentTime").exists())
+				.andExpect(jsonPath("$.customer.lastStatusChangedTime").exists())
+				.andExpect(jsonPath("$.customer.password").value(standardMobileCustomer().getPassword()))
+				.andExpect(jsonPath("$.customer.passwordType").value(standardMobileCustomer().getPasswordType()));	
 	}
 	//Cannot run in 'Dev' mode  but can run in 'Test' mode
 	/*

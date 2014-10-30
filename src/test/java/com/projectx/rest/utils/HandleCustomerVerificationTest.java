@@ -17,7 +17,7 @@ import com.projectx.rest.domain.CustomerQuickRegisterEntity;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
 @ActiveProfiles(value="Dev")
-public class HandleVerificationTest {
+public class HandleCustomerVerificationTest {
 
 	@Autowired
 	HandleCustomerVerification handleCustomerVerification;
@@ -27,8 +27,17 @@ public class HandleVerificationTest {
 		//CustomerQuickRegisterEntity customer=standardEmailCustomer();
 		//customer.setEmail("dineshshe@gmail.com");
 		
+		//handleCustomerVerification.generatePassword();
+		
 		//handleCustomerVerification.sendMobilePin(9960821869L, "Y+O+P+T");
 		//handleCustomerVerification.sendEmailHash("dineshshe@gmail.com", "Hi There!!");
 	}
+	/*
+	@Test
+	public void sendMobilePin() throws UnirestException
+	{
+		assertTrue(handleCustomerVerification.sendSMS(CUST_MOBILE, "Hi"));
+	}
+	*/
 
 }

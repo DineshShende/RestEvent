@@ -330,7 +330,20 @@ public class CustomerQuickRegisterServiceTest {
 		assertEquals(standardMobileCustomerAfterVerificatinDetailsSent(), customerStatusEntity.getCustomer());
 	}
 	
+	
 
+	@Test
+	public void handleNewCustomerWithMobileCustomer() throws Exception
+	{
+		CustomerQuickDetailsSentStatusEntity handledEntity=customerQuickRegisterHandler
+				.handleNewCustomerQuickRegister(standardMobileCustomerDTO());
+
+		assertTrue(handledEntity.getStatus());	
+		assertEquals(standardMobileCustomerAfterVerificatinDetailsSent(), handledEntity.getCustomer());
+		
+	}
+	
+	
 	
 	@Test
 	public void handleNewCustomerQuickRegistrationWithEmailMobileCustomer() throws Exception {
@@ -535,7 +548,7 @@ public class CustomerQuickRegisterServiceTest {
 		assertNull(customerQuickRegisterHandler.getCustomerQuickRegisterEntityByCustomerId(CUST_ID).getCustomerId());
 
 		CustomerQuickDetailsSentStatusEntity handledEntity=customerQuickRegisterHandler
-				.handleNewCustomerQuickRegister(standardEmailCustomerDTO());
+				.handleNewCustomerQuickRegister(standardMobileCustomerDTO());
 		
 		CustomerQuickRegisterEntity entity=handledEntity.getCustomer().createCopy();
 

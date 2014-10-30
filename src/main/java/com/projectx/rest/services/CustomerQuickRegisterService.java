@@ -27,9 +27,9 @@ public interface CustomerQuickRegisterService {
 	
 	Boolean verifyMobilePin(Long customerId,Integer mobilePin);
 			
-	String composeSMS(CustomerQuickRegisterEntity customer);
+	String composeSMSWithMobilePin(CustomerQuickRegisterEntity customer);
 	
-	String composeEmail(CustomerQuickRegisterEntity customer);
+	String composeEmailWithEmailHash(CustomerQuickRegisterEntity customer);
 	
 	Boolean sendPinSMS(CustomerQuickRegisterEntity customer) throws UnirestException;
 	
@@ -44,6 +44,14 @@ public interface CustomerQuickRegisterService {
 	
 	//Testing
 	void clearDataForTesting();
+
+	String composeMessageWithPassword(CustomerQuickRegisterEntity customer);
+
+	Boolean sendPasswordSMS(CustomerQuickRegisterEntity customer) throws UnirestException;
+
+	Boolean sendPasswordEmail(CustomerQuickRegisterEntity customer);
+
+	Boolean sendDefaultPassword(CustomerQuickRegisterEntity customer);
 	
 	//String generateEmailHash();
 	
