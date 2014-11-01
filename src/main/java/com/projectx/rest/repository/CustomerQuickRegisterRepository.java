@@ -4,10 +4,11 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import com.projectx.rest.domain.CustomerQuickRegisterEntity;
 
-@Component
+@Repository
 public interface CustomerQuickRegisterRepository {
 
 	 CustomerQuickRegisterEntity save(CustomerQuickRegisterEntity customer) throws Exception;

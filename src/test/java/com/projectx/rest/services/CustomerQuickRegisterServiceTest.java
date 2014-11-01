@@ -1,6 +1,7 @@
 package com.projectx.rest.services;
 
 import static com.projectx.rest.fixture.CustomerQuickRegisterDataFixture.*;
+//import static com.projectx.rest.fixtures.CustomerQuickRegisterDataFixtur
 import static org.junit.Assert.*;
 
 import org.junit.After;
@@ -14,6 +15,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.mashape.unirest.http.exceptions.UnirestException;
 import com.projectx.rest.config.Application;
+import com.projectx.rest.domain.CustomerAuthenticationDetails;
 import com.projectx.rest.domain.CustomerQuickDetailsSentStatusEntity;
 import com.projectx.rest.domain.CustomerQuickRegisterEntity;
 import com.projectx.rest.repository.CustomerQuickRegisterRepository;
@@ -292,6 +294,15 @@ public class CustomerQuickRegisterServiceTest {
 	}
 
 
+	@Test
+	public void saveVerificationDetails()
+	{
+		//TODO
+		CustomerAuthenticationDetails authenticationDetails=customerQuickRegisterHandler.saveCustomerAuthenticationDetails(sta)
+		
+		
+	}
+	
 	@Test
 	public void sendVerificationDetailsWithEmailMobileCustomer() throws Exception
 	{

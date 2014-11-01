@@ -1,8 +1,11 @@
 package com.projectx.rest.services;
 
 import com.mashape.unirest.http.exceptions.UnirestException;
+import com.projectx.data.domain.UpdatePasswordDTO;
+import com.projectx.rest.domain.CustomerAuthenticationDetails;
 import com.projectx.rest.domain.CustomerQuickDetailsSentStatusEntity;
 import com.projectx.rest.domain.CustomerQuickRegisterEntity;
+import com.projectx.web.domain.CustomerIdDTO;
 import com.projectx.web.domain.CustomerQuickRegisterEntityDTO;
 
 public interface CustomerQuickRegisterService {
@@ -51,7 +54,16 @@ public interface CustomerQuickRegisterService {
 
 	Boolean sendPasswordEmail(CustomerQuickRegisterEntity customer);
 
-	Boolean sendDefaultPassword(CustomerQuickRegisterEntity customer);
+	Boolean sendDefaultPassword(CustomerQuickRegisterEntity customer) throws UnirestException;
+
+	Boolean resetPassword(CustomerIdDTO customerIdDTO) throws UnirestException;
+
+	Boolean updatePassword(UpdatePasswordDTO updatePasswordDTO);
+
+	CustomerAuthenticationDetails saveCustomerAuthenticationDetails(
+			CustomerQuickRegisterEntity entity);
+	
+	
 	
 	//String generateEmailHash();
 	

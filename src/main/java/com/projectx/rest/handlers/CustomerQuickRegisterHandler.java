@@ -1,9 +1,6 @@
 package com.projectx.rest.handlers;
 
-import static com.projectx.rest.fixtures.CustomerQuickRegisterDataFixture.REGISTER_EMAIL_ALREADY_REGISTERED;
-import static com.projectx.rest.fixtures.CustomerQuickRegisterDataFixture.REGISTER_EMAIL_MOBILE_ALREADY_REGISTERED;
-import static com.projectx.rest.fixtures.CustomerQuickRegisterDataFixture.REGISTER_MOBILE_ALREADY_REGISTERED;
-import static com.projectx.rest.fixtures.CustomerQuickRegisterDataFixture.REGISTER_NOT_REGISTERED;
+import static com.projectx.rest.fixtures.CustomerQuickRegisterDataFixture.*;
 
 import java.util.Date;
 
@@ -13,13 +10,16 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
-
 import com.mashape.unirest.http.exceptions.UnirestException;
+import com.projectx.data.domain.UpdatePasswordDTO;
+import com.projectx.rest.domain.CustomerAuthenticationDetails;
 import com.projectx.rest.domain.CustomerQuickDetailsSentStatusEntity;
 import com.projectx.rest.domain.CustomerQuickRegisterEntity;
+import com.projectx.rest.repository.CustomerAuthenticationDetailsRepository;
 import com.projectx.rest.repository.CustomerQuickRegisterRepository;
 import com.projectx.rest.services.CustomerQuickRegisterService;
 import com.projectx.rest.utils.HandleCustomerVerification;
+import com.projectx.web.domain.CustomerIdDTO;
 import com.projectx.web.domain.CustomerQuickRegisterEntityDTO;
 
 @Component
@@ -30,6 +30,9 @@ public class CustomerQuickRegisterHandler implements
 
 	@Autowired
 	CustomerQuickRegisterRepository customerQuickRegisterRepository;
+	
+	@Autowired
+	CustomerAuthenticationDetailsRepository customerAuthenticationDetailsRepository;
 	
 	@Autowired 
 	HandleCustomerVerification handleCustomerVerification;
@@ -126,10 +129,19 @@ public class CustomerQuickRegisterHandler implements
 	@Override
 	public CustomerQuickRegisterEntity saveNewCustomerQuickRegisterEntity(
 			CustomerQuickRegisterEntity customer) throws Exception {
-
+				
 		return customerQuickRegisterRepository.save(customer);
 	}
 
+	
+	@Override
+	public CustomerAuthenticationDetails saveCustomerAuthenticationDetails(CustomerQuickRegisterEntity entity)
+	{
+		CustomerAuthenticationDetails newEntity=new CustomerAuthenticationDetails(entity.getCustomerId(), entity.getEmail(), 
+																								entity.getMobile(), null, null);
+		
+		return newEntity;
+	}
 
 	@Override
 	public CustomerQuickDetailsSentStatusEntity handleNewCustomerQuickRegister(
@@ -140,6 +152,8 @@ public class CustomerQuickRegisterHandler implements
 		CustomerQuickRegisterEntity initialisedCustomer=initializeNewCustomerQuickRegistrationEntity(customerWithStatusPopulated);
 
 		CustomerQuickRegisterEntity savedEntity=saveNewCustomerQuickRegisterEntity(initialisedCustomer);
+		
+		CustomerAuthenticationDetails savedLoginDetails=saveCustomerAuthenticationDetails(savedEntity);
 		
 		CustomerQuickDetailsSentStatusEntity customerStatusEntity=sendVerificationDetails(savedEntity);
 		
@@ -370,15 +384,62 @@ public class CustomerQuickRegisterHandler implements
 	
 	
 	@Override
-	public Boolean sendDefaultPassword(CustomerQuickRegisterEntity customer)
+	public Boolean sendDefaultPassword(CustomerQuickRegisterEntity customer) throws UnirestException
 	{
 		//TODO
-		String password=handleCustomerVerification.generatePassword();
-		customer.setPassword(password);
+		
+		Boolean emailSendStatus=true;
+		Boolean smsSendStatus=true;
+		Integer passwordUpdateStatus=new Integer(1);
+		
+		//CustomerAuthenticationDetails customerAuthenticationDetails=customerAuthenticationDetailsRepository.
 		
 		
+		if(customer.getPassword()==null)
+		{	
+			String password=handleCustomerVerification.generatePassword();
+			customer.setPassword(password);
+			customer.setPasswordType(CUST_PASSWORD_TYPE_DEFAULT);
+			passwordUpdateStatus=customerQuickRegisterRepository.updatePassword(customer.getCustomerId(), customer.getPassword(), customer.getPasswordType());
+			
+		}
+		
+		
+		
+		if(customer.isEmailMobileVerified() || customer.isEmailVerifiedMobileVerficationPending()||customer.isEmailVerified())
+			sendPasswordEmail(customer);
+		
+		if(customer.isEmailMobileVerified()||customer.isMobileVerifiedEmailVerficationPending()|| customer.isMobileVerified())
+			sendPinSMS(customer);
+		
+		
+		if(passwordUpdateStatus==UPDATE_SUCESS && emailSendStatus && smsSendStatus)
+			return true;
+		else
+			return false;
+	}
+	
+	
+	@Override
+	public Boolean resetPassword(CustomerIdDTO customerIdDTO) throws UnirestException
+	{
+		//TODO
+		
+		CustomerQuickRegisterEntity customer=customerQuickRegisterRepository.findByCustomerId(customerIdDTO.getCustomerId());
+		
+		customer.setPassword(null);
+		customer.setPasswordType(null);
+		
+		return sendDefaultPassword(customer);
+	}
+	
+	@Override
+	public Boolean updatePassword(UpdatePasswordDTO updatePasswordDTO)
+	{
+		//TODO
 		return null;
 	}
+	
 	
 	@Override
 	public Integer updateEmailHash(Long customerId) {

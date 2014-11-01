@@ -1,4 +1,4 @@
-package com.projectx.rest.repository;
+package com.projectx.rest.repositoryfixture;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 import static com.projectx.rest.fixtures.CustomerQuickRegisterDataFixture.*;
 
 import com.projectx.rest.domain.CustomerQuickRegisterEntity;
+import com.projectx.rest.repository.CustomerQuickRegisterRepository;
 
 @Component
 @Profile("Test")
