@@ -11,6 +11,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import com.mashape.unirest.http.exceptions.UnirestException;
+import com.projectx.data.domain.LoginVerificationDTO;
 import com.projectx.data.domain.UpdatePasswordDTO;
 import com.projectx.rest.domain.CustomerAuthenticationDetails;
 import com.projectx.rest.domain.CustomerQuickDetailsSentStatusEntity;
@@ -140,7 +141,9 @@ public class CustomerQuickRegisterHandler implements
 		CustomerAuthenticationDetails newEntity=new CustomerAuthenticationDetails(entity.getCustomerId(), entity.getEmail(), 
 																								entity.getMobile(), null, null);
 		
-		return newEntity;
+		CustomerAuthenticationDetails savedEntity=customerAuthenticationDetailsRepository.save(newEntity);
+		
+		return savedEntity;
 	}
 
 	@Override
@@ -196,6 +199,11 @@ public class CustomerQuickRegisterHandler implements
 	}
 	
 
+	@Override
+	public CustomerAuthenticationDetails getLoginDetailsByCustomerId(Long customerId)
+	{
+		return customerAuthenticationDetailsRepository.getByCustomerId(customerId);
+	}
 	
 	@Override
 	public CustomerQuickRegisterEntity getCustomerQuickRegisterEntityByCustomerId(
@@ -208,6 +216,8 @@ public class CustomerQuickRegisterHandler implements
 
 	@Override
 	public Boolean verifyEmailHash(Long customerId, String emailHash) {
+		
+		//TODO
 		
 		CustomerQuickRegisterEntity fetchedEntity=getCustomerQuickRegisterEntityByCustomerId(customerId);
 	
@@ -247,7 +257,10 @@ public class CustomerQuickRegisterHandler implements
 						fetchedEntity.getLastStatusChangedTime(), fetchedEntity.getMobileVerificationAttempts());
 										
 			
-			if(updatedStatus==UPDATE_SUCESS)
+			Boolean sendPasswordStatus=sendDefaultPassword(fetchedEntity, false);
+			
+			
+			if(updatedStatus==UPDATE_SUCESS && sendPasswordStatus)
 				return true;
 			else
 				return false;
@@ -262,11 +275,15 @@ public class CustomerQuickRegisterHandler implements
 	@Override
 	public Boolean verifyMobilePin(Long customerId, Integer mobilePin) {
 	
+		//TODO
+		
 		CustomerQuickRegisterEntity fetchedEntity=getCustomerQuickRegisterEntityByCustomerId(customerId);
 		
 		Date lastStatusChangedTime=fetchedEntity.getLastStatusChangedTime();
 		
 		Boolean verificationStatus=false;
+		
+		Boolean sendPasswordStatus=true;
 		
 		if(fetchedEntity.getCustomerId()==null)
 			return false;
@@ -285,6 +302,8 @@ public class CustomerQuickRegisterHandler implements
 			verificationStatus=true;
 			
 			lastStatusChangedTime=new Date();
+			
+			sendPasswordStatus=sendDefaultPassword(fetchedEntity, false);
 				
 		}
 		else
@@ -299,14 +318,24 @@ public class CustomerQuickRegisterHandler implements
 		int updatedStatus=customerQuickRegisterRepository.updateStatusAndMobileVerificationAttemptsByCustomerId(customerId, fetchedEntity.getStatus(), 
 				fetchedEntity.getLastStatusChangedTime(), fetchedEntity.getMobileVerificationAttempts());
 	
-		if(updatedStatus==UPDATE_SUCESS && verificationStatus)
+		if(updatedStatus==UPDATE_SUCESS && verificationStatus && sendPasswordStatus)
 			return true;
 		else
 			return false;
 		
 	}
 
+	@Override
+	public CustomerAuthenticationDetails verifyLoginDetails(
+			LoginVerificationDTO loginVerificationDTO) {
+		
+		CustomerAuthenticationDetails fetchedEntity=customerAuthenticationDetailsRepository.loginVerification(loginVerificationDTO.getEmail(),
+																loginVerificationDTO.getMobile(), loginVerificationDTO.getPassword());
+		return fetchedEntity;
+	}
 
+	
+	
 	@Override
 	public String composeEmailWithEmailHash(CustomerQuickRegisterEntity customer) {
 		
@@ -346,7 +375,7 @@ public class CustomerQuickRegisterHandler implements
 	}
 
 	@Override
-	public Boolean sendPinSMS(CustomerQuickRegisterEntity customer) throws UnirestException {
+	public Boolean sendPinSMS(CustomerQuickRegisterEntity customer)  {
 		
 		String message=composeSMSWithMobilePin(customer);
 		
@@ -366,7 +395,7 @@ public class CustomerQuickRegisterHandler implements
 	}
 	
 	@Override
-	public Boolean sendPasswordSMS(CustomerQuickRegisterEntity customer) throws UnirestException
+	public Boolean sendPasswordSMS(CustomerQuickRegisterEntity customer)
 	{
 		String message=composeMessageWithPassword(customer);
 		
@@ -384,28 +413,28 @@ public class CustomerQuickRegisterHandler implements
 	
 	
 	@Override
-	public Boolean sendDefaultPassword(CustomerQuickRegisterEntity customer) throws UnirestException
+	public Boolean sendDefaultPassword(CustomerQuickRegisterEntity customer,Boolean resetFlag) 
 	{
-		//TODO
-		
 		Boolean emailSendStatus=true;
 		Boolean smsSendStatus=true;
 		Integer passwordUpdateStatus=new Integer(1);
 		
-		//CustomerAuthenticationDetails customerAuthenticationDetails=customerAuthenticationDetailsRepository.
+		CustomerAuthenticationDetails customerAuthenticationDetails=customerAuthenticationDetailsRepository.getByCustomerId(customer.getCustomerId());
 		
+		if(!resetFlag && (customerAuthenticationDetails.getPasswordType()!=null && customerAuthenticationDetails.getPasswordType().equals(CUST_PASSWORD_TYPE_CHANGED)))
+			return true;
 		
-		if(customer.getPassword()==null)
+		if(customerAuthenticationDetails.getPassword()==null || resetFlag)
 		{	
 			String password=handleCustomerVerification.generatePassword();
-			customer.setPassword(password);
-			customer.setPasswordType(CUST_PASSWORD_TYPE_DEFAULT);
-			passwordUpdateStatus=customerQuickRegisterRepository.updatePassword(customer.getCustomerId(), customer.getPassword(), customer.getPasswordType());
-			
+			customerAuthenticationDetails.setPassword(password);
+			customerAuthenticationDetails.setPasswordType(CUST_PASSWORD_TYPE_DEFAULT);
+			//passwordUpdateStatus=customerQuickRegisterRepository.updatePassword(customer.getCustomerId(), customer.getPassword(), customer.getPasswordType());
+			 passwordUpdateStatus=customerAuthenticationDetailsRepository.updatePasswordAndPasswordType(customerAuthenticationDetails.getCustomerId(),
+					 																						customerAuthenticationDetails.getPassword(), customerAuthenticationDetails.getPasswordType());
 		}
 		
-		
-		
+			
 		if(customer.isEmailMobileVerified() || customer.isEmailVerifiedMobileVerficationPending()||customer.isEmailVerified())
 			sendPasswordEmail(customer);
 		
@@ -417,27 +446,32 @@ public class CustomerQuickRegisterHandler implements
 			return true;
 		else
 			return false;
+		
+		
 	}
 	
 	
 	@Override
-	public Boolean resetPassword(CustomerIdDTO customerIdDTO) throws UnirestException
+	public Boolean resetPassword(CustomerIdDTO customerIdDTO) 
 	{
-		//TODO
-		
 		CustomerQuickRegisterEntity customer=customerQuickRegisterRepository.findByCustomerId(customerIdDTO.getCustomerId());
 		
 		customer.setPassword(null);
 		customer.setPasswordType(null);
 		
-		return sendDefaultPassword(customer);
+		return sendDefaultPassword(customer,true);
 	}
 	
 	@Override
 	public Boolean updatePassword(UpdatePasswordDTO updatePasswordDTO)
 	{
-		//TODO
-		return null;
+		Integer updateStatus=customerAuthenticationDetailsRepository.updatePasswordAndPasswordType(updatePasswordDTO.getCustomerId(),
+				updatePasswordDTO.getPassword(), CUST_PASSWORD_TYPE_CHANGED);
+		
+		if(updateStatus==UPDATE_SUCESS)
+			return true;
+		else
+			return false;
 	}
 	
 	
@@ -460,7 +494,7 @@ public class CustomerQuickRegisterHandler implements
 
 		
 	@Override
-	public Boolean reSendMobilePin(Long customerId) throws UnirestException {
+	public Boolean reSendMobilePin(Long customerId)  {
 	
 		Integer updateStatus=0;
 		
@@ -505,6 +539,8 @@ public class CustomerQuickRegisterHandler implements
 
 		
 	}
+
+
 
 
 }

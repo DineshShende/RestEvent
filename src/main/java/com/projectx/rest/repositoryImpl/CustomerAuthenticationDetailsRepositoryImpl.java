@@ -80,6 +80,9 @@ public class CustomerAuthenticationDetailsRepositoryImpl implements CustomerAuth
 		
 		CustomerAuthenticationDetails fetchedEntity=restTemplate.postForObject(env.getProperty("data.url")+"/customer/quickregister/getLoginDetailsByCustomerId", customerIdDTO, CustomerAuthenticationDetails.class);
 
+		if(fetchedEntity==null)
+			return new CustomerAuthenticationDetails();
+		
 		return fetchedEntity;
 	}
 	

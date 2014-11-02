@@ -88,7 +88,12 @@ public class CustomerAuthenticationDetailsMemRepository implements CustomerAuthe
 	@Override
 	public CustomerAuthenticationDetails getByCustomerId(Long customerId) {
 		
-		return customerList.get(customerId);
+		CustomerAuthenticationDetails fetchedEntity= customerList.get(customerId);
+		
+		if(fetchedEntity==null)
+			return new CustomerAuthenticationDetails();
+		
+		return fetchedEntity; 
 	}
 
 }

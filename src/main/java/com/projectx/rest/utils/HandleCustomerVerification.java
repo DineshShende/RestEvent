@@ -10,6 +10,7 @@ import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestTemplate;
 
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
@@ -24,6 +25,9 @@ public class HandleCustomerVerification {
 	@Autowired
 	private  MailSender mailSender;
 	
+	
+	@Autowired
+	private RestTemplate restTemplate;
 	
 	private final int PASSWORD_LENGTH=6;
 	
@@ -108,40 +112,48 @@ public class HandleCustomerVerification {
 		mailMessage.setSubject("Greetings from transportdeal.in");
 		mailMessage.setText(message);
 			
-		mailSender.send(mailMessage);
+		System.out.println("Email sent");
+		
+		//mailSender.send(mailMessage);
 		
 		return true;
 	}
 	
-	public Boolean sendSMS(Long mobile,String message) throws UnirestException
+	public Boolean sendSMS(Long mobile,String message) 
 	{
 		String processedMessage=message.replace(" ", "+");
 		
 		StringBuilder requestBuilder=new StringBuilder();
 		
-		requestBuilder.append("https://site2sms.p.mashape.com/index.php?msg=");
-		requestBuilder.append(processedMessage);
-		requestBuilder.append("&phone=");
+		requestBuilder.append("http://login.bulksmsindia.biz/messageapi.asp?username=karle7&password=58483712&sender=karlee&mobile=");
 		requestBuilder.append(mobile);
-		requestBuilder.append("&pwd=projectx&uid=9766460156");
+		requestBuilder.append("&message=");
+		requestBuilder.append(message);
 		
-		System.out.println(requestBuilder.toString());
+		System.out.println("SMS sent");
+		
+		//System.out.println(requestBuilder.toString());
+						
+		//String result=restTemplate.getForObject(requestBuilder.toString(), String.class);	
+			
+		//System.out.println(result);
 		
 		
+		/*
+		 * 
 		HttpResponse<JsonNode> response = Unirest.get(requestBuilder.toString())
 				.header("X-Mashape-Key", "sTnPJWur9ZmshvwqGPSriebc0XbKp1l7AWBjsn0ID2ca6pEmZD")
 				.asJson();
 		
-		
-		
-		/*
 		HttpResponse<JsonNode> response = Unirest.get("https://site2sms.p.mashape.com/index.php?msg=Hi+how+r+u&phone=9960821869&pwd=projectx&uid=9960821869")
 				.header("X-Mashape-Key", "sTnPJWur9ZmshvwqGPSriebc0XbKp1l7AWBjsn0ID2ca6pEmZD")
 				.asJson();
 		
+		//System.out.println(response.getBody());
+		
 		*/
 		
-		System.out.println(response.getBody());
+		
 		
 		return true;
 	}
