@@ -13,12 +13,11 @@ import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.mashape.unirest.http.exceptions.UnirestException;
 import com.projectx.data.domain.LoginVerificationDTO;
-import com.projectx.data.domain.UpdatePasswordDTO;
+import com.projectx.data.domain.UpdatePasswordAndPasswordTypeDTO;
 import com.projectx.rest.config.Application;
 import com.projectx.rest.domain.CustomerAuthenticationDetails;
-import com.projectx.rest.domain.CustomerQuickDetailsSentStatusEntity;
+import com.projectx.rest.domain.CustomerQuickRegisterStatusEntity;
 import com.projectx.rest.domain.CustomerQuickRegisterEntity;
 import com.projectx.rest.repository.CustomerAuthenticationDetailsRepository;
 import com.projectx.rest.repository.CustomerQuickRegisterRepository;
@@ -50,20 +49,34 @@ public class CustomerQuickRegisterServiceTest {
 	public void checkIfEmailCustomerExist() throws Exception {
 
 		assertEquals(REGISTER_NOT_REGISTERED,customerQuickRegisterHandler
-				.checkIfAlreadyRegistered(standardEmailCustomerDTO()));
+				.checkIfAlreadyRegistered(standardEmailCustomerDTO()).getStatus());
+		
+		
+		CustomerQuickRegisterEntity fetchedEntity=customerQuickRegisterHandler.handleNewCustomerQuickRegister(standardEmailCustomerDTO()).getCustomer();
 
-		customerQuickRegisterHandler
-				.saveNewCustomerQuickRegisterEntity(standardEmailCustomer());
-
-		assertEquals(REGISTER_EMAIL_ALREADY_REGISTERED,customerQuickRegisterHandler
-				.checkIfAlreadyRegistered(standardEmailMobileCustomerDTO()));
+		assertEquals(REGISTER_EMAIL_ALREADY_REGISTERED_NOT_VERIFIED,customerQuickRegisterHandler
+				.checkIfAlreadyRegistered(standardEmailMobileCustomerDTO()).getStatus());
 
 		
-		assertEquals(REGISTER_EMAIL_ALREADY_REGISTERED,customerQuickRegisterHandler
-				.checkIfAlreadyRegistered(standardEmailCustomerDTO()));
+		assertEquals(REGISTER_EMAIL_ALREADY_REGISTERED_NOT_VERIFIED,customerQuickRegisterHandler
+				.checkIfAlreadyRegistered(standardEmailCustomerDTO()).getStatus());
 
+		
 		assertEquals(REGISTER_NOT_REGISTERED,customerQuickRegisterHandler
-				.checkIfAlreadyRegistered(standardMobileCustomerDTO()));
+				.checkIfAlreadyRegistered(standardMobileCustomerDTO()).getStatus());
+		
+		assertTrue(customerQuickRegisterHandler.verifyEmailHash(fetchedEntity.getCustomerId(), fetchedEntity.getEmailHash()));
+
+
+		assertEquals(REGISTER_EMAIL_ALREADY_REGISTERED_VERIFIED,customerQuickRegisterHandler
+				.checkIfAlreadyRegistered(standardEmailMobileCustomerDTO()).getStatus());
+
+		
+		assertEquals(REGISTER_EMAIL_ALREADY_REGISTERED_VERIFIED,customerQuickRegisterHandler
+				.checkIfAlreadyRegistered(standardEmailCustomerDTO()).getStatus());
+
+		
+		
 	}
 
 	
@@ -71,44 +84,104 @@ public class CustomerQuickRegisterServiceTest {
 	public void checkIfMobileCustomerExist() throws Exception {
 
 		assertEquals(REGISTER_NOT_REGISTERED,customerQuickRegisterHandler
-				.checkIfAlreadyRegistered(standardMobileCustomerDTO()));
+				.checkIfAlreadyRegistered(standardMobileCustomerDTO()).getStatus());
 
-		customerQuickRegisterHandler
-				.saveNewCustomerQuickRegisterEntity(standardMobileCustomer());
-
-		assertEquals(REGISTER_MOBILE_ALREADY_REGISTERED,customerQuickRegisterHandler
-				.checkIfAlreadyRegistered(standardEmailMobileCustomerDTO()));
+		CustomerQuickRegisterEntity fetchedEntity=customerQuickRegisterHandler.handleNewCustomerQuickRegister(standardMobileCustomerDTO()).getCustomer();
+		
+		assertEquals(REGISTER_MOBILE_ALREADY_REGISTERED_NOT_VERIFIED,customerQuickRegisterHandler
+				.checkIfAlreadyRegistered(standardEmailMobileCustomerDTO()).getStatus());
 
 		
 		assertEquals(REGISTER_NOT_REGISTERED,customerQuickRegisterHandler
-				.checkIfAlreadyRegistered(standardEmailCustomerDTO()));
+				.checkIfAlreadyRegistered(standardEmailCustomerDTO()).getStatus());
 
-		assertEquals(REGISTER_MOBILE_ALREADY_REGISTERED,customerQuickRegisterHandler
-				.checkIfAlreadyRegistered(standardMobileCustomerDTO()));
+		assertEquals(REGISTER_MOBILE_ALREADY_REGISTERED_NOT_VERIFIED,customerQuickRegisterHandler
+				.checkIfAlreadyRegistered(standardMobileCustomerDTO()).getStatus());
+		
+		
+		
+		//TODO
 	}
 
 	
 	@Test
-	public void checkIfEmailMobileCustomerExist() throws Exception {
+	public void checkIfEmailMobileCustomerExistEmailVerfiedFirst() throws Exception {
 
 		assertEquals(REGISTER_NOT_REGISTERED,customerQuickRegisterHandler
-				.checkIfAlreadyRegistered(standardEmailMobileCustomerDTO()));
-
-		customerQuickRegisterHandler
-				.saveNewCustomerQuickRegisterEntity(standardEmailMobileCustomer());
-
-		assertEquals(REGISTER_EMAIL_MOBILE_ALREADY_REGISTERED,customerQuickRegisterHandler
-				.checkIfAlreadyRegistered(standardEmailMobileCustomerDTO()));
+				.checkIfAlreadyRegistered(standardEmailMobileCustomerDTO()).getStatus());
+		
+		CustomerQuickRegisterEntity fetchedEntity=customerQuickRegisterHandler.handleNewCustomerQuickRegister(standardEmailMobileCustomerDTO()).getCustomer();
+		
+		assertEquals(REGISTER_EMAIL_MOBILE_ALREADY_REGISTERED_EMAIL_MOBILE_UNVERIFIED,customerQuickRegisterHandler
+				.checkIfAlreadyRegistered(standardEmailMobileCustomerDTO()).getStatus());
 
 		
-		assertEquals(REGISTER_EMAIL_ALREADY_REGISTERED,customerQuickRegisterHandler
-				.checkIfAlreadyRegistered(standardEmailCustomerDTO()));
+		assertEquals(REGISTER_EMAIL_ALREADY_REGISTERED_NOT_VERIFIED,customerQuickRegisterHandler
+				.checkIfAlreadyRegistered(standardEmailCustomerDTO()).getStatus());
 
-		assertEquals(REGISTER_MOBILE_ALREADY_REGISTERED,customerQuickRegisterHandler
-				.checkIfAlreadyRegistered(standardMobileCustomerDTO()));
+		assertEquals(REGISTER_MOBILE_ALREADY_REGISTERED_NOT_VERIFIED,customerQuickRegisterHandler
+				.checkIfAlreadyRegistered(standardMobileCustomerDTO()).getStatus());
+		
+		
+		
+		assertTrue(customerQuickRegisterHandler.verifyEmailHash(fetchedEntity.getCustomerId(), fetchedEntity.getEmailHash()));
+		
+		assertEquals(REGISTER_EMAIL_MOBILE_ALREADY_REGISTERED_EMAIL_VERIFIED ,customerQuickRegisterHandler
+				.checkIfAlreadyRegistered(standardEmailMobileCustomerDTO()).getStatus());
+		
+		assertTrue(customerQuickRegisterHandler.verifyMobilePin(fetchedEntity.getCustomerId(), fetchedEntity.getMobilePin()));
+		
+		assertEquals(REGISTER_EMAIL_MOBILE_ALREADY_REGISTERED_EMAIL_MOBILE_VERIFIED,customerQuickRegisterHandler
+				.checkIfAlreadyRegistered(standardEmailMobileCustomerDTO()).getStatus());
+		
+		assertEquals(REGISTER_EMAIL_ALREADY_REGISTERED_VERIFIED,customerQuickRegisterHandler
+				.checkIfAlreadyRegistered(standardEmailCustomerDTO()).getStatus());
+
+		assertEquals(REGISTER_MOBILE_ALREADY_REGISTERED_VERIFIED,customerQuickRegisterHandler
+				.checkIfAlreadyRegistered(standardMobileCustomerDTO()).getStatus());
+		
+		
 	}
+
 	
+	@Test
+	public void checkIfEmailMobileCustomerExistMobileVerfiedFirst() throws Exception {
+
+		assertEquals(REGISTER_NOT_REGISTERED,customerQuickRegisterHandler
+				.checkIfAlreadyRegistered(standardEmailMobileCustomerDTO()).getStatus());
 		
+		CustomerQuickRegisterEntity fetchedEntity=customerQuickRegisterHandler.handleNewCustomerQuickRegister(standardEmailMobileCustomerDTO()).getCustomer();
+		
+		assertEquals(REGISTER_EMAIL_MOBILE_ALREADY_REGISTERED_EMAIL_MOBILE_UNVERIFIED,customerQuickRegisterHandler
+				.checkIfAlreadyRegistered(standardEmailMobileCustomerDTO()).getStatus());
+
+		
+		assertEquals(REGISTER_EMAIL_ALREADY_REGISTERED_NOT_VERIFIED,customerQuickRegisterHandler
+				.checkIfAlreadyRegistered(standardEmailCustomerDTO()).getStatus());
+
+		assertEquals(REGISTER_MOBILE_ALREADY_REGISTERED_NOT_VERIFIED,customerQuickRegisterHandler
+				.checkIfAlreadyRegistered(standardMobileCustomerDTO()).getStatus());
+		
+		assertTrue(customerQuickRegisterHandler.verifyMobilePin(fetchedEntity.getCustomerId(), fetchedEntity.getMobilePin()));
+		
+		assertEquals(REGISTER_EMAIL_MOBILE_ALREADY_REGISTERED_MOBILE_VERIFIED ,customerQuickRegisterHandler
+				.checkIfAlreadyRegistered(standardEmailMobileCustomerDTO()).getStatus());
+		
+		assertTrue(customerQuickRegisterHandler.verifyEmailHash(fetchedEntity.getCustomerId(), fetchedEntity.getEmailHash()));
+		
+		assertEquals(REGISTER_EMAIL_MOBILE_ALREADY_REGISTERED_EMAIL_MOBILE_VERIFIED,customerQuickRegisterHandler
+				.checkIfAlreadyRegistered(standardEmailMobileCustomerDTO()).getStatus());
+		
+		assertEquals(REGISTER_EMAIL_ALREADY_REGISTERED_VERIFIED,customerQuickRegisterHandler
+				.checkIfAlreadyRegistered(standardEmailCustomerDTO()).getStatus());
+
+		assertEquals(REGISTER_MOBILE_ALREADY_REGISTERED_VERIFIED,customerQuickRegisterHandler
+				.checkIfAlreadyRegistered(standardMobileCustomerDTO()).getStatus());
+		
+		
+	}
+
+	
 	@Test
 	public void populateStatusEmailCustomer() throws Exception {
 		
@@ -302,6 +375,56 @@ public class CustomerQuickRegisterServiceTest {
 	
 	}
 
+	@Test
+	public void getCustomerQuickRegisterEntityByEmailAndMobile() throws Exception
+	{
+		assertNull(customerQuickRegisterHandler.getCustomerQuickRegisterEntityByEmail(CUST_EMAIL).getCustomerId());
+		
+		assertNull(customerQuickRegisterHandler.getCustomerQuickRegisterEntityByMobile(CUST_MOBILE).getCustomerId());
+		
+		CustomerQuickRegisterEntity saved=customerQuickRegisterHandler.saveNewCustomerQuickRegisterEntity(standardEmailMobileCustomerAfterInitialization());
+		
+		
+		CustomerQuickRegisterEntity fetced=customerQuickRegisterHandler.getCustomerQuickRegisterEntityByEmail(CUST_EMAIL);
+		
+		assertEquals(saved.getCustomerId(),fetced.getCustomerId());
+		assertEquals(standardEmailMobileCustomerAfterInitialization().getFirstName(), fetced.getFirstName());
+		assertEquals(standardEmailMobileCustomerAfterInitialization().getLastName(), fetced.getLastName());
+		assertEquals(standardEmailMobileCustomerAfterInitialization().getEmail(), fetced.getEmail());
+		assertEquals(standardEmailMobileCustomerAfterInitialization().getMobile(), fetced.getMobile());
+		assertEquals(standardEmailMobileCustomerAfterInitialization().getPin(), fetced.getPin());
+		assertEquals(standardEmailMobileCustomerAfterInitialization().getStatus(), fetced.getStatus());
+		assertNotNull(fetced.getMobilePin());
+		assertNotNull(fetced.getEmailHash());
+		assertEquals(standardEmailCustomerAfterStatusInitialization().getEmailHashSentTime(),fetced.getEmailHashSentTime());
+		assertEquals(standardEmailMobileCustomerAfterInitialization().getMobilePinSentTime(), fetced.getMobilePinSentTime());
+		assertEquals(standardEmailMobileCustomerAfterInitialization().getMobileVerificationAttempts(), fetced.getMobileVerificationAttempts());
+		assertTrue( (fetced.getLastStatusChangedTime().getTime()-standardEmailMobileCustomerAfterInitialization().getLastStatusChangedTime().getTime())<60*1000);
+		assertEquals(standardEmailMobileCustomerAfterInitialization().getPassword(), fetced.getPassword());
+		assertEquals(standardEmailMobileCustomerAfterInitialization().getPasswordType(), fetced.getPasswordType());
+		
+
+		fetced=customerQuickRegisterHandler.getCustomerQuickRegisterEntityByMobile(CUST_MOBILE);
+		
+		assertEquals(saved.getCustomerId(),fetced.getCustomerId());
+		assertEquals(standardEmailMobileCustomerAfterInitialization().getFirstName(), fetced.getFirstName());
+		assertEquals(standardEmailMobileCustomerAfterInitialization().getLastName(), fetced.getLastName());
+		assertEquals(standardEmailMobileCustomerAfterInitialization().getEmail(), fetced.getEmail());
+		assertEquals(standardEmailMobileCustomerAfterInitialization().getMobile(), fetced.getMobile());
+		assertEquals(standardEmailMobileCustomerAfterInitialization().getPin(), fetced.getPin());
+		assertEquals(standardEmailMobileCustomerAfterInitialization().getStatus(), fetced.getStatus());
+		assertNotNull(fetced.getMobilePin());
+		assertNotNull(fetced.getEmailHash());
+		assertEquals(standardEmailCustomerAfterStatusInitialization().getEmailHashSentTime(),fetced.getEmailHashSentTime());
+		assertEquals(standardEmailMobileCustomerAfterInitialization().getMobilePinSentTime(), fetced.getMobilePinSentTime());
+		assertEquals(standardEmailMobileCustomerAfterInitialization().getMobileVerificationAttempts(), fetced.getMobileVerificationAttempts());
+		assertTrue( (fetced.getLastStatusChangedTime().getTime()-standardEmailMobileCustomerAfterInitialization().getLastStatusChangedTime().getTime())<60*1000);
+		assertEquals(standardEmailMobileCustomerAfterInitialization().getPassword(), fetced.getPassword());
+		assertEquals(standardEmailMobileCustomerAfterInitialization().getPasswordType(), fetced.getPasswordType());
+		
+		
+	}
+	
 	
 	@Test
 	public void getVerificationDetailsByCustomerId()
@@ -348,7 +471,7 @@ public class CustomerQuickRegisterServiceTest {
 	@Test
 	public void sendDefaultPassword() throws Exception
 	{
-		CustomerQuickDetailsSentStatusEntity handledEntity=customerQuickRegisterHandler
+		CustomerQuickRegisterStatusEntity handledEntity=customerQuickRegisterHandler
 				.handleNewCustomerQuickRegister(standardEmailMobileCustomerDTO());
 		
 		assertTrue(customerQuickRegisterHandler.verifyEmailHash(handledEntity.getCustomer().getCustomerId(), handledEntity.getCustomer().getEmailHash()));
@@ -365,7 +488,7 @@ public class CustomerQuickRegisterServiceTest {
 	@Test
 	public void resetPassword() throws Exception
 	{
-		CustomerQuickDetailsSentStatusEntity handledEntity=customerQuickRegisterHandler
+		CustomerQuickRegisterStatusEntity handledEntity=customerQuickRegisterHandler
 				.handleNewCustomerQuickRegister(standardEmailMobileCustomerDTO());
 		
 		assertTrue(customerQuickRegisterHandler.verifyEmailHash(handledEntity.getCustomer().getCustomerId(), handledEntity.getCustomer().getEmailHash()));
@@ -391,30 +514,30 @@ public class CustomerQuickRegisterServiceTest {
 	@Test
 	public void updatePassword() throws Exception
 	{
-		CustomerQuickDetailsSentStatusEntity handledEntity=customerQuickRegisterHandler
+		CustomerQuickRegisterStatusEntity handledEntity=customerQuickRegisterHandler
 				.handleNewCustomerQuickRegister(standardEmailMobileCustomerDTO());
 		
 		assertTrue(customerQuickRegisterHandler.verifyEmailHash(handledEntity.getCustomer().getCustomerId(), handledEntity.getCustomer().getEmailHash()));
 		
 		
 		CustomerAuthenticationDetails authenticationDetails=customerQuickRegisterHandler.getLoginDetailsByCustomerId(handledEntity.getCustomer().getCustomerId());
-		/*
-		assertNull( authenticationDetails.getPassword());
-		assertNull( authenticationDetails.getPasswordType());
-	
-		CustomerQuickRegisterEntity updatedEntity=customerQuickRegisterHandler.getCustomerQuickRegisterEntityByCustomerId(handledEntity.getCustomer().getCustomerId());
-		
-		assertTrue(customerQuickRegisterHandler.sendDefaultPassword(updatedEntity, false));
-		
-		authenticationDetails=customerQuickRegisterHandler.getLoginDetailsByCustomerId(handledEntity.getCustomer().getCustomerId());
-		*/
+//		/*
+//		assertNull( authenticationDetails.getPassword());
+//		assertNull( authenticationDetails.getPasswordType());
+//	
+//		CustomerQuickRegisterEntity updatedEntity=customerQuickRegisterHandler.getCustomerQuickRegisterEntityByCustomerId(handledEntity.getCustomer().getCustomerId());
+//		
+//		assertTrue(customerQuickRegisterHandler.sendDefaultPassword(updatedEntity, false));
+//		
+//		authenticationDetails=customerQuickRegisterHandler.getLoginDetailsByCustomerId(handledEntity.getCustomer().getCustomerId());
+//		
 		assertNotNull( authenticationDetails.getPassword());
 		assertNotNull( authenticationDetails.getPasswordType());
 		
 		String oldPassword=authenticationDetails.getPassword();
 		String oldPasswordType=authenticationDetails.getPasswordType();
 		
-		assertTrue(customerQuickRegisterHandler.updatePassword(new UpdatePasswordDTO(authenticationDetails.getCustomerId(), CUST_PASSWORD_CHANGED, CUST_PASSWORD_TYPE_CHANGED)));
+		assertTrue(customerQuickRegisterHandler.updatePassword(new UpdatePasswordAndPasswordTypeDTO(authenticationDetails.getCustomerId(), CUST_PASSWORD_CHANGED, CUST_PASSWORD_TYPE_CHANGED)));
 		
 		authenticationDetails=customerQuickRegisterHandler.getLoginDetailsByCustomerId(handledEntity.getCustomer().getCustomerId());
 		
@@ -428,29 +551,29 @@ public class CustomerQuickRegisterServiceTest {
 	@Test
 	public void setDefaultPasswordWithEmailMobileCustomerCalledAfterEmailVerifiedAndPasswordChange() throws Exception
 	{
-		CustomerQuickDetailsSentStatusEntity handledEntity=customerQuickRegisterHandler
+		CustomerQuickRegisterStatusEntity handledEntity=customerQuickRegisterHandler
 				.handleNewCustomerQuickRegister(standardEmailMobileCustomerDTO());
 	
 		assertTrue(customerQuickRegisterHandler.verifyEmailHash(handledEntity.getCustomer().getCustomerId(), handledEntity.getCustomer().getEmailHash()));
 		
 		CustomerAuthenticationDetails authenticationDetails=customerQuickRegisterHandler.getLoginDetailsByCustomerId(handledEntity.getCustomer().getCustomerId());
-/*		
-		assertNull( authenticationDetails.getPassword());
-		assertNull( authenticationDetails.getPasswordType());
-	
-		CustomerQuickRegisterEntity updatedEntity=customerQuickRegisterHandler.getCustomerQuickRegisterEntityByCustomerId(handledEntity.getCustomer().getCustomerId());
-		
-		assertTrue(customerQuickRegisterHandler.sendDefaultPassword(updatedEntity, false));
-		
-		authenticationDetails=customerQuickRegisterHandler.getLoginDetailsByCustomerId(handledEntity.getCustomer().getCustomerId());
-		
-*/
+///*		
+//		assertNull( authenticationDetails.getPassword());
+//		assertNull( authenticationDetails.getPasswordType());
+//	
+//		CustomerQuickRegisterEntity updatedEntity=customerQuickRegisterHandler.getCustomerQuickRegisterEntityByCustomerId(handledEntity.getCustomer().getCustomerId());
+//		
+//		assertTrue(customerQuickRegisterHandler.sendDefaultPassword(updatedEntity, false));
+//		
+//		authenticationDetails=customerQuickRegisterHandler.getLoginDetailsByCustomerId(handledEntity.getCustomer().getCustomerId());
+//		
+
 		CustomerQuickRegisterEntity updatedEntity=customerQuickRegisterHandler.getCustomerQuickRegisterEntityByCustomerId(handledEntity.getCustomer().getCustomerId());
 		
 		assertNotNull( authenticationDetails.getPassword());
 		assertNotNull( authenticationDetails.getPasswordType());
 		
-		assertTrue(customerQuickRegisterHandler.updatePassword(new UpdatePasswordDTO(authenticationDetails.getCustomerId(), CUST_PASSWORD_CHANGED, CUST_PASSWORD_TYPE_CHANGED)));
+		assertTrue(customerQuickRegisterHandler.updatePassword(new UpdatePasswordAndPasswordTypeDTO(authenticationDetails.getCustomerId(), CUST_PASSWORD_CHANGED, CUST_PASSWORD_TYPE_CHANGED)));
 		
 		assertTrue(customerQuickRegisterHandler.sendDefaultPassword(updatedEntity, false));
 		
@@ -467,9 +590,9 @@ public class CustomerQuickRegisterServiceTest {
 	}
 
 	@Test
-	public void verifyLoginDetails() throws Exception
+	public void verifyLoginDetailsWithMobileVerifiedFirst() throws Exception
 	{
-		CustomerQuickDetailsSentStatusEntity handledEntity=customerQuickRegisterHandler
+		CustomerQuickRegisterStatusEntity handledEntity=customerQuickRegisterHandler
 				.handleNewCustomerQuickRegister(standardEmailMobileCustomerDTO());
 	
 		assertTrue(customerQuickRegisterHandler.verifyMobilePin(handledEntity.getCustomer().getCustomerId(), handledEntity.getCustomer().getMobilePin()));
@@ -493,7 +616,25 @@ public class CustomerQuickRegisterServiceTest {
 				CUST_PASSWORD_CHANGED)).getCustomerId());
 
 	}
+
 	
+	@Test
+	public void verifyLoginDetailsWithEmailVerifiedFirst() throws Exception
+	{
+		CustomerQuickRegisterStatusEntity handledEntity=customerQuickRegisterHandler
+				.handleNewCustomerQuickRegister(standardEmailMobileCustomerDTO());
+	
+		assertTrue(customerQuickRegisterHandler.verifyEmailHash(handledEntity.getCustomer().getCustomerId(), handledEntity.getCustomer().getEmailHash()));
+		
+		CustomerAuthenticationDetails authenticationDetails=customerQuickRegisterHandler.getLoginDetailsByCustomerId(handledEntity.getCustomer().getCustomerId());
+		
+		assertNotNull( authenticationDetails.getPassword());
+		assertNotNull( authenticationDetails.getPasswordType());
+	
+	
+		assertEquals(authenticationDetails, customerQuickRegisterHandler.verifyLoginDetails(new LoginVerificationDTO(authenticationDetails.getEmail(), null,
+																								authenticationDetails.getPassword())));
+	}
 	
 	
 	@Test
@@ -501,7 +642,7 @@ public class CustomerQuickRegisterServiceTest {
 	{
 		CustomerQuickRegisterEntity savedEntity=customerQuickRegisterHandler.saveNewCustomerQuickRegisterEntity(standardEmailMobileCustomerAfterInitialization());
 		
-		CustomerQuickDetailsSentStatusEntity customerStatusEntity=customerQuickRegisterHandler.sendVerificationDetails(savedEntity);
+		CustomerQuickRegisterStatusEntity customerStatusEntity=customerQuickRegisterHandler.sendVerificationDetails(savedEntity);
 		
 		assertTrue(customerStatusEntity.getStatus());
 		
@@ -514,7 +655,7 @@ public class CustomerQuickRegisterServiceTest {
 	{
 		CustomerQuickRegisterEntity savedEntity=customerQuickRegisterHandler.saveNewCustomerQuickRegisterEntity(standardEmailCustomerAfterVerificatinDetailsSent());
 		
-		CustomerQuickDetailsSentStatusEntity customerStatusEntity=customerQuickRegisterHandler.sendVerificationDetails(savedEntity);
+		CustomerQuickRegisterStatusEntity customerStatusEntity=customerQuickRegisterHandler.sendVerificationDetails(savedEntity);
 		
 		assertTrue(customerStatusEntity.getStatus());
 		
@@ -527,7 +668,7 @@ public class CustomerQuickRegisterServiceTest {
 	{
 		CustomerQuickRegisterEntity savedEntity=customerQuickRegisterHandler.saveNewCustomerQuickRegisterEntity(standardMobileCustomerAfterVerificatinDetailsSent());
 		
-		CustomerQuickDetailsSentStatusEntity customerStatusEntity=customerQuickRegisterHandler.sendVerificationDetails(savedEntity);
+		CustomerQuickRegisterStatusEntity customerStatusEntity=customerQuickRegisterHandler.sendVerificationDetails(savedEntity);
 		
 		assertTrue(customerStatusEntity.getStatus());
 		
@@ -541,7 +682,7 @@ public class CustomerQuickRegisterServiceTest {
 	@Test
 	public void handleNewCustomerQuickRegistrationWithEmailMobileCustomer() throws Exception {
 
-		CustomerQuickDetailsSentStatusEntity handledEntity=customerQuickRegisterHandler
+		CustomerQuickRegisterStatusEntity handledEntity=customerQuickRegisterHandler
 						.handleNewCustomerQuickRegister(standardEmailMobileCustomerDTO());
 		
 		assertTrue(handledEntity.getStatus());
@@ -560,7 +701,7 @@ public class CustomerQuickRegisterServiceTest {
 	@Test
 	public void handleNewCustomerQuickRegistrationWithEmailCustomer() throws Exception {
 
-		CustomerQuickDetailsSentStatusEntity handledEntity=customerQuickRegisterHandler
+		CustomerQuickRegisterStatusEntity handledEntity=customerQuickRegisterHandler
 				.handleNewCustomerQuickRegister(standardEmailCustomerDTO());
 		
 		assertTrue(handledEntity.getStatus());
@@ -578,7 +719,7 @@ public class CustomerQuickRegisterServiceTest {
 	@Test
 	public void handleNewCustomerQuickRegistrationWithMobileCustomer() throws Exception {
 
-		CustomerQuickDetailsSentStatusEntity handledEntity=customerQuickRegisterHandler
+		CustomerQuickRegisterStatusEntity handledEntity=customerQuickRegisterHandler
 				.handleNewCustomerQuickRegister(standardMobileCustomerDTO());
 		
 		assertTrue(handledEntity.getStatus());
@@ -600,7 +741,7 @@ public class CustomerQuickRegisterServiceTest {
 	{
 		assertNull(customerQuickRegisterHandler.getCustomerQuickRegisterEntityByCustomerId(CUST_ID).getCustomerId());
 
-		CustomerQuickDetailsSentStatusEntity handledEntity=customerQuickRegisterHandler
+		CustomerQuickRegisterStatusEntity handledEntity=customerQuickRegisterHandler
 				.handleNewCustomerQuickRegister(standardEmailMobileCustomerDTO());
 
 		CustomerAuthenticationDetails authenticationDetails=customerQuickRegisterHandler.getLoginDetailsByCustomerId(handledEntity.getCustomer().getCustomerId());
@@ -638,7 +779,7 @@ public class CustomerQuickRegisterServiceTest {
 	{
 		assertNull(customerQuickRegisterHandler.getCustomerQuickRegisterEntityByCustomerId(CUST_ID).getCustomerId());
 
-		CustomerQuickDetailsSentStatusEntity handledEntity=customerQuickRegisterHandler
+		CustomerQuickRegisterStatusEntity handledEntity=customerQuickRegisterHandler
 				.handleNewCustomerQuickRegister(standardEmailMobileCustomerDTO());
 
 		CustomerAuthenticationDetails authenticationDetails=customerQuickRegisterHandler.getLoginDetailsByCustomerId(handledEntity.getCustomer().getCustomerId());
@@ -679,7 +820,7 @@ public class CustomerQuickRegisterServiceTest {
 	{
 		assertNull(customerQuickRegisterHandler.getCustomerQuickRegisterEntityByCustomerId(CUST_ID).getCustomerId());
 
-		CustomerQuickDetailsSentStatusEntity handledEntity=customerQuickRegisterHandler
+		CustomerQuickRegisterStatusEntity handledEntity=customerQuickRegisterHandler
 				.handleNewCustomerQuickRegister(standardMobileCustomerDTO());
 		
 		CustomerAuthenticationDetails authenticationDetails=customerQuickRegisterHandler.getLoginDetailsByCustomerId(handledEntity.getCustomer().getCustomerId());
@@ -708,7 +849,7 @@ public class CustomerQuickRegisterServiceTest {
 	{
 		assertNull(customerQuickRegisterHandler.getCustomerQuickRegisterEntityByCustomerId(CUST_ID).getCustomerId());
 
-		CustomerQuickDetailsSentStatusEntity handledEntity=customerQuickRegisterHandler
+		CustomerQuickRegisterStatusEntity handledEntity=customerQuickRegisterHandler
 				.handleNewCustomerQuickRegister(standardEmailCustomerDTO());
 		
 		
@@ -737,7 +878,7 @@ public class CustomerQuickRegisterServiceTest {
 	{
 		assertNull(customerQuickRegisterHandler.getCustomerQuickRegisterEntityByCustomerId(CUST_ID).getCustomerId());
 
-		CustomerQuickDetailsSentStatusEntity handledEntity=customerQuickRegisterHandler
+		CustomerQuickRegisterStatusEntity handledEntity=customerQuickRegisterHandler
 				.handleNewCustomerQuickRegister(standardEmailMobileCustomerDTO());
 		
 		CustomerAuthenticationDetails authenticationDetails=customerQuickRegisterHandler.getLoginDetailsByCustomerId(handledEntity.getCustomer().getCustomerId());
@@ -750,11 +891,11 @@ public class CustomerQuickRegisterServiceTest {
 		
 		assertFalse(customerQuickRegisterHandler.verifyMobilePin(handledEntity.getCustomer().getCustomerId(), 101010));
 		
-		assertFalse(customerQuickRegisterHandler.verifyMobilePin(handledEntity.getCustomer().getCustomerId(), 101010));
+		//assertFalse(customerQuickRegisterHandler.verifyMobilePin(handledEntity.getCustomer().getCustomerId(), 101010));
 
-		assertFalse(customerQuickRegisterHandler.verifyMobilePin(handledEntity.getCustomer().getCustomerId(), 101010));
+		//assertFalse(customerQuickRegisterHandler.verifyMobilePin(handledEntity.getCustomer().getCustomerId(), 101010));
 		
-		assertFalse(customerQuickRegisterHandler.verifyMobilePin(handledEntity.getCustomer().getCustomerId(), handledEntity.getCustomer().getMobilePin()));
+		//assertFalse(customerQuickRegisterHandler.verifyMobilePin(handledEntity.getCustomer().getCustomerId(), handledEntity.getCustomer().getMobilePin()));
 		
 		authenticationDetails=customerQuickRegisterHandler.getLoginDetailsByCustomerId(handledEntity.getCustomer().getCustomerId());
 		
@@ -792,7 +933,7 @@ public class CustomerQuickRegisterServiceTest {
 	{
 		assertNull(customerQuickRegisterHandler.getCustomerQuickRegisterEntityByCustomerId(CUST_ID).getCustomerId());
 
-		CustomerQuickDetailsSentStatusEntity handledEntity=customerQuickRegisterHandler
+		CustomerQuickRegisterStatusEntity handledEntity=customerQuickRegisterHandler
 				.handleNewCustomerQuickRegister(standardEmailCustomerDTO());
 
 		assertEquals(handledEntity.getCustomer().getEmailHash(),
@@ -812,7 +953,7 @@ public class CustomerQuickRegisterServiceTest {
 	{
 		assertNull(customerQuickRegisterHandler.getCustomerQuickRegisterEntityByCustomerId(CUST_ID).getCustomerId());
 
-		CustomerQuickDetailsSentStatusEntity handledEntity=customerQuickRegisterHandler
+		CustomerQuickRegisterStatusEntity handledEntity=customerQuickRegisterHandler
 				.handleNewCustomerQuickRegister(standardEmailCustomerDTO());
 
 		assertEquals(handledEntity.getCustomer().getMobilePin(),
@@ -833,7 +974,7 @@ public class CustomerQuickRegisterServiceTest {
 	{
 		assertNull(customerQuickRegisterHandler.getCustomerQuickRegisterEntityByCustomerId(CUST_ID).getCustomerId());
 
-		CustomerQuickDetailsSentStatusEntity handledEntity=customerQuickRegisterHandler
+		CustomerQuickRegisterStatusEntity handledEntity=customerQuickRegisterHandler
 				.handleNewCustomerQuickRegister(standardEmailCustomerDTO());
 
 		CustomerQuickRegisterEntity entity=handledEntity.getCustomer().createCopy();
@@ -849,7 +990,7 @@ public class CustomerQuickRegisterServiceTest {
 	{
 		assertNull(customerQuickRegisterHandler.getCustomerQuickRegisterEntityByCustomerId(CUST_ID).getCustomerId());
 
-		CustomerQuickDetailsSentStatusEntity handledEntity=customerQuickRegisterHandler
+		CustomerQuickRegisterStatusEntity handledEntity=customerQuickRegisterHandler
 				.handleNewCustomerQuickRegister(standardMobileCustomerDTO());
 		
 		CustomerQuickRegisterEntity entity=handledEntity.getCustomer().createCopy();

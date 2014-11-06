@@ -12,13 +12,13 @@ import org.springframework.web.client.RestTemplate;
 
 import com.projectx.data.domain.CustomerIdDTO;
 import com.projectx.data.domain.CustomerQuickEntitySaveDTO;
-import com.projectx.data.domain.GetEmailCountDTO;
-import com.projectx.data.domain.GetMobileCountDTO;
+import com.projectx.data.domain.EmailDTO;
+import com.projectx.data.domain.MobileDTO;
 import com.projectx.data.domain.ResponseCustomerList;
 import com.projectx.data.domain.UpdateEmailHashAndMobilePinSentTimeDTO;
 import com.projectx.data.domain.UpdateEmailHashDTO;
 import com.projectx.data.domain.UpdateMobilePinDTO;
-import com.projectx.data.domain.UpdatePasswordDTO;
+
 import com.projectx.data.domain.UpdateStatusAndMobileVerificationAttemptsWithCustomerIdDTO;
 import com.projectx.rest.domain.CustomerQuickRegisterEntity;
 import com.projectx.rest.repository.CustomerQuickRegisterRepository;
@@ -68,7 +68,7 @@ public class CustomerQuickRegisterRepositoryImpl implements
 	@Override
 	public Integer countByEmail(String email) {
 		
-		GetEmailCountDTO emailDTO=new GetEmailCountDTO(email);
+		EmailDTO emailDTO=new EmailDTO(email);
 		
 		Integer  emailCount=restTemplate.postForObject(env.getProperty("data.url")+"/customer/quickregister/getEmailCount", 
 				emailDTO, Integer.class);
@@ -79,7 +79,7 @@ public class CustomerQuickRegisterRepositoryImpl implements
 	@Override
 	public Integer countByMobile(Long mobile) {
 
-		GetMobileCountDTO mobileDTO=new GetMobileCountDTO(mobile);
+		MobileDTO mobileDTO=new MobileDTO(mobile);
 		
 		Integer  mobileCount=restTemplate.postForObject(env.getProperty("data.url")+"/customer/quickregister/getMobileCount", 
 				mobileDTO, Integer.class);
@@ -120,7 +120,7 @@ public class CustomerQuickRegisterRepositoryImpl implements
 
 		return updateStatus;
 	}
-
+/*
 	@Override
 	public Integer updatePassword(Long customerId, String password,
 			String passwordType) {
@@ -131,7 +131,7 @@ public class CustomerQuickRegisterRepositoryImpl implements
 
 		return updateStatus;
 	}
-
+*/
 	@Override
 	public Integer updateEmailHashAndMobilePinSentTime(Long customerId,
 			Date emailHashSentTime, Date mobilePinSentTime) {
@@ -148,6 +148,26 @@ public class CustomerQuickRegisterRepositoryImpl implements
 	public void clearCustomerQuickRegister() {
 		restTemplate.getForObject(env.getProperty("data.url")+"/customer/quickregister/clearForTesting", Boolean.class);
 
+	}
+
+	@Override
+	public CustomerQuickRegisterEntity findByEmail(String email) {
+		
+		EmailDTO emailDTO=new EmailDTO(email);
+		
+		CustomerQuickRegisterEntity quickRegisterEntity=restTemplate.postForObject(env.getProperty("data.url")+"/customer/quickregister/getCustomerQuickRegisterEntityByEmail", emailDTO, CustomerQuickRegisterEntity.class);
+		
+		return quickRegisterEntity;
+	}
+
+	@Override
+	public CustomerQuickRegisterEntity findByMobile(Long mobile) {
+		
+		MobileDTO mobileDTO=new MobileDTO(mobile);
+		
+		CustomerQuickRegisterEntity quickRegisterEntity=restTemplate.postForObject(env.getProperty("data.url")+"/customer/quickregister/getCustomerQuickRegisterEntityByMobile", mobileDTO, CustomerQuickRegisterEntity.class);
+		
+		return quickRegisterEntity;
 	}
 
 //	@Override

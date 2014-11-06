@@ -1,21 +1,19 @@
-package com.projectx.data.domain;
+package com.projectx.web.domain;
 
-public class UpdatePasswordAndPasswordTypeDTO {
+public class UpdatePasswordDTO {
 
 	private Long customerId;
-	private String password;
-	private String passwordType;
 	
-	public UpdatePasswordAndPasswordTypeDTO() {
-		
+	private String password;
+
+	public UpdatePasswordDTO() {
+		super();
 	}
 
-	public UpdatePasswordAndPasswordTypeDTO(Long customerId, String password,
-			String passwordType) {
+	public UpdatePasswordDTO(Long customerId, String password) {
 		super();
 		this.customerId = customerId;
 		this.password = password;
-		this.passwordType = passwordType;
 	}
 
 	public Long getCustomerId() {
@@ -34,20 +32,6 @@ public class UpdatePasswordAndPasswordTypeDTO {
 		this.password = password;
 	}
 
-	public String getPasswordType() {
-		return passwordType;
-	}
-
-	public void setPasswordType(String passwordType) {
-		this.passwordType = passwordType;
-	}
-
-	@Override
-	public String toString() {
-		return "UpdatePasswordDTO [customerId=" + customerId + ", password="
-				+ password + ", passwordType=" + passwordType + "]";
-	}
-
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -56,8 +40,6 @@ public class UpdatePasswordAndPasswordTypeDTO {
 				+ ((customerId == null) ? 0 : customerId.hashCode());
 		result = prime * result
 				+ ((password == null) ? 0 : password.hashCode());
-		result = prime * result
-				+ ((passwordType == null) ? 0 : passwordType.hashCode());
 		return result;
 	}
 
@@ -69,7 +51,7 @@ public class UpdatePasswordAndPasswordTypeDTO {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		UpdatePasswordAndPasswordTypeDTO other = (UpdatePasswordAndPasswordTypeDTO) obj;
+		UpdatePasswordDTO other = (UpdatePasswordDTO) obj;
 		if (customerId == null) {
 			if (other.customerId != null)
 				return false;
@@ -80,14 +62,8 @@ public class UpdatePasswordAndPasswordTypeDTO {
 				return false;
 		} else if (!password.equals(other.password))
 			return false;
-		if (passwordType == null) {
-			if (other.passwordType != null)
-				return false;
-		} else if (!passwordType.equals(other.passwordType))
-			return false;
 		return true;
 	}
-	
 	
 	
 	

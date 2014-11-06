@@ -18,7 +18,7 @@ import static com.projectx.rest.fixture.CustomerAuthenticationDetailsDataFixture
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes=Application.class)
-@ActiveProfiles("Test")
+@ActiveProfiles("Dev")
 public class CustomerAuthenticationDetailsRepositoryTest {
 
 	@Autowired

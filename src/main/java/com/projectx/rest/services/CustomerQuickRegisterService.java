@@ -2,16 +2,18 @@ package com.projectx.rest.services;
 
 import com.mashape.unirest.http.exceptions.UnirestException;
 import com.projectx.data.domain.LoginVerificationDTO;
-import com.projectx.data.domain.UpdatePasswordDTO;
+import com.projectx.data.domain.UpdatePasswordAndPasswordTypeDTO;
+
 import com.projectx.rest.domain.CustomerAuthenticationDetails;
-import com.projectx.rest.domain.CustomerQuickDetailsSentStatusEntity;
+import com.projectx.rest.domain.CustomerQuickRegisterStatusEntity;
 import com.projectx.rest.domain.CustomerQuickRegisterEntity;
 import com.projectx.web.domain.CustomerIdDTO;
 import com.projectx.web.domain.CustomerQuickRegisterEntityDTO;
+import com.projectx.web.domain.CustomerQuickRegisterStringStatusEntity;
 
 public interface CustomerQuickRegisterService {
 	
-	String checkIfAlreadyRegistered(CustomerQuickRegisterEntityDTO customer) throws Exception;
+	CustomerQuickRegisterStringStatusEntity checkIfAlreadyRegistered(CustomerQuickRegisterEntityDTO customer) throws Exception;
 	
 	CustomerQuickRegisterEntity populateStatus(CustomerQuickRegisterEntityDTO customer) throws Exception;
 	
@@ -19,7 +21,7 @@ public interface CustomerQuickRegisterService {
 	
 	CustomerQuickRegisterEntity saveNewCustomerQuickRegisterEntity(CustomerQuickRegisterEntity customer) throws Exception;
 	
-	CustomerQuickDetailsSentStatusEntity handleNewCustomerQuickRegister(CustomerQuickRegisterEntityDTO customer) throws Exception;
+	CustomerQuickRegisterStatusEntity handleNewCustomerQuickRegister(CustomerQuickRegisterEntityDTO customer) throws Exception;
 	
 	CustomerQuickRegisterEntity getCustomerQuickRegisterEntityByCustomerId(Long customerId);
 	
@@ -39,7 +41,7 @@ public interface CustomerQuickRegisterService {
 	
 	Boolean sendHashEmail(CustomerQuickRegisterEntity customer);
 	
-	CustomerQuickDetailsSentStatusEntity sendVerificationDetails(CustomerQuickRegisterEntity customer) throws UnirestException;
+	CustomerQuickRegisterStatusEntity sendVerificationDetails(CustomerQuickRegisterEntity customer) throws UnirestException;
 	
 	Boolean reSendEmailHash(Long customerId);
 	
@@ -49,17 +51,17 @@ public interface CustomerQuickRegisterService {
 	//Testing
 	void clearDataForTesting();
 
-	String composeMessageWithPassword(CustomerQuickRegisterEntity customer);
+	String composeMessageWithPassword(CustomerQuickRegisterEntity customer,CustomerAuthenticationDetails authenticationDetails);
 
-	Boolean sendPasswordSMS(CustomerQuickRegisterEntity customer) ;
+	Boolean sendPasswordSMS(Long mobile,String message) ;
 
-	Boolean sendPasswordEmail(CustomerQuickRegisterEntity customer);
+	Boolean sendPasswordEmail(String email,String message);
 
 	//Boolean sendDefaultPassword(CustomerQuickRegisterEntity customer) throws UnirestException;
 
 	Boolean resetPassword(CustomerIdDTO customerIdDTO);
 
-	Boolean updatePassword(UpdatePasswordDTO updatePasswordDTO);
+	Boolean updatePassword(UpdatePasswordAndPasswordTypeDTO updatePasswordDTO);
 
 	CustomerAuthenticationDetails saveCustomerAuthenticationDetails(
 			CustomerQuickRegisterEntity entity);
@@ -73,13 +75,10 @@ public interface CustomerQuickRegisterService {
 	CustomerAuthenticationDetails verifyLoginDetails(LoginVerificationDTO loginVerificationDTO);
 	
 	
-	//String generateEmailHash();
+	CustomerQuickRegisterEntity getCustomerQuickRegisterEntityByEmail(String email);
 	
-	//Integer genarateMobilePin();
-
-	//CustomerQuickRegisterEntity getCustomerQuickRegisterEntityByEmail(String email);
+	CustomerQuickRegisterEntity getCustomerQuickRegisterEntityByMobile(Long mobile);
 	
-	//CustomerQuickRegisterEntity getCustomerQuickRegisterEntityByMobile(Long mobile);
-		
-
+	Boolean forgotPassword(String entity);
+	
 }

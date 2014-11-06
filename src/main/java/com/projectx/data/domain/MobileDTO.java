@@ -1,15 +1,15 @@
 package com.projectx.data.domain;
 
-public class GetMobileCountDTO {
+public class MobileDTO {
 	
 	private Long mobile;
 
-	public GetMobileCountDTO() {
+	public MobileDTO() {
 	
 	}
 	
 	
-	public GetMobileCountDTO(Long mobile) {
+	public MobileDTO(Long mobile) {
 		super();
 		this.mobile = mobile;
 	}

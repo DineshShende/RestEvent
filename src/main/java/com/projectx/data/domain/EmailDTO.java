@@ -1,14 +1,14 @@
 package com.projectx.data.domain;
 
-public class GetEmailCountDTO {
+public class EmailDTO {
 
 	private String email;
 
-	public GetEmailCountDTO() {
+	public EmailDTO() {
 	
 	}
 	
-	public GetEmailCountDTO(String email) {
+	public EmailDTO(String email) {
 		super();
 		this.email = email;
 	}

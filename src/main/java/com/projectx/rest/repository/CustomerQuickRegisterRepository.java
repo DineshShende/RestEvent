@@ -17,6 +17,10 @@ public interface CustomerQuickRegisterRepository {
 	 
 	 CustomerQuickRegisterEntity findByCustomerId(Long customerId);
 	 
+	 CustomerQuickRegisterEntity findByEmail(String email);
+	 
+	 CustomerQuickRegisterEntity findByMobile(Long mobile);
+	 
 	 Integer countByEmail(String email);
 	 
 	 Integer countByMobile(Long mobile);
@@ -28,7 +32,7 @@ public interface CustomerQuickRegisterRepository {
 	 
 	 Integer updateMobilePin(Long customerId,Integer mobilePin,Date updateTime);
 	 
-	 Integer updatePassword(Long customerId,String password,String passwordType);
+//	 Integer updatePassword(Long customerId,String password,String passwordType);
 	 
 	 Integer updateEmailHashAndMobilePinSentTime(Long customerId,Date emailHashSentTine,Date mobilePinSentTime);
 	 

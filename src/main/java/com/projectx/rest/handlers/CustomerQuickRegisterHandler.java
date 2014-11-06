@@ -12,9 +12,10 @@ import org.springframework.stereotype.Component;
 
 import com.mashape.unirest.http.exceptions.UnirestException;
 import com.projectx.data.domain.LoginVerificationDTO;
-import com.projectx.data.domain.UpdatePasswordDTO;
+import com.projectx.data.domain.UpdatePasswordAndPasswordTypeDTO;
+
 import com.projectx.rest.domain.CustomerAuthenticationDetails;
-import com.projectx.rest.domain.CustomerQuickDetailsSentStatusEntity;
+import com.projectx.rest.domain.CustomerQuickRegisterStatusEntity;
 import com.projectx.rest.domain.CustomerQuickRegisterEntity;
 import com.projectx.rest.repository.CustomerAuthenticationDetailsRepository;
 import com.projectx.rest.repository.CustomerQuickRegisterRepository;
@@ -22,6 +23,7 @@ import com.projectx.rest.services.CustomerQuickRegisterService;
 import com.projectx.rest.utils.HandleCustomerVerification;
 import com.projectx.web.domain.CustomerIdDTO;
 import com.projectx.web.domain.CustomerQuickRegisterEntityDTO;
+import com.projectx.web.domain.CustomerQuickRegisterStringStatusEntity;
 
 @Component
 @Profile(value={"Dev","Test"})
@@ -47,38 +49,81 @@ public class CustomerQuickRegisterHandler implements
 	
 	
 	@Override
-	public String checkIfAlreadyRegistered(
+	public CustomerQuickRegisterStringStatusEntity checkIfAlreadyRegistered(
 			CustomerQuickRegisterEntityDTO customer) throws Exception {
 
 		String status=null;
 		
 		Boolean emailAlreadyExist = false;
+		
+		Boolean emailVerified=false;
 
 		Boolean mobileAlreadyExist = false;
-
-		if (customer.getEmail() == null && customer.getMobile() == null)
-			throw new Exception();
-
-		if (customer.getEmail() != null
-				&& customerQuickRegisterRepository.countByEmail(customer
-						.getEmail()) > 0)
-			emailAlreadyExist = true;
-
-		if (customer.getMobile() != null
-				&& customerQuickRegisterRepository.countByMobile(customer
-						.getMobile()) > 0)
-			mobileAlreadyExist = true;
-
-		if (emailAlreadyExist && mobileAlreadyExist)
-			status=REGISTER_EMAIL_MOBILE_ALREADY_REGISTERED;
-		else if(!emailAlreadyExist && mobileAlreadyExist)
-			status=REGISTER_MOBILE_ALREADY_REGISTERED;
-		else if(emailAlreadyExist && !mobileAlreadyExist)
-			status=REGISTER_EMAIL_ALREADY_REGISTERED;
-		else if(!emailAlreadyExist && !mobileAlreadyExist)
-			status=REGISTER_NOT_REGISTERED;
 		
-		return status;
+		Boolean mobileVerified=false;
+	
+		CustomerQuickRegisterEntity returnEntity=new CustomerQuickRegisterEntity();
+		
+		CustomerQuickRegisterEntity entityByEmail=returnEntity;
+		
+		CustomerQuickRegisterEntity entityByMobile=returnEntity;
+		
+		if(customer.getEmail()!=null)
+			entityByEmail=customerQuickRegisterRepository.findByEmail(customer.getEmail());
+		
+		if(customer.getMobile()!=null)
+			entityByMobile=customerQuickRegisterRepository.findByMobile(customer.getMobile());
+		
+		if(customer.getEmail()!=null && entityByEmail.getCustomerId()!=null)
+		{
+			returnEntity=entityByEmail;
+			
+			emailAlreadyExist=true;
+			
+			if(entityByEmail.isEmailVerified() || entityByEmail.isEmailVerifiedMobileVerficationPending()|| entityByEmail.isEmailMobileVerified())
+				emailVerified=true;
+		}
+		
+		if(customer.getMobile()!=null && entityByMobile.getCustomerId()!=null)
+		{
+			returnEntity=entityByMobile;
+			
+			mobileAlreadyExist=true;
+			
+			if(entityByMobile.isMobileVerified()||entityByMobile.isMobileVerifiedEmailVerficationPending()||entityByMobile.isEmailMobileVerified())
+				mobileVerified=true;
+		}
+		
+		
+		if(!emailAlreadyExist && !mobileAlreadyExist)
+			status=REGISTER_NOT_REGISTERED;
+		else if(emailAlreadyExist && mobileAlreadyExist)
+		{
+			if(emailVerified && mobileVerified)
+				status=REGISTER_EMAIL_MOBILE_ALREADY_REGISTERED_EMAIL_MOBILE_VERIFIED;
+			else if (mobileVerified)
+				status=REGISTER_EMAIL_MOBILE_ALREADY_REGISTERED_MOBILE_VERIFIED;
+			else if(emailVerified)
+				status=REGISTER_EMAIL_MOBILE_ALREADY_REGISTERED_EMAIL_VERIFIED;
+			else
+				status=REGISTER_EMAIL_MOBILE_ALREADY_REGISTERED_EMAIL_MOBILE_UNVERIFIED;
+		}
+		else if(emailAlreadyExist)
+		{
+			if(emailVerified)
+				status=REGISTER_EMAIL_ALREADY_REGISTERED_VERIFIED;
+			else
+				status=REGISTER_EMAIL_ALREADY_REGISTERED_NOT_VERIFIED;
+		}
+		else if(mobileAlreadyExist)
+		{
+			if(mobileVerified)
+				status=REGISTER_MOBILE_ALREADY_REGISTERED_VERIFIED;
+			else
+				status=REGISTER_MOBILE_ALREADY_REGISTERED_NOT_VERIFIED;
+		}
+		
+		return new CustomerQuickRegisterStringStatusEntity(status, returnEntity);
 	}
 
 	@Override
@@ -147,7 +192,7 @@ public class CustomerQuickRegisterHandler implements
 	}
 
 	@Override
-	public CustomerQuickDetailsSentStatusEntity handleNewCustomerQuickRegister(
+	public CustomerQuickRegisterStatusEntity handleNewCustomerQuickRegister(
 			CustomerQuickRegisterEntityDTO customer) throws Exception {
 		
 		CustomerQuickRegisterEntity customerWithStatusPopulated=populateStatus(customer);
@@ -158,13 +203,13 @@ public class CustomerQuickRegisterHandler implements
 		
 		CustomerAuthenticationDetails savedLoginDetails=saveCustomerAuthenticationDetails(savedEntity);
 		
-		CustomerQuickDetailsSentStatusEntity customerStatusEntity=sendVerificationDetails(savedEntity);
+		CustomerQuickRegisterStatusEntity customerStatusEntity=sendVerificationDetails(savedEntity);
 		
 		return customerStatusEntity;
 	}
 
 	@Override
-	public CustomerQuickDetailsSentStatusEntity sendVerificationDetails(CustomerQuickRegisterEntity customer) throws UnirestException {
+	public CustomerQuickRegisterStatusEntity sendVerificationDetails(CustomerQuickRegisterEntity customer) throws UnirestException {
 		
 		Boolean emailSentStatus=true;
 		Boolean mobileSentStatus=true;
@@ -195,7 +240,7 @@ public class CustomerQuickRegisterHandler implements
 		else
 			finalStatus=false;
 	
-		return new CustomerQuickDetailsSentStatusEntity(finalStatus,customer);
+		return new CustomerQuickRegisterStatusEntity(finalStatus,customer);
 	}
 	
 
@@ -217,11 +262,8 @@ public class CustomerQuickRegisterHandler implements
 	@Override
 	public Boolean verifyEmailHash(Long customerId, String emailHash) {
 		
-		//TODO
-		
 		CustomerQuickRegisterEntity fetchedEntity=getCustomerQuickRegisterEntityByCustomerId(customerId);
 	
-		
 		
 		if(fetchedEntity.getCustomerId()==null)
 			return false;
@@ -275,8 +317,6 @@ public class CustomerQuickRegisterHandler implements
 	@Override
 	public Boolean verifyMobilePin(Long customerId, Integer mobilePin) {
 	
-		//TODO
-		
 		CustomerQuickRegisterEntity fetchedEntity=getCustomerQuickRegisterEntityByCustomerId(customerId);
 		
 		Date lastStatusChangedTime=fetchedEntity.getLastStatusChangedTime();
@@ -384,31 +424,31 @@ public class CustomerQuickRegisterHandler implements
 	}
 
 	@Override
-	public String composeMessageWithPassword(CustomerQuickRegisterEntity customer)
+	public String composeMessageWithPassword(CustomerQuickRegisterEntity customer,CustomerAuthenticationDetails authenticationDetails)
 	{
 		StringBuilder messageBuilder=new StringBuilder();
 		
 		messageBuilder.append("Hi "+customer.getFirstName()+" "+customer.getLastName()+"\n");
-		messageBuilder.append("Your login password is="+customer.getPassword());
+		messageBuilder.append("Your login password is="+authenticationDetails.getPassword());
 		
-		return null;
+		return messageBuilder.toString();
 	}
 	
 	@Override
-	public Boolean sendPasswordSMS(CustomerQuickRegisterEntity customer)
+	public Boolean sendPasswordSMS(Long mobile,String message)
 	{
-		String message=composeMessageWithPassword(customer);
+		//String message=composeMessageWithPassword(customer);
 		
-		return handleCustomerVerification.sendSMS(customer.getMobile(), message);
+		return handleCustomerVerification.sendSMS(mobile, message);
 	}
 	
 	
 	@Override
-	public Boolean sendPasswordEmail(CustomerQuickRegisterEntity customer)
+	public Boolean sendPasswordEmail(String email,String message)
 	{
-		String message=composeMessageWithPassword(customer);
+		//String message=composeMessageWithPassword(customer);
 		
-		return handleCustomerVerification.sendEmail(customer.getEmail(), message);
+		return handleCustomerVerification.sendEmail(email, message);
 	}
 	
 	
@@ -434,12 +474,15 @@ public class CustomerQuickRegisterHandler implements
 					 																						customerAuthenticationDetails.getPassword(), customerAuthenticationDetails.getPasswordType());
 		}
 		
+		CustomerAuthenticationDetails customerAuthenticationDetailsUpdated=customerAuthenticationDetailsRepository.getByCustomerId(customer.getCustomerId());
+		
+		String message=composeMessageWithPassword(customer, customerAuthenticationDetailsUpdated);
 			
 		if(customer.isEmailMobileVerified() || customer.isEmailVerifiedMobileVerficationPending()||customer.isEmailVerified())
-			sendPasswordEmail(customer);
+			sendPasswordEmail(customer.getEmail(),message);
 		
 		if(customer.isEmailMobileVerified()||customer.isMobileVerifiedEmailVerficationPending()|| customer.isMobileVerified())
-			sendPinSMS(customer);
+			sendPasswordSMS(customer.getMobile(),message);
 		
 		
 		if(passwordUpdateStatus==UPDATE_SUCESS && emailSendStatus && smsSendStatus)
@@ -463,7 +506,7 @@ public class CustomerQuickRegisterHandler implements
 	}
 	
 	@Override
-	public Boolean updatePassword(UpdatePasswordDTO updatePasswordDTO)
+	public Boolean updatePassword(UpdatePasswordAndPasswordTypeDTO updatePasswordDTO)
 	{
 		Integer updateStatus=customerAuthenticationDetailsRepository.updatePasswordAndPasswordType(updatePasswordDTO.getCustomerId(),
 				updatePasswordDTO.getPassword(), CUST_PASSWORD_TYPE_CHANGED);
@@ -531,7 +574,29 @@ public class CustomerQuickRegisterHandler implements
 			return false;
 	}
 
+	
+	//public Boolean resendVerificationDetails()
+	{
+		//TODO
+	}
+	
+	//public Boolean forgetPassword()
+	{
+		//TODO
+	}
 
+	@Override
+	public Boolean forgotPassword(String entity) {
+		
+		if(entity.length()==10)
+		{
+			
+		}
+		
+		return null;
+	}
+
+	
 	
 	@Override
 	public void clearDataForTesting() {
@@ -539,6 +604,21 @@ public class CustomerQuickRegisterHandler implements
 
 		
 	}
+
+	@Override
+	public CustomerQuickRegisterEntity getCustomerQuickRegisterEntityByEmail(
+			String email) {
+		
+		return customerQuickRegisterRepository.findByEmail(email);
+	}
+
+	@Override
+	public CustomerQuickRegisterEntity getCustomerQuickRegisterEntityByMobile(
+			Long mobile) {
+		
+		return customerQuickRegisterRepository.findByMobile(mobile);
+	}
+
 
 
 

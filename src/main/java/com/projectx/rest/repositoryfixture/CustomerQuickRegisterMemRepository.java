@@ -149,7 +149,7 @@ public class CustomerQuickRegisterMemRepository implements
 		else
 			return 0;
 	}
-
+/*
 	@Override
 	public Integer updatePassword(Long customerId, String password,
 			String passwordType) {
@@ -168,7 +168,7 @@ public class CustomerQuickRegisterMemRepository implements
 		else
 			return 0;
 	}
-
+*/
 	@Override
 	public void clearCustomerQuickRegister() {
 		customerList.clear();
@@ -194,6 +194,36 @@ public class CustomerQuickRegisterMemRepository implements
 			else
 				return 0;
 		}
+
+	@Override
+	public CustomerQuickRegisterEntity findByEmail(String email) {
+		
+		CustomerQuickRegisterEntity returnEntity=new CustomerQuickRegisterEntity();
+		
+		for(Long key:customerList.keySet())
+		{
+			if(customerList.get(key).getEmail()!=null && customerList.get(key).getEmail().equals(email))
+				
+			returnEntity=customerList.get(key);	
+		}
+		
+		return returnEntity;
+	}
+
+	@Override
+	public CustomerQuickRegisterEntity findByMobile(Long mobile) {
+
+		CustomerQuickRegisterEntity returnEntity=new CustomerQuickRegisterEntity();
+		
+		for(Long key:customerList.keySet())
+		{
+			if(customerList.get(key).getMobile()!=null && customerList.get(key).getMobile().equals(mobile))
+				
+			returnEntity=customerList.get(key);	
+		}
+		
+		return returnEntity;
+	}
 	
 
 	

@@ -1,6 +1,7 @@
 package com.projectx.rest.controller;
 
 import static com.projectx.rest.fixture.CustomerQuickRegisterDataFixture.*;
+import static com.projectx.rest.fixture.CustomerAuthenticationDetailsDataFixtures.*;
 import static org.junit.Assert.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -22,6 +23,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
+import com.projectx.data.domain.LoginVerificationDTO;
 import com.projectx.rest.repositoryImpl.CustomerQuickRegisterRepositoryImpl;
 import com.projectx.rest.services.CustomerQuickRegisterService;
 
@@ -143,6 +145,49 @@ public class CustomerQuickRegisterControllerStandAloneTest {
 		
 	}
 	
+	
+	
+	@Test
+	public void verifyLoginDetails() throws Exception
+	{
+		when(customerQuickRegisterService.verifyLoginDetails(standardLoginVerificationWithEmail())).thenReturn(standardCustomerEmailMobileAuthenticationDetails());
+		
+		//System.out.println(standardLoginVerificationWithEmail());
+		
+		//System.out.println(standardCustomerEmailMobileAuthenticationDetails());
+		
+		this.mockMvc.perform(
+	            post("/customer/quickregister/verifyLoginDetails")
+	                    .content(standardJsonLoginVerification(standardLoginVerificationWithEmail()))
+	                    .contentType(MediaType.APPLICATION_JSON)
+	                    .accept(MediaType.APPLICATION_JSON))
+
+	            .andDo(print())
+	            .andExpect(status().isOk())
+	            .andExpect(jsonPath("$.mobile").value(standardCustomerEmailMobileAuthenticationDetails().getMobile()))
+	            .andExpect(jsonPath("$.email").value(standardCustomerEmailMobileAuthenticationDetails().getEmail()))
+	            .andExpect(jsonPath("$.password").value(standardCustomerEmailMobileAuthenticationDetails().getPassword()))
+				.andExpect(jsonPath("$.passwordType").value(standardCustomerEmailMobileAuthenticationDetails().getPasswordType()));
+	}
+	
+	@Test
+	public void updatePassword() throws Exception
+	{
+		when(customerQuickRegisterService.updatePassword(standardUpdatePasswordAndPasswordTypeDTO())).thenReturn(true);
+		
+		System.out.println(standardUpdatePasswordAndPasswordTypeDTO());
+		
+		this.mockMvc.perform(
+	            post("/customer/quickregister/updatePassword")
+	                    .content(standardJsonUpdatePasswordAndPasswordType())
+	                    .contentType(MediaType.APPLICATION_JSON)
+	                    .accept(MediaType.APPLICATION_JSON))
+
+	            .andDo(print())
+	            .andExpect(status().isOk())
+	            .andExpect(content().string("true"));
+
+	}
 	
 }
 

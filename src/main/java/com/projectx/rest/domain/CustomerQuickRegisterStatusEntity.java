@@ -1,18 +1,18 @@
 package com.projectx.rest.domain;
 
-public class CustomerQuickDetailsSentStatusEntity {
+public class CustomerQuickRegisterStatusEntity {
 
 	private Boolean status;
 	private CustomerQuickRegisterEntity customer;
 	
-	public CustomerQuickDetailsSentStatusEntity() {
+	public CustomerQuickRegisterStatusEntity() {
 		super();
 	}
 
 	
 	
 	
-	public CustomerQuickDetailsSentStatusEntity(Boolean status,
+	public CustomerQuickRegisterStatusEntity(Boolean status,
 			CustomerQuickRegisterEntity customer) {
 		super();
 		this.status = status;

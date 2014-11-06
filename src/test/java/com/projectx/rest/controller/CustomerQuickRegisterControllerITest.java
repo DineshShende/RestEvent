@@ -52,10 +52,16 @@ public class CustomerQuickRegisterControllerITest {
 		this.mockMvc.perform(get("/customer/quickregister/cleartestdata"));
 	}
 	
-	/*
+	
 	@Test
 	public void checkIfExistStatusWithEmailMobileCustomer() throws Exception {
-					
+	
+		this.mockMvc.perform(
+	            post("/customer/quickregister")
+	                    .content(standardJsonEmailMobileCustomer())
+	                    .contentType(MediaType.APPLICATION_JSON)
+	                    .accept(MediaType.APPLICATION_JSON));
+	            	
 		this.mockMvc.perform(
 	            post("/customer/quickregister/checkifexist")
 	                    .content(standardJsonEmailMobileCustomer())
@@ -64,9 +70,22 @@ public class CustomerQuickRegisterControllerITest {
 	            .andDo(print())
 	            .andExpect(status().isOk())
 	            
-	            .andExpect(content().string(REGISTER_NOT_REGISTERED));
+	             .andExpect(jsonPath("status").value("EMAIL_MOBILE_ALREADY_REGISTERED_EMAIL_MOBILE_UNVERIFIED"))
+	            .andExpect(jsonPath("$.customer.firstName").value(standardEmailMobileCustomer().getFirstName()))
+	            .andExpect(jsonPath("$.customer.lastName").value(standardEmailMobileCustomer().getLastName()))
+	            .andExpect(jsonPath("$.customer.mobile").value(standardEmailMobileCustomer().getMobile()))
+	            .andExpect(jsonPath("$.customer.email").value(standardEmailMobileCustomer().getEmail()))
+	            .andExpect(jsonPath("$.customer.pin").value(standardEmailMobileCustomer().getPin()))
+				.andExpect(jsonPath("$.customer.status").value(standardEmailMobileCustomer().getStatus()))
+				.andExpect(jsonPath("$.customer.mobilePin").exists())
+			    .andExpect(jsonPath("$.customer.emailHash").exists())
+				.andExpect(jsonPath("$.customer.mobileVerificationAttempts").value(standardEmailMobileCustomer().getMobileVerificationAttempts()))
+				.andExpect(jsonPath("$.customer.mobilePinSentTime").exists())
+				.andExpect(jsonPath("$.customer.emailHashSentTime").exists())
+				.andExpect(jsonPath("$.customer.lastStatusChangedTime").exists());
 			 	
 	}
+	
 	
 	@Test
 	public void AddCustomerQuickRegisterWithEmailMobileCustomer() throws Exception {
@@ -95,7 +114,7 @@ public class CustomerQuickRegisterControllerITest {
 				.andExpect(jsonPath("$.customer.passwordType").value(standardEmailMobileCustomer().getPasswordType()));	
 	}
 	
-*/
+
 	@Test
 	public void AddCustomerQuickRegisterWithMobileCustomer() throws Exception {
 		
@@ -122,164 +141,9 @@ public class CustomerQuickRegisterControllerITest {
 				.andExpect(jsonPath("$.customer.password").value(standardMobileCustomer().getPassword()))
 				.andExpect(jsonPath("$.customer.passwordType").value(standardMobileCustomer().getPasswordType()));	
 	}
-	//Cannot run in 'Dev' mode  but can run in 'Test' mode
-	/*
-	@Test 
-	public void getByCustomerIdWithEmailMobileCustomer() throws Exception
-	{
-		this.mockMvc.perform(
-	            post("/customer/quickregister")
-	                    .content(standardJsonEmailMobileCustomer())
-	                    .contentType(MediaType.APPLICATION_JSON)
-	                    .accept(MediaType.APPLICATION_JSON));
-	                    
-						
-		
-		this.mockMvc.perform(
-	            post("/customer/quickregister/getByCustomerId")
-	                    .content(standardJsonGetByCustomerIdDTO())
-	                    .contentType(MediaType.APPLICATION_JSON)
-	                    .accept(MediaType.APPLICATION_JSON))
-	            .andDo(print())
-	            .andExpect(status().isOk())
-	            .andExpect(jsonPath("$.firstName").value(CUST_FIRSTNAME))
-	            .andExpect(jsonPath("$.lastName").value(CUST_LASTNAME))
-	           // .andExpect(jsonPath("$.mobile").value(CUST_MOBILE.longValue()))
-	            .andExpect(jsonPath("$.email").value(CUST_EMAIL))
-	            .andExpect(jsonPath("$.pin").value(CUST_PIN))
-				.andExpect(jsonPath("$.status").value(CUST_STATUS_EMAILMOBILE))
-				.andExpect(jsonPath("$.mobilePin").value(CUST_MOBILEPIN));
-			  //.andExpect(jsonPath("$.emailHash").value(CUST_EMAILHASH));
-
-	}
 	
 	
 	
-	@Test
-	public void verifyEmailHashForEmailCustomer() throws Exception
-	{
-		this.mockMvc.perform(
-	            post("/customer/quickregister")
-	                    .content(standardJsonEmailCustomer())
-	                    .contentType(MediaType.APPLICATION_JSON)
-	                    .accept(MediaType.APPLICATION_JSON));
-	
-		this.mockMvc.perform(
-				post("/customer/quickregister/verifyEmailHash")
-                .content(standardJsonVerifyEmailHashDTO())
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON))
-	            .andDo(print())
-	            .andExpect(content().string("true"))
-	            .andExpect(status().isOk());
-	    
-	   this.mockMvc.perform(
-	            post("/customer/quickregister/getByCustomerId")
-	                    .content(standardJsonGetByCustomerIdDTO())
-	                    .contentType(MediaType.APPLICATION_JSON)
-	                    .accept(MediaType.APPLICATION_JSON))
-	            .andDo(print())
-	            .andExpect(status().isOk())
-				.andExpect(jsonPath("$.status").value(STATUS_EMAIL_VERFIED));
-	   
-
-	}
-	
-	
-	
-	@Test
-	public void verifyMobilePinForMobileCustomer() throws Exception
-	{
-		this.mockMvc.perform(
-	            post("/customer/quickregister")
-	                    .content(standardJsonMobileCustomer())
-	                    .contentType(MediaType.APPLICATION_JSON)
-	                    .accept(MediaType.APPLICATION_JSON));
 	
 			
-		this.mockMvc.perform(
-	            post("/customer/quickregister/verifyMobilePin")
-	                    .content(standardJsonVerifyMobilePinDTO())
-	                    .contentType(MediaType.APPLICATION_JSON)
-	                    .accept(MediaType.APPLICATION_JSON))
-	            .andDo(print())
-	            .andExpect(status().isOk())
-	            .andExpect(content().string("true"));
-	    
-		this.mockMvc.perform(
-	            post("/customer/quickregister/getByCustomerId")
-	                    .content(standardJsonGetByCustomerIdDTO())
-	                    .contentType(MediaType.APPLICATION_JSON)
-	                    .accept(MediaType.APPLICATION_JSON))
-	            .andDo(print())
-	            .andExpect(status().isOk())
-				.andExpect(jsonPath("$.status").value(STATUS_MOBILE_VERFIED));
-		
-
-	}
-	
-	
-	@Test
-	//@Rollback(value=false)
-	public void updateMobilePin() throws Exception
-	{
-		this.mockMvc.perform(
-	            post("/customer/quickregister")
-	                    .content(standardJsonMobileCustomer())
-	                    .contentType(MediaType.APPLICATION_JSON)
-	                    .accept(MediaType.APPLICATION_JSON));
-	
-		this.mockMvc.perform(
-	            post("/customer/quickregister/updateMobilePin")
-	                    .content(standardJsonUpdateMobilePinDTO())
-	                    .contentType(MediaType.APPLICATION_JSON)
-	                    .accept(MediaType.APPLICATION_JSON))
-	            .andDo(print())
-	            .andExpect(status().isOk())
-	            .andExpect(content().string("1"));
-		
-		this.mockMvc.perform(
-	            post("/customer/quickregister/getByCustomerId")
-	                    .content(standardJsonGetByCustomerIdDTO())
-	                    .contentType(MediaType.APPLICATION_JSON)
-	                    .accept(MediaType.APPLICATION_JSON))
-	            .andDo(print())
-	            .andExpect(status().isOk())
-				.andExpect(jsonPath("$.mobilePin").value(CUST_MOBILEPIN_UPDATED));
-	   
-		
-	}
-	
-	@Test
-	//@Rollback(value=false)
-	public void updateEmailHash() throws Exception
-	{
-		this.mockMvc.perform(
-	            post("/customer/quickregister")
-	                    .content(standardJsonEmailCustomer())
-	                    .contentType(MediaType.APPLICATION_JSON)
-	                    .accept(MediaType.APPLICATION_JSON));
-	
-		this.mockMvc.perform(
-	            post("/customer/quickregister/updateEmailHash")
-	                    .content(standardJsonUpdateEmailHashDTO())
-	                    .contentType(MediaType.APPLICATION_JSON)
-	                    .accept(MediaType.APPLICATION_JSON))
-	            .andDo(print())
-	            .andExpect(status().isOk())
-	            .andExpect(content().string("1"));
-		
-		this.mockMvc.perform(
-	            post("/customer/quickregister/getByCustomerId")
-	                    .content(standardJsonGetByCustomerIdDTO())
-	                    .contentType(MediaType.APPLICATION_JSON)
-	                    .accept(MediaType.APPLICATION_JSON))
-	            .andDo(print())
-	            .andExpect(status().isOk());
-			//	.andExpect(jsonPath("$.emailHash").value(CUST_EMAILHASH_UPDATED));
-	   
-		
-	}
-	*/	
-		
 }

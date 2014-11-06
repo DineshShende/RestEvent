@@ -29,7 +29,7 @@ public class HandleCustomerVerificationTest {
 		
 		//handleCustomerVerification.generatePassword();
 		
-		handleCustomerVerification.sendSMS(8087997660L, "Hi How r u?");
+		handleCustomerVerification.sendSMS(9960821869L, "Hi How r u?");
 		//handleCustomerVerification.sendEmailHash("dineshshe@gmail.com", "Hi There!!");
 	}
 	/*

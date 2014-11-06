@@ -4,6 +4,7 @@ import static com.projectx.rest.fixtures.CustomerQuickRegisterDataFixture.*;
 
 import com.projectx.data.domain.LoginVerificationDTO;
 import com.projectx.data.domain.UpdatePasswordAndPasswordTypeDTO;
+
 import com.projectx.rest.domain.CustomerAuthenticationDetails;
 
 
@@ -68,6 +69,8 @@ public class CustomerAuthenticationDetailsDataFixtures {
 		return new LoginVerificationDTO(null, CUST_MOBILE, CUST_PASSWORD_CHANGED);
 	}
 	
+	
+	
 	public static String standardJsonCustomerAuthenticationDetails(CustomerAuthenticationDetails standardCustomer)
 	{
 		StringBuilder jsonBuilder=new StringBuilder();
@@ -116,13 +119,14 @@ public class CustomerAuthenticationDetailsDataFixtures {
 
 		jsonBuilder.append("{\"customerId\":"+standardUpdatePasswordAndPasswordTypeDTO().getCustomerId()+",");
 		
-		jsonBuilder.append("\"password\":\""+standardUpdatePasswordAndPasswordTypeDTO().getPassword()+"\",");
-		jsonBuilder.append("\"passwordType\":\""+standardUpdatePasswordAndPasswordTypeDTO().getPasswordType()+"\"}");
+		jsonBuilder.append("\"password\":\""+standardUpdatePasswordAndPasswordTypeDTO().getPassword()+"\"}");
+	//	jsonBuilder.append("\"passwordType\":\""+standardUpdatePasswordAndPasswordTypeDTO().getPasswordType()+"\"}");
 		
 		System.out.println(jsonBuilder.toString());
 		
 		return jsonBuilder.toString();
 		
 	}
+	
 	
 }
