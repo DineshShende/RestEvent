@@ -2,6 +2,8 @@ package com.projectx.rest.handlers;
 
 import static com.projectx.rest.fixtures.CustomerQuickRegisterDataFixture.*;
 
+import java.text.NumberFormat;
+import java.text.ParsePosition;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,19 +13,21 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import com.mashape.unirest.http.exceptions.UnirestException;
-import com.projectx.data.domain.LoginVerificationDTO;
 import com.projectx.data.domain.UpdatePasswordAndPasswordTypeDTO;
-
+import com.projectx.data.domain.VerifyLoginDetailsDataDTO;
 import com.projectx.rest.domain.CustomerAuthenticationDetails;
+import com.projectx.rest.domain.CustomerDocument;
 import com.projectx.rest.domain.CustomerQuickRegisterStatusEntity;
 import com.projectx.rest.domain.CustomerQuickRegisterEntity;
 import com.projectx.rest.repository.CustomerAuthenticationDetailsRepository;
+import com.projectx.rest.repository.CustomerDocumentRepository;
 import com.projectx.rest.repository.CustomerQuickRegisterRepository;
 import com.projectx.rest.services.CustomerQuickRegisterService;
 import com.projectx.rest.utils.HandleCustomerVerification;
 import com.projectx.web.domain.CustomerIdDTO;
 import com.projectx.web.domain.CustomerQuickRegisterEntityDTO;
 import com.projectx.web.domain.CustomerQuickRegisterStringStatusEntity;
+import com.projectx.web.domain.LoginVerificationDTO;
 
 @Component
 @Profile(value={"Dev","Test"})
@@ -36,6 +40,9 @@ public class CustomerQuickRegisterHandler implements
 	
 	@Autowired
 	CustomerAuthenticationDetailsRepository customerAuthenticationDetailsRepository;
+	
+	@Autowired
+	CustomerDocumentRepository customerDocumentRepository;
 	
 	@Autowired 
 	HandleCustomerVerification handleCustomerVerification;
@@ -369,8 +376,19 @@ public class CustomerQuickRegisterHandler implements
 	public CustomerAuthenticationDetails verifyLoginDetails(
 			LoginVerificationDTO loginVerificationDTO) {
 		
-		CustomerAuthenticationDetails fetchedEntity=customerAuthenticationDetailsRepository.loginVerification(loginVerificationDTO.getEmail(),
-																loginVerificationDTO.getMobile(), loginVerificationDTO.getPassword());
+		VerifyLoginDetailsDataDTO loginDetailsDataDTO;
+		
+		if(isMobileNumber(loginVerificationDTO.getLoginEntity()))
+		{
+			loginDetailsDataDTO=new VerifyLoginDetailsDataDTO(null, Long.parseLong(loginVerificationDTO.getLoginEntity()), loginVerificationDTO.getPassword());
+		}
+		else
+		{
+			loginDetailsDataDTO=new VerifyLoginDetailsDataDTO(loginVerificationDTO.getLoginEntity(), null, loginVerificationDTO.getPassword());
+		}
+		
+		CustomerAuthenticationDetails fetchedEntity=customerAuthenticationDetailsRepository.loginVerification(loginDetailsDataDTO.getEmail(),
+																loginDetailsDataDTO.getMobile(), loginDetailsDataDTO.getPassword());
 		return fetchedEntity;
 	}
 
@@ -437,8 +455,6 @@ public class CustomerQuickRegisterHandler implements
 	@Override
 	public Boolean sendPasswordSMS(Long mobile,String message)
 	{
-		//String message=composeMessageWithPassword(customer);
-		
 		return handleCustomerVerification.sendSMS(mobile, message);
 	}
 	
@@ -446,8 +462,6 @@ public class CustomerQuickRegisterHandler implements
 	@Override
 	public Boolean sendPasswordEmail(String email,String message)
 	{
-		//String message=composeMessageWithPassword(customer);
-		
 		return handleCustomerVerification.sendEmail(email, message);
 	}
 	
@@ -469,7 +483,7 @@ public class CustomerQuickRegisterHandler implements
 			String password=handleCustomerVerification.generatePassword();
 			customerAuthenticationDetails.setPassword(password);
 			customerAuthenticationDetails.setPasswordType(CUST_PASSWORD_TYPE_DEFAULT);
-			//passwordUpdateStatus=customerQuickRegisterRepository.updatePassword(customer.getCustomerId(), customer.getPassword(), customer.getPasswordType());
+
 			 passwordUpdateStatus=customerAuthenticationDetailsRepository.updatePasswordAndPasswordType(customerAuthenticationDetails.getCustomerId(),
 					 																						customerAuthenticationDetails.getPassword(), customerAuthenticationDetails.getPasswordType());
 		}
@@ -491,18 +505,6 @@ public class CustomerQuickRegisterHandler implements
 			return false;
 		
 		
-	}
-	
-	
-	@Override
-	public Boolean resetPassword(CustomerIdDTO customerIdDTO) 
-	{
-		CustomerQuickRegisterEntity customer=customerQuickRegisterRepository.findByCustomerId(customerIdDTO.getCustomerId());
-		
-		customer.setPassword(null);
-		customer.setPasswordType(null);
-		
-		return sendDefaultPassword(customer,true);
 	}
 	
 	@Override
@@ -574,28 +576,30 @@ public class CustomerQuickRegisterHandler implements
 			return false;
 	}
 
-	
-	//public Boolean resendVerificationDetails()
-	{
-		//TODO
-	}
-	
-	//public Boolean forgetPassword()
-	{
-		//TODO
+	@Override
+	public CustomerQuickRegisterEntity resetPasswordByEmailOrMobileRedirect(String entity) {
+		
+		CustomerQuickRegisterEntity quickRegisterEntity=new CustomerQuickRegisterEntity();
+		
+		if(isMobileNumber(entity))
+		{
+			quickRegisterEntity=getCustomerQuickRegisterEntityByMobile(Long.parseLong(entity));
+		}
+		else
+		{
+			quickRegisterEntity=getCustomerQuickRegisterEntityByEmail(entity);
+		}
+				
+		return quickRegisterEntity;
 	}
 
 	@Override
-	public Boolean forgotPassword(String entity) {
+	public Boolean resetPassword(CustomerIdDTO customerIdDTO) 
+	{
+		CustomerQuickRegisterEntity customer=customerQuickRegisterRepository.findByCustomerId(customerIdDTO.getCustomerId());
 		
-		if(entity.length()==10)
-		{
-			
-		}
-		
-		return null;
+		return sendDefaultPassword(customer,true);
 	}
-
 	
 	
 	@Override
@@ -619,8 +623,30 @@ public class CustomerQuickRegisterHandler implements
 		return customerQuickRegisterRepository.findByMobile(mobile);
 	}
 
+	@Override
+	public CustomerDocument saveCustomerDocument(
+			CustomerDocument customerDocument) {
+		
+		return customerDocumentRepository.saveCustomerDocument(customerDocument);
+	}
+
+	@Override
+	public CustomerDocument getCustomerDocumentById(
+			Long customerId) {
+		
+		return customerDocumentRepository.getCustomerDocumentByCustomerId(customerId);
+	}
 
 
+	private Boolean isMobileNumber(String entity)
+	{
+		NumberFormat formatter = NumberFormat.getInstance();
+		ParsePosition pos = new ParsePosition(0);
+		formatter.parse(entity, pos);
+		return (entity.length() == pos.getIndex()&&entity.length()==10);
+		
+	}
+	
 
 
 }

@@ -30,9 +30,6 @@ public class CustomerQuickEntitySaveDTO {
 		
 	private Date lastStatusChangedTime;
 		
-	private String password;
-		
-	private String passwordType;
 
 	public CustomerQuickEntitySaveDTO() {
 		super();
@@ -58,8 +55,7 @@ public class CustomerQuickEntitySaveDTO {
 		this.mobilePinSentTime = mobilePinSentTime;
 		this.emailHashSentTime = emailHashSentTime;
 		this.lastStatusChangedTime = lastStatusChangedTime;
-		this.password = password;
-		this.passwordType = passwordType;
+		
 	}
 
 	
@@ -168,25 +164,10 @@ public class CustomerQuickEntitySaveDTO {
 		this.lastStatusChangedTime = lastStatusChangedTime;
 	}
 
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
-	public String getPasswordType() {
-		return passwordType;
-	}
-
-	public void setPasswordType(String passwordType) {
-		this.passwordType = passwordType;
-	}
 
 	@Override
 	public String toString() {
-		return "CustomerQuickEntitySavaDTO [customerId=" + customerId
+		return "CustomerQuickEntitySaveDTO [customerId=" + customerId
 				+ ", firstName=" + firstName + ", lastName=" + lastName
 				+ ", email=" + email + ", mobile=" + mobile + ", pin=" + pin
 				+ ", status=" + status + ", mobilePin=" + mobilePin
@@ -194,8 +175,7 @@ public class CustomerQuickEntitySaveDTO {
 				+ mobileVerificationAttempts + ", mobilePinSentTime="
 				+ mobilePinSentTime + ", emailHashSentTime="
 				+ emailHashSentTime + ", lastStatusChangedTime="
-				+ lastStatusChangedTime + ", password=" + password
-				+ ", passwordType=" + passwordType + "]";
+				+ lastStatusChangedTime + "]";
 	}
 
 	

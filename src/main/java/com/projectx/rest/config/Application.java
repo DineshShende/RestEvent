@@ -19,7 +19,6 @@ public class Application {
         SpringApplication.run(Application.class, args);
     }
     
-    
     @Bean
     public RestTemplate restTemplate() throws IOException
     {

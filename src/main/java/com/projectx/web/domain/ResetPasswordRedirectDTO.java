@@ -1,15 +1,15 @@
 package com.projectx.web.domain;
 
-public class ForgotPasswordDTO {
+public class ResetPasswordRedirectDTO {
 	
 	private String entity;
 
-	public ForgotPasswordDTO() {
+	public ResetPasswordRedirectDTO() {
 	
 	}
 	
 	
-	public ForgotPasswordDTO(String entity) {
+	public ResetPasswordRedirectDTO(String entity) {
 
 		this.entity = entity;
 	}

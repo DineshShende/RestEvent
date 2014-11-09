@@ -113,16 +113,24 @@ public class HandleCustomerVerification {
 		mailMessage.setText(message);
 			
 		System.out.println("Email sent");
-		
 		//mailSender.send(mailMessage);
 		
+		
+		/*
+		SendEmailThread emailThread=new SendEmailThread(email, message);
+		
+		Thread t1=new Thread(emailThread);
+		
+		t1.start();
+		*/
 		return true;
 	}
 	
 	public Boolean sendSMS(Long mobile,String message) 
 	{
-		String processedMessage=message.replace(" ", "+");
 		
+		//String processedMessage=message.replace(" ", "+");
+		/*
 		StringBuilder requestBuilder=new StringBuilder();
 		
 		requestBuilder.append("http://login.bulksmsindia.biz/messageapi.asp?username=karle7&password=58483712&sender=karlee&mobile=");
@@ -134,11 +142,18 @@ public class HandleCustomerVerification {
 		
 		//System.out.println(requestBuilder.toString());
 						
-		//String result=restTemplate.getForObject(requestBuilder.toString(), String.class);	
+		String result=restTemplate.getForObject(requestBuilder.toString(), String.class);	
 			
-		//System.out.println(result);
+		System.out.println(result);
+		*/
 		
+		SendSMSThread sendSMSThread=new SendSMSThread(mobile, message);
 		
+		Thread t1=new Thread(sendSMSThread);
+		
+		//t1.start();
+		
+		return true;
 		/*
 		 * 
 		HttpResponse<JsonNode> response = Unirest.get(requestBuilder.toString())
@@ -155,7 +170,7 @@ public class HandleCustomerVerification {
 		
 		
 		
-		return true;
+		
 	}
 	
 }

@@ -23,9 +23,9 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
-import com.projectx.data.domain.LoginVerificationDTO;
 import com.projectx.rest.repositoryImpl.CustomerQuickRegisterRepositoryImpl;
 import com.projectx.rest.services.CustomerQuickRegisterService;
+import com.projectx.web.domain.LoginVerificationDTO;
 
 
 public class CustomerQuickRegisterControllerStandAloneTest {
@@ -73,9 +73,8 @@ public class CustomerQuickRegisterControllerStandAloneTest {
 				.andExpect(jsonPath("$.mobileVerificationAttempts").value(standardEmailMobileCustomer().getMobileVerificationAttempts()))
 				.andExpect(jsonPath("$.mobilePinSentTime").exists())
 				.andExpect(jsonPath("$.emailHashSentTime").exists())
-				.andExpect(jsonPath("$.lastStatusChangedTime").exists())
-				.andExpect(jsonPath("$.password").value(standardEmailMobileCustomer().getPassword()))
-				.andExpect(jsonPath("$.passwordType").value(standardEmailMobileCustomer().getPasswordType()));
+				.andExpect(jsonPath("$.lastStatusChangedTime").exists());
+				
 	}
 	
 	
@@ -152,9 +151,7 @@ public class CustomerQuickRegisterControllerStandAloneTest {
 	{
 		when(customerQuickRegisterService.verifyLoginDetails(standardLoginVerificationWithEmail())).thenReturn(standardCustomerEmailMobileAuthenticationDetails());
 		
-		//System.out.println(standardLoginVerificationWithEmail());
-		
-		//System.out.println(standardCustomerEmailMobileAuthenticationDetails());
+		System.out.println(standardLoginVerificationWithEmail());
 		
 		this.mockMvc.perform(
 	            post("/customer/quickregister/verifyLoginDetails")
@@ -175,11 +172,9 @@ public class CustomerQuickRegisterControllerStandAloneTest {
 	{
 		when(customerQuickRegisterService.updatePassword(standardUpdatePasswordAndPasswordTypeDTO())).thenReturn(true);
 		
-		System.out.println(standardUpdatePasswordAndPasswordTypeDTO());
-		
 		this.mockMvc.perform(
 	            post("/customer/quickregister/updatePassword")
-	                    .content(standardJsonUpdatePasswordAndPasswordType())
+	                    .content(standardJsonUpdatePasswordAndPasswordType(standardUpdatePasswordAndPasswordTypeDTO()))
 	                    .contentType(MediaType.APPLICATION_JSON)
 	                    .accept(MediaType.APPLICATION_JSON))
 
@@ -189,5 +184,51 @@ public class CustomerQuickRegisterControllerStandAloneTest {
 
 	}
 	
+	
+	@Test
+	public void resetPassword() throws Exception
+	{
+		when(customerQuickRegisterService.resetPassword(standardCustomerIdDTO())).thenReturn(true);
+		
+		this.mockMvc.perform(
+	            post("/customer/quickregister/resetPassword")
+	                    .content(standardJsonCustomerIdDTO())
+	                    .contentType(MediaType.APPLICATION_JSON)
+	                    .accept(MediaType.APPLICATION_JSON))
+
+	            .andDo(print())
+	            .andExpect(status().isOk())
+	            .andExpect(content().string("true"));
+		
+		
+	}
+	
+	
+	@Test
+	public void resetPasswordRedirect() throws Exception
+	{
+		when(customerQuickRegisterService.resetPasswordByEmailOrMobileRedirect(Long.toString(CUST_MOBILE))).thenReturn(standardEmailMobileCustomer());
+		
+		this.mockMvc.perform(
+					post("/customer/quickregister/resetPasswordRedirect")
+					.content(standardJsonResetPasswordRedirect(Long.toString(CUST_MOBILE)))
+					.contentType(MediaType.APPLICATION_JSON)
+					.accept(MediaType.APPLICATION_JSON))
+		.andDo(print())
+		.andExpect(status().isOk())
+		.andExpect(jsonPath("$.firstName").value(standardEmailMobileCustomer().getFirstName()))
+		.andExpect(jsonPath("$.lastName").value(standardEmailMobileCustomer().getLastName()))
+		.andExpect(jsonPath("$.mobile").value(standardEmailMobileCustomer().getMobile()))
+		.andExpect(jsonPath("$.email").value(standardEmailMobileCustomer().getEmail()))
+		.andExpect(jsonPath("$.pin").value(standardEmailMobileCustomer().getPin()))
+		.andExpect(jsonPath("$.status").value(standardEmailMobileCustomer().getStatus()))
+		.andExpect(jsonPath("$.mobilePin").exists())
+		.andExpect(jsonPath("$.emailHash").exists())
+		.andExpect(jsonPath("$.mobileVerificationAttempts").value(standardEmailMobileCustomer().getMobileVerificationAttempts()))
+		.andExpect(jsonPath("$.mobilePinSentTime").exists())
+		.andExpect(jsonPath("$.emailHashSentTime").exists())
+		.andExpect(jsonPath("$.lastStatusChangedTime").exists());
+		
+	}
 }
 

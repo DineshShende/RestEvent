@@ -109,9 +109,8 @@ public class CustomerQuickRegisterControllerITest {
 				.andExpect(jsonPath("$.customer.mobileVerificationAttempts").value(standardEmailMobileCustomer().getMobileVerificationAttempts()))
 				.andExpect(jsonPath("$.customer.mobilePinSentTime").exists())
 				.andExpect(jsonPath("$.customer.emailHashSentTime").exists())
-				.andExpect(jsonPath("$.customer.lastStatusChangedTime").exists())
-				.andExpect(jsonPath("$.customer.password").value(standardEmailMobileCustomer().getPassword()))
-				.andExpect(jsonPath("$.customer.passwordType").value(standardEmailMobileCustomer().getPasswordType()));	
+				.andExpect(jsonPath("$.customer.lastStatusChangedTime").exists());
+				
 	}
 	
 
@@ -137,9 +136,8 @@ public class CustomerQuickRegisterControllerITest {
 				.andExpect(jsonPath("$.customer.mobileVerificationAttempts").value(standardMobileCustomer().getMobileVerificationAttempts()))
 				.andExpect(jsonPath("$.customer.mobilePinSentTime").exists())
 				//.andExpect(jsonPath("$.customer.emailHashSentTime").exists())
-				.andExpect(jsonPath("$.customer.lastStatusChangedTime").exists())
-				.andExpect(jsonPath("$.customer.password").value(standardMobileCustomer().getPassword()))
-				.andExpect(jsonPath("$.customer.passwordType").value(standardMobileCustomer().getPasswordType()));	
+				.andExpect(jsonPath("$.customer.lastStatusChangedTime").exists());
+					
 	}
 	
 	

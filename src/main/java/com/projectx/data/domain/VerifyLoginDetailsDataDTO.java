@@ -1,6 +1,6 @@
 package com.projectx.data.domain;
 
-public class LoginVerificationDTO {
+public class VerifyLoginDetailsDataDTO {
 
 	private String email;
 	
@@ -8,11 +8,11 @@ public class LoginVerificationDTO {
 	
 	private String password;
 
-	public LoginVerificationDTO() {
-
+	public VerifyLoginDetailsDataDTO() {
+		super();
 	}
 
-	public LoginVerificationDTO(String email, Long mobile, String password) {
+	public VerifyLoginDetailsDataDTO(String email, Long mobile, String password) {
 		super();
 		this.email = email;
 		this.mobile = mobile;
@@ -43,12 +43,8 @@ public class LoginVerificationDTO {
 		this.password = password;
 	}
 
-	@Override
-	public String toString() {
-		return "LoginVerificationDTO [email=" + email + ", mobile=" + mobile
-				+ ", password=" + password + "]";
-	}
-
+	
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -68,7 +64,7 @@ public class LoginVerificationDTO {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		LoginVerificationDTO other = (LoginVerificationDTO) obj;
+		VerifyLoginDetailsDataDTO other = (VerifyLoginDetailsDataDTO) obj;
 		if (email == null) {
 			if (other.email != null)
 				return false;
@@ -86,6 +82,14 @@ public class LoginVerificationDTO {
 			return false;
 		return true;
 	}
+
+	@Override
+	public String toString() {
+		return "VerifyLoginDetailsDataDTO [email=" + email + ", mobile="
+				+ mobile + ", password=" + password + "]";
+	}
+	
+	
 	
 	
 	

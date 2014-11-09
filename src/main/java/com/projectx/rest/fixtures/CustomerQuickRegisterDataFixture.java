@@ -53,32 +53,6 @@ public class CustomerQuickRegisterDataFixture {
 	public static String STATUS_MOBILE_VERFIED="MobileVerified";
 	public static String STATUS_EMAIL_VERFIED="EmailVerified";
 	
-	//private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		
-	public static CustomerQuickRegisterEntity standardEmailMobileCustomer()
-	{
-		return new CustomerQuickRegisterEntity(CUST_ID,CUST_FIRSTNAME, CUST_LASTNAME, CUST_EMAIL,CUST_MOBILE, CUST_PIN,CUST_STATUS_EMAILMOBILE, CUST_MOBILEPIN, CUST_EMAILHASH,CUST_MOBILEPIN_VERIFICATION_ATTEMPTS,null,null,CUST_LAST_STATUS_CHANGED_TIME,null,null);
-		
-	}
-	
-	public static CustomerQuickRegisterEntity standardEmailMobileCustomerWithPassword()
-	{
-		return new CustomerQuickRegisterEntity(CUST_ID,CUST_FIRSTNAME, CUST_LASTNAME, CUST_EMAIL,CUST_MOBILE, CUST_PIN,CUST_STATUS_EMAILMOBILE, CUST_MOBILEPIN, CUST_EMAILHASH,CUST_MOBILEPIN_VERIFICATION_ATTEMPTS,null,null,CUST_LAST_STATUS_CHANGED_TIME,CUST_PASSWORD_DEFAULT,CUST_PASSWORD_TYPE_DEFAULT);
-		
-	}
-	
-	public static CustomerQuickRegisterEntity standardMobileCustomer()
-	{
-		return new CustomerQuickRegisterEntity(CUST_ID,CUST_FIRSTNAME, CUST_LASTNAME, null,CUST_MOBILE, CUST_PIN,CUST_STATUS_MOBILE, CUST_MOBILEPIN, null,CUST_MOBILEPIN_VERIFICATION_ATTEMPTS,null,null,CUST_LAST_STATUS_CHANGED_TIME,null,null);
-		
-	}
-	
-	public static CustomerQuickRegisterEntity standardEmailCustomer()
-	{
-		return new CustomerQuickRegisterEntity(CUST_ID,CUST_FIRSTNAME, CUST_LASTNAME, CUST_EMAIL,null, CUST_PIN,CUST_STATUS_EMAIL, null, CUST_EMAILHASH,CUST_MOBILEPIN_VERIFICATION_ATTEMPTS,null,null,CUST_LAST_STATUS_CHANGED_TIME,null,null);
-		
-	}
-
 	
 }
 

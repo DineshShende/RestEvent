@@ -32,8 +32,6 @@ public interface CustomerQuickRegisterRepository {
 	 
 	 Integer updateMobilePin(Long customerId,Integer mobilePin,Date updateTime);
 	 
-//	 Integer updatePassword(Long customerId,String password,String passwordType);
-	 
 	 Integer updateEmailHashAndMobilePinSentTime(Long customerId,Date emailHashSentTine,Date mobilePinSentTime);
 	 
 	 void clearCustomerQuickRegister();

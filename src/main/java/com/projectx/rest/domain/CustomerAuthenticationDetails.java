@@ -15,12 +15,12 @@ public class CustomerAuthenticationDetails {
 	private String passwordType;
 
 	public CustomerAuthenticationDetails() {
-		super();
+
 	}
 
 	public CustomerAuthenticationDetails(Long customerId, String email,
 			Long mobile, String password, String passwordType) {
-		super();
+
 		this.customerId = customerId;
 		this.email = email;
 		this.mobile = mobile;

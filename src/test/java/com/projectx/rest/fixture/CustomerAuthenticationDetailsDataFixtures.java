@@ -2,13 +2,16 @@ package com.projectx.rest.fixture;
 
 import static com.projectx.rest.fixtures.CustomerQuickRegisterDataFixture.*; 
 
-import com.projectx.data.domain.LoginVerificationDTO;
 import com.projectx.data.domain.UpdatePasswordAndPasswordTypeDTO;
-
+import com.projectx.data.domain.VerifyLoginDetailsDataDTO;
 import com.projectx.rest.domain.CustomerAuthenticationDetails;
+import com.projectx.web.domain.CustomerIdDTO;
+import com.projectx.web.domain.LoginVerificationDTO;
 
 
 public class CustomerAuthenticationDetailsDataFixtures {
+	
+
 	
 	
 	public static CustomerAuthenticationDetails standardCustomerEmailMobileAuthenticationDetails()
@@ -48,28 +51,48 @@ public class CustomerAuthenticationDetailsDataFixtures {
 	}
 
 	
-	
 	public static LoginVerificationDTO standardLoginVerificationWithEmail()
 	{
-		return new LoginVerificationDTO(CUST_EMAIL, null, CUST_PASSWORD_DEFAULT);
+		return new LoginVerificationDTO(CUST_EMAIL, CUST_PASSWORD_DEFAULT);
 	}
 	
 	public static LoginVerificationDTO standardLoginVerificationWithMobile()
 	{
-		return new LoginVerificationDTO(null, CUST_MOBILE, CUST_PASSWORD_DEFAULT);
+		return new LoginVerificationDTO(Long.toString(CUST_MOBILE), CUST_PASSWORD_DEFAULT);
 	}
 	
-	public static LoginVerificationDTO standardLoginVerificationWithEmailNewPassword()
+	
+	public static VerifyLoginDetailsDataDTO standardVerifyLoginDetailsDataWithEmail()
 	{
-		return new LoginVerificationDTO(CUST_EMAIL, null, CUST_PASSWORD_CHANGED);
+		return new VerifyLoginDetailsDataDTO(CUST_EMAIL, null, CUST_PASSWORD_DEFAULT);
 	}
 	
-	public static LoginVerificationDTO standardLoginVerificationWithMobileNewPassword()
+	public static VerifyLoginDetailsDataDTO standardVerifyLoginDetailsDataWithMobile()
 	{
-		return new LoginVerificationDTO(null, CUST_MOBILE, CUST_PASSWORD_CHANGED);
+		return new VerifyLoginDetailsDataDTO(null, CUST_MOBILE, CUST_PASSWORD_DEFAULT);
+	}
+	
+	public static VerifyLoginDetailsDataDTO standardVerifyLoginDetailsDataWithEmailNewPassword()
+	{
+		return new VerifyLoginDetailsDataDTO(CUST_EMAIL, null, CUST_PASSWORD_CHANGED);
+	}
+	
+	public static VerifyLoginDetailsDataDTO standardVerifyLoginDetailsDataWithMobileNewPassword()
+	{
+		return new VerifyLoginDetailsDataDTO(null, CUST_MOBILE, CUST_PASSWORD_CHANGED);
 	}
 	
 	
+	public static CustomerIdDTO standardCustomerIdDTO()
+	{
+		return new CustomerIdDTO(CUST_ID);
+	}
+	
+	
+	public static String standardJsonCustomerIdDTO(CustomerIdDTO customerIdDTO)
+	{
+		return "{\"customerId\":"+customerIdDTO.getCustomerId()+"}";
+	}
 	
 	public static String standardJsonCustomerAuthenticationDetails(CustomerAuthenticationDetails standardCustomer)
 	{
@@ -98,31 +121,29 @@ public class CustomerAuthenticationDetailsDataFixtures {
 	{
 		StringBuilder jsonBuilder=new StringBuilder();
 
-		if(loginVerificationDTO.getEmail()!=null)
-			jsonBuilder.append("{\"email\":\""+loginVerificationDTO.getEmail()+"\",");
+		if(loginVerificationDTO.getLoginEntity()!=null)
+			jsonBuilder.append("{\"loginEntity\":\""+loginVerificationDTO.getLoginEntity()+"\",");
 		else
-			jsonBuilder.append("{\"email\":"+loginVerificationDTO.getEmail()+",");
+			jsonBuilder.append("{\"loginEntity\":"+loginVerificationDTO.getLoginEntity()+",");
 
-		jsonBuilder.append("\"mobile\":"+loginVerificationDTO.getMobile()+",");
-		
 		jsonBuilder.append("\"password\":\""+loginVerificationDTO.getPassword()+"\"}");
 		
-		//System.out.println(jsonBuilder.toString());
+	//	System.out.println(jsonBuilder.toString());
 		
 		return jsonBuilder.toString();
 	}
 	
 	
-	public static String standardJsonUpdatePasswordAndPasswordType()
+	public static String standardJsonUpdatePasswordAndPasswordType(UpdatePasswordAndPasswordTypeDTO dto)
 	{
 		StringBuilder jsonBuilder=new StringBuilder();
 
-		jsonBuilder.append("{\"customerId\":"+standardUpdatePasswordAndPasswordTypeDTO().getCustomerId()+",");
+		jsonBuilder.append("{\"customerId\":"+dto.getCustomerId()+",");
 		
-		jsonBuilder.append("\"password\":\""+standardUpdatePasswordAndPasswordTypeDTO().getPassword()+"\"}");
-	//	jsonBuilder.append("\"passwordType\":\""+standardUpdatePasswordAndPasswordTypeDTO().getPasswordType()+"\"}");
+		jsonBuilder.append("\"password\":\""+dto.getPassword()+"\"}");
+	
 		
-		System.out.println(jsonBuilder.toString());
+	//	System.out.println(jsonBuilder.toString());
 		
 		return jsonBuilder.toString();
 		

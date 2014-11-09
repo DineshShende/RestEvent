@@ -7,11 +7,12 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
-import com.projectx.data.domain.LoginVerificationDTO;
 import com.projectx.data.domain.UpdatePasswordAndPasswordTypeDTO;
+import com.projectx.data.domain.VerifyLoginDetailsDataDTO;
 import com.projectx.rest.domain.CustomerAuthenticationDetails;
 import com.projectx.rest.repository.CustomerAuthenticationDetailsRepository;
 import com.projectx.web.domain.CustomerIdDTO;
+import com.projectx.web.domain.LoginVerificationDTO;
 
 @Component
 @Profile("Dev")
@@ -50,7 +51,7 @@ public class CustomerAuthenticationDetailsRepositoryImpl implements CustomerAuth
 	public CustomerAuthenticationDetails loginVerification(String email,
 			Long mobile, String password) {
 		
-		LoginVerificationDTO loginVerificationDTO=new LoginVerificationDTO(email, mobile, password);
+		VerifyLoginDetailsDataDTO loginVerificationDTO=new VerifyLoginDetailsDataDTO(email, mobile, password);
 		
 		//System.out.println(loginVerificationDTO);
 		

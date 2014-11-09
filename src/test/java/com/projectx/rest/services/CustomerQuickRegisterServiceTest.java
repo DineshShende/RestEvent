@@ -13,7 +13,6 @@ import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.projectx.data.domain.LoginVerificationDTO;
 import com.projectx.data.domain.UpdatePasswordAndPasswordTypeDTO;
 import com.projectx.rest.config.Application;
 import com.projectx.rest.domain.CustomerAuthenticationDetails;
@@ -22,6 +21,7 @@ import com.projectx.rest.domain.CustomerQuickRegisterEntity;
 import com.projectx.rest.repository.CustomerAuthenticationDetailsRepository;
 import com.projectx.rest.repository.CustomerQuickRegisterRepository;
 import com.projectx.web.domain.CustomerIdDTO;
+import com.projectx.web.domain.LoginVerificationDTO;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
@@ -230,8 +230,7 @@ public class CustomerQuickRegisterServiceTest {
 		assertEquals(standardMobileCustomerAfterInitialization().getMobilePinSentTime(), initializedCustomer.getMobilePinSentTime());
 		assertEquals(standardMobileCustomerAfterInitialization().getMobileVerificationAttempts(), initializedCustomer.getMobileVerificationAttempts());
 		assertTrue( (initializedCustomer.getLastStatusChangedTime().getTime()-standardMobileCustomerAfterInitialization().getLastStatusChangedTime().getTime())<60*1000);
-		assertEquals(standardMobileCustomerAfterInitialization().getPassword(), initializedCustomer.getPassword());
-		assertEquals(standardMobileCustomerAfterInitialization().getPasswordType(), initializedCustomer.getPasswordType());
+		
 		
 	}
 	
@@ -256,8 +255,7 @@ public class CustomerQuickRegisterServiceTest {
 		assertEquals(standardEmailMobileCustomerAfterInitialization().getMobilePinSentTime(), initializedCustomer.getMobilePinSentTime());
 		assertEquals(standardEmailMobileCustomerAfterInitialization().getMobileVerificationAttempts(), initializedCustomer.getMobileVerificationAttempts());
 		assertTrue( (initializedCustomer.getLastStatusChangedTime().getTime()-standardEmailMobileCustomerAfterInitialization().getLastStatusChangedTime().getTime())<60*1000);
-		assertEquals(standardEmailMobileCustomerAfterInitialization().getPassword(), initializedCustomer.getPassword());
-		assertEquals(standardEmailMobileCustomerAfterInitialization().getPasswordType(), initializedCustomer.getPasswordType());
+		
 		
 	}
 	
@@ -281,8 +279,7 @@ public class CustomerQuickRegisterServiceTest {
 		assertEquals(standardEmailCustomerAfterStatusInitialization().getMobilePinSentTime(), initializedCustomer.getMobilePinSentTime());
 		assertEquals(standardEmailCustomerAfterStatusInitialization().getMobileVerificationAttempts(), initializedCustomer.getMobileVerificationAttempts());
 		assertTrue( (initializedCustomer.getLastStatusChangedTime().getTime()-standardEmailCustomerAfterStatusInitialization().getLastStatusChangedTime().getTime())<60*1000);
-		assertEquals(standardEmailCustomerAfterStatusInitialization().getPassword(), initializedCustomer.getPassword());
-		assertEquals(standardEmailCustomerAfterStatusInitialization().getPasswordType(), initializedCustomer.getPasswordType());
+		
 		
 	}
 	
@@ -312,8 +309,7 @@ public class CustomerQuickRegisterServiceTest {
 		assertEquals(standardEmailMobileCustomerAfterInitialization().getMobilePinSentTime(), fetced.getMobilePinSentTime());
 		assertEquals(standardEmailMobileCustomerAfterInitialization().getMobileVerificationAttempts(), fetced.getMobileVerificationAttempts());
 		assertTrue( (fetced.getLastStatusChangedTime().getTime()-standardEmailMobileCustomerAfterInitialization().getLastStatusChangedTime().getTime())<60*1000);
-		assertEquals(standardEmailMobileCustomerAfterInitialization().getPassword(), fetced.getPassword());
-		assertEquals(standardEmailMobileCustomerAfterInitialization().getPasswordType(), fetced.getPasswordType());
+		
 		
 	
 	}
@@ -340,8 +336,7 @@ public class CustomerQuickRegisterServiceTest {
 		assertEquals(standardEmailCustomerAfterStatusInitialization().getMobilePinSentTime(), fetced.getMobilePinSentTime());
 		assertEquals(standardEmailCustomerAfterStatusInitialization().getMobileVerificationAttempts(), fetced.getMobileVerificationAttempts());
 		assertTrue( (fetced.getLastStatusChangedTime().getTime()-standardEmailCustomerAfterStatusInitialization().getLastStatusChangedTime().getTime())<60*1000);
-		assertEquals(standardEmailCustomerAfterStatusInitialization().getPassword(), fetced.getPassword());
-		assertEquals(standardEmailCustomerAfterStatusInitialization().getPasswordType(), fetced.getPasswordType());
+		
 		
 	
 	}
@@ -369,8 +364,7 @@ public class CustomerQuickRegisterServiceTest {
 		assertEquals(standardMobileCustomerAfterInitialization().getMobilePinSentTime(), fetced.getMobilePinSentTime());
 		assertEquals(standardMobileCustomerAfterInitialization().getMobileVerificationAttempts(), fetced.getMobileVerificationAttempts());
 		assertTrue( (fetced.getLastStatusChangedTime().getTime()-standardMobileCustomerAfterInitialization().getLastStatusChangedTime().getTime())<60*1000);
-		assertEquals(standardMobileCustomerAfterInitialization().getPassword(), fetced.getPassword());
-		assertEquals(standardMobileCustomerAfterInitialization().getPasswordType(), fetced.getPasswordType());
+		
 		
 	
 	}
@@ -400,8 +394,7 @@ public class CustomerQuickRegisterServiceTest {
 		assertEquals(standardEmailMobileCustomerAfterInitialization().getMobilePinSentTime(), fetced.getMobilePinSentTime());
 		assertEquals(standardEmailMobileCustomerAfterInitialization().getMobileVerificationAttempts(), fetced.getMobileVerificationAttempts());
 		assertTrue( (fetced.getLastStatusChangedTime().getTime()-standardEmailMobileCustomerAfterInitialization().getLastStatusChangedTime().getTime())<60*1000);
-		assertEquals(standardEmailMobileCustomerAfterInitialization().getPassword(), fetced.getPassword());
-		assertEquals(standardEmailMobileCustomerAfterInitialization().getPasswordType(), fetced.getPasswordType());
+		
 		
 
 		fetced=customerQuickRegisterHandler.getCustomerQuickRegisterEntityByMobile(CUST_MOBILE);
@@ -419,8 +412,7 @@ public class CustomerQuickRegisterServiceTest {
 		assertEquals(standardEmailMobileCustomerAfterInitialization().getMobilePinSentTime(), fetced.getMobilePinSentTime());
 		assertEquals(standardEmailMobileCustomerAfterInitialization().getMobileVerificationAttempts(), fetced.getMobileVerificationAttempts());
 		assertTrue( (fetced.getLastStatusChangedTime().getTime()-standardEmailMobileCustomerAfterInitialization().getLastStatusChangedTime().getTime())<60*1000);
-		assertEquals(standardEmailMobileCustomerAfterInitialization().getPassword(), fetced.getPassword());
-		assertEquals(standardEmailMobileCustomerAfterInitialization().getPasswordType(), fetced.getPasswordType());
+		
 		
 		
 	}
@@ -507,6 +499,7 @@ public class CustomerQuickRegisterServiceTest {
 		
 		assertNotEquals(oldPassword, authenticationDetails.getPassword());
 	//	assertNotEquals(oldPasswordType, authenticationDetails.getPasswordType());
+		assertEquals(oldPasswordType, authenticationDetails.getPasswordType());
 		
 	}
 
@@ -603,16 +596,16 @@ public class CustomerQuickRegisterServiceTest {
 		assertNotNull( authenticationDetails.getPasswordType());
 	
 	
-		assertEquals(authenticationDetails, customerQuickRegisterHandler.verifyLoginDetails(new LoginVerificationDTO(authenticationDetails.getEmail(), null,
+		assertEquals(authenticationDetails, customerQuickRegisterHandler.verifyLoginDetails(new LoginVerificationDTO(authenticationDetails.getEmail(),
 																								authenticationDetails.getPassword())));
 		
-		assertEquals(authenticationDetails, customerQuickRegisterHandler.verifyLoginDetails(new LoginVerificationDTO(null, authenticationDetails.getMobile(),
+		assertEquals(authenticationDetails, customerQuickRegisterHandler.verifyLoginDetails(new LoginVerificationDTO(Long.toString(authenticationDetails.getMobile()),
 				authenticationDetails.getPassword())));
 		
-		assertNull( customerQuickRegisterHandler.verifyLoginDetails(new LoginVerificationDTO(null, authenticationDetails.getMobile(),
+		assertNull( customerQuickRegisterHandler.verifyLoginDetails(new LoginVerificationDTO(Long.toString(authenticationDetails.getMobile()),
 				CUST_PASSWORD_DEFAULT)).getCustomerId());
 	
-		assertNull(customerQuickRegisterHandler.verifyLoginDetails(new LoginVerificationDTO(authenticationDetails.getEmail(), null,
+		assertNull(customerQuickRegisterHandler.verifyLoginDetails(new LoginVerificationDTO(authenticationDetails.getEmail(),
 				CUST_PASSWORD_CHANGED)).getCustomerId());
 
 	}
@@ -632,10 +625,9 @@ public class CustomerQuickRegisterServiceTest {
 		assertNotNull( authenticationDetails.getPasswordType());
 	
 	
-		assertEquals(authenticationDetails, customerQuickRegisterHandler.verifyLoginDetails(new LoginVerificationDTO(authenticationDetails.getEmail(), null,
+		assertEquals(authenticationDetails, customerQuickRegisterHandler.verifyLoginDetails(new LoginVerificationDTO(authenticationDetails.getEmail(),
 																								authenticationDetails.getPassword())));
 	}
-	
 	
 	@Test
 	public void sendVerificationDetailsWithEmailMobileCustomer() throws Exception
@@ -1000,6 +992,19 @@ public class CustomerQuickRegisterServiceTest {
 		assertNotEquals(entity.getMobilePin(),
 				customerQuickRegisterHandler.getCustomerQuickRegisterEntityByCustomerId(entity.getCustomerId()).getMobilePin());
 
+	}
+	
+	
+	@Test
+	public void resetPasswordByEmailOrMobile() throws Exception
+	{
+		assertNull(customerQuickRegisterHandler.getCustomerQuickRegisterEntityByCustomerId(CUST_ID).getCustomerId());
+
+		CustomerQuickRegisterStatusEntity handledEntity=customerQuickRegisterHandler
+				.handleNewCustomerQuickRegister(standardEmailCustomerDTO());
+		
+		
+	
 	}
 	
 }

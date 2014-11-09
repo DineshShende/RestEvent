@@ -265,7 +265,12 @@ public class CustomerQuickRegisterDataFixture {
 		return "{\"customerId\":212}";
 	}
 	
-	
+	public static String standardJsonResetPasswordRedirect(String entity)
+	{
+		System.out.println("{\"entity\":\""+entity+"\"}");
+		
+		return "{\"entity\":"+entity+"}";
+	}
 	
 	
 	public static String standardJsonVerifyEmailHashDTO()

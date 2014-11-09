@@ -77,17 +77,17 @@ public class CustomerAuthenticationDetailsRepositoryTest {
 		
 		assertEquals(1,customerAuthenticationDetailsRepository.count().intValue());
 		
-		assertNotNull(customerAuthenticationDetailsRepository.loginVerification(standardLoginVerificationWithEmail().getEmail(),
-				standardLoginVerificationWithEmail().getMobile(), standardLoginVerificationWithEmail().getPassword()));
+		assertNotNull(customerAuthenticationDetailsRepository.loginVerification(standardVerifyLoginDetailsDataWithEmail().getEmail(),
+				standardVerifyLoginDetailsDataWithEmail().getMobile(), standardVerifyLoginDetailsDataWithEmail().getPassword()));
 		
-		assertNotNull(customerAuthenticationDetailsRepository.loginVerification(standardLoginVerificationWithMobile().getEmail(),
-				standardLoginVerificationWithMobile().getMobile(), standardLoginVerificationWithMobile().getPassword()));
+		assertNotNull(customerAuthenticationDetailsRepository.loginVerification(standardVerifyLoginDetailsDataWithMobile().getEmail(),
+				standardVerifyLoginDetailsDataWithMobile().getMobile(), standardVerifyLoginDetailsDataWithMobile().getPassword()));
 		
-		assertNull(customerAuthenticationDetailsRepository.loginVerification(standardLoginVerificationWithMobileNewPassword().getEmail(),
-				standardLoginVerificationWithMobileNewPassword().getMobile(), standardLoginVerificationWithMobileNewPassword().getPassword()).getCustomerId());
+		assertNull(customerAuthenticationDetailsRepository.loginVerification(standardVerifyLoginDetailsDataWithMobileNewPassword().getEmail(),
+				standardVerifyLoginDetailsDataWithMobileNewPassword().getMobile(), standardVerifyLoginDetailsDataWithMobileNewPassword().getPassword()).getCustomerId());
 		
-		assertNull(customerAuthenticationDetailsRepository.loginVerification(standardLoginVerificationWithEmailNewPassword().getEmail(),
-				standardLoginVerificationWithEmailNewPassword().getMobile(), standardLoginVerificationWithEmailNewPassword().getPassword()).getCustomerId());
+		assertNull(customerAuthenticationDetailsRepository.loginVerification(standardVerifyLoginDetailsDataWithEmailNewPassword().getEmail(),
+				standardVerifyLoginDetailsDataWithEmailNewPassword().getMobile(), standardVerifyLoginDetailsDataWithEmailNewPassword().getPassword()).getCustomerId());
 	}
 	
 	@Test

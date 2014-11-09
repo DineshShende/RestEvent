@@ -34,9 +34,6 @@ public class CustomerQuickRegisterEntity {
 	
 	private Date lastStatusChangedTime;
 	
-	private String password;
-	
-	private String passwordType;
 	
 	public CustomerQuickRegisterEntity() {
 		
@@ -60,10 +57,6 @@ public class CustomerQuickRegisterEntity {
 		customerQuickRegisterDTO1.setMobilePinSentTime(this.mobilePinSentTime);
 		customerQuickRegisterDTO1.setEmailHashSentTime(this.emailHashSentTime);
 		customerQuickRegisterDTO1.setLastStatusChangedTime(this.lastStatusChangedTime);
-		customerQuickRegisterDTO1.setPassword(this.password);
-		customerQuickRegisterDTO1.setPasswordType(this.passwordType);
-		//customerQuickRegisterDTO1.setEmailHash(this.emailHash);
-		//customerQuickRegisterDTO1.setEmailHash(this.emailHash);
 		
 		
 		return customerQuickRegisterDTO1;
@@ -86,8 +79,6 @@ public class CustomerQuickRegisterEntity {
 		customerQuickRegisterDTO1.setMobilePinSentTime(this.mobilePinSentTime);
 		customerQuickRegisterDTO1.setEmailHashSentTime(this.emailHashSentTime);
 		customerQuickRegisterDTO1.setLastStatusChangedTime(this.lastStatusChangedTime);
-		customerQuickRegisterDTO1.setPassword(this.password);
-		customerQuickRegisterDTO1.setPasswordType(this.passwordType);
 		
 		return customerQuickRegisterDTO1;
 	}
@@ -113,8 +104,7 @@ public class CustomerQuickRegisterEntity {
 		this.mobilePinSentTime = mobilePinSentTime;
 		this.emailHashSentTime = emailHashSentTime;
 		this.lastStatusChangedTime = lastStatusChangedTime;
-		this.password = password;
-		this.passwordType=passwordType;
+		
 	}
 
 
@@ -335,33 +325,6 @@ public class CustomerQuickRegisterEntity {
 	}
 
 
-
-	public String getPassword() {
-		return password;
-	}
-
-
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
-
-
-	public String getPasswordType() {
-		return passwordType;
-	}
-
-
-
-	public void setPasswordType(String passwordType) {
-		this.passwordType = passwordType;
-
-	}
-
-
-
-
 	@Override
 	public String toString() {
 		return "CustomerQuickRegisterEntity [customerId=" + customerId
@@ -372,10 +335,8 @@ public class CustomerQuickRegisterEntity {
 				+ mobileVerificationAttempts + ", mobilePinSentTime="
 				+ mobilePinSentTime + ", emailHashSentTime="
 				+ emailHashSentTime + ", lastStatusChangedTime="
-				+ lastStatusChangedTime + ", password=" + password
-				+ ", passwordType=" + passwordType + "]";
+				+ lastStatusChangedTime + "]";
 	}
-
 
 
 	@Override
@@ -410,15 +371,10 @@ public class CustomerQuickRegisterEntity {
 				* result
 				+ ((mobileVerificationAttempts == null) ? 0
 						: mobileVerificationAttempts.hashCode());
-		result = prime * result
-				+ ((password == null) ? 0 : password.hashCode());
-		result = prime * result
-				+ ((passwordType == null) ? 0 : passwordType.hashCode());
 		result = prime * result + ((pin == null) ? 0 : pin.hashCode());
 		result = prime * result + ((status == null) ? 0 : status.hashCode());
 		return result;
 	}
-
 
 
 	@Override
@@ -487,16 +443,6 @@ public class CustomerQuickRegisterEntity {
 		} else if (!mobileVerificationAttempts
 				.equals(other.mobileVerificationAttempts))
 			return false;
-		if (password == null) {
-			if (other.password != null)
-				return false;
-		} else if (!password.equals(other.password))
-			return false;
-		if (passwordType == null) {
-			if (other.passwordType != null)
-				return false;
-		} else if (!passwordType.equals(other.passwordType))
-			return false;
 		if (pin == null) {
 			if (other.pin != null)
 				return false;
@@ -509,8 +455,6 @@ public class CustomerQuickRegisterEntity {
 			return false;
 		return true;
 	}
-
-
-
+	
 	
 }
