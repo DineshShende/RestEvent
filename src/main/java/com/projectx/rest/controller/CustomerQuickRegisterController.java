@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.mashape.unirest.http.exceptions.UnirestException;
 import com.projectx.data.domain.UpdatePasswordAndPasswordTypeDTO;
 import com.projectx.rest.domain.CustomerAuthenticationDetails;
 import com.projectx.rest.domain.CustomerDocument;
@@ -19,6 +18,8 @@ import com.projectx.web.domain.CustomerIdDTO;
 import com.projectx.web.domain.CustomerQuickRegisterStringStatusEntity;
 import com.projectx.web.domain.ResetPasswordRedirectDTO;
 import com.projectx.web.domain.LoginVerificationDTO;
+import com.projectx.web.domain.UpdateEmailHashDTO;
+import com.projectx.web.domain.UpdateMobilePinDTO;
 import com.projectx.web.domain.UpdatePasswordDTO;
 import com.projectx.web.domain.VerifyEmailHashDTO;
 import com.projectx.web.domain.VerifyMobilePinDTO;
@@ -51,7 +52,7 @@ public class CustomerQuickRegisterController {
 	@RequestMapping(value="/verifyEmailHash",method=RequestMethod.POST)
 	public Boolean verifyEmailHash(@RequestBody VerifyEmailHashDTO verifyEmail)
 	{
-		if(customerQuickRegisterService.verifyEmailHash(verifyEmail.getCustomerId(), verifyEmail.getEmailHash()))
+		if(customerQuickRegisterService.verifyEmailHash(verifyEmail.getCustomerId(),verifyEmail.getEmail(), verifyEmail.getEmailHash()))
 			return true;
 		else
 			return false;
@@ -60,7 +61,7 @@ public class CustomerQuickRegisterController {
 	@RequestMapping(value="/verifyMobilePin",method=RequestMethod.POST)
 	public Boolean verifyMobilePin(@RequestBody VerifyMobilePinDTO verifyMobile)
 	{
-		if(customerQuickRegisterService.verifyMobilePin(verifyMobile.getCustomerId(), verifyMobile.getMobilePin()))
+		if(customerQuickRegisterService.verifyMobilePin(verifyMobile.getCustomerId(),verifyMobile.getMobile(), verifyMobile.getMobilePin()))
 			return true;
 		else
 			return false;
@@ -75,16 +76,16 @@ public class CustomerQuickRegisterController {
 	}
 
 	
-	@RequestMapping(value="/resendMobilePin",method=RequestMethod.POST)
-	public Boolean updateMobilePin(@RequestBody CustomerIdDTO updateMobilePin) throws UnirestException
+	@RequestMapping(value="/resetMobilePin",method=RequestMethod.POST)
+	public Boolean updateMobilePin(@RequestBody UpdateMobilePinDTO updateMobilePin)
 	{
-		return customerQuickRegisterService.reSendMobilePin(updateMobilePin.getCustomerId());
+		return customerQuickRegisterService.reSetMobilePin(updateMobilePin.getCustomerId(),updateMobilePin.getMobile());
 	}
 	
-	@RequestMapping(value="/resendEmailHash",method=RequestMethod.POST)
-	public Boolean updateEmailHash(@RequestBody CustomerIdDTO updateEmailHash)
+	@RequestMapping(value="/resetEmailHash",method=RequestMethod.POST)
+	public Boolean updateEmailHash(@RequestBody UpdateEmailHashDTO updateEmailHash)
 	{
-		return customerQuickRegisterService.reSendEmailHash(updateEmailHash.getCustomerId());
+		return customerQuickRegisterService.reSetEmailHash(updateEmailHash.getCustomerId(),updateEmailHash.getEmail());
 	}
 	
 	@RequestMapping(value="/resetPassword",method=RequestMethod.POST)

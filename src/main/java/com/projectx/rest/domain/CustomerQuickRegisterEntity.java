@@ -18,21 +18,17 @@ public class CustomerQuickRegisterEntity {
 	
 	private Long mobile;
 	
-	private Integer pin;
+	private Integer pincode;
 	
-	private String status;
+	private Boolean isEmailVerified;
 
-	private Integer mobilePin;
+	private Boolean isMobileVerified;
+		
+	private Date insertTime;
 	
-	private String emailHash;
-
-	private Integer mobileVerificationAttempts;
+	private Date updateTime;
 	
-	private Date mobilePinSentTime;
-	
-	private Date emailHashSentTime;
-	
-	private Date lastStatusChangedTime;
+	private String updatedBy;
 	
 	
 	public CustomerQuickRegisterEntity() {
@@ -40,7 +36,7 @@ public class CustomerQuickRegisterEntity {
 		
 	}
 	
-	
+	/*
 	public CustomerQuickEntitySaveDTO toCustomerQuickRegisterDTO()
 	{
 		CustomerQuickEntitySaveDTO  customerQuickRegisterDTO1=new CustomerQuickEntitySaveDTO();
@@ -82,262 +78,124 @@ public class CustomerQuickRegisterEntity {
 		
 		return customerQuickRegisterDTO1;
 	}
+	*/
 	
-	
-
 	public CustomerQuickRegisterEntity(Long customerId, String firstName,
-			String lastName, String email, Long mobile, Integer pin,
-			String status, Integer mobilePin, String emailHash,
-			Integer mobileVerificationAttempts, Date mobilePinSentTime,
-			Date emailHashSentTime, Date lastStatusChangedTime, String password,String passwordType) {
+			String lastName, String email, Long mobile, Integer pincode,
+			Boolean isEmailVerified, Boolean isMobileVerified, Date insertTime,
+			Date updateTime, String updatedBy) {
 		super();
 		this.customerId = customerId;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.email = email;
 		this.mobile = mobile;
-		this.pin = pin;
-		this.status = status;
-		this.mobilePin = mobilePin;
-		this.emailHash = emailHash;
-		this.mobileVerificationAttempts = mobileVerificationAttempts;
-		this.mobilePinSentTime = mobilePinSentTime;
-		this.emailHashSentTime = emailHashSentTime;
-		this.lastStatusChangedTime = lastStatusChangedTime;
-		
+		this.pincode = pincode;
+		this.isEmailVerified = isEmailVerified;
+		this.isMobileVerified = isMobileVerified;
+		this.insertTime = insertTime;
+		this.updateTime = updateTime;
+		this.updatedBy = updatedBy;
 	}
-
-
-	@JsonIgnore
-	public boolean isMobileVerifiedEmailVerficationPending() {
-		return this.status.equals("MobileVerifiedEmailVerficationPending");
-	}
-	@JsonIgnore
-	public boolean isMobileVerified() {
-		return this.status.equals("MobileVerified");
-	}
-	@JsonIgnore
-	public boolean isEmailMobileVerified() {
-		return this.status.equals("EmailMobileVerified");
-	}
-	@JsonIgnore
-	public boolean isEmailVerified() {
-		return this.status.equals("EmailVerified");
-	}
-	@JsonIgnore
-	public boolean isEmailVerificationPending() {
-		return this.status.equals("EmailVerificationPending");
-	}
-	@JsonIgnore
-	public boolean isMobileVerificationPending() {
-		return this.status.equals("MobileVerificationPending");
-	}
-	@JsonIgnore
-	public boolean isEmailMobileVerificationPending() {
-		return this.status.equals("EmailMobileVerificationPending");
-	}
-	@JsonIgnore
-	public boolean isEmailVerifiedMobileVerficationPending() {
-		return this.status.equals("EmailVerifiedMobileVerficationPending");
-	}
-	@JsonIgnore
-	public void setStatusEmailVerifiedMobileVerficationPending() {
-		this.status = "EmailVerifiedMobileVerficationPending";
-	}
-
-
-
-	
-	public void setStatusMobileVerifiedEmailVerficationPending() {
-		this.status = "MobileVerifiedEmailVerficationPending";
-	}
-	
-	
-	public void setStatusMobileVerified() {
-		this.status = "MobileVerified";
-	}
-
-	
-	public void setStatusEmailVerified() {
-		this.status = "EmailVerified";
-	}
-
-	
-	public void setStatusEmailMobileVerified() {
-		this.status = "EmailMobileVerified";
-	}
-
-	
-
 
 	public Long getCustomerId() {
 		return customerId;
 	}
 
-
-
 	public void setCustomerId(Long customerId) {
 		this.customerId = customerId;
 	}
-
-
 
 	public String getFirstName() {
 		return firstName;
 	}
 
-
-
 	public void setFirstName(String firstName) {
 		this.firstName = firstName;
 	}
-
-
 
 	public String getLastName() {
 		return lastName;
 	}
 
-
-
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
 	}
-
-
 
 	public String getEmail() {
 		return email;
 	}
 
-
-
 	public void setEmail(String email) {
 		this.email = email;
 	}
-
-
 
 	public Long getMobile() {
 		return mobile;
 	}
 
-
-
 	public void setMobile(Long mobile) {
 		this.mobile = mobile;
 	}
 
-
-
-	public Integer getPin() {
-		return pin;
+	public Integer getPincode() {
+		return pincode;
 	}
 
-
-
-	public void setPin(Integer pin) {
-		this.pin = pin;
+	public void setPincode(Integer pincode) {
+		this.pincode = pincode;
 	}
 
-
-
-	public String getStatus() {
-		return status;
+	public Boolean getIsEmailVerified() {
+		return isEmailVerified;
 	}
 
-
-
-	public void setStatus(String status) {
-		this.status = status;
+	public void setIsEmailVerified(Boolean isEmailVerified) {
+		this.isEmailVerified = isEmailVerified;
 	}
 
-
-
-	public Integer getMobilePin() {
-		return mobilePin;
+	public Boolean getIsMobileVerified() {
+		return isMobileVerified;
 	}
 
-
-
-	public void setMobilePin(Integer mobilePin) {
-		this.mobilePin = mobilePin;
+	public void setIsMobileVerified(Boolean isMobileVerified) {
+		this.isMobileVerified = isMobileVerified;
 	}
 
-
-
-	public String getEmailHash() {
-		return emailHash;
+	public Date getInsertTime() {
+		return insertTime;
 	}
 
-
-
-	public void setEmailHash(String emailHash) {
-		this.emailHash = emailHash;
+	public void setInsertTime(Date insertTime) {
+		this.insertTime = insertTime;
 	}
 
-
-
-	public Integer getMobileVerificationAttempts() {
-		return mobileVerificationAttempts;
+	public Date getUpdateTime() {
+		return updateTime;
 	}
 
-
-
-	public void setMobileVerificationAttempts(Integer mobileVerificationAttempts) {
-		this.mobileVerificationAttempts = mobileVerificationAttempts;
+	public void setUpdateTime(Date updateTime) {
+		this.updateTime = updateTime;
 	}
 
-
-
-	public Date getMobilePinSentTime() {
-		return mobilePinSentTime;
+	public String getUpdatedBy() {
+		return updatedBy;
 	}
 
-
-
-	public void setMobilePinSentTime(Date mobilePinSentTime) {
-		this.mobilePinSentTime = mobilePinSentTime;
+	public void setUpdatedBy(String updatedBy) {
+		this.updatedBy = updatedBy;
 	}
-
-
-
-	public Date getEmailHashSentTime() {
-		return emailHashSentTime;
-	}
-
-
-
-	public void setEmailHashSentTime(Date emailHashSentTime) {
-		this.emailHashSentTime = emailHashSentTime;
-	}
-
-
-
-	public Date getLastStatusChangedTime() {
-		return lastStatusChangedTime;
-	}
-
-
-
-	public void setLastStatusChangedTime(Date lastStatusChangedTime) {
-		this.lastStatusChangedTime = lastStatusChangedTime;
-	}
-
 
 	@Override
 	public String toString() {
 		return "CustomerQuickRegisterEntity [customerId=" + customerId
 				+ ", firstName=" + firstName + ", lastName=" + lastName
-				+ ", email=" + email + ", mobile=" + mobile + ", pin=" + pin
-				+ ", status=" + status + ", mobilePin=" + mobilePin
-				+ ", emailHash=" + emailHash + ", mobileVerificationAttempts="
-				+ mobileVerificationAttempts + ", mobilePinSentTime="
-				+ mobilePinSentTime + ", emailHashSentTime="
-				+ emailHashSentTime + ", lastStatusChangedTime="
-				+ lastStatusChangedTime + "]";
+				+ ", email=" + email + ", mobile=" + mobile + ", pincode="
+				+ pincode + ", isEmailVerified=" + isEmailVerified
+				+ ", isMobileVerified=" + isMobileVerified + ", insertTime="
+				+ insertTime + ", updateTime=" + updateTime + ", updatedBy="
+				+ updatedBy + "]";
 	}
-
 
 	@Override
 	public int hashCode() {
@@ -347,35 +205,24 @@ public class CustomerQuickRegisterEntity {
 				+ ((customerId == null) ? 0 : customerId.hashCode());
 		result = prime * result + ((email == null) ? 0 : email.hashCode());
 		result = prime * result
-				+ ((emailHash == null) ? 0 : emailHash.hashCode());
-		result = prime
-				* result
-				+ ((emailHashSentTime == null) ? 0 : emailHashSentTime
-						.hashCode());
-		result = prime * result
 				+ ((firstName == null) ? 0 : firstName.hashCode());
 		result = prime * result
-				+ ((lastName == null) ? 0 : lastName.hashCode());
-		result = prime
-				* result
-				+ ((lastStatusChangedTime == null) ? 0 : lastStatusChangedTime
-						.hashCode());
-		result = prime * result + ((mobile == null) ? 0 : mobile.hashCode());
+				+ ((insertTime == null) ? 0 : insertTime.hashCode());
 		result = prime * result
-				+ ((mobilePin == null) ? 0 : mobilePin.hashCode());
+				+ ((isEmailVerified == null) ? 0 : isEmailVerified.hashCode());
 		result = prime
 				* result
-				+ ((mobilePinSentTime == null) ? 0 : mobilePinSentTime
-						.hashCode());
-		result = prime
-				* result
-				+ ((mobileVerificationAttempts == null) ? 0
-						: mobileVerificationAttempts.hashCode());
-		result = prime * result + ((pin == null) ? 0 : pin.hashCode());
-		result = prime * result + ((status == null) ? 0 : status.hashCode());
+				+ ((isMobileVerified == null) ? 0 : isMobileVerified.hashCode());
+		result = prime * result
+				+ ((lastName == null) ? 0 : lastName.hashCode());
+		result = prime * result + ((mobile == null) ? 0 : mobile.hashCode());
+		result = prime * result + ((pincode == null) ? 0 : pincode.hashCode());
+		result = prime * result
+				+ ((updateTime == null) ? 0 : updateTime.hashCode());
+		result = prime * result
+				+ ((updatedBy == null) ? 0 : updatedBy.hashCode());
 		return result;
 	}
-
 
 	@Override
 	public boolean equals(Object obj) {
@@ -389,72 +236,62 @@ public class CustomerQuickRegisterEntity {
 		if (customerId == null) {
 			if (other.customerId != null)
 				return false;
-		} else if (!(customerId!=null && other.customerId!=null))
+		} else if (!customerId.equals(other.customerId))
 			return false;
 		if (email == null) {
 			if (other.email != null)
 				return false;
 		} else if (!email.equals(other.email))
 			return false;
-		if (emailHash == null) {
-			if (other.emailHash != null)
-				return false;
-		} else if (!(emailHash.length()==other.emailHash.length()))
-			return false;
-		if (emailHashSentTime == null) {
-			if (other.emailHashSentTime != null)
-				return false;
-		} else if ((emailHashSentTime.getTime()-other.emailHashSentTime.getTime())>60 * 1000)
-			return false;
 		if (firstName == null) {
 			if (other.firstName != null)
 				return false;
 		} else if (!firstName.equals(other.firstName))
+			return false;
+		if (insertTime == null) {
+			if (other.insertTime != null)
+				return false;
+		} else if (Math.abs(insertTime.getTime()-other.insertTime.getTime())<1000)
+			return true;
+		if (isEmailVerified == null) {
+			if (other.isEmailVerified != null)
+				return false;
+		} else if (!isEmailVerified.equals(other.isEmailVerified))
+			return false;
+		if (isMobileVerified == null) {
+			if (other.isMobileVerified != null)
+				return false;
+		} else if (!isMobileVerified.equals(other.isMobileVerified))
 			return false;
 		if (lastName == null) {
 			if (other.lastName != null)
 				return false;
 		} else if (!lastName.equals(other.lastName))
 			return false;
-		if (lastStatusChangedTime == null) {
-			if (other.lastStatusChangedTime != null)
-				return false;
-		//Changed to cope up with testing time differences	
-		} else if ((lastStatusChangedTime.getTime()-other.getLastStatusChangedTime().getTime())>60 * 1000)//(!lastStatusChangedTime.equals(other.lastStatusChangedTime))
-			return false;
 		if (mobile == null) {
 			if (other.mobile != null)
 				return false;
 		} else if (!mobile.equals(other.mobile))
 			return false;
-		if (mobilePin == null) {
-			if (other.mobilePin != null)
+		if (pincode == null) {
+			if (other.pincode != null)
 				return false;
-		} else if (Math.abs(mobilePin-other.mobilePin)>999999)
+		} else if (!pincode.equals(other.pincode))
 			return false;
-		if (mobilePinSentTime == null) {
-			if (other.mobilePinSentTime != null)
+		if (updateTime == null) {
+			if (other.updateTime != null)
 				return false;
-		} else if ((mobilePinSentTime.getTime()-other.mobilePinSentTime.getTime())>60 * 1000)
-			return false;
-		if (mobileVerificationAttempts == null) {
-			if (other.mobileVerificationAttempts != null)
+		} else if (Math.abs(updateTime.getTime()-other.updateTime.getTime())<1000)
+			return true;
+		if (updatedBy == null) {
+			if (other.updatedBy != null)
 				return false;
-		} else if (!mobileVerificationAttempts
-				.equals(other.mobileVerificationAttempts))
-			return false;
-		if (pin == null) {
-			if (other.pin != null)
-				return false;
-		} else if (!pin.equals(other.pin))
-			return false;
-		if (status == null) {
-			if (other.status != null)
-				return false;
-		} else if (!status.equals(other.status))
+		} else if (!updatedBy.equals(other.updatedBy))
 			return false;
 		return true;
 	}
+
+
 	
 	
 }

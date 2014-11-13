@@ -14,13 +14,23 @@ public interface CustomerAuthenticationDetailsRepository  {
 	
 	CustomerAuthenticationDetails save(CustomerAuthenticationDetails authenticationDetails);
 	
-	Integer updatePasswordAndPasswordType(Long customerId,String password,String passwordType);
-		
-	CustomerAuthenticationDetails loginVerification(String email,Long mobile,String password);
+	Integer updatePasswordAndPasswordTypeAndCounts(Long customerId,String password,String passwordType);
+	
+	Integer updateEmailPasswordAndPasswordTypeAndCounts(Long customerId,String emailPassword);
+	
+	Integer updateResendCount(Long customerId,Integer resendCount);
+	
+	Integer updateLastUnsucessfullAttempts(Long customerId,Integer lastUnsucessfullAttempts);
+	
+	//CustomerAuthenticationDetails loginVerification(String email,Long mobile,String password);
 	
 	Integer count();
 	
-	CustomerAuthenticationDetails getByCustomerId(Long customerId);
+	CustomerAuthenticationDetails getCustomerAuthenticationDetailsByCustomerId(Long customerId);
+	
+	CustomerAuthenticationDetails getCustomerAuthenticationDetailsByEmail(String email);
+	
+	CustomerAuthenticationDetails getCustomerAuthenticationDetailsByMobile(Long mobile);
 	
 	Boolean clearLoginDetailsForTesting();
 	

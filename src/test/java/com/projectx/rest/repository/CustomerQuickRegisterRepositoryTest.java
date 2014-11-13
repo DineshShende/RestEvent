@@ -21,7 +21,7 @@ import com.projectx.rest.domain.CustomerQuickRegisterEntity;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes=Application.class)
-@ActiveProfiles("Dev")
+@ActiveProfiles("Test")
 public class CustomerQuickRegisterRepositoryTest {
 
 	@Autowired
@@ -33,78 +33,9 @@ public class CustomerQuickRegisterRepositoryTest {
 		customerQuickRegisterRepository.clearCustomerQuickRegister();
 	}
 	
-/*
-	@Test
-	public void saveCustomer() throws Exception
-	{
-		CustomerQuickRegisterEntity firstEntity=customerQuickRegisterRepository.save(standardEmailMobileCustomer());
-		
-		assertNotNull(firstEntity);
-		
-		CustomerQuickRegisterEntity secondEntity=customerQuickRegisterRepository.save(standardEmailMobileCustomer());
-		
-		assertNull(secondEntity);
-	}
-	
-*/	
 	
 	@Test
-	public void countByEmailMobileNewEmailMobileCustomer() throws Exception {
-		
-		
-		
-		assertEquals(new Integer(0), customerQuickRegisterRepository.countByEmail(CUST_EMAIL));
-		
-		assertEquals(new Integer(0), customerQuickRegisterRepository.countByMobile(CUST_MOBILE));
-		
-		customerQuickRegisterRepository.save(standardEmailMobileCustomer());
-		
-		assertEquals(new Integer(1), customerQuickRegisterRepository.countByEmail(CUST_EMAIL));
-		
-		assertEquals(new Integer(1), customerQuickRegisterRepository.countByMobile(CUST_MOBILE));
-		
-		
-	}
-	
-	
-
-	@Test
-	public void countByEmailMobileNewEmailCustomer() throws Exception {
-		
-		
-		assertEquals(new Integer(0), customerQuickRegisterRepository.countByEmail(CUST_EMAIL));
-		
-		assertEquals(new Integer(0), customerQuickRegisterRepository.countByMobile(CUST_MOBILE));
-		
-		customerQuickRegisterRepository.save(standardEmailCustomer());
-		
-		assertEquals(new Integer(1), customerQuickRegisterRepository.countByEmail(CUST_EMAIL));
-		
-		assertEquals(new Integer(0), customerQuickRegisterRepository.countByMobile(CUST_MOBILE));
-		
-		
-	}
-
-	
-	@Test
-	public void countByEmailMobileNewMobileCustomer() throws Exception {
-		
-		
-		assertEquals(new Integer(0), customerQuickRegisterRepository.countByEmail(CUST_EMAIL));
-		
-		assertEquals(new Integer(0), customerQuickRegisterRepository.countByMobile(CUST_MOBILE));
-		
-		customerQuickRegisterRepository.save(standardMobileCustomer());
-		
-		assertEquals(new Integer(0), customerQuickRegisterRepository.countByEmail(CUST_EMAIL));
-		
-		assertEquals(new Integer(1), customerQuickRegisterRepository.countByMobile(CUST_MOBILE));
-		
-		
-	}
-	
-	@Test
-	public void findAllWithEmailMobileCustomer() throws Exception {
+	public void findAllWithEmailMobileCustomer() {
 		
 		List<CustomerQuickRegisterEntity> customerList=customerQuickRegisterRepository.findAll();
 		
@@ -122,17 +53,19 @@ public class CustomerQuickRegisterRepositoryTest {
 		assertEquals(CUST_LASTNAME, customerList.get(0).getLastName());
 		assertEquals(CUST_EMAIL, customerList.get(0).getEmail());
 		assertEquals(CUST_MOBILE, customerList.get(0).getMobile());
-		assertEquals(CUST_PIN, customerList.get(0).getPin());
-		assertEquals(CUST_STATUS_EMAILMOBILE, customerList.get(0).getStatus());
-		assertEquals(CUST_MOBILEPIN, customerList.get(0).getMobilePin());
-		assertEquals(CUST_EMAILHASH, customerList.get(0).getEmailHash());
+		assertEquals(CUST_PIN_CODE, customerList.get(0).getPincode());
+		assertEquals(CUST_IS_EMAIL_VERIFIED_FALSE, customerList.get(0).getIsEmailVerified());
+		assertEquals(CUST_IS_MOBILE_VERIFIED_FALSE, customerList.get(0).getIsMobileVerified());
+		assertNotNull(customerList.get(0).getInsertTime());
+		assertNotNull(customerList.get(0).getUpdateTime());
+		assertEquals(CUST_UPDATED_BY, customerList.get(0).getUpdatedBy());
 		
 	}
 	
 
 	
 	@Test
-	public void findByCustomerIdWithEmailMobileCustomer() throws Exception {
+	public void findByCustomerIdWithEmailMobileCustomer()  {
 		
 	
 		assertNull(customerQuickRegisterRepository.findByCustomerId(CUST_ID).getCustomerId());
@@ -161,62 +94,41 @@ public class CustomerQuickRegisterRepositoryTest {
 	
 	
 	@Test
-	public void updateStatusAndMobileVerificationAttemptsByCustomerId() throws Exception
+	public void updateEmailVericationStatusWithEmailMobileCustomer()
 	{
-		assertEquals(new Integer(0), customerQuickRegisterRepository.updateStatusAndMobileVerificationAttemptsByCustomerId(CUST_ID, STATUS_MOBILE_VERFIED,CUST_LAST_STATUS_CHANGE_TIME,CUST_MOBILE_VERIFICATION_ATTEMPTS));
+		assertEquals(new Integer(0), customerQuickRegisterRepository.updateEmailVerificationStatus(standardUpdateEmailMobileVerificationStatus().getCustomerId(),
+				standardUpdateEmailMobileVerificationStatus().getStatus(),standardUpdateEmailMobileVerificationStatus().getUpdateTime(),
+				standardUpdateEmailMobileVerificationStatus().getUpdatedBy()));
 		
-		CustomerQuickRegisterEntity savedEntity=customerQuickRegisterRepository.save(standardMobileCustomer());
+		CustomerQuickRegisterEntity savedCustomer=customerQuickRegisterRepository.save(standardEmailMobileCustomer());
 		
-		assertEquals(CUST_STATUS_MOBILE,customerQuickRegisterRepository.findByCustomerId(savedEntity.getCustomerId()).getStatus());
+		assertEquals(new Integer(1), customerQuickRegisterRepository.updateEmailVerificationStatus(standardUpdateEmailMobileVerificationStatus().getCustomerId(),
+				standardUpdateEmailMobileVerificationStatus().getStatus(),standardUpdateEmailMobileVerificationStatus().getUpdateTime(),
+				standardUpdateEmailMobileVerificationStatus().getUpdatedBy()));
 		
-		assertEquals(new Integer(1), customerQuickRegisterRepository.updateStatusAndMobileVerificationAttemptsByCustomerId(savedEntity.getCustomerId(), STATUS_MOBILE_VERFIED,CUST_LAST_STATUS_CHANGE_TIME,CUST_MOBILE_VERIFICATION_ATTEMPTS));
+		assertEquals(CUST_IS_EMAIL_VERIFIED_TRUE, customerQuickRegisterRepository.findByCustomerId(savedCustomer.getCustomerId()).getIsEmailVerified());
 		
-		assertEquals(STATUS_MOBILE_VERFIED,customerQuickRegisterRepository.findByCustomerId(savedEntity.getCustomerId()).getStatus());
 	}
 	
-	
-
 	@Test
-	public void updateEmailHash() throws Exception
+	public void updateMobileVericationStatusWithEmailMobileCustomer()
 	{
-		assertEquals(new Integer(0), customerQuickRegisterRepository.updateEmailHash(CUST_ID, CUST_EMAILHASH_UPDATED,CUST_EMAIL_HASH_SENT_TIME));
+		assertEquals(new Integer(0), customerQuickRegisterRepository.updateMobileVerificationStatus(standardUpdateEmailMobileVerificationStatus().getCustomerId(),
+				standardUpdateEmailMobileVerificationStatus().getStatus(),standardUpdateEmailMobileVerificationStatus().getUpdateTime(),
+				standardUpdateEmailMobileVerificationStatus().getUpdatedBy()));
 		
-		CustomerQuickRegisterEntity savedEntity=customerQuickRegisterRepository.save(standardEmailCustomer());
+		CustomerQuickRegisterEntity savedCustomer=customerQuickRegisterRepository.save(standardEmailMobileCustomer());
 		
-		assertEquals(CUST_EMAILHASH,customerQuickRegisterRepository.findByCustomerId(savedEntity.getCustomerId()).getEmailHash());
+		assertEquals(new Integer(1), customerQuickRegisterRepository.updateMobileVerificationStatus(standardUpdateEmailMobileVerificationStatus().getCustomerId(),
+				standardUpdateEmailMobileVerificationStatus().getStatus(),standardUpdateEmailMobileVerificationStatus().getUpdateTime(),
+				standardUpdateEmailMobileVerificationStatus().getUpdatedBy()));
 		
-		assertEquals(new Integer(1), customerQuickRegisterRepository.updateEmailHash(savedEntity.getCustomerId(), CUST_EMAILHASH_UPDATED,CUST_EMAIL_HASH_SENT_TIME));
+		assertEquals(CUST_IS_MOBILE_VERIFIED_TRUE, customerQuickRegisterRepository.findByCustomerId(savedCustomer.getCustomerId()).getIsMobileVerified());
 		
-		assertEquals(CUST_EMAILHASH_UPDATED,customerQuickRegisterRepository.findByCustomerId(savedEntity.getCustomerId()).getEmailHash());
+		
 	}
 	
-
-		
-	@Test
-	public void updateMobilePin() throws Exception
-	{
-		assertEquals(new Integer(0), customerQuickRegisterRepository.updateMobilePin(CUST_ID, CUST_MOBILEPIN_UPDATED,CUST_MOBILE_PIN_SENT_TIME));
-		
-		CustomerQuickRegisterEntity savedEntity=customerQuickRegisterRepository.save(standardMobileCustomer());
-		
-		assertEquals(CUST_MOBILEPIN,customerQuickRegisterRepository.findByCustomerId(savedEntity.getCustomerId()).getMobilePin());
-		
-		assertEquals(new Integer(1), customerQuickRegisterRepository.updateMobilePin(savedEntity.getCustomerId(), CUST_MOBILEPIN_UPDATED,CUST_MOBILE_PIN_SENT_TIME));
-		
-		assertEquals(CUST_MOBILEPIN_UPDATED,customerQuickRegisterRepository.findByCustomerId(savedEntity.getCustomerId()).getMobilePin());
-	}
 	
-		
-
-	@Test
-	public void updateEmailHashAndMobilePinSentTime() throws Exception
-	{
-		assertEquals(0, customerQuickRegisterRepository.updateEmailHashAndMobilePinSentTime(CUST_ID, CUST_EMAIL_HASH_SENT_TIME, CUST_MOBILE_PIN_SENT_TIME).intValue());
-		
-		CustomerQuickRegisterEntity savedEntity=customerQuickRegisterRepository.save(standardMobileCustomer());
-		
-		assertEquals(1, customerQuickRegisterRepository.updateEmailHashAndMobilePinSentTime(savedEntity.getCustomerId(), CUST_EMAIL_HASH_SENT_TIME, CUST_MOBILE_PIN_SENT_TIME).intValue());
-	}
 	
 	
 	@Test

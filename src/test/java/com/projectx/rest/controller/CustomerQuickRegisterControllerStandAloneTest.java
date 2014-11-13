@@ -57,7 +57,7 @@ public class CustomerQuickRegisterControllerStandAloneTest {
 		
 		this.mockMvc.perform(
 	            post("/customer/quickregister/getByCustomerId")
-	                    .content(standardJsonGetByCustomerIdDTO())
+	                    .content(standardJsonCustomerIdDTO())
 	                    .contentType(MediaType.APPLICATION_JSON)
 	                    .accept(MediaType.APPLICATION_JSON))
 	            .andDo(print())
@@ -66,22 +66,18 @@ public class CustomerQuickRegisterControllerStandAloneTest {
 	            .andExpect(jsonPath("$.lastName").value(standardEmailMobileCustomer().getLastName()))
 	            .andExpect(jsonPath("$.mobile").value(standardEmailMobileCustomer().getMobile()))
 	            .andExpect(jsonPath("$.email").value(standardEmailMobileCustomer().getEmail()))
-	            .andExpect(jsonPath("$.pin").value(standardEmailMobileCustomer().getPin()))
-				.andExpect(jsonPath("$.status").value(standardEmailMobileCustomer().getStatus()))
-				.andExpect(jsonPath("$.mobilePin").exists())
-			    .andExpect(jsonPath("$.emailHash").exists())
-				.andExpect(jsonPath("$.mobileVerificationAttempts").value(standardEmailMobileCustomer().getMobileVerificationAttempts()))
-				.andExpect(jsonPath("$.mobilePinSentTime").exists())
-				.andExpect(jsonPath("$.emailHashSentTime").exists())
-				.andExpect(jsonPath("$.lastStatusChangedTime").exists());
-				
+	            .andExpect(jsonPath("$.isMobileVerified").value(standardEmailMobileCustomer().getIsMobileVerified()))
+	            .andExpect(jsonPath("$.isEmailVerified").value(standardEmailMobileCustomer().getIsEmailVerified()))
+	            .andExpect(jsonPath("$.insertTime").exists())
+				.andExpect(jsonPath("$.updateTime").exists())
+				.andExpect(jsonPath("$.updatedBy").value(standardEmailMobileCustomer().getUpdatedBy()));
 	}
 	
 	
 	@Test
 	public void verifyEmailHashForEmailCustomer() throws Exception
 	{
-		when(customerQuickRegisterService.verifyEmailHash(CUST_ID, CUST_EMAILHASH)).thenReturn(true);
+		when(customerQuickRegisterService.verifyEmailHash(CUST_ID,CUST_EMAIL ,CUST_EMAILHASH)).thenReturn(true);
 		
 		
 		this.mockMvc.perform(
@@ -99,7 +95,7 @@ public class CustomerQuickRegisterControllerStandAloneTest {
 	@Test
 	public void verifyMobilePinForMobileCustomer() throws Exception
 	{
-		when(customerQuickRegisterService.verifyMobilePin(CUST_ID, CUST_MOBILEPIN)).thenReturn(true);
+		when(customerQuickRegisterService.verifyMobilePin(CUST_ID,CUST_MOBILE, CUST_MOBILEPIN)).thenReturn(true);
 		
 		this.mockMvc.perform(
 	            post("/customer/quickregister/verifyMobilePin")
@@ -115,11 +111,11 @@ public class CustomerQuickRegisterControllerStandAloneTest {
 	@Test
 	public void reSendMobilePin() throws Exception
 	{
-		when(customerQuickRegisterService.reSendMobilePin(CUST_ID)).thenReturn(true);
+		when(customerQuickRegisterService.reSetMobilePin(CUST_ID,CUST_MOBILE)).thenReturn(true);
 		
 		this.mockMvc.perform(
-	            post("/customer/quickregister/resendMobilePin")
-	                    .content(standardJsonCustomerIdDTO())
+	            post("/customer/quickregister/resetMobilePin")
+	                    .content(standardJsonUpdateMobilePinDTOMVC())
 	                    .contentType(MediaType.APPLICATION_JSON)
 	                    .accept(MediaType.APPLICATION_JSON))
 	            .andDo(print())
@@ -131,11 +127,11 @@ public class CustomerQuickRegisterControllerStandAloneTest {
 	@Test
 	public void reSendEmailHash() throws Exception
 	{
-		when(customerQuickRegisterService.reSendEmailHash(CUST_ID)).thenReturn(true);
+		when(customerQuickRegisterService.reSetEmailHash(CUST_ID,CUST_EMAIL)).thenReturn(true);
 		
 		this.mockMvc.perform(
-	            post("/customer/quickregister/resendEmailHash")
-	                    .content(standardJsonCustomerIdDTO())
+	            post("/customer/quickregister/resetEmailHash")
+	                    .content(standardJsonUpdateEmailHashDTOMVC())
 	                    .contentType(MediaType.APPLICATION_JSON)
 	                    .accept(MediaType.APPLICATION_JSON))
 	            .andDo(print())
@@ -174,7 +170,7 @@ public class CustomerQuickRegisterControllerStandAloneTest {
 		
 		this.mockMvc.perform(
 	            post("/customer/quickregister/updatePassword")
-	                    .content(standardJsonUpdatePasswordAndPasswordType(standardUpdatePasswordAndPasswordTypeDTO()))
+	                    .content(standardJsonUpdatePasswordAndPasswordType(standardUpdatePasswordDTO()))
 	                    .contentType(MediaType.APPLICATION_JSON)
 	                    .accept(MediaType.APPLICATION_JSON))
 
@@ -217,18 +213,16 @@ public class CustomerQuickRegisterControllerStandAloneTest {
 		.andDo(print())
 		.andExpect(status().isOk())
 		.andExpect(jsonPath("$.firstName").value(standardEmailMobileCustomer().getFirstName()))
-		.andExpect(jsonPath("$.lastName").value(standardEmailMobileCustomer().getLastName()))
-		.andExpect(jsonPath("$.mobile").value(standardEmailMobileCustomer().getMobile()))
-		.andExpect(jsonPath("$.email").value(standardEmailMobileCustomer().getEmail()))
-		.andExpect(jsonPath("$.pin").value(standardEmailMobileCustomer().getPin()))
-		.andExpect(jsonPath("$.status").value(standardEmailMobileCustomer().getStatus()))
-		.andExpect(jsonPath("$.mobilePin").exists())
-		.andExpect(jsonPath("$.emailHash").exists())
-		.andExpect(jsonPath("$.mobileVerificationAttempts").value(standardEmailMobileCustomer().getMobileVerificationAttempts()))
-		.andExpect(jsonPath("$.mobilePinSentTime").exists())
-		.andExpect(jsonPath("$.emailHashSentTime").exists())
-		.andExpect(jsonPath("$.lastStatusChangedTime").exists());
+        .andExpect(jsonPath("$.lastName").value(standardEmailMobileCustomer().getLastName()))
+        .andExpect(jsonPath("$.mobile").value(standardEmailMobileCustomer().getMobile()))
+        .andExpect(jsonPath("$.email").value(standardEmailMobileCustomer().getEmail()))
+        .andExpect(jsonPath("$.isMobileVerified").value(standardEmailMobileCustomer().getIsMobileVerified()))
+        .andExpect(jsonPath("$.isEmailVerified").value(standardEmailMobileCustomer().getIsEmailVerified()))
+        .andExpect(jsonPath("$.insertTime").exists())
+		.andExpect(jsonPath("$.updateTime").exists())
+		.andExpect(jsonPath("$.updatedBy").value(standardEmailMobileCustomer().getUpdatedBy()));
 		
 	}
+	
 }
 

@@ -12,22 +12,24 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
-import com.mashape.unirest.http.HttpResponse;
-import com.mashape.unirest.http.JsonNode;
-import com.mashape.unirest.http.Unirest;
-import com.mashape.unirest.http.exceptions.UnirestException;
-
 @Component
 @Profile(value={"Dev","Test"})
+/**
+ * @
+ * @author dinesh
+ *
+ */
 public class HandleCustomerVerification {
 	
 	
 	@Autowired
 	private  MailSender mailSender;
 	
-	
 	@Autowired
 	private RestTemplate restTemplate;
+	
+	@Autowired
+	private SecureRandom secureRandom;
 	
 	private final int PASSWORD_LENGTH=6;
 	
@@ -36,7 +38,7 @@ public class HandleCustomerVerification {
 		String allPossibleChar="01234567789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 		
 		StringBuilder sb=new StringBuilder();
-		SecureRandom secureRandom=new SecureRandom();
+		//SecureRandom secureRandom=new SecureRandom();
 		
 		for(int i=0;i<10;i++)
 		{
@@ -73,7 +75,7 @@ public class HandleCustomerVerification {
 
 	public  Integer genarateMobilePin() {
 
-		SecureRandom secureRandom=new SecureRandom();
+		//SecureRandom secureRandom=new SecureRandom();
 		int number=secureRandom.nextInt(9)+1;
 		
 		for(int i=0;i<5;i++)
@@ -87,7 +89,7 @@ public class HandleCustomerVerification {
 	public String generatePassword()
 	{
 		StringBuilder passwordBuilder=new StringBuilder();
-		SecureRandom secureRandom=new SecureRandom();
+		//SecureRandom secureRandom=new SecureRandom();
 		
 		String allPossibleChar="01234567789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 		
@@ -96,7 +98,7 @@ public class HandleCustomerVerification {
 			passwordBuilder.append(allPossibleChar.charAt(secureRandom.nextInt(allPossibleChar.length())));
 		}
 			
-		System.out.println(passwordBuilder.toString());
+		//System.out.println(passwordBuilder.toString());
 	
 		return passwordBuilder.toString();
 	}
@@ -106,6 +108,7 @@ public class HandleCustomerVerification {
 	
 	public Boolean sendEmail(String email,String message)
 	{
+		
 		SimpleMailMessage mailMessage=new SimpleMailMessage();
 		
 		mailMessage.setTo(email);
@@ -130,7 +133,7 @@ public class HandleCustomerVerification {
 	{
 		
 		//String processedMessage=message.replace(" ", "+");
-		/*
+		
 		StringBuilder requestBuilder=new StringBuilder();
 		
 		requestBuilder.append("http://login.bulksmsindia.biz/messageapi.asp?username=karle7&password=58483712&sender=karlee&mobile=");
@@ -142,18 +145,20 @@ public class HandleCustomerVerification {
 		
 		//System.out.println(requestBuilder.toString());
 						
-		String result=restTemplate.getForObject(requestBuilder.toString(), String.class);	
+		//String result=restTemplate.getForObject(requestBuilder.toString(), String.class);	
 			
-		System.out.println(result);
-		*/
+		//System.out.println(result);
 		
+		
+		/*
 		SendSMSThread sendSMSThread=new SendSMSThread(mobile, message);
 		
 		Thread t1=new Thread(sendSMSThread);
 		
 		//t1.start();
-		
+		*/
 		return true;
+		
 		/*
 		 * 
 		HttpResponse<JsonNode> response = Unirest.get(requestBuilder.toString())

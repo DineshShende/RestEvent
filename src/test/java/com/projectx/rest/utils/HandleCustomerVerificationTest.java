@@ -10,7 +10,7 @@ import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.mashape.unirest.http.exceptions.UnirestException;
+
 import com.projectx.rest.config.Application;
 import com.projectx.rest.domain.CustomerQuickRegisterEntity;
 
@@ -23,13 +23,19 @@ public class HandleCustomerVerificationTest {
 	HandleCustomerVerification handleCustomerVerification;
 	
 	@Test
-	public void test() throws UnirestException {
+	public void test()  {
 		//CustomerQuickRegisterEntity customer=standardEmailCustomer();
 		//customer.setEmail("dineshshe@gmail.com");
 		
 		//handleCustomerVerification.generatePassword();
 		
-		handleCustomerVerification.sendSMS(9960821869L, "Hi How r u?");
+		System.out.println(handleCustomerVerification.genarateMobilePin());
+		
+		System.out.println(handleCustomerVerification.generatePassword());
+		
+		System.out.println(handleCustomerVerification.generateEmailHash());
+		
+		//handleCustomerVerification.sendSMS(9960821869L, "Hi How r u?");
 		
 		//handleCustomerVerification.sendEmail("dineshshe@gmail.com", "Hi How r u?");
 		

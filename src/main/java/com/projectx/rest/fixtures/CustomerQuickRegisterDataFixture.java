@@ -19,6 +19,8 @@ public class CustomerQuickRegisterDataFixture {
 	public static String REGISTER_EMAIL_ALREADY_REGISTERED_NOT_VERIFIED="EMAIL_ALREADY_REGISTERED_NOT_VERIFIED";
 	public static String REGISTER_EMAIL_ALREADY_REGISTERED_VERIFIED="EMAIL_ALREADY_REGISTERED_VERIFIED";
 	
+	public static String REGISTER_FISHY="EMAIL_MOBILE_EXISTS_BELONG_TO_DIFFERENT_ACCOUNTS";
+	
 	public static Long CUST_ID=212L;
 	public static String CUST_FIRSTNAME="dinesh";
 	public static String CUST_LASTNAME="shende";
@@ -53,6 +55,11 @@ public class CustomerQuickRegisterDataFixture {
 	public static String STATUS_MOBILE_VERFIED="MobileVerified";
 	public static String STATUS_EMAIL_VERFIED="EmailVerified";
 	
+	public static String CUST_EMAIL_TYPE_PRIMARY="PRIMARY";
+	public static String CUST_MOBILE_TYPE_PRIMARY="PRIMARY";
+	
+	public static String CUST_EMAIL_TYPE_SECONDARY="SECONDARY";
+	public static String CUST_MOBILE_TYPE_SECONDARY="SECONDARY";
 	
 }
 

@@ -1,6 +1,7 @@
 package com.projectx.rest.config;
 
 import java.io.IOException;
+import java.security.SecureRandom;
 import java.util.Properties;
 
 import org.springframework.boot.SpringApplication;
@@ -9,6 +10,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.web.client.RestTemplate;
+
 
 
 @EnableAutoConfiguration
@@ -47,4 +49,19 @@ public class Application {
     	
     }
     
+    @Bean
+    public SecureRandom secureRandom()
+    {
+    	return new SecureRandom();
+    }
+/*    
+    @Bean
+    public Gson gson()
+    {
+    	GsonBuilder builder = new GsonBuilder();
+        Gson gson = builder.create();
+        
+        return gson;
+    }
+ */   
 }

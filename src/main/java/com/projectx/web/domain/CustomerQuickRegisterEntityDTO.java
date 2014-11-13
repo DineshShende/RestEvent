@@ -11,7 +11,7 @@ public class CustomerQuickRegisterEntityDTO {
 	private Long mobile;
 
 	private Integer pin;
-	private String status;
+	
 	
 	
 	public CustomerQuickRegisterEntityDTO()
@@ -19,17 +19,20 @@ public class CustomerQuickRegisterEntityDTO {
 		
 	}
 	
+	
+	
 	public CustomerQuickRegisterEntityDTO(String firstName, String lastName,
-			String email, Long mobile, Integer pin, String status) {
+			String email, Long mobile, Integer pin) {
 		super();
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.email = email;
 		this.mobile = mobile;
 		this.pin = pin;
-		this.status = status;
 	}
-	
+
+
+
 	public CustomerQuickRegisterEntity toCustomerQuickRegisterEntity()
 	{
 		CustomerQuickRegisterEntity newCustomer=new CustomerQuickRegisterEntity();
@@ -37,8 +40,9 @@ public class CustomerQuickRegisterEntityDTO {
 		newCustomer.setLastName(this.lastName);
 		newCustomer.setEmail(this.email);
 		newCustomer.setMobile(this.mobile);
-		newCustomer.setPin(this.pin);
-		newCustomer.setStatus(this.status);
+		newCustomer.setPincode(this.pin);
+		//newCustomer.setIsEmailVerified(false);
+		//newCustomer.setIsMobileVerified(false);
 		
 		return newCustomer;
 		
@@ -74,12 +78,17 @@ public class CustomerQuickRegisterEntityDTO {
 	public void setPin(Integer pin) {
 		this.pin = pin;
 	}
-	public String getStatus() {
-		return status;
+
+
+	@Override
+	public String toString() {
+		return "CustomerQuickRegisterEntityDTO [firstName=" + firstName
+				+ ", lastName=" + lastName + ", email=" + email + ", mobile="
+				+ mobile + ", pin=" + pin + "]";
 	}
-	public void setStatus(String status) {
-		this.status = status;
-	}
+	
+	
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -91,9 +100,11 @@ public class CustomerQuickRegisterEntityDTO {
 				+ ((lastName == null) ? 0 : lastName.hashCode());
 		result = prime * result + ((mobile == null) ? 0 : mobile.hashCode());
 		result = prime * result + ((pin == null) ? 0 : pin.hashCode());
-		result = prime * result + ((status == null) ? 0 : status.hashCode());
 		return result;
 	}
+
+
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -128,21 +139,10 @@ public class CustomerQuickRegisterEntityDTO {
 				return false;
 		} else if (!pin.equals(other.pin))
 			return false;
-		if (status == null) {
-			if (other.status != null)
-				return false;
-		} else if (!status.equals(other.status))
-			return false;
 		return true;
 	}
 
-	@Override
-	public String toString() {
-		return "CustomerQuickRegisterEntityDTO [firstName=" + firstName
-				+ ", lastName=" + lastName + ", email=" + email + ", mobile="
-				+ mobile + ", pin=" + pin + ", status=" + status + "]";
-	}
-	
+
 	
 	
 

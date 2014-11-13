@@ -3,6 +3,7 @@ package com.projectx.rest.utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
+import org.springframework.web.util.Log4jConfigListener;
 
 public class SendEmailThread implements Runnable {
 
@@ -27,6 +28,8 @@ public class SendEmailThread implements Runnable {
 
 	@Override
 	public void run() {
+
+		
 		
 		SimpleMailMessage mailMessage=new SimpleMailMessage();
 		

@@ -18,8 +18,7 @@ import com.projectx.data.domain.ResponseCustomerList;
 import com.projectx.data.domain.UpdateEmailHashAndMobilePinSentTimeDTO;
 import com.projectx.data.domain.UpdateEmailHashDTO;
 import com.projectx.data.domain.UpdateMobilePinDTO;
-
-import com.projectx.data.domain.UpdateStatusAndMobileVerificationAttemptsWithCustomerIdDTO;
+import com.projectx.data.domain.UpdateMobilePinAndMobileVerificationAttemptsAndResetCountDTO;
 import com.projectx.rest.domain.CustomerQuickRegisterEntity;
 import com.projectx.rest.repository.CustomerQuickRegisterRepository;
 
@@ -34,7 +33,7 @@ public class CustomerQuickRegisterRepositoryImpl implements
 	
 	@Autowired
 	Environment env;
-	
+/*	
 	@Override
 	public CustomerQuickRegisterEntity save(CustomerQuickRegisterEntity customer)
 			throws Exception {
@@ -92,8 +91,8 @@ public class CustomerQuickRegisterRepositoryImpl implements
 			Long customerId, String status, Date lastStatusChaneTime,
 			Integer mobileVerificationAttempts) {
 		
-		UpdateStatusAndMobileVerificationAttemptsWithCustomerIdDTO updateStatusMobileVerification=
-				new UpdateStatusAndMobileVerificationAttemptsWithCustomerIdDTO(customerId,status,lastStatusChaneTime,mobileVerificationAttempts);
+		UpdateMobilePinAndMobileVerificationAttemptsAndResetCountDTO updateStatusMobileVerification=
+				new UpdateMobilePinAndMobileVerificationAttemptsAndResetCountDTO(customerId,status,lastStatusChaneTime,mobileVerificationAttempts);
 		
 		Integer updateStatus=restTemplate.postForObject(env.getProperty("data.url")+"/customer/quickregister/updateStatusAndMobileVerificationAttempts", 
 															updateStatusMobileVerification, Integer.class);
@@ -131,7 +130,7 @@ public class CustomerQuickRegisterRepositoryImpl implements
 
 		return updateStatus;
 	}
-*/
+*//*
 	@Override
 	public Integer updateEmailHashAndMobilePinSentTime(Long customerId,
 			Date emailHashSentTime, Date mobilePinSentTime) {
@@ -142,7 +141,7 @@ public class CustomerQuickRegisterRepositoryImpl implements
 
 		return updateStatus;
 	}
-
+*/
 	
 	@Override
 	public void clearCustomerQuickRegister() {
@@ -168,6 +167,38 @@ public class CustomerQuickRegisterRepositoryImpl implements
 		CustomerQuickRegisterEntity quickRegisterEntity=restTemplate.postForObject(env.getProperty("data.url")+"/customer/quickregister/getCustomerQuickRegisterEntityByMobile", mobileDTO, CustomerQuickRegisterEntity.class);
 		
 		return quickRegisterEntity;
+	}
+
+	@Override
+	public Integer updateMobileVerificationStatus(Long customerId,
+			Boolean status, Date updateTime, String updatedBy) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Integer updateEmailVerificationStatus(Long customerId,
+			Boolean status, Date updateTime, String updatedBy) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public CustomerQuickRegisterEntity save(CustomerQuickRegisterEntity customer) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<CustomerQuickRegisterEntity> findAll() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public CustomerQuickRegisterEntity findByCustomerId(Long customerId) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 //	@Override

@@ -1,9 +1,12 @@
 package com.projectx.rest.services;
 
-import com.mashape.unirest.http.exceptions.UnirestException;
+
 import com.projectx.data.domain.UpdatePasswordAndPasswordTypeDTO;
 import com.projectx.rest.domain.CustomerAuthenticationDetails;
 import com.projectx.rest.domain.CustomerDocument;
+import com.projectx.rest.domain.CustomerEmailVerificationDetails;
+import com.projectx.rest.domain.CustomerMobileVerificationDetails;
+import com.projectx.rest.domain.CustomerQuickRegisterEmailMobileVerificationEntity;
 import com.projectx.rest.domain.CustomerQuickRegisterStatusEntity;
 import com.projectx.rest.domain.CustomerQuickRegisterEntity;
 import com.projectx.web.domain.CustomerIdDTO;
@@ -15,37 +18,54 @@ public interface CustomerQuickRegisterService {
 	
 	CustomerQuickRegisterStringStatusEntity checkIfAlreadyRegistered(CustomerQuickRegisterEntityDTO customer) throws Exception;
 	
-	CustomerQuickRegisterEntity populateStatus(CustomerQuickRegisterEntityDTO customer) throws Exception;
+	CustomerQuickRegisterEntity populateVerificationFields(CustomerQuickRegisterEntityDTO customer) throws Exception;
 	
 	CustomerQuickRegisterEntity initializeNewCustomerQuickRegistrationEntity(CustomerQuickRegisterEntity customer);
 	
-	CustomerQuickRegisterEntity saveNewCustomerQuickRegisterEntity(CustomerQuickRegisterEntity customer) throws Exception;
+	CustomerMobileVerificationDetails createCustomerMobileVerificationEntity(CustomerQuickRegisterEntity customerQuickRegisterEntity);
+	
+	CustomerEmailVerificationDetails createCustomerEmailVerificationEntity(CustomerQuickRegisterEntity customerQuickRegisterEntity);
+	
+	CustomerAuthenticationDetails createCustomerAuthenticationDetails(CustomerQuickRegisterEntity customerQuickRegisterEntity);
+	
+	CustomerQuickRegisterEmailMobileVerificationEntity saveNewCustomerQuickRegisterEntity(CustomerQuickRegisterEntity customer) throws Exception;
+	
+	CustomerEmailVerificationDetails saveCustomerEmailVerificationDetails(CustomerEmailVerificationDetails emailVerificationDetails);
+	
+	CustomerQuickRegisterEntity saveCustomerQuickRegisterEntity(CustomerQuickRegisterEntity customerQuickRegisterEntity);
+	
+	CustomerMobileVerificationDetails saveCustomerMobileVerificationDetails(CustomerMobileVerificationDetails mobileVerificationDetails);
 	
 	CustomerQuickRegisterStatusEntity handleNewCustomerQuickRegister(CustomerQuickRegisterEntityDTO customer) throws Exception;
 	
 	CustomerQuickRegisterEntity getCustomerQuickRegisterEntityByCustomerId(Long customerId);
 	
-	Integer updateEmailHash(Long customerId);
+	Integer updateEmailHash(Long customerId,String email);
 	
-	Integer updateMobilePin(Long customerId);
+	Integer updateMobilePin(Long customerId,Long mobile);
 	
-	Boolean verifyEmailHash(Long customerId,String emailHash);
+	Boolean verifyEmailHash(Long customerId,String email,String emailHash);
 	
-	Boolean verifyMobilePin(Long customerId,Integer mobilePin);
+	Boolean verifyMobilePin(Long customerId,Long mobile,Integer mobilePin);
 			
-	String composeSMSWithMobilePin(CustomerQuickRegisterEntity customer);
+	String composeSMSWithMobilePin(CustomerQuickRegisterEntity customer,CustomerMobileVerificationDetails mobileVerificationDetails);
 	
-	String composeEmailWithEmailHash(CustomerQuickRegisterEntity customer);
+	String composeEmailWithEmailHash(CustomerQuickRegisterEntity customer,CustomerEmailVerificationDetails emailVerificationDetails);
 	
-	Boolean sendPinSMS(CustomerQuickRegisterEntity customer) throws UnirestException;
+	Boolean sendPinSMS(CustomerQuickRegisterEntity customer,CustomerMobileVerificationDetails mobileVerificationDetails);
 	
-	Boolean sendHashEmail(CustomerQuickRegisterEntity customer);
+	Boolean sendHashEmail(CustomerQuickRegisterEntity customer,CustomerEmailVerificationDetails emailVerificationDetails);
 	
-	CustomerQuickRegisterStatusEntity sendVerificationDetails(CustomerQuickRegisterEntity customer) throws UnirestException;
+	CustomerQuickRegisterStatusEntity sendVerificationDetails(CustomerQuickRegisterEntity customer,CustomerEmailVerificationDetails emailVerificationDetails,CustomerMobileVerificationDetails mobileVerificationDetails);
 	
-	Boolean reSendEmailHash(Long customerId);
+	Boolean reSetEmailHash(Long customerId,String email);
 	
-	Boolean reSendMobilePin(Long customerId) throws UnirestException;
+	Boolean reSetMobilePin(Long customerId,Long mobile);
+	
+	Boolean reSendEmailHash(Long customerId,String email);
+	
+	Boolean reSendMobilePin(Long customerId,Long mobile);
+
 	
 	
 	//Testing
@@ -57,14 +77,11 @@ public interface CustomerQuickRegisterService {
 
 	Boolean sendPasswordEmail(String email,String message);
 
-	//Boolean sendDefaultPassword(CustomerQuickRegisterEntity customer) throws UnirestException;
-
-	
 
 	Boolean updatePassword(UpdatePasswordAndPasswordTypeDTO updatePasswordDTO);
 
 	CustomerAuthenticationDetails saveCustomerAuthenticationDetails(
-			CustomerQuickRegisterEntity entity);
+			CustomerAuthenticationDetails entity);
 
 	CustomerAuthenticationDetails getLoginDetailsByCustomerId(Long customerId);
 
@@ -82,6 +99,11 @@ public interface CustomerQuickRegisterService {
 	CustomerQuickRegisterEntity resetPasswordByEmailOrMobileRedirect(String entity);
 	
 	Boolean resetPassword(CustomerIdDTO customerIdDTO);
+	
+	CustomerEmailVerificationDetails getCustomerEmailVerificationDetailsByCustomerIdAndEmail(Long customerId,String email);
+	
+	CustomerMobileVerificationDetails getCustomerMobileVerificationDetailsByCustomerIdAndMobile(Long customerId,Long mobile);
+	
 	
 	//Document
 	

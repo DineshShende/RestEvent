@@ -12,15 +12,19 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
-import com.mashape.unirest.http.exceptions.UnirestException;
 import com.projectx.data.domain.UpdatePasswordAndPasswordTypeDTO;
 import com.projectx.data.domain.VerifyLoginDetailsDataDTO;
 import com.projectx.rest.domain.CustomerAuthenticationDetails;
 import com.projectx.rest.domain.CustomerDocument;
+import com.projectx.rest.domain.CustomerEmailVerificationDetails;
+import com.projectx.rest.domain.CustomerMobileVerificationDetails;
+import com.projectx.rest.domain.CustomerQuickRegisterEmailMobileVerificationEntity;
 import com.projectx.rest.domain.CustomerQuickRegisterStatusEntity;
 import com.projectx.rest.domain.CustomerQuickRegisterEntity;
 import com.projectx.rest.repository.CustomerAuthenticationDetailsRepository;
 import com.projectx.rest.repository.CustomerDocumentRepository;
+import com.projectx.rest.repository.CustomerEmailVericationDetailsRepository;
+import com.projectx.rest.repository.CustomerMobileVerificationDetailsRepository;
 import com.projectx.rest.repository.CustomerQuickRegisterRepository;
 import com.projectx.rest.services.CustomerQuickRegisterService;
 import com.projectx.rest.utils.HandleCustomerVerification;
@@ -40,6 +44,12 @@ public class CustomerQuickRegisterHandler implements
 	
 	@Autowired
 	CustomerAuthenticationDetailsRepository customerAuthenticationDetailsRepository;
+	
+	@Autowired
+	CustomerEmailVericationDetailsRepository customerEmailVericationDetailsRepository;
+	
+	@Autowired
+	CustomerMobileVerificationDetailsRepository customerMobileVerificationDetailsRepository; 
 	
 	@Autowired
 	CustomerDocumentRepository customerDocumentRepository;
@@ -81,13 +91,20 @@ public class CustomerQuickRegisterHandler implements
 		if(customer.getMobile()!=null)
 			entityByMobile=customerQuickRegisterRepository.findByMobile(customer.getMobile());
 		
+
+		if(entityByEmail.getCustomerId()!=null && entityByMobile.getCustomerId()!=null && !entityByEmail.getCustomerId().equals(entityByMobile.getCustomerId()))
+		{
+			return new CustomerQuickRegisterStringStatusEntity(REGISTER_FISHY, new CustomerQuickRegisterEntity());
+		}
+		
+		
 		if(customer.getEmail()!=null && entityByEmail.getCustomerId()!=null)
 		{
 			returnEntity=entityByEmail;
 			
 			emailAlreadyExist=true;
 			
-			if(entityByEmail.isEmailVerified() || entityByEmail.isEmailVerifiedMobileVerficationPending()|| entityByEmail.isEmailMobileVerified())
+			if(entityByEmail.getIsEmailVerified())
 				emailVerified=true;
 		}
 		
@@ -97,7 +114,7 @@ public class CustomerQuickRegisterHandler implements
 			
 			mobileAlreadyExist=true;
 			
-			if(entityByMobile.isMobileVerified()||entityByMobile.isMobileVerifiedEmailVerficationPending()||entityByMobile.isEmailMobileVerified())
+			if(entityByMobile.getIsMobileVerified())
 				mobileVerified=true;
 		}
 		
@@ -134,27 +151,22 @@ public class CustomerQuickRegisterHandler implements
 	}
 
 	@Override
-	public CustomerQuickRegisterEntity populateStatus(
+	public CustomerQuickRegisterEntity populateVerificationFields(
 			CustomerQuickRegisterEntityDTO customer) throws Exception {
 
 		CustomerQuickRegisterEntity customerToProcess = customer.toCustomerQuickRegisterEntity();
 		
-		String status = null;
-
-		if (customer.getEmail() == null && customer.getMobile() == null)
+		if (customerToProcess.getEmail() == null && customerToProcess.getMobile() == null)
 			throw new Exception();
 
-		if (customer.getEmail() != null && customer.getMobile() != null) {
-			status = "EmailMobileVerificationPending";
-		} else if (customer.getEmail() != null) {
-			status = "EmailVerificationPending";
-		} else if (customer.getMobile() != null) {
-			status = "MobileVerificationPending";
+		if (customerToProcess.getEmail() != null ) {
+			customerToProcess.setIsEmailVerified(false);
+		} 
+		
+		if(customerToProcess.getMobile()!=null){
+			customerToProcess.setIsMobileVerified(false);
 		}
 
-		customerToProcess.setStatus(status);
-		customerToProcess.setLastStatusChangedTime(new Date());
-		
 		return customerToProcess;
 	}
 
@@ -162,87 +174,129 @@ public class CustomerQuickRegisterHandler implements
 	public CustomerQuickRegisterEntity initializeNewCustomerQuickRegistrationEntity(
 			CustomerQuickRegisterEntity customer) {
 
-		if (customer.getStatus().equals(
-				"EmailMobileVerificationPending")) {
-			customer.setEmailHash(handleCustomerVerification.generateEmailHash());
-			customer.setMobilePin(handleCustomerVerification.genarateMobilePin());
-			customer.setMobileVerificationAttempts(0);
-		} else if (customer.getStatus().equals(
-				"EmailVerificationPending")) {
-			customer.setEmailHash(handleCustomerVerification.generateEmailHash());
-		} else if (customer.getStatus().equals(
-				"MobileVerificationPending")) {
-			customer.setMobilePin(handleCustomerVerification.genarateMobilePin());
-			customer.setMobileVerificationAttempts(0);
-		}
+		customer.setInsertTime(new Date());
+		customer.setUpdatedBy("ONLINE_CUST");
+		customer.setUpdateTime(new Date());
 		
 		return customer;
 	}
-
+	
+	
+	
 	@Override
-	public CustomerQuickRegisterEntity saveNewCustomerQuickRegisterEntity(
+	public CustomerQuickRegisterEmailMobileVerificationEntity saveNewCustomerQuickRegisterEntity(
 			CustomerQuickRegisterEntity customer) throws Exception {
 				
-		return customerQuickRegisterRepository.save(customer);
+		CustomerQuickRegisterEntity savedCustomerQuickRegisterEntity= customerQuickRegisterRepository.save(customer);
+		CustomerEmailVerificationDetails savedCustomerEmailVerificationDetails=new CustomerEmailVerificationDetails();
+		CustomerMobileVerificationDetails savedCustomerMobileVerificationDetails=new CustomerMobileVerificationDetails();
+		
+		if(savedCustomerQuickRegisterEntity.getEmail()!=null)
+		{
+			CustomerEmailVerificationDetails newCustomerEmailVerificationDetails=createCustomerEmailVerificationEntity(savedCustomerQuickRegisterEntity);
+			savedCustomerEmailVerificationDetails=saveCustomerEmailVerificationDetails(newCustomerEmailVerificationDetails);
+		}
+		
+		if(savedCustomerQuickRegisterEntity.getMobile()!=null)
+		{
+			CustomerMobileVerificationDetails newCustomerMobileVerificationDetails=createCustomerMobileVerificationEntity(savedCustomerQuickRegisterEntity);
+			savedCustomerMobileVerificationDetails=saveCustomerMobileVerificationDetails(newCustomerMobileVerificationDetails);
+
+		}
+		
+		CustomerAuthenticationDetails customerAuthenticationDetails=createCustomerAuthenticationDetails(savedCustomerQuickRegisterEntity);
+		saveCustomerAuthenticationDetails(customerAuthenticationDetails);
+				
+		return new CustomerQuickRegisterEmailMobileVerificationEntity(savedCustomerQuickRegisterEntity, savedCustomerEmailVerificationDetails, savedCustomerMobileVerificationDetails);
 	}
+
 
 	
 	@Override
-	public CustomerAuthenticationDetails saveCustomerAuthenticationDetails(CustomerQuickRegisterEntity entity)
-	{
-		CustomerAuthenticationDetails newEntity=new CustomerAuthenticationDetails(entity.getCustomerId(), entity.getEmail(), 
-																								entity.getMobile(), null, null);
+	public CustomerMobileVerificationDetails createCustomerMobileVerificationEntity(
+			CustomerQuickRegisterEntity customerQuickRegisterEntity) {
 		
-		CustomerAuthenticationDetails savedEntity=customerAuthenticationDetailsRepository.save(newEntity);
+		CustomerMobileVerificationDetails mobileVerificationDetails=new CustomerMobileVerificationDetails();
+		mobileVerificationDetails.setCustomerId(customerQuickRegisterEntity.getCustomerId());
+		mobileVerificationDetails.setMobile(customerQuickRegisterEntity.getMobile());
+		mobileVerificationDetails.setMobileType(CUST_MOBILE_TYPE_PRIMARY);
+		mobileVerificationDetails.setMobilePin(handleCustomerVerification.genarateMobilePin());
+		mobileVerificationDetails.setMobileVerificationAttempts(0);
+		mobileVerificationDetails.setResendCount(0);
 		
-		return savedEntity;
+		
+		return mobileVerificationDetails;
 	}
 
+	@Override
+	public CustomerEmailVerificationDetails createCustomerEmailVerificationEntity(
+			CustomerQuickRegisterEntity customerQuickRegisterEntity) {
+		CustomerEmailVerificationDetails emailVerificationDetails=new CustomerEmailVerificationDetails();
+		emailVerificationDetails.setCustomerId(customerQuickRegisterEntity.getCustomerId());
+		emailVerificationDetails.setEmail(customerQuickRegisterEntity.getEmail());
+		emailVerificationDetails.setEmailHash(handleCustomerVerification.generateEmailHash());
+		emailVerificationDetails.setEmailHashSentTime(new Date());
+		emailVerificationDetails.setEmailType(CUST_EMAIL_TYPE_PRIMARY);
+		emailVerificationDetails.setResendCount(0);
+		
+		return emailVerificationDetails;
+	}
+	
+	@Override
+	public CustomerAuthenticationDetails createCustomerAuthenticationDetails(
+			CustomerQuickRegisterEntity customerQuickRegisterEntity) {
+		
+		CustomerAuthenticationDetails customerAuthenticationDetails=new CustomerAuthenticationDetails();
+		customerAuthenticationDetails.setCustomerId(customerQuickRegisterEntity.getCustomerId());
+		customerAuthenticationDetails.setEmail(customerQuickRegisterEntity.getEmail());
+		customerAuthenticationDetails.setMobile(customerQuickRegisterEntity.getMobile());
+		customerAuthenticationDetails.setLoginVerificationCount(0);
+		customerAuthenticationDetails.setResendCount(0);
+		
+		return customerAuthenticationDetails;
+	}
+
+	
+	
+		
 	@Override
 	public CustomerQuickRegisterStatusEntity handleNewCustomerQuickRegister(
 			CustomerQuickRegisterEntityDTO customer) throws Exception {
 		
-		CustomerQuickRegisterEntity customerWithStatusPopulated=populateStatus(customer);
+		CustomerQuickRegisterEntity customerWithStatusPopulated=populateVerificationFields(customer);
 		
 		CustomerQuickRegisterEntity initialisedCustomer=initializeNewCustomerQuickRegistrationEntity(customerWithStatusPopulated);
 
-		CustomerQuickRegisterEntity savedEntity=saveNewCustomerQuickRegisterEntity(initialisedCustomer);
+		CustomerQuickRegisterEmailMobileVerificationEntity savedEntity=saveNewCustomerQuickRegisterEntity(initialisedCustomer);
 		
-		CustomerAuthenticationDetails savedLoginDetails=saveCustomerAuthenticationDetails(savedEntity);
+		//CustomerAuthenticationDetails savedLoginDetails=saveCustomerAuthenticationDetails(savedEntity.getCustomerQuickRegisterEntity());
 		
-		CustomerQuickRegisterStatusEntity customerStatusEntity=sendVerificationDetails(savedEntity);
+		CustomerQuickRegisterStatusEntity customerStatusEntity=sendVerificationDetails(savedEntity.getCustomerQuickRegisterEntity(),savedEntity.getCustomerEmailVerificationDetails(),
+																			savedEntity.getCustomerMobileVerificationDetails());
 		
 		return customerStatusEntity;
 	}
 
 	@Override
-	public CustomerQuickRegisterStatusEntity sendVerificationDetails(CustomerQuickRegisterEntity customer) throws UnirestException {
+	public CustomerQuickRegisterStatusEntity sendVerificationDetails(CustomerQuickRegisterEntity customer,CustomerEmailVerificationDetails emailVerificationDetails,CustomerMobileVerificationDetails mobileVerificationDetails) {
 		
 		Boolean emailSentStatus=true;
 		Boolean mobileSentStatus=true;
 		
 		Boolean finalStatus=false;
 		
-		if (customer.getStatus().equals(
-				"EmailMobileVerificationPending")) {
-			emailSentStatus=sendHashEmail(customer);
-			customer.setEmailHashSentTime(new Date());
-			mobileSentStatus=sendPinSMS(customer);
-			customer.setMobilePinSentTime(new Date());
-			
-		} else if (customer.getStatus().equals(
-				"EmailVerificationPending")) {
-			emailSentStatus=sendHashEmail(customer);
-			customer.setEmailHashSentTime(new Date());
-		} else if (customer.getStatus().equals(
-				"MobileVerificationPending")) {
-			mobileSentStatus=sendPinSMS(customer);
-			customer.setMobilePinSentTime(new Date());
+		if(customer.getEmail()!=null&&!customer.getIsEmailVerified())
+		{
+			emailSentStatus=sendHashEmail(customer,emailVerificationDetails);
 		}
 		
-		Integer updatedStatus=customerQuickRegisterRepository.updateEmailHashAndMobilePinSentTime(customer.getCustomerId(),customer.getEmailHashSentTime() ,customer.getMobilePinSentTime());
+		if(customer.getMobile()!=null && !customer.getIsMobileVerified())
+		{
+			mobileSentStatus=sendPinSMS(customer, mobileVerificationDetails);
+		}
+		
 				
-		if(updatedStatus==UPDATE_SUCESS && emailSentStatus && mobileSentStatus)
+		if(emailSentStatus && mobileSentStatus)
 			finalStatus= true;
 		else
 			finalStatus=false;
@@ -252,30 +306,15 @@ public class CustomerQuickRegisterHandler implements
 	
 
 	@Override
-	public CustomerAuthenticationDetails getLoginDetailsByCustomerId(Long customerId)
-	{
-		return customerAuthenticationDetailsRepository.getByCustomerId(customerId);
-	}
-	
-	@Override
-	public CustomerQuickRegisterEntity getCustomerQuickRegisterEntityByCustomerId(
-			Long customerId) {
-		
-		return customerQuickRegisterRepository.findByCustomerId(customerId);
-	}
-
-
-
-	@Override
-	public Boolean verifyEmailHash(Long customerId, String emailHash) {
+	public Boolean verifyEmailHash(Long customerId,String email, String emailHash) {
 		
 		CustomerQuickRegisterEntity fetchedEntity=getCustomerQuickRegisterEntityByCustomerId(customerId);
-	
-		
-		if(fetchedEntity.getCustomerId()==null)
+		CustomerEmailVerificationDetails emailVerificationDetails=getCustomerEmailVerificationDetailsByCustomerIdAndEmail(customerId, email);
+			
+		if(fetchedEntity.getCustomerId()==null||emailVerificationDetails.getCustomerId()==null)
 			return false;
 	
-		Date emailHashSentTime=fetchedEntity.getEmailHashSentTime();
+		Date emailHashSentTime=emailVerificationDetails.getEmailHashSentTime();
 		
 		Date verificationTime=new Date();
 		
@@ -284,27 +323,16 @@ public class CustomerQuickRegisterHandler implements
 		long diffHours = dateDiffernce / (60 * 60 * 1000);
 		
 		
-		if(fetchedEntity.getEmailHash().equals(emailHash) && diffHours<=EMAIL_VALIDITY_TIME_IN_HRS)
+		if(emailVerificationDetails.getEmailHash().equals(emailHash) && diffHours<EMAIL_VALIDITY_TIME_IN_HRS)
 		{
 							
-			if(fetchedEntity.isMobileVerifiedEmailVerficationPending())
-			{
-				fetchedEntity.setStatusEmailMobileVerified();
-			}
-			else if(fetchedEntity.isEmailMobileVerificationPending())
-			{
-				fetchedEntity.setStatusEmailVerifiedMobileVerficationPending();
-			}
-			else if(fetchedEntity.isEmailVerificationPending())
-			{
-				fetchedEntity.setStatusEmailVerified();
-			}
+			fetchedEntity.setIsEmailVerified(true);
 			
-			fetchedEntity.setLastStatusChangedTime(new Date());
+			fetchedEntity.setUpdateTime(new Date());
+			fetchedEntity.setUpdatedBy("ONLINE_CUST");
 			
-			int updatedStatus=customerQuickRegisterRepository.updateStatusAndMobileVerificationAttemptsByCustomerId(customerId, fetchedEntity.getStatus(), 
-						fetchedEntity.getLastStatusChangedTime(), fetchedEntity.getMobileVerificationAttempts());
-										
+			int updatedStatus=customerQuickRegisterRepository.updateEmailVerificationStatus(fetchedEntity.getCustomerId(), fetchedEntity.getIsEmailVerified(),
+					fetchedEntity.getUpdateTime(), fetchedEntity.getUpdatedBy());										
 			
 			Boolean sendPasswordStatus=sendDefaultPassword(fetchedEntity, false);
 			
@@ -322,50 +350,46 @@ public class CustomerQuickRegisterHandler implements
 	}
 
 	@Override
-	public Boolean verifyMobilePin(Long customerId, Integer mobilePin) {
+	public Boolean verifyMobilePin(Long customerId,Long mobile, Integer mobilePin) {
 	
 		CustomerQuickRegisterEntity fetchedEntity=getCustomerQuickRegisterEntityByCustomerId(customerId);
-		
-		Date lastStatusChangedTime=fetchedEntity.getLastStatusChangedTime();
+		CustomerMobileVerificationDetails mobileVerificationDetails=getCustomerMobileVerificationDetailsByCustomerIdAndMobile(customerId, mobile);
 		
 		Boolean verificationStatus=false;
 		
 		Boolean sendPasswordStatus=true;
 		
-		if(fetchedEntity.getCustomerId()==null)
+		if(fetchedEntity.getCustomerId()==null || mobileVerificationDetails.getCustomerId()==null)
 			return false;
 		
 		
 		
-		if(fetchedEntity.getMobilePin().equals(mobilePin) && fetchedEntity.getMobileVerificationAttempts()<MAX_MOBILE_VERIFICATION_ATTEMPTS)
+		if(mobileVerificationDetails.getMobilePin().equals(mobilePin) && mobileVerificationDetails.getMobileVerificationAttempts()<MAX_MOBILE_VERIFICATION_ATTEMPTS)
 		{
-			if(fetchedEntity.isEmailMobileVerificationPending())
-				fetchedEntity.setStatusMobileVerifiedEmailVerficationPending();
-			else if(fetchedEntity.isEmailVerifiedMobileVerficationPending())
-				fetchedEntity.setStatusEmailMobileVerified();
-			else if(fetchedEntity.isMobileVerificationPending())
-				fetchedEntity.setStatusMobileVerified();
-		
-			verificationStatus=true;
+			fetchedEntity.setIsMobileVerified(true);
 			
-			lastStatusChangedTime=new Date();
+			verificationStatus=true;
 			
 			sendPasswordStatus=sendDefaultPassword(fetchedEntity, false);
 				
 		}
 		else
 		{
-			int currentAttemptCount=fetchedEntity.getMobileVerificationAttempts();
-			fetchedEntity.setMobileVerificationAttempts(currentAttemptCount+1);
+			int currentAttemptCount=mobileVerificationDetails.getMobileVerificationAttempts();
+			mobileVerificationDetails.setMobileVerificationAttempts(currentAttemptCount+1);
 		
 		}
 		
-		fetchedEntity.setLastStatusChangedTime(lastStatusChangedTime);
+		fetchedEntity.setUpdateTime(new Date());
+		fetchedEntity.setUpdatedBy("ONLINE_CUST");
 		
-		int updatedStatus=customerQuickRegisterRepository.updateStatusAndMobileVerificationAttemptsByCustomerId(customerId, fetchedEntity.getStatus(), 
-				fetchedEntity.getLastStatusChangedTime(), fetchedEntity.getMobileVerificationAttempts());
+		int customerQuickRegisterUpdateStatus=customerQuickRegisterRepository.updateMobileVerificationStatus(fetchedEntity.getCustomerId(), 
+				fetchedEntity.getIsMobileVerified(), fetchedEntity.getUpdateTime(), fetchedEntity.getUpdatedBy());
+		
+		int customerMobileVerificationDetailsStatus=customerMobileVerificationDetailsRepository.updateMobilePinAndMobileVerificationAttemptsAndResendCount(fetchedEntity.getCustomerId(), fetchedEntity.getMobile(),
+				mobileVerificationDetails.getMobilePin(), mobileVerificationDetails.getMobileVerificationAttempts(), mobileVerificationDetails.getResendCount());
 	
-		if(updatedStatus==UPDATE_SUCESS && verificationStatus && sendPasswordStatus)
+		if(customerQuickRegisterUpdateStatus==UPDATE_SUCESS&&customerMobileVerificationDetailsStatus==UPDATE_SUCESS && verificationStatus && sendPasswordStatus)
 			return true;
 		else
 			return false;
@@ -376,32 +400,40 @@ public class CustomerQuickRegisterHandler implements
 	public CustomerAuthenticationDetails verifyLoginDetails(
 			LoginVerificationDTO loginVerificationDTO) {
 		
-		VerifyLoginDetailsDataDTO loginDetailsDataDTO;
+		CustomerAuthenticationDetails customerAuthenticationDetails=new CustomerAuthenticationDetails();
 		
 		if(isMobileNumber(loginVerificationDTO.getLoginEntity()))
 		{
-			loginDetailsDataDTO=new VerifyLoginDetailsDataDTO(null, Long.parseLong(loginVerificationDTO.getLoginEntity()), loginVerificationDTO.getPassword());
+			customerAuthenticationDetails=customerAuthenticationDetailsRepository.getCustomerAuthenticationDetailsByMobile(Long.parseLong(loginVerificationDTO.getLoginEntity()));
 		}
 		else
 		{
-			loginDetailsDataDTO=new VerifyLoginDetailsDataDTO(loginVerificationDTO.getLoginEntity(), null, loginVerificationDTO.getPassword());
+			customerAuthenticationDetails=customerAuthenticationDetailsRepository.getCustomerAuthenticationDetailsByEmail(loginVerificationDTO.getLoginEntity());
 		}
 		
-		CustomerAuthenticationDetails fetchedEntity=customerAuthenticationDetailsRepository.loginVerification(loginDetailsDataDTO.getEmail(),
-																loginDetailsDataDTO.getMobile(), loginDetailsDataDTO.getPassword());
-		return fetchedEntity;
+		if(customerAuthenticationDetails.getCustomerId()!=null && !loginVerificationDTO.getPassword().equals(customerAuthenticationDetails.getPassword()))
+		{
+			customerAuthenticationDetailsRepository.updateLastUnsucessfullAttempts(customerAuthenticationDetails.getCustomerId(),
+					customerAuthenticationDetails.getLoginVerificationCount()+1);
+			
+			customerAuthenticationDetails=new CustomerAuthenticationDetails();	
+			
+		}
+		
+		
+		return customerAuthenticationDetails;
 	}
 
 	
 	
 	@Override
-	public String composeEmailWithEmailHash(CustomerQuickRegisterEntity customer) {
+	public String composeEmailWithEmailHash(CustomerQuickRegisterEntity customer,CustomerEmailVerificationDetails emailVerificationDetails) {
 		
 		StringBuilder messageBuilder=new StringBuilder();
 		
 		messageBuilder.append("Hi "+customer.getFirstName()+" "+customer.getLastName()+"\n");
 		messageBuilder.append("Thanks for connecting with us!!\n Please Click Below link to activate your account\n");
-		messageBuilder.append(env.getProperty("mvc.url")+"/customer/quickregister/verifyEmailHash/"+customer.getCustomerId()+"/"+customer.getEmailHash());
+		messageBuilder.append(env.getProperty("mvc.url")+"/customer/quickregister/verifyEmailHash/"+customer.getCustomerId()+"/"+emailVerificationDetails.getEmailHash());
 		
 		//System.out.println(messageBuilder.toString());
 		
@@ -409,23 +441,20 @@ public class CustomerQuickRegisterHandler implements
 	}
 
 	@Override
-	public Boolean sendHashEmail(CustomerQuickRegisterEntity customer) {
+	public Boolean sendHashEmail(CustomerQuickRegisterEntity customer, CustomerEmailVerificationDetails emailVerificationDetails) {
 		
-		String message=composeEmailWithEmailHash(customer);
+		String message=composeEmailWithEmailHash(customer,emailVerificationDetails);
 		
 		return handleCustomerVerification.sendEmail(customer.getEmail(), message);
 	}
 
-
-	
-	
 	@Override
-	public String composeSMSWithMobilePin(CustomerQuickRegisterEntity customer) {
+	public String composeSMSWithMobilePin(CustomerQuickRegisterEntity customer,CustomerMobileVerificationDetails mobileVerificationDetails) {
 		
 		StringBuilder messageBuilder=new StringBuilder();
 		
 		messageBuilder.append("Hi "+customer.getFirstName()+" "+customer.getLastName()+"\n");
-		messageBuilder.append("Thanks for connecting with us!!\n Enter given OTP in provided textbox.OTP="+customer.getMobilePin());
+		messageBuilder.append("Thanks for connecting with us!!\n Enter given OTP in provided textbox.OTP="+mobileVerificationDetails.getMobilePin());
 		
 		//System.out.println(messageBuilder.toString());
 		
@@ -433,9 +462,9 @@ public class CustomerQuickRegisterHandler implements
 	}
 
 	@Override
-	public Boolean sendPinSMS(CustomerQuickRegisterEntity customer)  {
+	public Boolean sendPinSMS(CustomerQuickRegisterEntity customer,CustomerMobileVerificationDetails mobileVerificationDetails)  {
 		
-		String message=composeSMSWithMobilePin(customer);
+		String message=composeSMSWithMobilePin(customer,mobileVerificationDetails);
 		
 		return handleCustomerVerification.sendSMS(customer.getMobile(), message);
 		
@@ -472,8 +501,9 @@ public class CustomerQuickRegisterHandler implements
 		Boolean emailSendStatus=true;
 		Boolean smsSendStatus=true;
 		Integer passwordUpdateStatus=new Integer(1);
+		Integer emailPasswordUpdateStatus=new Integer(1);
 		
-		CustomerAuthenticationDetails customerAuthenticationDetails=customerAuthenticationDetailsRepository.getByCustomerId(customer.getCustomerId());
+		CustomerAuthenticationDetails customerAuthenticationDetails=customerAuthenticationDetailsRepository.getCustomerAuthenticationDetailsByCustomerId(customer.getCustomerId());
 		
 		if(!resetFlag && (customerAuthenticationDetails.getPasswordType()!=null && customerAuthenticationDetails.getPasswordType().equals(CUST_PASSWORD_TYPE_CHANGED)))
 			return true;
@@ -484,22 +514,30 @@ public class CustomerQuickRegisterHandler implements
 			customerAuthenticationDetails.setPassword(password);
 			customerAuthenticationDetails.setPasswordType(CUST_PASSWORD_TYPE_DEFAULT);
 
-			 passwordUpdateStatus=customerAuthenticationDetailsRepository.updatePasswordAndPasswordType(customerAuthenticationDetails.getCustomerId(),
+			 passwordUpdateStatus=customerAuthenticationDetailsRepository.updatePasswordAndPasswordTypeAndCounts (customerAuthenticationDetails.getCustomerId(),
 					 																						customerAuthenticationDetails.getPassword(), customerAuthenticationDetails.getPasswordType());
+			 if(customer.getEmail()!=null)
+			 {	 
+				 String emailPassword=handleCustomerVerification.generateEmailHash();
+				 customerAuthenticationDetails.setEmailPassword(emailPassword);
+				 emailPasswordUpdateStatus=customerAuthenticationDetailsRepository.updateEmailPasswordAndPasswordTypeAndCounts(customerAuthenticationDetails.getCustomerId(),customerAuthenticationDetails.getEmailPassword());
+						 
+			 }			 
+			 
 		}
 		
-		CustomerAuthenticationDetails customerAuthenticationDetailsUpdated=customerAuthenticationDetailsRepository.getByCustomerId(customer.getCustomerId());
+		CustomerAuthenticationDetails customerAuthenticationDetailsUpdated=customerAuthenticationDetailsRepository.getCustomerAuthenticationDetailsByCustomerId(customer.getCustomerId());
 		
 		String message=composeMessageWithPassword(customer, customerAuthenticationDetailsUpdated);
 			
-		if(customer.isEmailMobileVerified() || customer.isEmailVerifiedMobileVerficationPending()||customer.isEmailVerified())
+		if(customer.getEmail()!=null && customer.getIsEmailVerified())
 			sendPasswordEmail(customer.getEmail(),message);
 		
-		if(customer.isEmailMobileVerified()||customer.isMobileVerifiedEmailVerficationPending()|| customer.isMobileVerified())
+		if(customer.getMobile()!=null && customer.getIsMobileVerified())
 			sendPasswordSMS(customer.getMobile(),message);
 		
 		
-		if(passwordUpdateStatus==UPDATE_SUCESS && emailSendStatus && smsSendStatus)
+		if(passwordUpdateStatus==UPDATE_SUCESS && emailSendStatus && smsSendStatus && emailPasswordUpdateStatus==UPDATE_SUCESS)
 			return true;
 		else
 			return false;
@@ -510,7 +548,7 @@ public class CustomerQuickRegisterHandler implements
 	@Override
 	public Boolean updatePassword(UpdatePasswordAndPasswordTypeDTO updatePasswordDTO)
 	{
-		Integer updateStatus=customerAuthenticationDetailsRepository.updatePasswordAndPasswordType(updatePasswordDTO.getCustomerId(),
+		Integer updateStatus=customerAuthenticationDetailsRepository.updatePasswordAndPasswordTypeAndCounts(updatePasswordDTO.getCustomerId(),
 				updatePasswordDTO.getPassword(), CUST_PASSWORD_TYPE_CHANGED);
 		
 		if(updateStatus==UPDATE_SUCESS)
@@ -521,35 +559,34 @@ public class CustomerQuickRegisterHandler implements
 	
 	
 	@Override
-	public Integer updateEmailHash(Long customerId) {
+	public Integer updateEmailHash(Long customerId,String email) {
 		
 		String emailHash=handleCustomerVerification.generateEmailHash();
 		
-		return customerQuickRegisterRepository.updateEmailHash(customerId, emailHash,new Date());
+		return customerEmailVericationDetailsRepository.resetEmailHashAndEmailHashSentTime(customerId, email, emailHash, new Date(), 0);
 		
 	}
 
 	@Override
-	public Integer updateMobilePin(Long customerId) {
+	public Integer updateMobilePin(Long customerId,Long mobile) {
 		
 		Integer mobilePin=handleCustomerVerification.genarateMobilePin();
-		
-		return customerQuickRegisterRepository.updateMobilePin(customerId, mobilePin,new Date());
+
+		return customerMobileVerificationDetailsRepository.updateMobilePinAndMobileVerificationAttemptsAndResendCount(customerId, mobile, mobilePin, 0, 0);
 	}
 
 		
 	@Override
-	public Boolean reSendMobilePin(Long customerId)  {
+	public Boolean reSetMobilePin(Long customerId,Long mobile)  {
 	
 		Integer updateStatus=0;
 		
-		Integer mobilePin=handleCustomerVerification.genarateMobilePin();
-		
-		updateStatus=customerQuickRegisterRepository.updateMobilePin(customerId, mobilePin,new Date());
+		updateStatus=updateMobilePin(customerId, mobile);
 		
 		CustomerQuickRegisterEntity customer=customerQuickRegisterRepository.findByCustomerId(customerId);
+		CustomerMobileVerificationDetails mobileVerificationDetails=customerMobileVerificationDetailsRepository.getMobileVerificationDetailsByCustomerIdAndMobile(customer.getCustomerId(), customer.getMobile());
 		
-		Boolean sentStatus=sendPinSMS(customer);
+		Boolean sentStatus=sendPinSMS(customer,mobileVerificationDetails);
 		
 		if(updateStatus==UPDATE_SUCESS && sentStatus)
 			return true;
@@ -557,18 +594,20 @@ public class CustomerQuickRegisterHandler implements
 			return false;
 	}
 
+
+
 	@Override
-	public Boolean reSendEmailHash(Long customerId) {
+	public Boolean reSetEmailHash(Long customerId,String email) {
 		
 		Integer updateStatus=0;
-		
-		String emailHash=handleCustomerVerification.generateEmailHash();
-		
-		updateStatus= customerQuickRegisterRepository.updateEmailHash(customerId, emailHash,new Date());
+			
+		updateStatus= updateEmailHash(customerId, email);
 		
 		CustomerQuickRegisterEntity customer=customerQuickRegisterRepository.findByCustomerId(customerId);
+		CustomerEmailVerificationDetails emailVerificationDetails=customerEmailVericationDetailsRepository
+				.getEmailVerificationDetailsByCustomerIdAndEmail(customer.getCustomerId(), customer.getEmail());
 		
-		Boolean sentStatus=sendHashEmail(customer);
+		Boolean sentStatus=sendHashEmail(customer,emailVerificationDetails);
 		
 		if(updateStatus==UPDATE_SUCESS && sentStatus)
 			return true;
@@ -577,7 +616,57 @@ public class CustomerQuickRegisterHandler implements
 	}
 
 	@Override
+	public Boolean reSendEmailHash(Long customerId, String email) {
+
+		Integer updateStatus=0;
+		Boolean sentStatus=false;
+		
+		CustomerQuickRegisterEntity customer=customerQuickRegisterRepository.findByCustomerId(customerId);
+		CustomerEmailVerificationDetails emailVerificationDetails=customerEmailVericationDetailsRepository
+				.getEmailVerificationDetailsByCustomerIdAndEmail(customer.getCustomerId(), customer.getEmail());
+		
+		
+		updateStatus=customerEmailVericationDetailsRepository.updateResendCountByCustomerIdAndEmail(customerId, email,
+				emailVerificationDetails.getResendCount()+1);
+		
+		if(updateStatus==UPDATE_SUCESS)
+			sentStatus=sendHashEmail(customer,emailVerificationDetails);
+				
+		if(updateStatus==UPDATE_SUCESS && sentStatus)
+			return true;
+		else
+			return false;
+		
+	}
+
+	@Override
+	public Boolean reSendMobilePin(Long customerId, Long mobile) {
+		
+		Integer updateStatus=0;
+		Boolean sentStatus=false;
+		
+		CustomerQuickRegisterEntity customer=customerQuickRegisterRepository.findByCustomerId(customerId);
+		CustomerMobileVerificationDetails mobileVerificationDetails=customerMobileVerificationDetailsRepository
+				.getMobileVerificationDetailsByCustomerIdAndMobile(customer.getCustomerId(), customer.getMobile());
+		
+		updateStatus=customerMobileVerificationDetailsRepository.updateResendCount(customerId, mobile,
+				mobileVerificationDetails.getResendCount()+1);
+	
+		
+		if(updateStatus==UPDATE_SUCESS)
+			sentStatus=sendPinSMS(customer,mobileVerificationDetails);
+		
+		if(updateStatus==UPDATE_SUCESS && sentStatus)
+			return true;
+		else
+			return false;
+	}
+	
+	
+	@Override
 	public CustomerQuickRegisterEntity resetPasswordByEmailOrMobileRedirect(String entity) {
+		
+		//TODO
 		
 		CustomerQuickRegisterEntity quickRegisterEntity=new CustomerQuickRegisterEntity();
 		
@@ -601,13 +690,21 @@ public class CustomerQuickRegisterHandler implements
 		return sendDefaultPassword(customer,true);
 	}
 	
+
+
+	@Override
+	public CustomerAuthenticationDetails getLoginDetailsByCustomerId(Long customerId)
+	{
+		return customerAuthenticationDetailsRepository.getCustomerAuthenticationDetailsByCustomerId(customerId);
+	}
 	
 	@Override
-	public void clearDataForTesting() {
-		customerQuickRegisterRepository.clearCustomerQuickRegister();
-
+	public CustomerQuickRegisterEntity getCustomerQuickRegisterEntityByCustomerId(
+			Long customerId) {
 		
+		return customerQuickRegisterRepository.findByCustomerId(customerId);
 	}
+
 
 	@Override
 	public CustomerQuickRegisterEntity getCustomerQuickRegisterEntityByEmail(
@@ -622,6 +719,67 @@ public class CustomerQuickRegisterHandler implements
 		
 		return customerQuickRegisterRepository.findByMobile(mobile);
 	}
+	
+	@Override
+	public CustomerQuickRegisterEntity saveCustomerQuickRegisterEntity(
+			CustomerQuickRegisterEntity customerQuickRegisterEntity) {
+		
+		CustomerQuickRegisterEntity quickRegisterEntity=customerQuickRegisterRepository.save(customerQuickRegisterEntity);
+		
+		return quickRegisterEntity;
+	}
+
+	
+	@Override
+	public CustomerEmailVerificationDetails saveCustomerEmailVerificationDetails(
+			CustomerEmailVerificationDetails emailVerificationDetails) {
+		
+		CustomerEmailVerificationDetails verificationDetails=customerEmailVericationDetailsRepository.save(emailVerificationDetails);
+		
+		return verificationDetails;
+	}
+
+	@Override
+	public CustomerMobileVerificationDetails saveCustomerMobileVerificationDetails(
+			CustomerMobileVerificationDetails mobileVerificationDetails) {
+		
+		CustomerMobileVerificationDetails verificationDetails=customerMobileVerificationDetailsRepository.save(mobileVerificationDetails);
+		
+		return verificationDetails;
+	}
+
+
+	
+
+
+	@Override
+	public CustomerAuthenticationDetails saveCustomerAuthenticationDetails(
+			CustomerAuthenticationDetails entity) {
+		
+		CustomerAuthenticationDetails customerAuthenticationDetails=customerAuthenticationDetailsRepository.save(entity);
+		
+		return customerAuthenticationDetails;
+	}
+
+	
+	
+	@Override
+	public CustomerEmailVerificationDetails getCustomerEmailVerificationDetailsByCustomerIdAndEmail(
+			Long customerId, String email) {
+		CustomerEmailVerificationDetails fetchedEmailVerificationDetails=customerEmailVericationDetailsRepository.
+					getEmailVerificationDetailsByCustomerIdAndEmail(customerId, email);
+		return fetchedEmailVerificationDetails;
+	}
+
+	@Override
+	public CustomerMobileVerificationDetails getCustomerMobileVerificationDetailsByCustomerIdAndMobile(
+			Long customerId, Long mobile) {
+		CustomerMobileVerificationDetails fetchedMobileVerificationDetails=customerMobileVerificationDetailsRepository.
+					getMobileVerificationDetailsByCustomerIdAndMobile(customerId, mobile);
+		return fetchedMobileVerificationDetails;
+	}
+
+	
 
 	@Override
 	public CustomerDocument saveCustomerDocument(
@@ -637,7 +795,14 @@ public class CustomerQuickRegisterHandler implements
 		return customerDocumentRepository.getCustomerDocumentByCustomerId(customerId);
 	}
 
+	
+	@Override
+	public void clearDataForTesting() {
+		customerQuickRegisterRepository.clearCustomerQuickRegister();
 
+		
+	}
+	
 	private Boolean isMobileNumber(String entity)
 	{
 		NumberFormat formatter = NumberFormat.getInstance();
@@ -646,7 +811,5 @@ public class CustomerQuickRegisterHandler implements
 		return (entity.length() == pos.getIndex()&&entity.length()==10);
 		
 	}
-	
-
 
 }

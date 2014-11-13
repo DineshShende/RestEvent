@@ -35,7 +35,7 @@ public class CustomerAuthenticationDetailsRepositoryImpl implements CustomerAuth
 		return savedEntity;
 		
 	}
-
+/*
 	@Override
 	public Integer updatePasswordAndPasswordType(Long customerId,
 			String password, String passwordType) {
@@ -59,7 +59,7 @@ public class CustomerAuthenticationDetailsRepositoryImpl implements CustomerAuth
 		
 		return verificationEntity;
 	}
-
+*/
 	@Override
 	public Integer count() {
 		Integer count=restTemplate.getForObject(env.getProperty("data.url")+"/customer/quickregister/loginDetailsCount", Integer.class);
@@ -75,7 +75,7 @@ public class CustomerAuthenticationDetailsRepositoryImpl implements CustomerAuth
 	}
 
 	@Override
-	public CustomerAuthenticationDetails getByCustomerId(Long customerId) {
+	public CustomerAuthenticationDetails getCustomerAuthenticationDetailsByCustomerId(Long customerId) {
 		
 		CustomerIdDTO customerIdDTO=new CustomerIdDTO(customerId);
 		
@@ -85,6 +85,47 @@ public class CustomerAuthenticationDetailsRepositoryImpl implements CustomerAuth
 			return new CustomerAuthenticationDetails();
 		
 		return fetchedEntity;
+	}
+
+	@Override
+	public Integer updatePasswordAndPasswordTypeAndCounts(Long customerId,
+			String password, String passwordType) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Integer updateEmailPasswordAndPasswordTypeAndCounts(Long customerId,
+			String emailPassword) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Integer updateResendCount(Long customerId, Integer resendCount) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Integer updateLastUnsucessfullAttempts(Long customerId,
+			Integer lastUnsucessfullAttempts) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public CustomerAuthenticationDetails getCustomerAuthenticationDetailsByEmail(
+			String email) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public CustomerAuthenticationDetails getCustomerAuthenticationDetailsByMobile(
+			Long mobile) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 	

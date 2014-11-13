@@ -31,7 +31,7 @@ import com.projectx.rest.config.Application;
 @WebAppConfiguration
 
 
-@ActiveProfiles("Dev")
+@ActiveProfiles("Test")
 public class CustomerQuickRegisterControllerITest {
 	
 	@Autowired
@@ -75,14 +75,11 @@ public class CustomerQuickRegisterControllerITest {
 	            .andExpect(jsonPath("$.customer.lastName").value(standardEmailMobileCustomer().getLastName()))
 	            .andExpect(jsonPath("$.customer.mobile").value(standardEmailMobileCustomer().getMobile()))
 	            .andExpect(jsonPath("$.customer.email").value(standardEmailMobileCustomer().getEmail()))
-	            .andExpect(jsonPath("$.customer.pin").value(standardEmailMobileCustomer().getPin()))
-				.andExpect(jsonPath("$.customer.status").value(standardEmailMobileCustomer().getStatus()))
-				.andExpect(jsonPath("$.customer.mobilePin").exists())
-			    .andExpect(jsonPath("$.customer.emailHash").exists())
-				.andExpect(jsonPath("$.customer.mobileVerificationAttempts").value(standardEmailMobileCustomer().getMobileVerificationAttempts()))
-				.andExpect(jsonPath("$.customer.mobilePinSentTime").exists())
-				.andExpect(jsonPath("$.customer.emailHashSentTime").exists())
-				.andExpect(jsonPath("$.customer.lastStatusChangedTime").exists());
+	            .andExpect(jsonPath("$.customer.isMobileVerified").value(standardEmailMobileCustomer().getIsMobileVerified()))
+	            .andExpect(jsonPath("$.customer.isEmailVerified").value(standardEmailMobileCustomer().getIsEmailVerified()))
+	            .andExpect(jsonPath("$.customer.insertTime").exists())
+				.andExpect(jsonPath("$.customer.updateTime").exists())
+				.andExpect(jsonPath("$.customer.updatedBy").value(standardEmailMobileCustomer().getUpdatedBy()));
 			 	
 	}
 	
@@ -102,15 +99,13 @@ public class CustomerQuickRegisterControllerITest {
 	            .andExpect(jsonPath("$.customer.lastName").value(standardEmailMobileCustomer().getLastName()))
 	            .andExpect(jsonPath("$.customer.mobile").value(standardEmailMobileCustomer().getMobile()))
 	            .andExpect(jsonPath("$.customer.email").value(standardEmailMobileCustomer().getEmail()))
-	            .andExpect(jsonPath("$.customer.pin").value(standardEmailMobileCustomer().getPin()))
-				.andExpect(jsonPath("$.customer.status").value(standardEmailMobileCustomer().getStatus()))
-				.andExpect(jsonPath("$.customer.mobilePin").exists())
-			    .andExpect(jsonPath("$.customer.emailHash").exists())
-				.andExpect(jsonPath("$.customer.mobileVerificationAttempts").value(standardEmailMobileCustomer().getMobileVerificationAttempts()))
-				.andExpect(jsonPath("$.customer.mobilePinSentTime").exists())
-				.andExpect(jsonPath("$.customer.emailHashSentTime").exists())
-				.andExpect(jsonPath("$.customer.lastStatusChangedTime").exists());
-				
+	            .andExpect(jsonPath("$.customer.isMobileVerified").value(standardEmailMobileCustomer().getIsMobileVerified()))
+	            .andExpect(jsonPath("$.customer.isEmailVerified").value(standardEmailMobileCustomer().getIsEmailVerified()))
+	            .andExpect(jsonPath("$.customer.insertTime").exists())
+				.andExpect(jsonPath("$.customer.updateTime").exists())
+				.andExpect(jsonPath("$.customer.updatedBy").value(standardEmailMobileCustomer().getUpdatedBy()));
+		
+		
 	}
 	
 
@@ -128,16 +123,12 @@ public class CustomerQuickRegisterControllerITest {
 	            .andExpect(jsonPath("$.customer.firstName").value(standardMobileCustomer().getFirstName()))
 	            .andExpect(jsonPath("$.customer.lastName").value(standardMobileCustomer().getLastName()))
 	            .andExpect(jsonPath("$.customer.mobile").value(standardMobileCustomer().getMobile()))
-	            //.andExpect(jsonPath("$.customer.email").value(standardEmailMobileCustomer().getEmail()))
-	            .andExpect(jsonPath("$.customer.pin").value(standardMobileCustomer().getPin()))
-				.andExpect(jsonPath("$.customer.status").value(standardMobileCustomer().getStatus()))
-				.andExpect(jsonPath("$.customer.mobilePin").exists())
-			    //.andExpect(jsonPath("$.customer.emailHash").exists())
-				.andExpect(jsonPath("$.customer.mobileVerificationAttempts").value(standardMobileCustomer().getMobileVerificationAttempts()))
-				.andExpect(jsonPath("$.customer.mobilePinSentTime").exists())
-				//.andExpect(jsonPath("$.customer.emailHashSentTime").exists())
-				.andExpect(jsonPath("$.customer.lastStatusChangedTime").exists());
-					
+	            .andExpect(jsonPath("$.customer.email").value(standardMobileCustomer().getEmail()))
+	            .andExpect(jsonPath("$.customer.isMobileVerified").value(standardMobileCustomer().getIsMobileVerified()))
+	            .andExpect(jsonPath("$.customer.isEmailVerified").doesNotExist())
+	            .andExpect(jsonPath("$.customer.insertTime").exists())
+				.andExpect(jsonPath("$.customer.updateTime").exists())
+				.andExpect(jsonPath("$.customer.updatedBy").value(standardMobileCustomer().getUpdatedBy()));				
 	}
 	
 	

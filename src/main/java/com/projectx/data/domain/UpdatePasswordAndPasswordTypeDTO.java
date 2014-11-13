@@ -6,9 +6,11 @@ public class UpdatePasswordAndPasswordTypeDTO {
 	private String password;
 	private String passwordType;
 	
+	
 	public UpdatePasswordAndPasswordTypeDTO() {
 		
 	}
+
 
 	public UpdatePasswordAndPasswordTypeDTO(Long customerId, String password,
 			String passwordType) {
@@ -18,35 +20,44 @@ public class UpdatePasswordAndPasswordTypeDTO {
 		this.passwordType = passwordType;
 	}
 
+
 	public Long getCustomerId() {
 		return customerId;
 	}
+
 
 	public void setCustomerId(Long customerId) {
 		this.customerId = customerId;
 	}
 
+
 	public String getPassword() {
 		return password;
 	}
+
 
 	public void setPassword(String password) {
 		this.password = password;
 	}
 
+
 	public String getPasswordType() {
 		return passwordType;
 	}
+
 
 	public void setPasswordType(String passwordType) {
 		this.passwordType = passwordType;
 	}
 
+
 	@Override
 	public String toString() {
-		return "UpdatePasswordDTO [customerId=" + customerId + ", password="
-				+ password + ", passwordType=" + passwordType + "]";
+		return "UpdatePasswordAndPasswordTypeDTO [customerId=" + customerId
+				+ ", password=" + password + ", passwordType=" + passwordType
+				+ "]";
 	}
+
 
 	@Override
 	public int hashCode() {
@@ -60,6 +71,7 @@ public class UpdatePasswordAndPasswordTypeDTO {
 				+ ((passwordType == null) ? 0 : passwordType.hashCode());
 		return result;
 	}
+
 
 	@Override
 	public boolean equals(Object obj) {
@@ -87,9 +99,7 @@ public class UpdatePasswordAndPasswordTypeDTO {
 			return false;
 		return true;
 	}
-	
-	
-	
+
 	
 	
 }
