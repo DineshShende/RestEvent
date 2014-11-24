@@ -21,7 +21,7 @@ import com.projectx.rest.domain.CustomerQuickRegisterEntity;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes=Application.class)
-@ActiveProfiles("Test")
+@ActiveProfiles("Dev")
 public class CustomerQuickRegisterRepositoryTest {
 
 	@Autowired
@@ -102,7 +102,9 @@ public class CustomerQuickRegisterRepositoryTest {
 		
 		CustomerQuickRegisterEntity savedCustomer=customerQuickRegisterRepository.save(standardEmailMobileCustomer());
 		
-		assertEquals(new Integer(1), customerQuickRegisterRepository.updateEmailVerificationStatus(standardUpdateEmailMobileVerificationStatus().getCustomerId(),
+		assertEquals(1, customerQuickRegisterRepository.findAll().size());
+		
+		assertEquals(new Integer(1), customerQuickRegisterRepository.updateEmailVerificationStatus(savedCustomer.getCustomerId(),
 				standardUpdateEmailMobileVerificationStatus().getStatus(),standardUpdateEmailMobileVerificationStatus().getUpdateTime(),
 				standardUpdateEmailMobileVerificationStatus().getUpdatedBy()));
 		
@@ -119,7 +121,9 @@ public class CustomerQuickRegisterRepositoryTest {
 		
 		CustomerQuickRegisterEntity savedCustomer=customerQuickRegisterRepository.save(standardEmailMobileCustomer());
 		
-		assertEquals(new Integer(1), customerQuickRegisterRepository.updateMobileVerificationStatus(standardUpdateEmailMobileVerificationStatus().getCustomerId(),
+		assertEquals(1, customerQuickRegisterRepository.findAll().size());
+		
+		assertEquals(new Integer(1), customerQuickRegisterRepository.updateMobileVerificationStatus(savedCustomer.getCustomerId(),
 				standardUpdateEmailMobileVerificationStatus().getStatus(),standardUpdateEmailMobileVerificationStatus().getUpdateTime(),
 				standardUpdateEmailMobileVerificationStatus().getUpdatedBy()));
 		

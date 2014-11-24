@@ -18,7 +18,7 @@ import static com.projectx.rest.fixture.CustomerQuickRegisterDataFixture.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes=Application.class)
-@ActiveProfiles("Test")
+@ActiveProfiles("Dev")
 
 public class CustomerMobileVerificationDetailsRepositoryTest {
 
@@ -57,6 +57,7 @@ public class CustomerMobileVerificationDetailsRepositoryTest {
 				standardCustomerMobileVerificationDetailsByCustomerIdAndMobileDTO().getMobile()));
 	}
 	
+	
 	@Test
 	public void updateMobilePinAndMobileVerificationAttempts()
 	{
@@ -81,20 +82,21 @@ public class CustomerMobileVerificationDetailsRepositoryTest {
 		
 	}
 	
+	
 	@Test
 	public void updateMobileVerificationAttempts()
 	{
 		assertEquals(0, customerMobileVerificationDetailsRepository.count().intValue());
 		
-		assertEquals(new Integer(0), customerMobileVerificationDetailsRepository.updateMobileVerificationAttempts(standardUpdateMobileVerificationAttemptsDTO().getCustomerId(),
-				standardUpdateMobileVerificationAttemptsDTO().getMobile(), standardUpdateMobileVerificationAttemptsDTO().getMobileVerificationAttempts()));
+		assertEquals(new Integer(0), customerMobileVerificationDetailsRepository.incrementMobileVerificationAttempts(standardCustomerIdMobileDTO().getCustomerId(),
+				standardCustomerIdMobileDTO().getMobile()));
 		
 		CustomerMobileVerificationDetails oldSaved=customerMobileVerificationDetailsRepository.save(standardCustomerMobileVerificationDetails());
 		
 		assertEquals(new Integer(0), customerMobileVerificationDetailsRepository.getMobileVerificationDetailsByCustomerIdAndMobile(oldSaved.getCustomerId(), oldSaved.getMobile()).getMobileVerificationAttempts());
 		
-		assertEquals(new Integer(1), customerMobileVerificationDetailsRepository.updateMobileVerificationAttempts(standardUpdateMobileVerificationAttemptsDTO().getCustomerId(),
-				standardUpdateMobileVerificationAttemptsDTO().getMobile(), standardUpdateMobileVerificationAttemptsDTO().getMobileVerificationAttempts()));
+		assertEquals(new Integer(1), customerMobileVerificationDetailsRepository.incrementMobileVerificationAttempts(standardCustomerIdMobileDTO().getCustomerId(),
+				standardCustomerIdMobileDTO().getMobile()));
 		
 		assertEquals(new Integer(1), customerMobileVerificationDetailsRepository.getMobileVerificationDetailsByCustomerIdAndMobile(oldSaved.getCustomerId(), oldSaved.getMobile()).getMobileVerificationAttempts());
 		
@@ -105,15 +107,15 @@ public class CustomerMobileVerificationDetailsRepositoryTest {
 	{
 		assertEquals(0, customerMobileVerificationDetailsRepository.count().intValue());
 		
-		assertEquals(new Integer(0), customerMobileVerificationDetailsRepository.updateResendCount(standardUpdateMobilePinResendCount().getCustomerId(),
-				standardUpdateMobilePinResendCount().getMobile(), standardUpdateMobilePinResendCount().getResendCount()));
+		assertEquals(new Integer(0), customerMobileVerificationDetailsRepository.incrementResendCount(standardCustomerIdMobileDTO().getCustomerId(),
+				standardCustomerIdMobileDTO().getMobile()));
 		
 		CustomerMobileVerificationDetails oldSaved=customerMobileVerificationDetailsRepository.save(standardCustomerMobileVerificationDetails());
 		
 		assertEquals(new Integer(0), customerMobileVerificationDetailsRepository.getMobileVerificationDetailsByCustomerIdAndMobile(oldSaved.getCustomerId(), oldSaved.getMobile()).getResendCount());
 		
-		assertEquals(new Integer(1), customerMobileVerificationDetailsRepository.updateResendCount(standardUpdateMobilePinResendCount().getCustomerId(),
-				standardUpdateMobilePinResendCount().getMobile(), standardUpdateMobilePinResendCount().getResendCount()));
+		assertEquals(new Integer(1), customerMobileVerificationDetailsRepository.incrementResendCount(standardCustomerIdMobileDTO().getCustomerId(),
+				standardCustomerIdMobileDTO().getMobile()));
 		
 		assertEquals(new Integer(1), customerMobileVerificationDetailsRepository.getMobileVerificationDetailsByCustomerIdAndMobile(oldSaved.getCustomerId(), oldSaved.getMobile()).getResendCount());
 	}
@@ -145,5 +147,5 @@ public class CustomerMobileVerificationDetailsRepositoryTest {
 		assertEquals(0, customerMobileVerificationDetailsRepository.count().intValue());
 		
 	}
-
+	
 }

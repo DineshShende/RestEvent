@@ -91,7 +91,7 @@ public class CustomerAuthenticationDetailsMemRepository implements CustomerAuthe
 		
 			oldRecord.setPassword(password);
 			oldRecord.setPasswordType(passwordType);
-			oldRecord.setLoginVerificationCount(0);
+			oldRecord.setLastUnsucessfullAttempts(0);;
 			oldRecord.setResendCount(0);
 
 			customerList.put(customerId, oldRecord);
@@ -115,7 +115,7 @@ public class CustomerAuthenticationDetailsMemRepository implements CustomerAuthe
 		
 			oldRecord.setEmailPassword(emailPassword);
 			oldRecord.setPasswordType("Default");
-			oldRecord.setLoginVerificationCount(0);
+			oldRecord.setLastUnsucessfullAttempts(0);
 			oldRecord.setResendCount(0);
 
 			customerList.put(customerId, oldRecord);
@@ -128,7 +128,7 @@ public class CustomerAuthenticationDetailsMemRepository implements CustomerAuthe
 
 
 	@Override
-	public Integer updateResendCount(Long customerId, Integer resendCount) {
+	public Integer incrementResendCount(Long customerId) {
 		
 		CustomerAuthenticationDetails oldRecord=customerList.get(customerId);
 		
@@ -136,7 +136,7 @@ public class CustomerAuthenticationDetailsMemRepository implements CustomerAuthe
 		{	
 			customerList.remove(customerId);
 		
-			oldRecord.setResendCount(resendCount);
+			oldRecord.setResendCount(oldRecord.getResendCount()+1);
 
 			customerList.put(customerId, oldRecord);
 		
@@ -148,8 +148,7 @@ public class CustomerAuthenticationDetailsMemRepository implements CustomerAuthe
 
 
 	@Override
-	public Integer updateLastUnsucessfullAttempts(Long customerId,
-			Integer lastUnsucessfullAttempts) {
+	public Integer incrementLastUnsucessfullAttempts(Long customerId) {
 		
 		CustomerAuthenticationDetails oldRecord=customerList.get(customerId);
 		
@@ -157,7 +156,7 @@ public class CustomerAuthenticationDetailsMemRepository implements CustomerAuthe
 		{	
 			customerList.remove(customerId);
 		
-			oldRecord.setLoginVerificationCount(lastUnsucessfullAttempts);
+			oldRecord.setLastUnsucessfullAttempts(oldRecord.getLastUnsucessfullAttempts()+1);
 
 			customerList.put(customerId, oldRecord);
 		

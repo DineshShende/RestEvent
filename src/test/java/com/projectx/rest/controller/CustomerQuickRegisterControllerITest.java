@@ -31,7 +31,7 @@ import com.projectx.rest.config.Application;
 @WebAppConfiguration
 
 
-@ActiveProfiles("Test")
+@ActiveProfiles("Dev")
 public class CustomerQuickRegisterControllerITest {
 	
 	@Autowired
@@ -49,6 +49,9 @@ public class CustomerQuickRegisterControllerITest {
 	@Before
 	public void clearTestData() throws Exception
 	{
+		this.mockMvc.perform(get("/customer/quickregister/cleartestdata"));
+		this.mockMvc.perform(get("/customer/quickregister/cleartestdata"));
+		this.mockMvc.perform(get("/customer/quickregister/cleartestdata"));
 		this.mockMvc.perform(get("/customer/quickregister/cleartestdata"));
 	}
 	
@@ -130,7 +133,6 @@ public class CustomerQuickRegisterControllerITest {
 				.andExpect(jsonPath("$.customer.updateTime").exists())
 				.andExpect(jsonPath("$.customer.updatedBy").value(standardMobileCustomer().getUpdatedBy()));				
 	}
-	
 	
 	
 	

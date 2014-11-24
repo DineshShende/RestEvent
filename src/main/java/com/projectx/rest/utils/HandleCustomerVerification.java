@@ -3,6 +3,10 @@ package com.projectx.rest.utils;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
@@ -106,7 +110,7 @@ public class HandleCustomerVerification {
 	
 	
 	
-	public Boolean sendEmail(String email,String message)
+	public Boolean sendEmail(String email,String message) 
 	{
 		
 		SimpleMailMessage mailMessage=new SimpleMailMessage();
@@ -115,33 +119,55 @@ public class HandleCustomerVerification {
 		mailMessage.setSubject("Greetings from transportdeal.in");
 		mailMessage.setText(message);
 			
-		System.out.println("Email sent");
+		
 		//mailSender.send(mailMessage);
 		
 		
-		/*
+		
 		SendEmailThread emailThread=new SendEmailThread(email, message);
 		
 		Thread t1=new Thread(emailThread);
 		
 		t1.start();
-		*/
+		
+		//t1.join();
+		
 		return true;
 	}
 	
-	public Boolean sendSMS(Long mobile,String message) 
+	public Boolean sendEmailNewWay(String email,String message) 
 	{
 		
-		//String processedMessage=message.replace(" ", "+");
+		SimpleMailMessage mailMessage=new SimpleMailMessage();
 		
+		mailMessage.setTo(email);
+		mailMessage.setSubject("Greetings from transportdeal.in");
+		mailMessage.setText(message);
+		
+		//mailSender.send(mailMessage);
+		
+		
+		Thread t1=new Thread(()->{mailSender.send(mailMessage);});
+		
+		//SendEmailThread emailThread=new SendEmailThread(email, message);
+		
+		//Thread t1=new Thread(emailThread);
+		
+		t1.start();
+		
+		//t1.join();
+		
+		return true;
+	}
+	
+	public Boolean sendSMS(Long mobile,String message)  
+	{
 		StringBuilder requestBuilder=new StringBuilder();
 		
 		requestBuilder.append("http://login.bulksmsindia.biz/messageapi.asp?username=karle7&password=58483712&sender=karlee&mobile=");
 		requestBuilder.append(mobile);
 		requestBuilder.append("&message=");
 		requestBuilder.append(message);
-		
-		System.out.println("SMS sent");
 		
 		//System.out.println(requestBuilder.toString());
 						
@@ -150,32 +176,38 @@ public class HandleCustomerVerification {
 		//System.out.println(result);
 		
 		
-		/*
-		SendSMSThread sendSMSThread=new SendSMSThread(mobile, message);
+		//SendSMSThread sendSMSThread=new SendSMSThread(mobile, message);
 		
-		Thread t1=new Thread(sendSMSThread);
+		//Thread t1=new Thread(sendSMSThread);
 		
-		//t1.start();
-		*/
+		
+		
+		Thread t1=new Thread(()->
+		{
+			System.out.println("Sending SMS");
+										
+			String result=restTemplate.getForObject(requestBuilder.toString(), String.class);	
+		
+			System.out.println(result);		
+		}
+		);
+		
+		t1.start();
+		
 		return true;
 		
-		/*
-		 * 
-		HttpResponse<JsonNode> response = Unirest.get(requestBuilder.toString())
-				.header("X-Mashape-Key", "sTnPJWur9ZmshvwqGPSriebc0XbKp1l7AWBjsn0ID2ca6pEmZD")
-				.asJson();
-		
-		HttpResponse<JsonNode> response = Unirest.get("https://site2sms.p.mashape.com/index.php?msg=Hi+how+r+u&phone=9960821869&pwd=projectx&uid=9960821869")
-				.header("X-Mashape-Key", "sTnPJWur9ZmshvwqGPSriebc0XbKp1l7AWBjsn0ID2ca6pEmZD")
-				.asJson();
-		
-		//System.out.println(response.getBody());
-		
-		*/
 		
 		
 		
+	}
+	
+	public void simulate()
+	{
+		SimulationThread simulationThread=new SimulationThread();
 		
+		Thread t1=new Thread(simulationThread);
+		
+		t1.start();
 	}
 	
 }

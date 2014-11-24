@@ -83,8 +83,8 @@ public class CustomerMobileVerificationDetailsMemRepository implements
 	}
 
 	@Override
-	public Integer updateMobileVerificationAttempts(Long customerId,
-			Long mobile, Integer mobileVerificationAttempts) {
+	public Integer incrementMobileVerificationAttempts(Long customerId,
+			Long mobile) {
 		
 		Key key=new Key(customerId, mobile); 
 		
@@ -93,7 +93,7 @@ public class CustomerMobileVerificationDetailsMemRepository implements
 		{	
 			customerList.remove(key);
 		
-			oldRecord.setMobileVerificationAttempts(mobileVerificationAttempts);
+			oldRecord.setMobileVerificationAttempts(oldRecord.getMobileVerificationAttempts()+1);
 								
 			customerList.put(key, oldRecord);
 		
@@ -104,8 +104,7 @@ public class CustomerMobileVerificationDetailsMemRepository implements
 	}
 
 	@Override
-	public Integer updateResendCount(Long customerId, Long mobile,
-			Integer resendCount) {
+	public Integer incrementResendCount(Long customerId, Long mobile) {
 		
 		Key key=new Key(customerId, mobile); 
 		
@@ -114,7 +113,7 @@ public class CustomerMobileVerificationDetailsMemRepository implements
 		{	
 			customerList.remove(key);
 		
-			oldRecord.setResendCount(resendCount);
+			oldRecord.setResendCount(oldRecord.getResendCount()+1);
 								
 			customerList.put(key, oldRecord);
 		

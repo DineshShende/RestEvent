@@ -81,8 +81,8 @@ public class CustomerEmailVerificationDetailsMemRepository implements CustomerEm
 	}
 
 	@Override
-	public Integer updateResendCountByCustomerIdAndEmail(Long customerId,
-			String email, Integer resendCount) {
+	public Integer incrementResendCountByCustomerIdAndEmail(Long customerId,
+			String email) {
 
 
 		KeyEmail key=new KeyEmail(customerId, email); 
@@ -92,7 +92,7 @@ public class CustomerEmailVerificationDetailsMemRepository implements CustomerEm
 		{	
 			customerList.remove(key);
 		
-			oldRecord.setResendCount(resendCount);
+			oldRecord.setResendCount(oldRecord.getResendCount()+1);
 								
 			customerList.put(key, oldRecord);
 		

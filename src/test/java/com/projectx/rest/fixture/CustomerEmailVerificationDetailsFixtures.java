@@ -4,7 +4,7 @@ import static com.projectx.rest.fixture.CustomerQuickRegisterDataFixture.*;
 
 import com.projectx.data.domain.CustomerEmailVerificationDetailsByCustomerIdAndEmailDTO;
 import com.projectx.data.domain.UpdateEmailHashAndEmailHashSentTimeAndResendCountDTO;
-import com.projectx.data.domain.UpdateEmailHashResendCount;
+import com.projectx.data.domain.CustomerIdEmailDTO;
 import com.projectx.rest.domain.CustomerEmailVerificationDetails;
 
 
@@ -31,9 +31,9 @@ public class CustomerEmailVerificationDetailsFixtures {
 		return new UpdateEmailHashAndEmailHashSentTimeAndResendCountDTO(CUST_ID, CUST_EMAIL, CUST_EMAILHASH_UPDATED, CUST_EMAIL_HASH_SENT_TIME,CUST_RESEND_COUNT+1);
 	}
 	
-	public static UpdateEmailHashResendCount standardUpdateEmailHashResendCount()
+	public static CustomerIdEmailDTO standardCustomerIdEmailDTO()
 	{
-		return new UpdateEmailHashResendCount(CUST_ID, CUST_EMAIL, CUST_RESEND_COUNT+1);
+		return new CustomerIdEmailDTO(CUST_ID, CUST_EMAIL);
 	}
 	
 	

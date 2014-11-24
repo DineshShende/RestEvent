@@ -5,7 +5,7 @@ import static com.projectx.rest.fixture.CustomerQuickRegisterDataFixture.*;
 import com.projectx.data.domain.CustomerMobileVerificationDetailsByCustomerIdAndMobileDTO;
 import com.projectx.data.domain.MobileDTO;
 import com.projectx.data.domain.UpdateMobilePinAndMobileVerificationAttemptsAndResetCountDTO;
-import com.projectx.data.domain.UpdateMobilePinResendCount;
+import com.projectx.data.domain.CustomerIdMobileDTO;
 import com.projectx.data.domain.UpdateMobileVerificationAttemptsDTO;
 import com.projectx.rest.domain.CustomerMobileVerificationDetails;
 import com.projectx.web.domain.VerifyMobileDTO;
@@ -40,9 +40,9 @@ public class CustomerMobileVericationDetailsFixtures {
 		return new UpdateMobileVerificationAttemptsDTO(CUST_ID, CUST_MOBILE, 1);
 	}
 	
-	public static UpdateMobilePinResendCount standardUpdateMobilePinResendCount()
+	public static CustomerIdMobileDTO standardCustomerIdMobileDTO()
 	{
-		return new UpdateMobilePinResendCount(CUST_ID, CUST_MOBILE, CUST_RESEND_COUNT+1);
+		return new CustomerIdMobileDTO(CUST_ID, CUST_MOBILE);
 	}
 	
 	

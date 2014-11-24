@@ -135,8 +135,8 @@ public class CustomerEmailVerificationDetails {
 		if (emailHashSentTime == null) {
 			if (other.emailHashSentTime != null)
 				return false;
-		} else if (!emailHashSentTime.equals(other.emailHashSentTime))
-			return false;
+		} else if (true)
+			return true;
 		if (emailType == null) {
 			if (other.emailType != null)
 				return false;
@@ -150,6 +150,6 @@ public class CustomerEmailVerificationDetails {
 		return true;
 	}
 
-	
+
 	
 }

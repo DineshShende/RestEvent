@@ -1,79 +1,52 @@
 package com.projectx.data.domain;
 
-public class UpdateCountByCustomerId {
-
+public class CustomerIdMobileDTO {
+	
 	private Long customerId;
 	
-	private Integer count;
-
+	private Long mobile;
 	
-	
-	
-	public UpdateCountByCustomerId() {
+	public CustomerIdMobileDTO() {
 		super();
 	}
 
-
-
-
-	public UpdateCountByCustomerId(Long customerId, Integer count) {
+	public CustomerIdMobileDTO(Long customerId, Long mobile) {
 		super();
 		this.customerId = customerId;
-		this.count = count;
+		this.mobile = mobile;
 	}
-
-
-
 
 	public Long getCustomerId() {
 		return customerId;
 	}
 
-
-
-
 	public void setCustomerId(Long customerId) {
 		this.customerId = customerId;
 	}
 
-
-
-
-	public Integer getCount() {
-		return count;
+	public Long getMobile() {
+		return mobile;
 	}
 
-
-
-
-	public void setCount(Integer count) {
-		this.count = count;
+	public void setMobile(Long mobile) {
+		this.mobile = mobile;
 	}
-
-
-
 
 	@Override
 	public String toString() {
-		return "UpdateCountByCustomerId [customerId=" + customerId + ", count="
-				+ count + "]";
+		return "UpdateMobilePinResendCount [customerId=" + customerId
+				+ ", mobile=" + mobile + "]";
 	}
-
-
-
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((count == null) ? 0 : count.hashCode());
 		result = prime * result
 				+ ((customerId == null) ? 0 : customerId.hashCode());
+		result = prime * result + ((mobile == null) ? 0 : mobile.hashCode());
 		return result;
 	}
-
-
-
 
 	@Override
 	public boolean equals(Object obj) {
@@ -83,20 +56,20 @@ public class UpdateCountByCustomerId {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		UpdateCountByCustomerId other = (UpdateCountByCustomerId) obj;
-		if (count == null) {
-			if (other.count != null)
-				return false;
-		} else if (!count.equals(other.count))
-			return false;
+		CustomerIdMobileDTO other = (CustomerIdMobileDTO) obj;
 		if (customerId == null) {
 			if (other.customerId != null)
 				return false;
 		} else if (!customerId.equals(other.customerId))
 			return false;
+		if (mobile == null) {
+			if (other.mobile != null)
+				return false;
+		} else if (!mobile.equals(other.mobile))
+			return false;
 		return true;
 	}
-	
+
 	
 	
 	

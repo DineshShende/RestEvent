@@ -27,7 +27,7 @@ public class CustomerAuthenticationDetails {
 	public CustomerAuthenticationDetails(Long customerId, String email,
 			Long mobile, String password, String passwordType,
 			String emailPassword, Integer resendCount,
-			Integer loginVerificationCount) {
+			Integer lastUnsucessfullAttempts) {
 		super();
 		this.customerId = customerId;
 		this.email = email;
@@ -36,7 +36,7 @@ public class CustomerAuthenticationDetails {
 		this.passwordType = passwordType;
 		this.emailPassword = emailPassword;
 		this.resendCount = resendCount;
-		this.lastUnsucessfullAttempts = loginVerificationCount;
+		this.lastUnsucessfullAttempts = lastUnsucessfullAttempts;
 	}
 
 	public Long getCustomerId() {
@@ -95,12 +95,12 @@ public class CustomerAuthenticationDetails {
 		this.resendCount = resendCount;
 	}
 
-	public Integer getLoginVerificationCount() {
+	public Integer getLastUnsucessfullAttempts() {
 		return lastUnsucessfullAttempts;
 	}
 
-	public void setLoginVerificationCount(Integer loginVerificationCount) {
-		this.lastUnsucessfullAttempts = loginVerificationCount;
+	public void setLastUnsucessfullAttempts(Integer lastUnsucessfullAttempts) {
+		this.lastUnsucessfullAttempts = lastUnsucessfullAttempts;
 	}
 
 	@Override
@@ -109,7 +109,7 @@ public class CustomerAuthenticationDetails {
 				+ ", email=" + email + ", mobile=" + mobile + ", password="
 				+ password + ", passwordType=" + passwordType
 				+ ", emailPassword=" + emailPassword + ", resendCount="
-				+ resendCount + ", loginVerificationCount="
+				+ resendCount + ", lastUnsucessfullAttempts="
 				+ lastUnsucessfullAttempts + "]";
 	}
 
@@ -163,7 +163,8 @@ public class CustomerAuthenticationDetails {
 		if (lastUnsucessfullAttempts == null) {
 			if (other.lastUnsucessfullAttempts != null)
 				return false;
-		} else if (!lastUnsucessfullAttempts.equals(other.lastUnsucessfullAttempts))
+		} else if (!lastUnsucessfullAttempts
+				.equals(other.lastUnsucessfullAttempts))
 			return false;
 		if (mobile == null) {
 			if (other.mobile != null)
@@ -188,6 +189,6 @@ public class CustomerAuthenticationDetails {
 		return true;
 	}
 
-	
+
 	
 }

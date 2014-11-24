@@ -16,7 +16,7 @@ public interface CustomerEmailVericationDetailsRepository {
 	
 	Integer resetEmailHashAndEmailHashSentTime(Long customerId,String email,String emailHash,Date emailHashSentTime,Integer resetCount);
 	
-	Integer updateResendCountByCustomerIdAndEmail(Long customerId,String email,Integer resendCount);
+	Integer incrementResendCountByCustomerIdAndEmail(Long customerId,String email);
 	
 	Long count();
 	

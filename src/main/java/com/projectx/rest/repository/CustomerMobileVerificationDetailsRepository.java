@@ -15,9 +15,9 @@ public interface CustomerMobileVerificationDetailsRepository {
 	
 	Integer updateMobilePinAndMobileVerificationAttemptsAndResendCount(Long customerId,Long mobile,Integer mobilePin,Integer mobileVerificationAttempts,Integer resendCount);
 	
-	Integer updateMobileVerificationAttempts(Long customerId,Long mobile,Integer mobileVerificationAttempts);
+	Integer incrementMobileVerificationAttempts(Long customerId,Long mobile);
 	
-	Integer updateResendCount(Long customerId,Long mobile,Integer resendCount);
+	Integer incrementResendCount(Long customerId,Long mobile);
 	
 	Long count();
 	

@@ -5,8 +5,6 @@ import org.springframework.web.client.RestTemplate;
 
 public class SendSMSThread implements Runnable {
 
-
-	
 	private RestTemplate restTemplate=new RestTemplate();
 	
 	private Long mobile;
@@ -21,6 +19,8 @@ public class SendSMSThread implements Runnable {
 		this.message = message;
 	}
 
+	
+	
 
 
 	@Override
@@ -35,15 +35,22 @@ public class SendSMSThread implements Runnable {
 		requestBuilder.append("&message=");
 		requestBuilder.append(message);
 		
-		System.out.println("SMS sent");
-		
+	
+		System.out.println("Sending SMS");
 		//System.out.println(requestBuilder.toString());
 						
 		String result=restTemplate.getForObject(requestBuilder.toString(), String.class);	
 			
-		System.out.println("Hi");
-		
-		System.out.println(result);
+	/*
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		*/
+		System.out.println("Simulated SMS sent");	
+		//System.out.println(result);
 		
 		
 		

@@ -17,7 +17,8 @@ import com.projectx.rest.domain.CustomerEmailVerificationDetails;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes=Application.class)
-@ActiveProfiles("Test")
+@ActiveProfiles("Dev")
+
 public class CustomerEmailVerificationDetailsRepositoryTest {
 
 	
@@ -93,15 +94,15 @@ public class CustomerEmailVerificationDetailsRepositoryTest {
 	{
 		assertEquals(0, customerEmailVericationDetailsRepository.count().intValue());
 		
-		assertEquals(0, customerEmailVericationDetailsRepository.updateResendCountByCustomerIdAndEmail(standardUpdateEmailHashResendCount().getCustomerId(),
-				standardUpdateEmailHashResendCount().getEmail(), standardUpdateEmailHashResendCount().getResendCount()).intValue());
+		assertEquals(0, customerEmailVericationDetailsRepository.incrementResendCountByCustomerIdAndEmail(standardCustomerIdEmailDTO().getCustomerId(),
+				standardCustomerIdEmailDTO().getEmail()).intValue());
 		
 		CustomerEmailVerificationDetails oldSaved=customerEmailVericationDetailsRepository.save(standardCustomerEmailVerificationDetails());
 		
 		assertEquals(0, oldSaved.getResendCount().intValue());
 		
-		assertEquals(1, customerEmailVericationDetailsRepository.updateResendCountByCustomerIdAndEmail(standardUpdateEmailHashResendCount().getCustomerId(),
-				standardUpdateEmailHashResendCount().getEmail(), standardUpdateEmailHashResendCount().getResendCount()).intValue());
+		assertEquals(1, customerEmailVericationDetailsRepository.incrementResendCountByCustomerIdAndEmail(standardCustomerIdEmailDTO().getCustomerId(),
+				standardCustomerIdEmailDTO().getEmail()).intValue());
 		
 		assertEquals(1, customerEmailVericationDetailsRepository.getEmailVerificationDetailsByCustomerIdAndEmail(oldSaved.getCustomerId(), oldSaved.getEmail()).getResendCount().intValue());
 		

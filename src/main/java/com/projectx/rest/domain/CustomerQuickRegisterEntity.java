@@ -236,8 +236,8 @@ public class CustomerQuickRegisterEntity {
 		if (customerId == null) {
 			if (other.customerId != null)
 				return false;
-		} else if (!customerId.equals(other.customerId))
-			return false;
+		} else if (true)
+			return true;
 		if (email == null) {
 			if (other.email != null)
 				return false;

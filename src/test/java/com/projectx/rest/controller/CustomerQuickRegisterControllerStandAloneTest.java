@@ -2,6 +2,8 @@ package com.projectx.rest.controller;
 
 import static com.projectx.rest.fixture.CustomerQuickRegisterDataFixture.*;
 import static com.projectx.rest.fixture.CustomerAuthenticationDetailsDataFixtures.*;
+import static com.projectx.rest.fixture.CustomerEmailVerificationDetailsFixtures.*;
+import static com.projectx.rest.fixture.CustomerMobileVericationDetailsFixtures.*;
 import static org.junit.Assert.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -9,6 +11,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.mockito.Mockito.*;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -23,6 +27,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
+import com.fasterxml.jackson.annotation.JsonFormat.Value;
 import com.projectx.rest.repositoryImpl.CustomerQuickRegisterRepositoryImpl;
 import com.projectx.rest.services.CustomerQuickRegisterService;
 import com.projectx.web.domain.LoginVerificationDTO;
@@ -48,7 +53,6 @@ public class CustomerQuickRegisterControllerStandAloneTest {
 	    
 	}
 
-	
 	@Test
 	public void getByCustomerIdWithEmailMobileCustomer() throws Exception {
 		
@@ -71,6 +75,11 @@ public class CustomerQuickRegisterControllerStandAloneTest {
 	            .andExpect(jsonPath("$.insertTime").exists())
 				.andExpect(jsonPath("$.updateTime").exists())
 				.andExpect(jsonPath("$.updatedBy").value(standardEmailMobileCustomer().getUpdatedBy()));
+		
+			verify(customerQuickRegisterService,times(1))
+						.getCustomerQuickRegisterEntityByCustomerId(standardEmailMobileCustomer().getCustomerId());
+			
+			verifyNoMoreInteractions(customerQuickRegisterService);
 	}
 	
 	
@@ -109,7 +118,7 @@ public class CustomerQuickRegisterControllerStandAloneTest {
 	
 	
 	@Test
-	public void reSendMobilePin() throws Exception
+	public void reSetMobilePin() throws Exception
 	{
 		when(customerQuickRegisterService.reSetMobilePin(CUST_ID,CUST_MOBILE)).thenReturn(true);
 		
@@ -125,7 +134,7 @@ public class CustomerQuickRegisterControllerStandAloneTest {
 	}
 	
 	@Test
-	public void reSendEmailHash() throws Exception
+	public void reSetEmailHash() throws Exception
 	{
 		when(customerQuickRegisterService.reSetEmailHash(CUST_ID,CUST_EMAIL)).thenReturn(true);
 		
@@ -141,13 +150,45 @@ public class CustomerQuickRegisterControllerStandAloneTest {
 	}
 	
 	
+	@Test
+	public void reSendMobilePin() throws Exception
+	{
+		when(customerQuickRegisterService.reSendMobilePin(CUST_ID,CUST_MOBILE)).thenReturn(true);
+		
+		this.mockMvc.perform(
+	            post("/customer/quickregister/resendMobilePin")
+	                    .content(standardJsonUpdateMobilePinDTOMVC())
+	                    .contentType(MediaType.APPLICATION_JSON)
+	                    .accept(MediaType.APPLICATION_JSON))
+	            .andDo(print())
+	            .andExpect(status().isOk())
+	            .andExpect(content().string("true"));
+		
+	}
+	
+	@Test
+	public void reSendEmailHash() throws Exception
+	{
+		when(customerQuickRegisterService.reSendEmailHash(CUST_ID,CUST_EMAIL)).thenReturn(true);
+		
+		this.mockMvc.perform(
+	            post("/customer/quickregister/resendEmailHash")
+	                    .content(standardJsonUpdateEmailHashDTOMVC())
+	                    .contentType(MediaType.APPLICATION_JSON)
+	                    .accept(MediaType.APPLICATION_JSON))
+	            .andDo(print())
+	            .andExpect(status().isOk())
+	            .andExpect(content().string("true"));
+		
+	}
+	
 	
 	@Test
 	public void verifyLoginDetails() throws Exception
 	{
 		when(customerQuickRegisterService.verifyLoginDetails(standardLoginVerificationWithEmail())).thenReturn(standardCustomerEmailMobileAuthenticationDetails());
 		
-		System.out.println(standardLoginVerificationWithEmail());
+		//System.out.println(standardLoginVerificationWithEmail());
 		
 		this.mockMvc.perform(
 	            post("/customer/quickregister/verifyLoginDetails")
@@ -160,8 +201,33 @@ public class CustomerQuickRegisterControllerStandAloneTest {
 	            .andExpect(jsonPath("$.mobile").value(standardCustomerEmailMobileAuthenticationDetails().getMobile()))
 	            .andExpect(jsonPath("$.email").value(standardCustomerEmailMobileAuthenticationDetails().getEmail()))
 	            .andExpect(jsonPath("$.password").value(standardCustomerEmailMobileAuthenticationDetails().getPassword()))
-				.andExpect(jsonPath("$.passwordType").value(standardCustomerEmailMobileAuthenticationDetails().getPasswordType()));
+				.andExpect(jsonPath("$.passwordType").value(standardCustomerEmailMobileAuthenticationDetails().getPasswordType()))
+				.andExpect(jsonPath("$.emailPassword").value(standardCustomerEmailMobileAuthenticationDetails().getEmailPassword()));
 	}
+	
+	@Test
+	public void verifyLoginDefaultEmailPassword() throws Exception
+	{
+		
+		when(customerQuickRegisterService.verifyDefaultEmailLoginDetails(standardEmailLoginVerification())).thenReturn(standardCustomerEmailMobileAuthenticationDetails());
+
+		this.mockMvc.perform(
+	            post("/customer/quickregister/verifyLoginDefaultEmailPassword")
+	                    .content(standJsonEmailPasswordLoginVerification())
+	                    .contentType(MediaType.APPLICATION_JSON)
+	                    .accept(MediaType.APPLICATION_JSON))
+
+	            .andDo(print())
+	            .andExpect(status().isOk())
+	            .andExpect(jsonPath("$.mobile").value(standardCustomerEmailMobileAuthenticationDetails().getMobile()))
+	            .andExpect(jsonPath("$.email").value(standardCustomerEmailMobileAuthenticationDetails().getEmail()))
+	            .andExpect(jsonPath("$.password").value(standardCustomerEmailMobileAuthenticationDetails().getPassword()))
+				.andExpect(jsonPath("$.passwordType").value(standardCustomerEmailMobileAuthenticationDetails().getPasswordType()))
+				.andExpect(jsonPath("$.emailPassword").value(standardCustomerEmailMobileAuthenticationDetails().getEmailPassword()));
+
+		
+	}
+	
 	
 	@Test
 	public void updatePassword() throws Exception
@@ -198,7 +264,24 @@ public class CustomerQuickRegisterControllerStandAloneTest {
 		
 		
 	}
-	
+
+	@Test
+	public void resendPassword() throws Exception
+	{
+		when(customerQuickRegisterService.resendPassword(standardCustomerIdDTO())).thenReturn(true);
+		
+		this.mockMvc.perform(
+	            post("/customer/quickregister/resendPassword")
+	                    .content(standardJsonCustomerIdDTO())
+	                    .contentType(MediaType.APPLICATION_JSON)
+	                    .accept(MediaType.APPLICATION_JSON))
+
+	            .andDo(print())
+	            .andExpect(status().isOk())
+	            .andExpect(content().string("true"));
+		
+		
+	}
 	
 	@Test
 	public void resetPasswordRedirect() throws Exception
@@ -223,6 +306,58 @@ public class CustomerQuickRegisterControllerStandAloneTest {
 		.andExpect(jsonPath("$.updatedBy").value(standardEmailMobileCustomer().getUpdatedBy()));
 		
 	}
+	
+	
+	@Test
+	public void addCustomerMobileVerification() throws Exception
+	{
+		when(customerQuickRegisterService.getCustomerMobileVerificationDetailsByCustomerIdAndMobile(standardCustomerIdMobileDTO().getCustomerId(),
+				standardCustomerIdMobileDTO().getMobile())).thenReturn(standardCustomerMobileVerificationDetails());
+		
+	
+		this.mockMvc.perform(
+				post("/customer/quickregister/getMobileVerificationDetails")
+				.content(standardJsonUpdateMobilePinDTOMVC())
+				.contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON))
+		.andDo(print())
+		.andExpect(status().isOk())
+		//.andExpect(jsonPath("$.customerId").value(standardCustomerMobileVerificationDetails().getCustomerId()))
+	    .andExpect(jsonPath("$.mobileType").value(standardCustomerMobileVerificationDetails().getMobileType()))
+	    .andExpect(jsonPath("$.mobile").value(standardCustomerMobileVerificationDetails().getMobile()))
+	    .andExpect(jsonPath("$.mobilePin").value(standardCustomerMobileVerificationDetails().getMobilePin()))
+	    .andExpect(jsonPath("$.mobileVerificationAttempts").value(standardCustomerMobileVerificationDetails().getMobileVerificationAttempts()))
+	    .andExpect(jsonPath("$.resendCount").value(standardCustomerMobileVerificationDetails().getResendCount()));
+	    
+	
+
+		
+	}
+	
+	
+	@Test
+	public void addCustomerEmailVerification() throws Exception
+	{
+		when(customerQuickRegisterService.getCustomerEmailVerificationDetailsByCustomerIdAndEmail(standardCustomerIdEmailDTO().getCustomerId(),
+				standardCustomerIdEmailDTO().getEmail())).thenReturn(standardCustomerEmailVerificationDetails());
+		
+		this.mockMvc.perform(
+				post("/customer/quickregister/getEmailVerificationDetails")
+				.content(standardJsonUpdateEmailHashDTOMVC())
+				.contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON))
+		.andDo(print())
+		.andExpect(status().isOk())
+		//.andExpect(jsonPath("$.customerId").value(standardCustomerMobileVerificationDetails().getCustomerId()))
+	    .andExpect(jsonPath("$.emailType").value(standardCustomerEmailVerificationDetails().getEmailType()))
+	    .andExpect(jsonPath("$.email").value(standardCustomerEmailVerificationDetails().getEmail()))
+	    .andExpect(jsonPath("$.emailHash").value(standardCustomerEmailVerificationDetails().getEmailHash()))
+	    .andExpect(jsonPath("$.emailHashSentTime").exists())
+	    .andExpect(jsonPath("$.resendCount").value(standardCustomerEmailVerificationDetails().getResendCount()));
+	    
+	}
+	
+	
 	
 }
 

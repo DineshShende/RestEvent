@@ -19,7 +19,7 @@ import static com.projectx.rest.fixture.CustomerQuickRegisterDataFixture.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes=Application.class)
-@ActiveProfiles("Test")
+@ActiveProfiles("Dev")
 public class CustomerAuthenticationDetailsRepositoryTest {
 
 	@Autowired
@@ -105,10 +105,12 @@ public class CustomerAuthenticationDetailsRepositoryTest {
 
 		assertEquals(0, savedEntity.getResendCount().intValue());
 		
-		assertEquals(1, customerAuthenticationDetailsRepository.updateResendCount(standardUpdateCountByCustomerId().getCustomerId(), standardUpdateCountByCustomerId().getCount()).intValue());
+		assertEquals(1, customerAuthenticationDetailsRepository.incrementResendCount(standardCustomerIdDTO().getCustomerId()).intValue());
 		
 		assertEquals(1, customerAuthenticationDetailsRepository.getCustomerAuthenticationDetailsByCustomerId(savedEntity.getCustomerId()).getResendCount().intValue());
 	}
+	
+	
 	
 	@Test
 	public void updateLoginVerificationCount()
@@ -117,15 +119,16 @@ public class CustomerAuthenticationDetailsRepositoryTest {
 		
 		CustomerAuthenticationDetails savedEntity=customerAuthenticationDetailsRepository.save(standardCustomerEmailMobileAuthenticationDetails());
 
-		assertEquals(0, savedEntity.getLoginVerificationCount().intValue());
+		assertEquals(0, savedEntity.getLastUnsucessfullAttempts().intValue());
 		
-		assertEquals(1, customerAuthenticationDetailsRepository.updateLastUnsucessfullAttempts(standardUpdateCountByCustomerId().getCustomerId(), standardUpdateCountByCustomerId().getCount()).intValue());
+		assertEquals(1, customerAuthenticationDetailsRepository.incrementLastUnsucessfullAttempts(standardCustomerIdDTO().getCustomerId()).intValue());
 		
-		assertEquals(1, customerAuthenticationDetailsRepository.getCustomerAuthenticationDetailsByCustomerId(savedEntity.getCustomerId()).getLoginVerificationCount().intValue());
+		assertEquals(1, customerAuthenticationDetailsRepository.getCustomerAuthenticationDetailsByCustomerId(savedEntity.getCustomerId()).getLastUnsucessfullAttempts().intValue());
 
 		
 		
 	}
+	
 	
 	@Test
 	public void getByCustomerId()

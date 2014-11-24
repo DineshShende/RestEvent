@@ -2,13 +2,14 @@ package com.projectx.rest.fixture;
 
 import static com.projectx.rest.fixtures.CustomerQuickRegisterDataFixture.*; 
 
-import com.projectx.data.domain.UpdateCountByCustomerId;
+
 import com.projectx.data.domain.UpdateEmailPassword;
 import com.projectx.data.domain.UpdatePasswordAndPasswordTypeDTO;
 import com.projectx.data.domain.VerifyLoginDetailsDataDTO;
 import com.projectx.rest.domain.CustomerAuthenticationDetails;
 import com.projectx.web.domain.CustomerIdDTO;
 import com.projectx.web.domain.LoginVerificationDTO;
+import com.projectx.web.domain.LoginVerificationWithDefaultEmailPasswordDTO;
 import com.projectx.web.domain.UpdatePasswordDTO;
 
 
@@ -55,11 +56,11 @@ public class CustomerAuthenticationDetailsDataFixtures {
 	{
 		return new UpdatePasswordAndPasswordTypeDTO(CUST_ID, CUST_PASSWORD_CHANGED,CUST_PASSWORD_TYPE_CHANGED);
 	}
-	
-	public static UpdateCountByCustomerId standardUpdateCountByCustomerId()
-	{
-		return new UpdateCountByCustomerId(CUST_ID, CUST_RESEND_COUNT+1);
-	}
+//	
+//	public static UpdateCountByCustomerId standardUpdateCountByCustomerId()
+//	{
+//		return new UpdateCountByCustomerId(CUST_ID, CUST_RESEND_COUNT+1);
+//	}
 
 	public static UpdateEmailPassword standardUpdateEmailPassword()
 	{
@@ -81,6 +82,11 @@ public class CustomerAuthenticationDetailsDataFixtures {
 		return new LoginVerificationDTO(Long.toString(CUST_MOBILE), CUST_PASSWORD_DEFAULT);
 	}
 	
+	
+	public static LoginVerificationWithDefaultEmailPasswordDTO standardEmailLoginVerification()
+	{
+		return new LoginVerificationWithDefaultEmailPasswordDTO(CUST_ID, CUST_EMAILHASH);
+	}
 	
 	public static VerifyLoginDetailsDataDTO standardVerifyLoginDetailsDataWithEmail()
 	{
@@ -163,6 +169,21 @@ public class CustomerAuthenticationDetailsDataFixtures {
 		
 		return jsonBuilder.toString();
 		
+	}
+	
+	public static String standJsonEmailPasswordLoginVerification()
+	{
+		StringBuilder jsonBuilder=new StringBuilder();
+
+		jsonBuilder.append("{\"customerId\":"+standardEmailLoginVerification().getCustomerId()+",");
+		
+		jsonBuilder.append("\"emailPassword\":\""+standardEmailLoginVerification().getEmailPassword()+"\"}");
+		
+		
+		System.out.println(jsonBuilder.toString());
+		
+		return jsonBuilder.toString();
+
 	}
 	
 	

@@ -13,9 +13,11 @@ import com.projectx.web.domain.CustomerIdDTO;
 import com.projectx.web.domain.CustomerQuickRegisterEntityDTO;
 import com.projectx.web.domain.CustomerQuickRegisterStringStatusEntity;
 import com.projectx.web.domain.LoginVerificationDTO;
+import com.projectx.web.domain.LoginVerificationWithDefaultEmailPasswordDTO;
 
 public interface CustomerQuickRegisterService {
 	
+	//QuickRegisterEntitySave
 	CustomerQuickRegisterStringStatusEntity checkIfAlreadyRegistered(CustomerQuickRegisterEntityDTO customer) throws Exception;
 	
 	CustomerQuickRegisterEntity populateVerificationFields(CustomerQuickRegisterEntityDTO customer) throws Exception;
@@ -40,6 +42,8 @@ public interface CustomerQuickRegisterService {
 	
 	CustomerQuickRegisterEntity getCustomerQuickRegisterEntityByCustomerId(Long customerId);
 	
+	
+	//Verification Of Entity
 	Integer updateEmailHash(Long customerId,String email);
 	
 	Integer updateMobilePin(Long customerId,Long mobile);
@@ -48,6 +52,15 @@ public interface CustomerQuickRegisterService {
 	
 	Boolean verifyMobilePin(Long customerId,Long mobile,Integer mobilePin);
 			
+	Boolean reSetEmailHash(Long customerId,String email);
+	
+	Boolean reSetMobilePin(Long customerId,Long mobile);
+	
+	Boolean reSendEmailHash(Long customerId,String email);
+	
+	Boolean reSendMobilePin(Long customerId,Long mobile);
+
+	//Sending Verification Details
 	String composeSMSWithMobilePin(CustomerQuickRegisterEntity customer,CustomerMobileVerificationDetails mobileVerificationDetails);
 	
 	String composeEmailWithEmailHash(CustomerQuickRegisterEntity customer,CustomerEmailVerificationDetails emailVerificationDetails);
@@ -58,51 +71,50 @@ public interface CustomerQuickRegisterService {
 	
 	CustomerQuickRegisterStatusEntity sendVerificationDetails(CustomerQuickRegisterEntity customer,CustomerEmailVerificationDetails emailVerificationDetails,CustomerMobileVerificationDetails mobileVerificationDetails);
 	
-	Boolean reSetEmailHash(Long customerId,String email);
-	
-	Boolean reSetMobilePin(Long customerId,Long mobile);
-	
-	Boolean reSendEmailHash(Long customerId,String email);
-	
-	Boolean reSendMobilePin(Long customerId,Long mobile);
 
-	
-	
-	//Testing
-	void clearDataForTesting();
-
-	String composeMessageWithPassword(CustomerQuickRegisterEntity customer,CustomerAuthenticationDetails authenticationDetails);
-
-	Boolean sendPasswordSMS(Long mobile,String message) ;
-
-	Boolean sendPasswordEmail(String email,String message);
-
-
+	//LoginAuthentication
 	Boolean updatePassword(UpdatePasswordAndPasswordTypeDTO updatePasswordDTO);
 
 	CustomerAuthenticationDetails saveCustomerAuthenticationDetails(
 			CustomerAuthenticationDetails entity);
 
 	CustomerAuthenticationDetails getLoginDetailsByCustomerId(Long customerId);
-
-	Boolean sendDefaultPassword(CustomerQuickRegisterEntity customer,
-			Boolean resetFlag);
-	
 	
 	CustomerAuthenticationDetails verifyLoginDetails(LoginVerificationDTO loginVerificationDTO);
 	
+	CustomerAuthenticationDetails verifyDefaultEmailLoginDetails(LoginVerificationWithDefaultEmailPasswordDTO emailPasswordDTO);
+
+	CustomerQuickRegisterEntity resetPasswordByEmailOrMobileRedirect(String entity);
+	
+	Boolean sendDefaultPassword(CustomerQuickRegisterEntity customer,Boolean resetFlag);
+	
+	Boolean resendDefaultPassword(CustomerQuickRegisterEntity customerQuickRegisterEntity);
+	
+	Boolean resetPassword(CustomerIdDTO customerIdDTO);
+	
+	Boolean resendPassword(CustomerIdDTO customerIdDTO);
+	
+
+//Sending Authentication Details
+	String composeSMSWithPassword(CustomerQuickRegisterEntity customer,CustomerAuthenticationDetails authenticationDetails);
+	
+	String composeEmailWithPassword(CustomerQuickRegisterEntity customer,CustomerAuthenticationDetails authenticationDetails);
+
+	Boolean sendPasswordSMS(Long mobile,String message) ;
+
+	Boolean sendPasswordEmail(String email,String message);
+
+
+//Getters	
 	
 	CustomerQuickRegisterEntity getCustomerQuickRegisterEntityByEmail(String email);
 	
 	CustomerQuickRegisterEntity getCustomerQuickRegisterEntityByMobile(Long mobile);
 	
-	CustomerQuickRegisterEntity resetPasswordByEmailOrMobileRedirect(String entity);
-	
-	Boolean resetPassword(CustomerIdDTO customerIdDTO);
-	
 	CustomerEmailVerificationDetails getCustomerEmailVerificationDetailsByCustomerIdAndEmail(Long customerId,String email);
 	
 	CustomerMobileVerificationDetails getCustomerMobileVerificationDetailsByCustomerIdAndMobile(Long customerId,Long mobile);
+
 	
 	
 	//Document
@@ -110,5 +122,12 @@ public interface CustomerQuickRegisterService {
 	CustomerDocument saveCustomerDocument(CustomerDocument customerDocument);
 	
 	CustomerDocument getCustomerDocumentById(Long customerId);
+	
+	
+	//Testing
+	void clearDataForTesting();
+	
+	
+
 	
 }
