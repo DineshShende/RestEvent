@@ -1,23 +1,42 @@
 package com.projectx.rest.config;
 
+
+
 import java.io.IOException;
 import java.security.SecureRandom;
+import java.util.Date;
 import java.util.Properties;
+import java.util.concurrent.ScheduledFuture;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.ImportResource;
+import org.springframework.core.task.TaskExecutor;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.scheduling.TaskScheduler;
+import org.springframework.scheduling.Trigger;
+import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.web.client.RestTemplate;
+
+import com.projectx.rest.handlers.quickregister.Receiver;
 
 
 
 @EnableAutoConfiguration
+//@EnableAsync
+//@EnableScheduling
 @ComponentScan(basePackages="com.projectx")
+//@ImportResource(value="/schedule-config.xml")
+//@Configuration(value="/schedule-config.xml")
 public class Application {
 
     public static void main(String[] args) {
+    	
         SpringApplication.run(Application.class, args);
     }
     
@@ -54,6 +73,84 @@ public class Application {
     {
     	return new SecureRandom();
     }
+    /*------------AMQP
+     * 
+     * 
+     
+	@Bean
+	public RabbitTemplate rabitTemplate(ConnectionFactory connectionFactory)
+	{
+		RabbitTemplate rabbitTemplate=new RabbitTemplate(connectionFactory);
+		
+		rabbitTemplate.setMessageConverter(new SimpleMessageConverter());
+				
+		return rabbitTemplate;
+	}
+	
+	@Bean
+	public AmqpAdmin amqpAdmin(ConnectionFactory connectionFactory)
+	{
+		return new RabbitAdmin(connectionFactory);
+	}
+	
+	@Bean
+	Queue queue() {
+		return new Queue("spring-boot", false);
+		
+		}
+
+	@Bean
+	TopicExchange exchange() {
+		return new TopicExchange("spring-boot-exchange");
+	}
+
+	@Bean
+	CachingConnectionFactory connectionFactory()
+	{
+		CachingConnectionFactory connectionFactory= new CachingConnectionFactory("localhost");
+		connectionFactory.setUsername("guest");
+		connectionFactory.setPassword("guest");
+		
+		return connectionFactory;
+	}
+	
+	@Bean
+	Binding binding(Queue queue, TopicExchange exchange) {
+		return BindingBuilder.bind(queue).to(exchange).with("spring-boot");
+		
+	}
+
+	
+    @Bean
+    Receiver receiver() {
+        return new Receiver();
+    }
+
+    
+	@Bean
+	MessageListenerAdapter listenerAdapter(Receiver receiver) {
+		return new MessageListenerAdapter(receiver, "receiveMessage");
+	}
+	
+	
+	@Bean
+	SimpleMessageListenerContainer container(ConnectionFactory connectionFactory, MessageListenerAdapter listenerAdapter) {
+		SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
+		
+		container.setConnectionFactory(connectionFactory);
+		container.setQueueNames("spring-boot");
+		container.setMessageListener(listenerAdapter);
+		return container;
+	}
+	
+	*/
+	
+	
+	/*
+	 */
+	 
+    
+    
 /*    
     @Bean
     public Gson gson()

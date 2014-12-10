@@ -3,6 +3,7 @@ package com.projectx.rest.utils;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -13,6 +14,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
@@ -109,21 +111,23 @@ public class HandleCustomerVerification {
 	
 	
 	
-	
+	@Async
 	public Boolean sendEmail(String email,String message) 
 	{
+		
 		
 		SimpleMailMessage mailMessage=new SimpleMailMessage();
 		
 		mailMessage.setTo(email);
 		mailMessage.setSubject("Greetings from transportdeal.in");
 		mailMessage.setText(message);
-			
+		
+		System.out.println("Sending Email");
 		
 		//mailSender.send(mailMessage);
 		
-		
-		
+		System.out.println("EmailSent");
+		/*
 		SendEmailThread emailThread=new SendEmailThread(email, message);
 		
 		Thread t1=new Thread(emailThread);
@@ -131,35 +135,12 @@ public class HandleCustomerVerification {
 		t1.start();
 		
 		//t1.join();
-		
+		*/
 		return true;
 	}
 	
-	public Boolean sendEmailNewWay(String email,String message) 
-	{
-		
-		SimpleMailMessage mailMessage=new SimpleMailMessage();
-		
-		mailMessage.setTo(email);
-		mailMessage.setSubject("Greetings from transportdeal.in");
-		mailMessage.setText(message);
-		
-		//mailSender.send(mailMessage);
-		
-		
-		Thread t1=new Thread(()->{mailSender.send(mailMessage);});
-		
-		//SendEmailThread emailThread=new SendEmailThread(email, message);
-		
-		//Thread t1=new Thread(emailThread);
-		
-		t1.start();
-		
-		//t1.join();
-		
-		return true;
-	}
 	
+	@Async
 	public Boolean sendSMS(Long mobile,String message)  
 	{
 		StringBuilder requestBuilder=new StringBuilder();
@@ -168,6 +149,8 @@ public class HandleCustomerVerification {
 		requestBuilder.append(mobile);
 		requestBuilder.append("&message=");
 		requestBuilder.append(message);
+		
+		System.out.println("Sending SMS");
 		
 		//System.out.println(requestBuilder.toString());
 						
@@ -181,24 +164,47 @@ public class HandleCustomerVerification {
 		//Thread t1=new Thread(sendSMSThread);
 		
 		
-		
+		/*
 		Thread t1=new Thread(()->
 		{
 			System.out.println("Sending SMS");
 										
-			String result=restTemplate.getForObject(requestBuilder.toString(), String.class);	
+			//String result=restTemplate.getForObject(requestBuilder.toString(), String.class);	
 		
-			System.out.println(result);		
+			//System.out.println(result);		
 		}
 		);
 		
 		t1.start();
-		
+		*/
 		return true;
 		
+	}
+	
+	
+	public Boolean sendEmailNewWay(String email,String message) 
+	{
+		
+		SimpleMailMessage mailMessage=new SimpleMailMessage();
+		
+		mailMessage.setTo(email);
+		mailMessage.setSubject("Greetings from transportdeal.in");
+		mailMessage.setText(message);
+		
+		//mailSender.send(mailMessage);
 		
 		
+	//	Thread t1=new Thread(()->{mailSender.send(mailMessage);});
 		
+		//SendEmailThread emailThread=new SendEmailThread(email, message);
+		
+		//Thread t1=new Thread(emailThread);
+		
+	//	t1.start();
+		
+		//t1.join();
+		
+		return true;
 	}
 	
 	public void simulate()

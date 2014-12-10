@@ -6,10 +6,10 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
-import com.projectx.rest.domain.CustomerAuthenticationDetails;
-import com.projectx.rest.domain.CustomerEmailVerificationDetails;
-import com.projectx.rest.domain.CustomerMobileVerificationDetails;
-import com.projectx.rest.domain.CustomerQuickRegisterEntity;
+import com.projectx.rest.domain.quickregister.AuthenticationDetails;
+import com.projectx.rest.domain.quickregister.EmailVerificationDetails;
+import com.projectx.rest.domain.quickregister.MobileVerificationDetails;
+import com.projectx.rest.domain.quickregister.QuickRegisterEntity;
 
 @Component
 @Profile(value={"Dev","Test"})
@@ -20,7 +20,7 @@ public class MessageBuilder {
 	@Autowired
 	Environment env;
 	
-	public String composeSMSWithPassword(CustomerQuickRegisterEntity customer,CustomerAuthenticationDetails authenticationDetails)
+	public String composeSMSWithPassword(QuickRegisterEntity customer,AuthenticationDetails authenticationDetails)
 	{
 		StringBuilder messageBuilder=new StringBuilder();
 		
@@ -30,7 +30,7 @@ public class MessageBuilder {
 		return messageBuilder.toString();
 	}
 	
-	public String composeEmailWithPassword(CustomerQuickRegisterEntity customer,CustomerAuthenticationDetails authenticationDetails)
+	public String composeEmailWithPassword(QuickRegisterEntity customer,AuthenticationDetails authenticationDetails)
 	{
 		
 		StringBuilder messageBuilder=new StringBuilder();
@@ -46,7 +46,7 @@ public class MessageBuilder {
 	}
 
 	
-	public String composeSMSWithMobilePin(CustomerQuickRegisterEntity customer,CustomerMobileVerificationDetails mobileVerificationDetails)
+	public String composeSMSWithMobilePin(QuickRegisterEntity customer,MobileVerificationDetails mobileVerificationDetails)
 	{
 		StringBuilder messageBuilder=new StringBuilder();
 		
@@ -59,13 +59,13 @@ public class MessageBuilder {
 	}
 	
 	
-	public String composeEmailWithEmailHash(CustomerQuickRegisterEntity customer,CustomerEmailVerificationDetails emailVerificationDetails)
+	public String composeEmailWithEmailHash(QuickRegisterEntity customer,EmailVerificationDetails emailVerificationDetails)
 	{
 		StringBuilder messageBuilder=new StringBuilder();
 		
 		messageBuilder.append("Hi "+customer.getFirstName()+" "+customer.getLastName()+"\n");
 		messageBuilder.append("Thanks for connecting with us!!\n Please Click Below link to activate your account\n");
-		messageBuilder.append(env.getProperty("mvc.url")+"/customer/quickregister/verifyEmailHash/"+customer.getCustomerId()+"/"+emailVerificationDetails.getEmail()+"/"+emailVerificationDetails.getEmailHash());
+		messageBuilder.append(env.getProperty("mvc.url")+"/customer/quickregister/verifyEmailHash/"+customer.getCustomerId()+"/"+emailVerificationDetails.getKey().getEmail()+"/"+emailVerificationDetails.getEmailHash());
 		
 		//System.out.println(messageBuilder.toString());
 		

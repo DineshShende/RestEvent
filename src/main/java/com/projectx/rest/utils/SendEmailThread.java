@@ -58,7 +58,7 @@ public class SendEmailThread implements Runnable {
 		
 		System.out.println(mailSender);
 		
-		mailSender.send(mailMessage);
+		//mailSender.send(mailMessage);
 		
 		/*
 		try {

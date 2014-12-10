@@ -1,7 +1,7 @@
 package com.projectx.rest.utils;
 
 import static org.junit.Assert.*;
-import static com.projectx.rest.fixture.CustomerQuickRegisterDataFixture.*;
+import static com.projectx.rest.fixture.quickregister.QuickRegisterDataFixture.*;
 
 import java.util.concurrent.ExecutionException;
 
@@ -13,7 +13,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.projectx.rest.config.Application;
-import com.projectx.rest.domain.CustomerQuickRegisterEntity;
+import com.projectx.rest.domain.quickregister.QuickRegisterEntity;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
