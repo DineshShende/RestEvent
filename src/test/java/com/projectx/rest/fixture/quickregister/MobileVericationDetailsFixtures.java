@@ -4,11 +4,11 @@ import static com.projectx.rest.fixture.quickregister.QuickRegisterDataFixture.*
 
 import java.util.Date;
 
-import com.projectx.data.quickregister.domain.CustomerIdTypeMobileDTO;
-import com.projectx.data.quickregister.domain.CustomerMobileVerificationDetailsByCustomerIdTypeAndMobileDTO;
-import com.projectx.data.quickregister.domain.MobileDTO;
-import com.projectx.data.quickregister.domain.UpdateMobilePinAndMobileVerificationAttemptsAndResetCountDTO;
-import com.projectx.data.quickregister.domain.UpdateMobileVerificationAttemptsDTO;
+import com.projectx.data.domain.quickregister.CustomerIdTypeMobileDTO;
+import com.projectx.data.domain.quickregister.CustomerMobileVerificationDetailsByCustomerIdTypeAndMobileDTO;
+import com.projectx.data.domain.quickregister.MobileDTO;
+import com.projectx.data.domain.quickregister.UpdateMobilePinAndMobileVerificationAttemptsAndResetCountDTO;
+import com.projectx.data.domain.quickregister.UpdateMobileVerificationAttemptsDTO;
 import com.projectx.rest.domain.quickregister.MobileVerificationDetails;
 import com.projectx.rest.domain.quickregister.MobileVerificationDetailsKey;
 import com.projectx.web.domain.quickregister.VerifyMobileDTO;

@@ -6,7 +6,7 @@ import java.util.List;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
-import com.projectx.data.quickregister.domain.UpdateEmailMobileVerificationStatus;
+import com.projectx.data.domain.quickregister.UpdateEmailMobileVerificationStatus;
 import com.projectx.rest.domain.quickregister.QuickRegisterEntity;
 
 @Repository

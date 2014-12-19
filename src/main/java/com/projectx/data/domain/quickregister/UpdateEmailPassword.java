@@ -1,28 +1,24 @@
-package com.projectx.data.quickregister.domain;
+package com.projectx.data.domain.quickregister;
 
-public class CustomerIdTypeMobileDTO {
-	
+public class UpdateEmailPassword {
+
 	private Long customerId;
 	
 	private Integer customerType;
 	
-	private Long mobile;
-	
-	public CustomerIdTypeMobileDTO() {
+	private String emailPassword;
+
+	public UpdateEmailPassword() {
 		super();
 	}
 
-	
-
-	public CustomerIdTypeMobileDTO(Long customerId, Integer customerType,
-			Long mobile) {
+	public UpdateEmailPassword(Long customerId, Integer customerType,
+			String emailPassword) {
 		super();
 		this.customerId = customerId;
 		this.customerType = customerType;
-		this.mobile = mobile;
+		this.emailPassword = emailPassword;
 	}
-
-
 
 	public Long getCustomerId() {
 		return customerId;
@@ -32,12 +28,12 @@ public class CustomerIdTypeMobileDTO {
 		this.customerId = customerId;
 	}
 
-	public Long getMobile() {
-		return mobile;
+	public String getEmailPassword() {
+		return emailPassword;
 	}
 
-	public void setMobile(Long mobile) {
-		this.mobile = mobile;
+	public void setEmailPassword(String emailPassword) {
+		this.emailPassword = emailPassword;
 	}
 
 	
@@ -46,21 +42,16 @@ public class CustomerIdTypeMobileDTO {
 		return customerType;
 	}
 
-
-
 	public void setCustomerType(Integer customerType) {
 		this.customerType = customerType;
 	}
 
-
-
 	@Override
 	public String toString() {
-		return "CustomerIdTypeMobileDTO [customerId=" + customerId
-				+ ", customerType=" + customerType + ", mobile=" + mobile + "]";
+		return "UpdateEmailPassword [customerId=" + customerId
+				+ ", customerType=" + customerType + ", emailPassword="
+				+ emailPassword + "]";
 	}
-
-
 
 	@Override
 	public int hashCode() {
@@ -70,11 +61,10 @@ public class CustomerIdTypeMobileDTO {
 				+ ((customerId == null) ? 0 : customerId.hashCode());
 		result = prime * result
 				+ ((customerType == null) ? 0 : customerType.hashCode());
-		result = prime * result + ((mobile == null) ? 0 : mobile.hashCode());
+		result = prime * result
+				+ ((emailPassword == null) ? 0 : emailPassword.hashCode());
 		return result;
 	}
-
-
 
 	@Override
 	public boolean equals(Object obj) {
@@ -84,7 +74,7 @@ public class CustomerIdTypeMobileDTO {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		CustomerIdTypeMobileDTO other = (CustomerIdTypeMobileDTO) obj;
+		UpdateEmailPassword other = (UpdateEmailPassword) obj;
 		if (customerId == null) {
 			if (other.customerId != null)
 				return false;
@@ -95,14 +85,17 @@ public class CustomerIdTypeMobileDTO {
 				return false;
 		} else if (!customerType.equals(other.customerType))
 			return false;
-		if (mobile == null) {
-			if (other.mobile != null)
+		if (emailPassword == null) {
+			if (other.emailPassword != null)
 				return false;
-		} else if (!mobile.equals(other.mobile))
+		} else if (!emailPassword.equals(other.emailPassword))
 			return false;
 		return true;
 	}
 
-
+	
+	
+	
+	
 	
 }

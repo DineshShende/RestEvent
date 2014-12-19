@@ -1,4 +1,4 @@
-package com.projectx.data.quickregister.domain;
+package com.projectx.data.domain.quickregister;
 
 public class UpdatePasswordAndPasswordTypeDTO {
 

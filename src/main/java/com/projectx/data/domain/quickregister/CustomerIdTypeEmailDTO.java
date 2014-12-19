@@ -1,40 +1,48 @@
-package com.projectx.data.quickregister.domain;
+package com.projectx.data.domain.quickregister;
 
-public class UpdateEmailPassword {
+public class CustomerIdTypeEmailDTO {
 
 	private Long customerId;
 	
 	private Integer customerType;
 	
-	private String emailPassword;
+	private String email;
+	
+	
+	public CustomerIdTypeEmailDTO() {
 
-	public UpdateEmailPassword() {
-		super();
 	}
 
-	public UpdateEmailPassword(Long customerId, Integer customerType,
-			String emailPassword) {
+	public CustomerIdTypeEmailDTO(Long customerId, Integer customerType,
+			String email) {
 		super();
 		this.customerId = customerId;
 		this.customerType = customerType;
-		this.emailPassword = emailPassword;
+		this.email = email;
 	}
+
+
+
 
 	public Long getCustomerId() {
 		return customerId;
 	}
 
+
 	public void setCustomerId(Long customerId) {
 		this.customerId = customerId;
 	}
 
-	public String getEmailPassword() {
-		return emailPassword;
+
+	public String getEmail() {
+		return email;
 	}
 
-	public void setEmailPassword(String emailPassword) {
-		this.emailPassword = emailPassword;
+
+	public void setEmail(String email) {
+		this.email = email;
 	}
+
 
 	
 	
@@ -48,9 +56,8 @@ public class UpdateEmailPassword {
 
 	@Override
 	public String toString() {
-		return "UpdateEmailPassword [customerId=" + customerId
-				+ ", customerType=" + customerType + ", emailPassword="
-				+ emailPassword + "]";
+		return "CustomerIdTypeEmailDTO [customerId=" + customerId
+				+ ", customerType=" + customerType + ", email=" + email + "]";
 	}
 
 	@Override
@@ -61,8 +68,7 @@ public class UpdateEmailPassword {
 				+ ((customerId == null) ? 0 : customerId.hashCode());
 		result = prime * result
 				+ ((customerType == null) ? 0 : customerType.hashCode());
-		result = prime * result
-				+ ((emailPassword == null) ? 0 : emailPassword.hashCode());
+		result = prime * result + ((email == null) ? 0 : email.hashCode());
 		return result;
 	}
 
@@ -74,7 +80,7 @@ public class UpdateEmailPassword {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		UpdateEmailPassword other = (UpdateEmailPassword) obj;
+		CustomerIdTypeEmailDTO other = (CustomerIdTypeEmailDTO) obj;
 		if (customerId == null) {
 			if (other.customerId != null)
 				return false;
@@ -85,17 +91,13 @@ public class UpdateEmailPassword {
 				return false;
 		} else if (!customerType.equals(other.customerType))
 			return false;
-		if (emailPassword == null) {
-			if (other.emailPassword != null)
+		if (email == null) {
+			if (other.email != null)
 				return false;
-		} else if (!emailPassword.equals(other.emailPassword))
+		} else if (!email.equals(other.email))
 			return false;
 		return true;
 	}
 
-	
-	
-	
-	
-	
+			
 }

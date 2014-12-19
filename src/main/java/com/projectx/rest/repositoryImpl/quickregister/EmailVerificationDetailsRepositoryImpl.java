@@ -9,8 +9,8 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
-import com.projectx.data.quickregister.domain.CustomerIdTypeEmailDTO;
-import com.projectx.data.quickregister.domain.UpdateEmailHashAndEmailHashSentTimeAndResendCountDTO;
+import com.projectx.data.domain.quickregister.CustomerIdTypeEmailDTO;
+import com.projectx.data.domain.quickregister.UpdateEmailHashAndEmailHashSentTimeAndResendCountDTO;
 import com.projectx.rest.domain.quickregister.EmailVerificationDetails;
 import com.projectx.rest.repository.quickregister.EmailVericationDetailsRepository;
 

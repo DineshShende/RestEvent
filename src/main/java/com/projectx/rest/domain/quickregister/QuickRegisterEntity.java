@@ -3,7 +3,7 @@ package com.projectx.rest.domain.quickregister;
 import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.projectx.data.quickregister.domain.CustomerQuickEntitySaveDTO;
+import com.projectx.data.domain.quickregister.CustomerQuickEntitySaveDTO;
 
 public class QuickRegisterEntity {
 

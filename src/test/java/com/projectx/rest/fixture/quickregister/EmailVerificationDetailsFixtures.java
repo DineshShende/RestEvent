@@ -4,9 +4,9 @@ import static com.projectx.rest.fixture.quickregister.QuickRegisterDataFixture.*
 
 import java.util.Date;
 
-import com.projectx.data.quickregister.domain.CustomerEmailVerificationDetailsByCustomerIdTypeAndEmailDTO;
-import com.projectx.data.quickregister.domain.CustomerIdTypeEmailDTO;
-import com.projectx.data.quickregister.domain.UpdateEmailHashAndEmailHashSentTimeAndResendCountDTO;
+import com.projectx.data.domain.quickregister.CustomerEmailVerificationDetailsByCustomerIdTypeAndEmailDTO;
+import com.projectx.data.domain.quickregister.CustomerIdTypeEmailDTO;
+import com.projectx.data.domain.quickregister.UpdateEmailHashAndEmailHashSentTimeAndResendCountDTO;
 import com.projectx.rest.domain.quickregister.EmailVerificationDetails;
 import com.projectx.rest.domain.quickregister.EmailVerificationDetailsKey;
 

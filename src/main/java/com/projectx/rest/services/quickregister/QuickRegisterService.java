@@ -3,7 +3,7 @@ package com.projectx.rest.services.quickregister;
 
 import java.util.Date;
 
-import com.projectx.data.quickregister.domain.UpdatePasswordAndPasswordTypeDTO;
+import com.projectx.data.domain.quickregister.UpdatePasswordAndPasswordTypeDTO;
 import com.projectx.rest.domain.quickregister.AuthenticationDetails;
 import com.projectx.rest.domain.quickregister.CustomerDocument;
 import com.projectx.rest.domain.quickregister.EmailVerificationDetails;

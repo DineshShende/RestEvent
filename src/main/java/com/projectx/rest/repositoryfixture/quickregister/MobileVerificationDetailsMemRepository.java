@@ -6,7 +6,7 @@ import java.util.Map;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
-import com.projectx.data.quickregister.domain.CustomerMobileVerificationDetailsByCustomerIdTypeAndMobileDTO;
+import com.projectx.data.domain.quickregister.CustomerMobileVerificationDetailsByCustomerIdTypeAndMobileDTO;
 import com.projectx.rest.domain.quickregister.MobileVerificationDetails;
 import com.projectx.rest.domain.quickregister.QuickRegisterEntity;
 import com.projectx.rest.domain.quickregister.MobileVerificationDetailsKey;

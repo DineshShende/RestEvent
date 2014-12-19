@@ -1,6 +1,6 @@
 package com.projectx.rest.services.quickregister;
 
-import com.projectx.data.quickregister.domain.UpdatePasswordAndPasswordTypeDTO;
+import com.projectx.data.domain.quickregister.UpdatePasswordAndPasswordTypeDTO;
 import com.projectx.rest.domain.quickregister.AuthenticationDetails;
 import com.projectx.rest.domain.quickregister.QuickRegisterEntity;
 import com.projectx.web.domain.quickregister.CustomerIdTypeDTO;

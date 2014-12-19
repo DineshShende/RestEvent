@@ -4,9 +4,9 @@ import static com.projectx.rest.fixture.quickregister.QuickRegisterDataFixture.*
 
 import java.util.Date;
 
-import com.projectx.data.quickregister.domain.UpdateEmailPassword;
-import com.projectx.data.quickregister.domain.UpdatePasswordAndPasswordTypeDTO;
-import com.projectx.data.quickregister.domain.VerifyLoginDetailsDataDTO;
+import com.projectx.data.domain.quickregister.UpdateEmailPassword;
+import com.projectx.data.domain.quickregister.UpdatePasswordAndPasswordTypeDTO;
+import com.projectx.data.domain.quickregister.VerifyLoginDetailsDataDTO;
 import com.projectx.rest.domain.quickregister.AuthenticationDetails;
 import com.projectx.rest.domain.quickregister.AuthenticationDetailsKey;
 import com.projectx.web.domain.quickregister.CustomerIdTypeDTO;

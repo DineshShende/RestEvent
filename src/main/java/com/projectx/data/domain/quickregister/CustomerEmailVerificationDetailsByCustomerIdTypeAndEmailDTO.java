@@ -1,27 +1,25 @@
-package com.projectx.data.quickregister.domain;
+package com.projectx.data.domain.quickregister;
 
-public class CustomerMobileVerificationDetailsByCustomerIdTypeAndMobileDTO {
+public class CustomerEmailVerificationDetailsByCustomerIdTypeAndEmailDTO {
 
 	private Long customerId;
 	
-	private Integer customerType;
+	private Integer customerType; 
 	
-	private Long mobile;
+	private String email;
 
-	public CustomerMobileVerificationDetailsByCustomerIdTypeAndMobileDTO() {
-
+	public CustomerEmailVerificationDetailsByCustomerIdTypeAndEmailDTO() {
+		super();
 	}
 
-	
 
-	public CustomerMobileVerificationDetailsByCustomerIdTypeAndMobileDTO(
-			Long customerId, Integer customerType, Long mobile) {
+	public CustomerEmailVerificationDetailsByCustomerIdTypeAndEmailDTO(
+			Long customerId, Integer customerType, String email) {
 		super();
 		this.customerId = customerId;
 		this.customerType = customerType;
-		this.mobile = mobile;
+		this.email = email;
 	}
-
 
 
 	public Long getCustomerId() {
@@ -32,12 +30,12 @@ public class CustomerMobileVerificationDetailsByCustomerIdTypeAndMobileDTO {
 		this.customerId = customerId;
 	}
 
-	public Long getMobile() {
-		return mobile;
+	public String getEmail() {
+		return email;
 	}
 
-	public void setMobile(Long mobile) {
-		this.mobile = mobile;
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 	
@@ -47,23 +45,20 @@ public class CustomerMobileVerificationDetailsByCustomerIdTypeAndMobileDTO {
 	}
 
 
-
 	public void setCustomerType(Integer customerType) {
 		this.customerType = customerType;
 	}
 
 
-
 	@Override
 	public String toString() {
-		return "CustomerMobileVerificationDetailsByCustomerIdTypeAndMobileDTO [customerId="
+		return "CustomerEmailVerificationDetailsByCustomerIdAndEmailDTO [customerId="
 				+ customerId
 				+ ", customerType="
 				+ customerType
-				+ ", mobile="
-				+ mobile + "]";
+				+ ", email="
+				+ email + "]";
 	}
-
 
 
 	@Override
@@ -74,10 +69,9 @@ public class CustomerMobileVerificationDetailsByCustomerIdTypeAndMobileDTO {
 				+ ((customerId == null) ? 0 : customerId.hashCode());
 		result = prime * result
 				+ ((customerType == null) ? 0 : customerType.hashCode());
-		result = prime * result + ((mobile == null) ? 0 : mobile.hashCode());
+		result = prime * result + ((email == null) ? 0 : email.hashCode());
 		return result;
 	}
-
 
 
 	@Override
@@ -88,7 +82,7 @@ public class CustomerMobileVerificationDetailsByCustomerIdTypeAndMobileDTO {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		CustomerMobileVerificationDetailsByCustomerIdTypeAndMobileDTO other = (CustomerMobileVerificationDetailsByCustomerIdTypeAndMobileDTO) obj;
+		CustomerEmailVerificationDetailsByCustomerIdTypeAndEmailDTO other = (CustomerEmailVerificationDetailsByCustomerIdTypeAndEmailDTO) obj;
 		if (customerId == null) {
 			if (other.customerId != null)
 				return false;
@@ -99,15 +93,16 @@ public class CustomerMobileVerificationDetailsByCustomerIdTypeAndMobileDTO {
 				return false;
 		} else if (!customerType.equals(other.customerType))
 			return false;
-		if (mobile == null) {
-			if (other.mobile != null)
+		if (email == null) {
+			if (other.email != null)
 				return false;
-		} else if (!mobile.equals(other.mobile))
+		} else if (!email.equals(other.email))
 			return false;
 		return true;
 	}
 
 
+	
 	
 	
 }

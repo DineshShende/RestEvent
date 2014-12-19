@@ -10,16 +10,16 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
-import com.projectx.data.quickregister.domain.CustomerIdDTO;
-import com.projectx.data.quickregister.domain.CustomerQuickEntitySaveDTO;
-import com.projectx.data.quickregister.domain.EmailDTO;
-import com.projectx.data.quickregister.domain.MobileDTO;
-import com.projectx.data.quickregister.domain.ResponseCustomerList;
-import com.projectx.data.quickregister.domain.UpdateEmailHashAndMobilePinSentTimeDTO;
-import com.projectx.data.quickregister.domain.UpdateEmailHashDTO;
-import com.projectx.data.quickregister.domain.UpdateEmailMobileVerificationStatus;
-import com.projectx.data.quickregister.domain.UpdateMobilePinAndMobileVerificationAttemptsAndResetCountDTO;
-import com.projectx.data.quickregister.domain.UpdateMobilePinDTO;
+import com.projectx.data.domain.quickregister.CustomerIdDTO;
+import com.projectx.data.domain.quickregister.CustomerQuickEntitySaveDTO;
+import com.projectx.data.domain.quickregister.EmailDTO;
+import com.projectx.data.domain.quickregister.MobileDTO;
+import com.projectx.data.domain.quickregister.ResponseCustomerList;
+import com.projectx.data.domain.quickregister.UpdateEmailHashAndMobilePinSentTimeDTO;
+import com.projectx.data.domain.quickregister.UpdateEmailHashDTO;
+import com.projectx.data.domain.quickregister.UpdateEmailMobileVerificationStatus;
+import com.projectx.data.domain.quickregister.UpdateMobilePinAndMobileVerificationAttemptsAndResetCountDTO;
+import com.projectx.data.domain.quickregister.UpdateMobilePinDTO;
 import com.projectx.rest.domain.quickregister.QuickRegisterEntity;
 import com.projectx.rest.repository.quickregister.QuickRegisterRepository;
 

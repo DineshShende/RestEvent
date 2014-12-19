@@ -7,9 +7,9 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
-import com.projectx.data.quickregister.domain.UpdateEmailPassword;
-import com.projectx.data.quickregister.domain.UpdatePasswordAndPasswordTypeDTO;
-import com.projectx.data.quickregister.domain.VerifyLoginDetailsDataDTO;
+import com.projectx.data.domain.quickregister.UpdateEmailPassword;
+import com.projectx.data.domain.quickregister.UpdatePasswordAndPasswordTypeDTO;
+import com.projectx.data.domain.quickregister.VerifyLoginDetailsDataDTO;
 import com.projectx.rest.domain.quickregister.AuthenticationDetails;
 import com.projectx.rest.repository.quickregister.AuthenticationDetailsRepository;
 import com.projectx.web.domain.quickregister.CustomerIdTypeDTO;

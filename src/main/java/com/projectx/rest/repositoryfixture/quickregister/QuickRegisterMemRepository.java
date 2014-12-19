@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 
 import static com.projectx.rest.fixtures.quickregister.CustomerQuickRegisterDataFixture.*;
 
-import com.projectx.data.quickregister.domain.UpdateEmailMobileVerificationStatus;
+import com.projectx.data.domain.quickregister.UpdateEmailMobileVerificationStatus;
 import com.projectx.rest.domain.quickregister.QuickRegisterEntity;
 import com.projectx.rest.repository.quickregister.QuickRegisterRepository;
 

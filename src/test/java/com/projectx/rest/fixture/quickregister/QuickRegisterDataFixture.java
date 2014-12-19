@@ -2,9 +2,9 @@ package com.projectx.rest.fixture.quickregister;
 
 import java.util.Date;
 
-import com.projectx.data.quickregister.domain.UpdateEmailHashDTO;
-import com.projectx.data.quickregister.domain.UpdateEmailMobileVerificationStatus;
-import com.projectx.data.quickregister.domain.UpdateMobilePinDTO;
+import com.projectx.data.domain.quickregister.UpdateEmailHashDTO;
+import com.projectx.data.domain.quickregister.UpdateEmailMobileVerificationStatus;
+import com.projectx.data.domain.quickregister.UpdateMobilePinDTO;
 import com.projectx.rest.domain.quickregister.EmailVerificationDetails;
 import com.projectx.rest.domain.quickregister.QuickRegisterEntity;
 import com.projectx.web.domain.quickregister.CustomerIdTypeDTO;
@@ -41,6 +41,7 @@ public class QuickRegisterDataFixture {
 	public static String CUST_PASSWORD_TYPE_DEFAULT="Default";
 	public static String CUST_PASSWORD_CHANGED="654321";
 	public static String CUST_PASSWORD_TYPE_CHANGED="Changed";
+	
 	
 	
 	

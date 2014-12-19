@@ -1,30 +1,37 @@
-package com.projectx.data.quickregister.domain;
+package com.projectx.data.domain.quickregister;
 
-public class UpdateMobileVerificationAttemptsDTO {
+
+public class UpdateMobilePinAndMobileVerificationAttemptsAndResetCountDTO {
 
 	private Long customerId;
 	
 	private Integer customerType;
-	
 	private Long mobile;
-	
+	private Integer mobilePin;
 	private Integer mobileVerificationAttempts;
-
-	public UpdateMobileVerificationAttemptsDTO() {
+	private Integer resendCount;
+	
+	
+	
+	public UpdateMobilePinAndMobileVerificationAttemptsAndResetCountDTO() {
 		super();
 	}
 
 
-
-	public UpdateMobileVerificationAttemptsDTO(Long customerId,
-			Integer customerType, Long mobile,
-			Integer mobileVerificationAttempts) {
+	public UpdateMobilePinAndMobileVerificationAttemptsAndResetCountDTO(
+			Long customerId, Integer customerType, Long mobile,
+			Integer mobilePin, Integer mobileVerificationAttempts,
+			Integer resendCount) {
 		super();
 		this.customerId = customerId;
 		this.customerType = customerType;
 		this.mobile = mobile;
+		this.mobilePin = mobilePin;
 		this.mobileVerificationAttempts = mobileVerificationAttempts;
+		this.resendCount = resendCount;
 	}
+
+
 
 
 
@@ -32,32 +39,66 @@ public class UpdateMobileVerificationAttemptsDTO {
 		return customerId;
 	}
 
+
+
 	public void setCustomerId(Long customerId) {
 		this.customerId = customerId;
 	}
+
+
 
 	public Long getMobile() {
 		return mobile;
 	}
 
+
+
 	public void setMobile(Long mobile) {
 		this.mobile = mobile;
 	}
+
+
+
+	public Integer getMobilePin() {
+		return mobilePin;
+	}
+
+
+
+	public void setMobilePin(Integer mobilePin) {
+		this.mobilePin = mobilePin;
+	}
+
+
 
 	public Integer getMobileVerificationAttempts() {
 		return mobileVerificationAttempts;
 	}
 
+
+
 	public void setMobileVerificationAttempts(Integer mobileVerificationAttempts) {
 		this.mobileVerificationAttempts = mobileVerificationAttempts;
 	}
 
+
+
+	public Integer getResendCount() {
+		return resendCount;
+	}
+
+
+
+	public void setResendCount(Integer resendCount) {
+		this.resendCount = resendCount;
+	}
+
+
 	
-	
+
 	public Integer getCustomerType() {
 		return customerType;
 	}
-
 
 
 	public void setCustomerType(Integer customerType) {
@@ -65,15 +106,20 @@ public class UpdateMobileVerificationAttemptsDTO {
 	}
 
 
-
 	@Override
 	public String toString() {
-		return "UpdateMobileVerificationAttemptsDTO [customerId=" + customerId
-				+ ", customerType=" + customerType + ", mobile=" + mobile
-				+ ", mobileVerificationAttempts=" + mobileVerificationAttempts
-				+ "]";
+		return "UpdateMobilePinAndMobileVerificationAttemptsAndResetCountDTO [customerId="
+				+ customerId
+				+ ", customerType="
+				+ customerType
+				+ ", mobile="
+				+ mobile
+				+ ", mobilePin="
+				+ mobilePin
+				+ ", mobileVerificationAttempts="
+				+ mobileVerificationAttempts
+				+ ", resendCount=" + resendCount + "]";
 	}
-
 
 
 	@Override
@@ -85,13 +131,16 @@ public class UpdateMobileVerificationAttemptsDTO {
 		result = prime * result
 				+ ((customerType == null) ? 0 : customerType.hashCode());
 		result = prime * result + ((mobile == null) ? 0 : mobile.hashCode());
+		result = prime * result
+				+ ((mobilePin == null) ? 0 : mobilePin.hashCode());
 		result = prime
 				* result
 				+ ((mobileVerificationAttempts == null) ? 0
 						: mobileVerificationAttempts.hashCode());
+		result = prime * result
+				+ ((resendCount == null) ? 0 : resendCount.hashCode());
 		return result;
 	}
-
 
 
 	@Override
@@ -102,7 +151,7 @@ public class UpdateMobileVerificationAttemptsDTO {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		UpdateMobileVerificationAttemptsDTO other = (UpdateMobileVerificationAttemptsDTO) obj;
+		UpdateMobilePinAndMobileVerificationAttemptsAndResetCountDTO other = (UpdateMobilePinAndMobileVerificationAttemptsAndResetCountDTO) obj;
 		if (customerId == null) {
 			if (other.customerId != null)
 				return false;
@@ -118,15 +167,25 @@ public class UpdateMobileVerificationAttemptsDTO {
 				return false;
 		} else if (!mobile.equals(other.mobile))
 			return false;
+		if (mobilePin == null) {
+			if (other.mobilePin != null)
+				return false;
+		} else if (!mobilePin.equals(other.mobilePin))
+			return false;
 		if (mobileVerificationAttempts == null) {
 			if (other.mobileVerificationAttempts != null)
 				return false;
 		} else if (!mobileVerificationAttempts
 				.equals(other.mobileVerificationAttempts))
 			return false;
+		if (resendCount == null) {
+			if (other.resendCount != null)
+				return false;
+		} else if (!resendCount.equals(other.resendCount))
+			return false;
 		return true;
 	}
 
 
-	
+		
 }
