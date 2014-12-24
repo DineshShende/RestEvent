@@ -20,24 +20,24 @@ public class MessageBuilder {
 	@Autowired
 	Environment env;
 	
-	public String composeSMSWithPassword(QuickRegisterEntity customer,AuthenticationDetails authenticationDetails)
+	public String composeSMSWithPassword(String firstName,String lastName,String password)
 	{
 		StringBuilder messageBuilder=new StringBuilder();
 		
-		messageBuilder.append("Hi "+customer.getFirstName()+" "+customer.getLastName()+"\n");
-		messageBuilder.append("Your login password is="+authenticationDetails.getPassword());
+		messageBuilder.append("Hi "+firstName+" "+lastName+"\n");
+		messageBuilder.append("Your login password is="+password);
 		
 		return messageBuilder.toString();
 	}
 	
-	public String composeEmailWithPassword(QuickRegisterEntity customer,AuthenticationDetails authenticationDetails)
+	public String composeEmailWithPassword(Long customerId,String firstName,String lastName,String emailPassword)
 	{
 		
 		StringBuilder messageBuilder=new StringBuilder();
 		
-		messageBuilder.append("Hi "+customer.getFirstName()+" "+customer.getLastName()+"\n");
+		messageBuilder.append("Hi "+firstName+" "+lastName+"\n");
 		messageBuilder.append("As per your new password Request!!\n Click here to login with new password\n");
-		messageBuilder.append(env.getProperty("mvc.url")+"/customer/quickregister/emailPasswordVerification/"+customer.getCustomerId()+"/"+authenticationDetails.getEmailPassword());
+		messageBuilder.append(env.getProperty("mvc.url")+"/customer/quickregister/emailPasswordVerification/"+customerId+"/"+emailPassword);
 		
 		//System.out.println(messageBuilder.toString());
 		
@@ -46,12 +46,12 @@ public class MessageBuilder {
 	}
 
 	
-	public String composeSMSWithMobilePin(QuickRegisterEntity customer,MobileVerificationDetails mobileVerificationDetails)
+	public String composeSMSWithMobilePin(String firstName,String lastName,Integer mobilePin)
 	{
 		StringBuilder messageBuilder=new StringBuilder();
 		
-		messageBuilder.append("Hi "+customer.getFirstName()+" "+customer.getLastName()+"\n");
-		messageBuilder.append("Thanks for connecting with us!!\n Enter given OTP in provided textbox.OTP="+mobileVerificationDetails.getMobilePin());
+		messageBuilder.append("Hi "+firstName+" "+lastName+"\n");
+		messageBuilder.append("Thanks for connecting with us!!\n Enter given OTP in provided textbox.OTP="+mobilePin);
 		
 		//System.out.println(messageBuilder.toString());
 		
@@ -59,13 +59,13 @@ public class MessageBuilder {
 	}
 	
 	
-	public String composeEmailWithEmailHash(QuickRegisterEntity customer,EmailVerificationDetails emailVerificationDetails)
+	public String composeEmailWithEmailHash(Long customerId,String firstName,String lastName,String email,String emailHash)
 	{
 		StringBuilder messageBuilder=new StringBuilder();
 		
-		messageBuilder.append("Hi "+customer.getFirstName()+" "+customer.getLastName()+"\n");
+		messageBuilder.append("Hi "+firstName+" "+lastName+"\n");
 		messageBuilder.append("Thanks for connecting with us!!\n Please Click Below link to activate your account\n");
-		messageBuilder.append(env.getProperty("mvc.url")+"/customer/quickregister/verifyEmailHash/"+customer.getCustomerId()+"/"+emailVerificationDetails.getKey().getEmail()+"/"+emailVerificationDetails.getEmailHash());
+		messageBuilder.append(env.getProperty("mvc.url")+"/customer/quickregister/verifyEmailHash/"+customerId+"/"+email+"/"+emailHash);
 		
 		//System.out.println(messageBuilder.toString());
 		

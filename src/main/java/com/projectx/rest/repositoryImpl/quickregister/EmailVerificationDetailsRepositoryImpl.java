@@ -12,6 +12,7 @@ import org.springframework.web.client.RestTemplate;
 import com.projectx.data.domain.quickregister.CustomerIdTypeEmailDTO;
 import com.projectx.data.domain.quickregister.UpdateEmailHashAndEmailHashSentTimeAndResendCountDTO;
 import com.projectx.rest.domain.quickregister.EmailVerificationDetails;
+import com.projectx.rest.domain.quickregister.EmailVerificationDetailsKey;
 import com.projectx.rest.repository.quickregister.EmailVericationDetailsRepository;
 
 
@@ -83,6 +84,16 @@ public class EmailVerificationDetailsRepositoryImpl implements EmailVericationDe
 		Boolean status=restTemplate.getForObject(env.getProperty("data.url")+"/customer/quickregister/emailVerification/clearForTesting", Boolean.class);
 		
 		return status;
+	}
+
+	@Override
+	public Boolean delete(EmailVerificationDetailsKey key) {
+		
+		Boolean updateStatus=restTemplate.postForObject(env.getProperty("data.url")+"/customer/quickregister/emailVerification/deleteByKey", key, Boolean.class);
+		
+		return updateStatus;
+	
+		
 	}
 
 	

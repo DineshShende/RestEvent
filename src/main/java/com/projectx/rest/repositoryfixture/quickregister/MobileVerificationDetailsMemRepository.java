@@ -127,4 +127,13 @@ public class MobileVerificationDetailsMemRepository implements
 			return 0;
 	}
 
+	@Override
+	public Boolean delete(MobileVerificationDetailsKey key) {
+
+		customerList.remove(key);
+		
+		return true;
+		
+	}
+
 }

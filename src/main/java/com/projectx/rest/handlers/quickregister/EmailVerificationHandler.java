@@ -12,7 +12,6 @@ import com.projectx.rest.domain.quickregister.EmailVerificationDetails;
 import com.projectx.rest.domain.quickregister.EmailVerificationDetailsKey;
 import com.projectx.rest.domain.quickregister.QuickRegisterEntity;
 import com.projectx.rest.repository.quickregister.EmailVericationDetailsRepository;
-import com.projectx.rest.repository.quickregister.MobileVerificationDetailsRepository;
 import com.projectx.rest.services.quickregister.AuthenticationService;
 import com.projectx.rest.services.quickregister.QuickRegisterService;
 import com.projectx.rest.services.quickregister.EmailVerificationService;
@@ -50,16 +49,15 @@ public class EmailVerificationHandler implements EmailVerificationService {
 	
 	@Override
 	public EmailVerificationDetails createCustomerEmailVerificationEntity(
-			QuickRegisterEntity customerQuickRegisterEntity) {
+			Long customerId,Integer customerType,String email,Integer emailType) {
 		EmailVerificationDetails emailVerificationDetails=new EmailVerificationDetails();
 		
-		EmailVerificationDetailsKey  key=new EmailVerificationDetailsKey(customerQuickRegisterEntity.getCustomerId(),
-				customerQuickRegisterEntity.getCustomerType(), customerQuickRegisterEntity.getEmail());
+		EmailVerificationDetailsKey  key=new EmailVerificationDetailsKey(customerId,customerType,email);
 		
 		emailVerificationDetails.setKey(key);
 		emailVerificationDetails.setEmailHash(handleCustomerVerification.generateEmailHash());
 		emailVerificationDetails.setEmailHashSentTime(new Date());
-		emailVerificationDetails.setEmailType(CUST_EMAIL_TYPE_PRIMARY);
+		emailVerificationDetails.setEmailType(emailType);
 		emailVerificationDetails.setResendCount(0);
 		
 		return emailVerificationDetails;
@@ -141,7 +139,9 @@ public class EmailVerificationHandler implements EmailVerificationService {
 		EmailVerificationDetails emailVerificationDetails=customerEmailVericationDetailsRepository
 				.getEmailVerificationDetailsByCustomerIdTypeAndEmail(customer.getCustomerId(),customer.getCustomerType(), customer.getEmail());
 		
-		Boolean sentStatus=messagerSender.sendHashEmail(customer,emailVerificationDetails);
+		Boolean sentStatus=messagerSender
+				.sendHashEmail(customer.getCustomerId(), customer.getFirstName(), customer.getLastName(),
+						customer.getEmail(), emailVerificationDetails.getEmailHash());
 		
 		if(updateStatus.equals(UPDATE_SUCESS) && sentStatus)
 			return true;
@@ -163,7 +163,9 @@ public class EmailVerificationHandler implements EmailVerificationService {
 		updateStatus=customerEmailVericationDetailsRepository.incrementResendCountByCustomerIdAndEmail(customerId,customerType, email);
 		
 		if(updateStatus.equals(UPDATE_SUCESS))
-			sentStatus=messagerSender.sendHashEmail(customer,emailVerificationDetails);
+			sentStatus=messagerSender
+				.sendHashEmail(customer.getCustomerId(), customer.getFirstName(), customer.getLastName(),
+						customer.getEmail(), emailVerificationDetails.getEmailHash());
 				
 		if(updateStatus.equals(UPDATE_SUCESS) && sentStatus)
 			return true;
@@ -185,6 +187,20 @@ public class EmailVerificationHandler implements EmailVerificationService {
 	public Boolean clearTestData() {
 
 		return customerEmailVericationDetailsRepository.clearTestData();
+	}
+
+	@Override
+	public Boolean deleteByKey(EmailVerificationDetailsKey key) {
+		
+		Boolean deletionStatus=customerEmailVericationDetailsRepository.delete(key);
+		
+		return deletionStatus;
+	}
+
+	@Override
+	public Integer count() {
+		
+		return customerEmailVericationDetailsRepository.count().intValue();
 	}
 
 	

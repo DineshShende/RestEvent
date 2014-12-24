@@ -107,4 +107,12 @@ public class EmailVerificationDetailsMemRepository implements EmailVericationDet
 		
 	}
 
+	@Override
+	public Boolean delete(EmailVerificationDetailsKey key) {
+
+		customerList.remove(key);
+		
+		return true;
+	}
+
 }

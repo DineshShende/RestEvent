@@ -137,18 +137,18 @@ public class AuthenticationHandler implements AuthenticationService {
 		//CustomerAuthenticationDetails customerAuthenticationDetailsUpdated=customerAuthenticationDetailsRepository
 		//		.getCustomerAuthenticationDetailsByCustomerId(customer.getCustomerId());
 		
-		String message;
-			
+					
 		if(customer.getEmail()!=null && customer.getIsEmailVerified())
 		{
-			message=messageBuilder.composeEmailWithPassword(customer, customerAuthenticationDetails);
-			messagerSender.sendPasswordEmail(customer.getEmail(),message);
+			messagerSender.sendPasswordEmail(customer.getCustomerId(), customer.getFirstName(), customer.getLastName(),
+					customer.getEmail(), customerAuthenticationDetails.getEmailPassword());
 		}	
 		
 		if(customer.getMobile()!=null && customer.getIsMobileVerified())
 		{
-			message=messageBuilder.composeSMSWithPassword(customer, customerAuthenticationDetails);
-			messagerSender.sendPasswordSMS(customer.getMobile(),message);
+			
+			messagerSender.sendPasswordSMS(customer.getFirstName(), customer.getLastName(), customer.getMobile(),
+					customerAuthenticationDetails.getPassword());
 		}	
 		
 		if(passwordUpdateStatus.equals(UPDATE_SUCESS) && emailSendStatus && smsSendStatus && emailPasswordUpdateStatus.equals(UPDATE_SUCESS))
@@ -167,18 +167,18 @@ public class AuthenticationHandler implements AuthenticationService {
 		AuthenticationDetails customerAuthenticationDetails=customerAuthenticationDetailsRepository
 				.getCustomerAuthenticationDetailsByCustomerIdType(customer.getCustomerId(),customer.getCustomerType());
 		
-		String message;
-		
+			
 		if(customer.getEmail()!=null && customer.getIsEmailVerified())
 		{
-			message=messageBuilder.composeEmailWithPassword(customer, customerAuthenticationDetails);
-			messagerSender.sendPasswordEmail(customer.getEmail(),message);
+			messagerSender.sendPasswordEmail(customer.getCustomerId(), customer.getFirstName(), customer.getLastName(),
+					customer.getEmail(), customerAuthenticationDetails.getEmailPassword());
 		}	
 		
 		if(customer.getMobile()!=null && customer.getIsMobileVerified())
 		{
-			message=messageBuilder.composeSMSWithPassword(customer, customerAuthenticationDetails);
-			messagerSender.sendPasswordSMS(customer.getMobile(),message);
+			
+			messagerSender.sendPasswordSMS(customer.getFirstName(), customer.getLastName(), customer.getMobile(),
+					customerAuthenticationDetails.getPassword());
 		}	
 		
 		Integer updateStatus=customerAuthenticationDetailsRepository.incrementResendCount(customer.getCustomerId(),customer.getCustomerType());

@@ -114,6 +114,28 @@ public class CustomerDetailsMemRepository implements CustomerDetailsRepository {
 	}
 
 	@Override
+	public Integer updateEmailVerificationStatus(
+			UpdateMobileVerificationStatusDTO verificationStatusDTO) {
+		
+		CustomerDetails oldRecord=list.get(verificationStatusDTO.getCustomerId());
+		
+		if(oldRecord!=null)
+		{	
+			list.remove(verificationStatusDTO.getCustomerId());
+		
+			oldRecord.setIsEmailVerified(verificationStatusDTO.getStatus());
+
+			list.put(verificationStatusDTO.getCustomerId(), oldRecord);
+		
+			return 1;
+		}
+		else
+			return 0;
+
+		
+	}
+	
+	@Override
 	public Boolean deleteAll() {
 		list.clear();
 		return true;
@@ -131,5 +153,7 @@ public class CustomerDetailsMemRepository implements CustomerDetailsRepository {
 
 		return list.get(customerId);
 	}
+
+	
 
 }

@@ -3,7 +3,11 @@ package com.projectx.rest.domain.quickregister;
 import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.projectx.data.domain.quickregister.CustomerQuickEntitySaveDTO;
+import com.projectx.rest.util.serializer.JsonDateDeSerializer;
+import com.projectx.rest.util.serializer.JsonDateSerializer;
 
 public class QuickRegisterEntity {
 
@@ -165,19 +169,22 @@ public class QuickRegisterEntity {
 	public void setIsMobileVerified(Boolean isMobileVerified) {
 		this.isMobileVerified = isMobileVerified;
 	}
-
+	@JsonSerialize(using=JsonDateSerializer.class)
 	public Date getInsertTime() {
 		return insertTime;
 	}
 
+	@JsonDeserialize(using = JsonDateDeSerializer.class)
 	public void setInsertTime(Date insertTime) {
 		this.insertTime = insertTime;
 	}
 
+	@JsonSerialize(using=JsonDateSerializer.class)
 	public Date getUpdateTime() {
 		return updateTime;
 	}
 
+	@JsonDeserialize(using = JsonDateDeSerializer.class)
 	public void setUpdateTime(Date updateTime) {
 		this.updateTime = updateTime;
 	}

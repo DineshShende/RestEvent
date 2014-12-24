@@ -10,7 +10,7 @@ import org.springframework.web.client.RestTemplate;
 import com.projectx.data.domain.completeregister.UpdateAddressDTO;
 import com.projectx.data.domain.completeregister.UpdateMobileVerificationStatusDTO;
 import com.projectx.rest.domain.completeregister.CustomerDetails;
-import com.projectx.rest.domain.quickregister.CustomerDocument;
+import com.projectx.rest.domain.completeregister.CustomerDocument;
 import com.projectx.rest.repository.completeregister.CustomerDetailsRepository;
 
 @Component
@@ -39,36 +39,70 @@ public class CustomerDetailsRepositoryImpl implements CustomerDetailsRepository 
 
 	@Override
 	public CustomerDetails findOne(Long customerId) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		CustomerDetails result=restTemplate.getForObject(env.getProperty("data.url")+"/customer/completeregister/"+customerId,
+				CustomerDetails.class);
+		
+		return result;
+
+		
 	}
 
 	@Override
 	public CustomerDetails updateFirmAddress(UpdateAddressDTO addressDTO) {
-		// TODO Auto-generated method stub
-		return null;
+
+		CustomerDetails updatedEntity=restTemplate.postForObject(env.getProperty("data.url")+"/customer/completeregister/updateFirmAddress",
+				addressDTO, CustomerDetails.class);
+
+		return updatedEntity;
+
 	}
 
 	@Override
 	public CustomerDetails updateHomeAddress(UpdateAddressDTO addressDTO) {
-		// TODO Auto-generated method stub
-		return null;
+
+		CustomerDetails updatedEntity=restTemplate.postForObject(env.getProperty("data.url")+"/customer/completeregister/updateHomeAddress",
+				addressDTO, CustomerDetails.class);
+
+		return updatedEntity;
+		
+		
 	}
 
 	@Override
 	public Integer updateMobileVerificationStatus(
 			UpdateMobileVerificationStatusDTO verificationStatusDTO) {
-		// TODO Auto-generated method stub
-		return null;
+
+		Integer updatedStatus=restTemplate.postForObject(env.getProperty("data.url")+"/customer/completeregister/updateMobileVerificationStatus",
+				verificationStatusDTO, Integer.class);
+
+		return updatedStatus;
 	}
 
 	@Override
 	public Integer updateSecondaryMobileVerificationStatus(
 			UpdateMobileVerificationStatusDTO verificationStatusDTO) {
-		// TODO Auto-generated method stub
-		return null;
+
+		Integer updatedStatus=restTemplate.postForObject(env.getProperty("data.url")+"/customer/completeregister/updateSecondaryMobileVerificationStatus",
+				verificationStatusDTO, Integer.class);
+
+		return updatedStatus;
+	
 	}
 
+	@Override
+	public Integer updateEmailVerificationStatus(
+			UpdateMobileVerificationStatusDTO verificationStatusDTO) {
+
+		Integer updatedStatus=restTemplate.postForObject(env.getProperty("data.url")+"/customer/completeregister/updateEmailVerificationStatus",
+				verificationStatusDTO, Integer.class);
+
+		return updatedStatus;
+
+		
+	}
+
+	
 	@Override
 	public Boolean deleteAll() {
 		Boolean result=restTemplate.getForObject(env.getProperty("data.url")+"/customer/completeregister/clearTestData",
@@ -84,5 +118,6 @@ public class CustomerDetailsRepositoryImpl implements CustomerDetailsRepository 
 
 		return count;
 	}
+
 
 }

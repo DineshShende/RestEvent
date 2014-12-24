@@ -16,8 +16,8 @@ import com.projectx.web.domain.quickregister.VerifyMobileDTO;
 public class MobileVericationDetailsFixtures {
 
 	
-	public static String CUST_MOBILE_TYPE_PRIMARY="PRIMARY";
-	public static String CUST_MOBILE_TYPE_SECONDARY="SECONDARY";
+	public static Integer CUST_MOBILE_TYPE_PRIMARY=1;
+	public static Integer CUST_MOBILE_TYPE_SECONDARY=2;
 	public static Integer CUST_RESEND_COUNT=0;
 	
 	public static Date CUST_DATE=new Date();

@@ -22,35 +22,37 @@ public class MessagerSender {
 	HandleCustomerVerification handleCustomerVerification;
 	
 	
-	public Boolean sendHashEmail(QuickRegisterEntity customer, EmailVerificationDetails emailVerificationDetails) {
+	public Boolean sendHashEmail(Long customerId,String firstName,String lastName,String email,String emailHash) {
 		
-		String message=messageBuilder.composeEmailWithEmailHash(customer,emailVerificationDetails);
+		String message=messageBuilder.composeEmailWithEmailHash(customerId, firstName, lastName, email, emailHash);		
 		
-		return handleCustomerVerification.sendEmail(customer.getEmail(), message);
+		return handleCustomerVerification.sendEmail(email, message);
 	}
 
 
 	
-	public Boolean sendPinSMS(QuickRegisterEntity customer,MobileVerificationDetails mobileVerificationDetails)  {
+	public Boolean sendPinSMS(String firstName,String lastName,Long mobile,Integer mobilePin)  {
 		
-		String message=messageBuilder.composeSMSWithMobilePin(customer,mobileVerificationDetails);
+		String message=messageBuilder.composeSMSWithMobilePin(firstName, lastName, mobilePin);
 		
-		return handleCustomerVerification.sendSMS(customer.getMobile(), message);
+		return handleCustomerVerification.sendSMS(mobile, message);
 		
 	}
 
-
 	
-	
-	public Boolean sendPasswordSMS(Long mobile,String message)
+	public Boolean sendPasswordSMS(String firstName,String lastName,Long mobile,String password)
 	{
+		String message=messageBuilder.composeSMSWithPassword(firstName, lastName, password);
+		
 		return handleCustomerVerification.sendSMS(mobile, message);
 	}
 	
 	
 	
-	public Boolean sendPasswordEmail(String email,String message)
+	public Boolean sendPasswordEmail(Long customerId,String firstName,String lastName,String email,String emailPassword)
 	{
+		String message=messageBuilder.composeEmailWithPassword(customerId, firstName, lastName, emailPassword);
+		
 		return handleCustomerVerification.sendEmail(email, message);
 	}
 	

@@ -1,5 +1,5 @@
-package com.projectx.rest.fixture.completeregister;
 
+package com.projectx.rest.fixture.completeregister;
 
 import static com.projectx.rest.fixture.quickregister.QuickRegisterDataFixture.*;
 import static com.projectx.rest.fixture.completeregister.AddressDataFixture.*;
@@ -9,6 +9,10 @@ import java.util.Date;
 import com.google.gson.Gson;
 import com.projectx.data.domain.completeregister.UpdateAddressDTO;
 import com.projectx.data.domain.completeregister.UpdateMobileVerificationStatusDTO;
+import com.projectx.data.domain.quickregister.CustomerIdTypeEmailDTO;
+import com.projectx.data.domain.quickregister.CustomerIdTypeMobileDTO;
+import com.projectx.mvc.domain.completeregister.VerifyEmailDTO;
+import com.projectx.mvc.domain.completeregister.VerifyMobileDTO;
 import com.projectx.rest.domain.completeregister.Address;
 import com.projectx.rest.domain.completeregister.CustomerDetails;
 import com.sun.org.apache.bcel.internal.generic.GETSTATIC;
@@ -24,7 +28,11 @@ public class CustomerDetailsDataFixtures {
 	
 	public static String CUST_NAME_OF_FIRM="ABC TRANSPORT";
 	public static Long CUST_SEC_MOBILE=8598058044L;
+	public static Long CUST_SEC_MOBILE_NEW=8888888888L;
+	public static Long CUST_MOBILE_NEW=9999999999L;
 	public static String CUST_SEC_EMAIL="dineshshende@hotmail.com";
+	
+	public static String CUST_EMAIL_NEW="dineshshende@gmail.com";
 	
 	public static Date CUST_DATE=new Date();
 	
@@ -60,13 +68,53 @@ public class CustomerDetailsDataFixtures {
 		
 	}
 	
-	public static CustomerDetails standardCustomerDetails()
+	public static CustomerDetails standardCustomerDetails(CustomerDetails customerDetails)
+	{
+		return new CustomerDetails(customerDetails.getCustomerId(), customerDetails.getFirstName(),
+				customerDetails.getLastName(), CUST_DATE, standardAddress(), customerDetails.getMobile(), 
+				customerDetails.getIsEmailVerified(),customerDetails.getEmail(),
+				customerDetails.getIsEmailVerified(), CUST_LANG, CUST_BUSINESS_DOMAIN, CUST_NAME_OF_FIRM, standardAddress(),
+				CUST_SEC_MOBILE, null,	CUST_SEC_EMAIL, CUST_DATE, CUST_DATE, CUST_UPDATED_BY);
+		
+	}
+	
+	public static CustomerDetails standardCustomerDetailsWithNewSecondaryMobile(CustomerDetails customerDetails)
 	{
 		return new CustomerDetails(standardEmailMobileCustomer().getCustomerId(), standardEmailMobileCustomer().getFirstName(),
-				standardEmailMobileCustomer().getLastName(), CUST_DATE, standardAddress(), standardEmailMobileCustomer().getMobile(), 
+				standardEmailMobileCustomer().getLastName(), CUST_DATE, customerDetails.getHomeAddressId(), standardEmailMobileCustomer().getMobile(), 
 				standardEmailMobileCustomer().getIsEmailVerified(),standardEmailMobileCustomer().getEmail(),
-				standardEmailMobileCustomer().getIsEmailVerified(), CUST_LANG, CUST_BUSINESS_DOMAIN, CUST_NAME_OF_FIRM, standardAddress(),
-				CUST_SEC_MOBILE, null,	CUST_SEC_EMAIL, CUST_DATE, CUST_DATE, CUST_UPDATED_BY);
+				standardEmailMobileCustomer().getIsEmailVerified(), CUST_LANG, CUST_BUSINESS_DOMAIN, CUST_NAME_OF_FIRM, customerDetails.getFirmAddressId(),
+				CUST_SEC_MOBILE_NEW, null,	CUST_SEC_EMAIL, CUST_DATE, CUST_DATE, CUST_UPDATED_BY);
+		
+	}
+	
+	public static CustomerDetails standardCustomerDetailsWithNewMobile(CustomerDetails customerDetails)
+	{
+		return new CustomerDetails(customerDetails.getCustomerId(), customerDetails.getFirstName(),
+				customerDetails.getLastName(), CUST_DATE, customerDetails.getHomeAddressId(), CUST_MOBILE_NEW, 
+				customerDetails.getIsEmailVerified(),customerDetails.getEmail(),
+				customerDetails.getIsEmailVerified(), CUST_LANG, CUST_BUSINESS_DOMAIN, CUST_NAME_OF_FIRM, customerDetails.getFirmAddressId(),
+				CUST_SEC_MOBILE_NEW, null,	CUST_SEC_EMAIL, CUST_DATE, CUST_DATE, CUST_UPDATED_BY);
+		
+	}
+	
+	public static CustomerDetails standardCustomerDetailsWithNewEmail(CustomerDetails customerDetails)
+	{
+		return new CustomerDetails(customerDetails.getCustomerId(), customerDetails.getFirstName(),
+				customerDetails.getLastName(), CUST_DATE, customerDetails.getHomeAddressId(), CUST_MOBILE_NEW, 
+				customerDetails.getIsEmailVerified(),CUST_EMAIL_NEW,
+				customerDetails.getIsEmailVerified(), CUST_LANG, CUST_BUSINESS_DOMAIN, CUST_NAME_OF_FIRM, customerDetails.getFirmAddressId(),
+				CUST_SEC_MOBILE_NEW, null,	CUST_SEC_EMAIL, CUST_DATE, CUST_DATE, CUST_UPDATED_BY);
+		
+	}
+	
+	public static CustomerDetails standardCustomerDetailsWithNewHomeAddress(CustomerDetails customerDetails)
+	{
+		return new CustomerDetails(customerDetails.getCustomerId(), customerDetails.getFirstName(),
+				customerDetails.getLastName(), CUST_DATE, standardAddressUpdated(), CUST_MOBILE_NEW, 
+				customerDetails.getIsEmailVerified(),CUST_EMAIL_NEW,
+				customerDetails.getIsEmailVerified(), CUST_LANG, CUST_BUSINESS_DOMAIN, CUST_NAME_OF_FIRM, customerDetails.getFirmAddressId(),
+				CUST_SEC_MOBILE_NEW, null,	CUST_SEC_EMAIL, CUST_DATE, CUST_DATE, CUST_UPDATED_BY);
 		
 	}
 	
@@ -136,4 +184,32 @@ public class CustomerDetailsDataFixtures {
 		return gson.toJson(standardMobileVerificationStatusDTO());
 	}
 	
+	
+	public static String standardJsonVerifyMobileDetails(VerifyMobileDTO verifyMobileDTO)
+	{
+		System.out.println(gson.toJson(verifyMobileDTO));
+		
+		return gson.toJson(verifyMobileDTO);
+	}
+	
+	public static String standardJsonVerifyEmailDetails(VerifyEmailDTO verifyEmailDTO)
+	{
+		System.out.println(gson.toJson(verifyEmailDTO));
+		
+		return gson.toJson(verifyEmailDTO);
+	}
+	
+	public static String standardJsonCustomerIdTypeMobileDTO(CustomerIdTypeMobileDTO idTypeMobileDTO)
+	{
+		System.out.println(gson.toJson(idTypeMobileDTO));
+		
+		return gson.toJson(idTypeMobileDTO);
+	}
+	
+	public static String standardJsonCustomerIdTypeEmailDTO(CustomerIdTypeEmailDTO idTypeEmailDTO)
+	{
+		System.out.println(gson.toJson(idTypeEmailDTO));
+		
+		return gson.toJson(idTypeEmailDTO);
+	}
 }

@@ -24,6 +24,8 @@ public interface CustomerDetailsRepository {
 	 
 	 Integer updateSecondaryMobileVerificationStatus(UpdateMobileVerificationStatusDTO verificationStatusDTO);
 	 
+	 Integer updateEmailVerificationStatus(UpdateMobileVerificationStatusDTO verificationStatusDTO);
+	 
 	 Boolean deleteAll();
 	 
 	 Long count();

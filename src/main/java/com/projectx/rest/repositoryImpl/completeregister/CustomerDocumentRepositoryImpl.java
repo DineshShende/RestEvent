@@ -7,8 +7,8 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
+import com.projectx.rest.domain.completeregister.CustomerDocument;
 import com.projectx.rest.domain.quickregister.AuthenticationDetails;
-import com.projectx.rest.domain.quickregister.CustomerDocument;
 import com.projectx.rest.repository.completeregister.CustomerDocumentRepository;
 
 @Component

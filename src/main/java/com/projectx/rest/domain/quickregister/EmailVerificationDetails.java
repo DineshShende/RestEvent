@@ -2,11 +2,16 @@ package com.projectx.rest.domain.quickregister;
 
 import java.util.Date;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.projectx.rest.util.serializer.JsonDateDeSerializer;
+import com.projectx.rest.util.serializer.JsonDateSerializer;
+
 public class EmailVerificationDetails {
 	
 	private EmailVerificationDetailsKey key;
 	
-	private String emailType;
+	private Integer emailType;
 	
 	private String emailHash;
 	
@@ -26,7 +31,7 @@ public class EmailVerificationDetails {
 
 	
 	public EmailVerificationDetails(EmailVerificationDetailsKey key,
-			String emailType, String emailHash, Date emailHashSentTime,
+			Integer emailType, String emailHash, Date emailHashSentTime,
 			Integer resendCount, Date insertTime, Date updateTime,
 			String updatedBy) {
 		super();
@@ -51,12 +56,12 @@ public class EmailVerificationDetails {
 	}
 
 
-	public String getEmailType() {
+	public Integer getEmailType() {
 		return emailType;
 	}
 
 
-	public void setEmailType(String emailType) {
+	public void setEmailType(Integer emailType) {
 		this.emailType = emailType;
 	}
 
@@ -70,12 +75,12 @@ public class EmailVerificationDetails {
 		this.emailHash = emailHash;
 	}
 
-
+	@JsonSerialize(using=JsonDateSerializer.class)
 	public Date getEmailHashSentTime() {
 		return emailHashSentTime;
 	}
 
-
+	@JsonDeserialize(using = JsonDateDeSerializer.class)
 	public void setEmailHashSentTime(Date emailHashSentTime) {
 		this.emailHashSentTime = emailHashSentTime;
 	}
@@ -90,22 +95,22 @@ public class EmailVerificationDetails {
 		this.resendCount = resendCount;
 	}
 
-
+	@JsonSerialize(using=JsonDateSerializer.class)
 	public Date getInsertTime() {
 		return insertTime;
 	}
 
-
+	@JsonDeserialize(using = JsonDateDeSerializer.class)
 	public void setInsertTime(Date insertTime) {
 		this.insertTime = insertTime;
 	}
 
-
+	@JsonSerialize(using=JsonDateSerializer.class)
 	public Date getUpdateTime() {
 		return UpdateTime;
 	}
 
-
+	@JsonDeserialize(using = JsonDateDeSerializer.class)
 	public void setUpdateTime(Date updateTime) {
 		UpdateTime = updateTime;
 	}

@@ -13,8 +13,8 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import com.projectx.data.domain.quickregister.UpdatePasswordAndPasswordTypeDTO;
+import com.projectx.rest.domain.completeregister.CustomerDocument;
 import com.projectx.rest.domain.quickregister.AuthenticationDetails;
-import com.projectx.rest.domain.quickregister.CustomerDocument;
 import com.projectx.rest.domain.quickregister.EmailVerificationDetails;
 import com.projectx.rest.domain.quickregister.MobileVerificationDetails;
 import com.projectx.rest.domain.quickregister.CustomerQuickRegisterEmailMobileVerificationEntity;
@@ -182,7 +182,7 @@ public class QuickRegisterHandler implements
 			QuickRegisterEntity customer) {
 
 		customer.setInsertTime(new Date());
-		customer.setUpdatedBy("ONLINE_CUST");
+		customer.setUpdatedBy("CUST_ONLINE");
 		customer.setUpdateTime(new Date());
 		
 		return customer;
@@ -234,13 +234,17 @@ public class QuickRegisterHandler implements
 		
 		if(savedCustomerQuickRegisterEntity.getEmail()!=null)
 		{
-			EmailVerificationDetails newCustomerEmailVerificationDetails=emailVerificationService.createCustomerEmailVerificationEntity(savedCustomerQuickRegisterEntity);
+			EmailVerificationDetails newCustomerEmailVerificationDetails=emailVerificationService
+					.createCustomerEmailVerificationEntity(savedCustomerQuickRegisterEntity.getCustomerId(),savedCustomerQuickRegisterEntity.getCustomerType(),
+							savedCustomerQuickRegisterEntity.getEmail(),CUST_EMAIL_TYPE_PRIMARY);
 			savedCustomerEmailVerificationDetails=emailVerificationService.saveCustomerEmailVerificationDetails(newCustomerEmailVerificationDetails);
 		}
 		
 		if(savedCustomerQuickRegisterEntity.getMobile()!=null)
 		{
-			MobileVerificationDetails newCustomerMobileVerificationDetails=mobileVerificationService.createCustomerMobileVerificationEntity(savedCustomerQuickRegisterEntity);
+			MobileVerificationDetails newCustomerMobileVerificationDetails=mobileVerificationService
+					.createCustomerMobileVerificationEntity(savedCustomerQuickRegisterEntity.getCustomerId(),savedCustomerQuickRegisterEntity.getCustomerType(),
+							savedCustomerQuickRegisterEntity.getMobile(),CUST_MOBILE_TYPE_PRIMARY);
 			savedCustomerMobileVerificationDetails=mobileVerificationService.saveCustomerMobileVerificationDetails(newCustomerMobileVerificationDetails);
 
 		}
@@ -269,7 +273,8 @@ public class QuickRegisterHandler implements
 	}
 
 	@Override
-	public CustomerQuickRegisterStatusEntity sendVerificationDetails(QuickRegisterEntity customer,EmailVerificationDetails emailVerificationDetails,MobileVerificationDetails mobileVerificationDetails) {
+	public CustomerQuickRegisterStatusEntity sendVerificationDetails(QuickRegisterEntity customer,
+			EmailVerificationDetails emailVerificationDetails,MobileVerificationDetails mobileVerificationDetails) {
 		
 		Boolean emailSentStatus=true;
 		Boolean mobileSentStatus=true;
@@ -278,12 +283,17 @@ public class QuickRegisterHandler implements
 		
 		if(customer.getEmail()!=null&&!customer.getIsEmailVerified())
 		{
-			emailSentStatus=messagerSender.sendHashEmail(customer,emailVerificationDetails);
+			emailSentStatus=messagerSender
+					.sendHashEmail(customer.getCustomerId(), customer.getFirstName(), customer.getEmail(), 
+							customer.getEmail(), emailVerificationDetails.getEmailHash());
 		}
 		
 		if(customer.getMobile()!=null && !customer.getIsMobileVerified())
 		{
-			mobileSentStatus=messagerSender.sendPinSMS(customer, mobileVerificationDetails);
+			mobileSentStatus=messagerSender.sendPinSMS(customer.getFirstName(), customer.getLastName(),
+					customer.getMobile(), mobileVerificationDetails.getMobilePin());
+			
+			
 		}
 		
 				

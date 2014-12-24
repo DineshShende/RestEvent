@@ -2,11 +2,16 @@ package com.projectx.rest.domain.quickregister;
 
 import java.util.Date;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.projectx.rest.util.serializer.JsonDateDeSerializer;
+import com.projectx.rest.util.serializer.JsonDateSerializer;
+
 public class MobileVerificationDetails {
 
 	private MobileVerificationDetailsKey key;
 	
-	private String mobileType;
+	private Integer mobileType;
 		
 	private Integer mobilePin;
 	
@@ -28,7 +33,7 @@ public class MobileVerificationDetails {
 	
 	
 	public MobileVerificationDetails(MobileVerificationDetailsKey key,
-			String mobileType, Integer mobilePin,
+			Integer mobileType, Integer mobilePin,
 			Integer mobileVerificationAttempts, Integer resendCount,
 			Date insertTime, Date updateTime, String updatedBy) {
 		super();
@@ -52,11 +57,11 @@ public class MobileVerificationDetails {
 		this.key = key;
 	}
 
-	public String getMobileType() {
+	public Integer getMobileType() {
 		return mobileType;
 	}
 
-	public void setMobileType(String mobileType) {
+	public void setMobileType(Integer mobileType) {
 		this.mobileType = mobileType;
 	}
 
@@ -85,25 +90,25 @@ public class MobileVerificationDetails {
 	}
 
 	
-	
+	@JsonSerialize(using=JsonDateSerializer.class)
 	public Date getInsertTime() {
 		return insertTime;
 	}
 
 
-
+	@JsonDeserialize(using = JsonDateDeSerializer.class)
 	public void setInsertTime(Date insertTime) {
 		this.insertTime = insertTime;
 	}
 
 
-
+	@JsonSerialize(using=JsonDateSerializer.class)
 	public Date getUpdateTime() {
 		return UpdateTime;
 	}
 
 
-
+	@JsonDeserialize(using = JsonDateDeSerializer.class)
 	public void setUpdateTime(Date updateTime) {
 		UpdateTime = updateTime;
 	}

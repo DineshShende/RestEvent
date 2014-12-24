@@ -1,6 +1,7 @@
 package com.projectx.rest.services.quickregister;
 
 import com.projectx.rest.domain.quickregister.MobileVerificationDetails;
+import com.projectx.rest.domain.quickregister.MobileVerificationDetailsKey;
 import com.projectx.rest.domain.quickregister.QuickRegisterEntity;
 
 
@@ -16,10 +17,14 @@ public interface MobileVerificationService {
 	
 	Integer updateMobilePin(Long customerId,Integer customerType,Long mobile);
 
-	MobileVerificationDetails createCustomerMobileVerificationEntity(QuickRegisterEntity customerQuickRegisterEntity);
+	MobileVerificationDetails createCustomerMobileVerificationEntity(Long customerId,Integer customerType,Long mobile,Integer mobileType);
 	
 	MobileVerificationDetails saveCustomerMobileVerificationDetails(MobileVerificationDetails mobileVerificationDetails);
 
+	Boolean deleteByKey(MobileVerificationDetailsKey key);
+	
+	Integer count();
+	
 	Boolean clearTestData();
 
 }

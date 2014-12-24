@@ -55,8 +55,8 @@ public class CustomerQuickRegisterDataFixture {
 	public static String STATUS_MOBILE_VERFIED="MobileVerified";
 	public static String STATUS_EMAIL_VERFIED="EmailVerified";
 	
-	public static String CUST_EMAIL_TYPE_PRIMARY="PRIMARY";
-	public static String CUST_MOBILE_TYPE_PRIMARY="PRIMARY";
+	public static Integer CUST_EMAIL_TYPE_PRIMARY=1;
+	public static Integer CUST_MOBILE_TYPE_PRIMARY=1;
 	
 	public static String CUST_EMAIL_TYPE_SECONDARY="SECONDARY";
 	public static String CUST_MOBILE_TYPE_SECONDARY="SECONDARY";

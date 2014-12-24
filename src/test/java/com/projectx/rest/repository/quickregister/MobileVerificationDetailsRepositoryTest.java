@@ -162,4 +162,19 @@ public class MobileVerificationDetailsRepositoryTest {
 		
 	}
 	
+	@Test
+	public void deleteByKey()
+	{
+		assertEquals(0, customerMobileVerificationDetailsRepository.count().intValue());
+		
+		MobileVerificationDetails oldSaved=customerMobileVerificationDetailsRepository.save(standardCustomerMobileVerificationDetails());
+		
+		assertEquals(1, customerMobileVerificationDetailsRepository.count().intValue());
+	
+		assertTrue(customerMobileVerificationDetailsRepository.delete(oldSaved.getKey()));
+		
+		assertEquals(0, customerMobileVerificationDetailsRepository.count().intValue());
+		
+	}
+	
 }

@@ -2,6 +2,11 @@ package com.projectx.rest.domain.quickregister;
 
 import java.util.Date;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.projectx.rest.util.serializer.JsonDateDeSerializer;
+import com.projectx.rest.util.serializer.JsonDateSerializer;
+
 public class AuthenticationDetails {
 
 	private AuthenticationDetailsKey key; 
@@ -113,18 +118,22 @@ public class AuthenticationDetails {
 		this.lastUnsucessfullAttempts = lastUnsucessfullAttempts;
 	}
 
+	@JsonSerialize(using=JsonDateSerializer.class)
 	public Date getInsertTime() {
 		return insertTime;
 	}
 
+	@JsonDeserialize(using = JsonDateDeSerializer.class)
 	public void setInsertTime(Date insertTime) {
 		this.insertTime = insertTime;
 	}
 
+	@JsonSerialize(using=JsonDateSerializer.class)
 	public Date getUpdateTime() {
 		return UpdateTime;
 	}
 
+	@JsonDeserialize(using = JsonDateDeSerializer.class)
 	public void setUpdateTime(Date updateTime) {
 		UpdateTime = updateTime;
 	}
@@ -133,6 +142,7 @@ public class AuthenticationDetails {
 		return updatedBy;
 	}
 
+	
 	public void setUpdatedBy(String updatedBy) {
 		this.updatedBy = updatedBy;
 	}

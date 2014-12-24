@@ -140,4 +140,19 @@ public class EmailVerificationDetailsRepositoryTest {
 		
 	}
 	
+	@Test
+	public void deleteByKey()
+	{
+		assertEquals(0, customerEmailVericationDetailsRepository.count().intValue());
+		
+		EmailVerificationDetails oldSaved=customerEmailVericationDetailsRepository.save(standardCustomerEmailVerificationDetails());
+		
+		assertEquals(1, customerEmailVericationDetailsRepository.count().intValue());
+	
+		assertTrue(customerEmailVericationDetailsRepository.delete(oldSaved.getKey()));
+		
+		assertEquals(0, customerEmailVericationDetailsRepository.count().intValue());
+		
+	}
+	
 }

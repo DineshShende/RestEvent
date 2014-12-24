@@ -1,4 +1,4 @@
-package com.projectx.rest.domain.quickregister;
+package com.projectx.rest.domain.completeregister;
 
 import java.util.Arrays;
 

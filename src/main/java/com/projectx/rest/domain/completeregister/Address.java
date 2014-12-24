@@ -50,6 +50,21 @@ public class Address {
 		this.updatedBy = updatedBy;
 	}
 
+	public Address(Long addressId, Integer customerType, String addressLine,
+			String city, String district, String state, Integer pincode,
+			Date insertTime, Date updateTime, String updatedBy) {
+		
+		this.addressId=addressId;
+		this.customerType = customerType;
+		this.addressLine = addressLine;
+		this.city = city;
+		this.district = district;
+		this.state = state;
+		this.pincode = pincode;
+		this.insertTime = insertTime;
+		this.updateTime = updateTime;
+		this.updatedBy = updatedBy;
+	}
 
 	public Long getAddressId() {
 		return addressId;

@@ -2,6 +2,7 @@ package com.projectx.rest.fixture.quickregister;
 
 import java.util.Date;
 
+import com.google.gson.Gson;
 import com.projectx.data.domain.quickregister.UpdateEmailHashDTO;
 import com.projectx.data.domain.quickregister.UpdateEmailMobileVerificationStatus;
 import com.projectx.data.domain.quickregister.UpdateMobilePinDTO;
@@ -29,7 +30,7 @@ public class QuickRegisterDataFixture {
 	
 	public static Date CUST_INSERT_TIME=new Date();
 	public static Date CUST_UPDATE_TIME=new Date();
-	public static String CUST_UPDATED_BY="ONLINE_CUST";
+	public static String CUST_UPDATED_BY="CUST_ONLINE";
 	
 	
 	public static Integer CUST_MOBILE_VERIFICATION_ATTEMPTS=0;
@@ -65,7 +66,7 @@ public class QuickRegisterDataFixture {
 	public static String REGISTER_EMAIL_ALREADY_REGISTERED_NOT_VERIFIED="EMAIL_ALREADY_REGISTERED_NOT_VERIFIED";
 	public static String REGISTER_EMAIL_ALREADY_REGISTERED_VERIFIED="EMAIL_ALREADY_REGISTERED_VERIFIED";
 	
-	
+	private static Gson gson=new Gson();
 	
 
 	public static Integer CUST_MOBILEPIN=101010;
@@ -199,31 +200,27 @@ public class QuickRegisterDataFixture {
 	
 	public static String standardJsonEmailMobileCustomer()
 	{
-		return "{\"firstName\":\"dinesh\",\"lastName\":\"shende\",\"email\":\"dineshshe@gmail.com\",\"mobile\":9960821869,\"pin\":413133}";
-		//return "{\"firstName\":\"dinesh\",\"lastName\":\"shende\",\"email\":\"dineshshe@gmail.com\",\"mobile\":\"9960821869\",\"pin\":\"413133\",\"status\":\"\"}";
+		System.out.println(gson.toJson(standardEmailMobileCustomerDTO()));
+		
+		return gson.toJson(standardEmailMobileCustomerDTO());
 		        	
 	}
 	
-	public static String standardJsonEmailMobileCustomerOther()
-	{
-		return "{\"firstName\":\"dinesh\",\"lastName\":\"shende\",\"email\":\"dineshshende@gmail.com\",\"mobile\":8598058044,\"pin\":413133}";
 
-		        	
-	}
-	
 	public static String standardJsonEmailCustomer()
 	{
-		return "{\"firstName\":\"dinesh\",\"lastName\":\"shende\",\"email\":\"dineshshe@gmail.com\",\"pin\":413133}";
-	}
+		System.out.println(gson.toJson(standardEmailCustomerDTO()));
+		
+		return gson.toJson(standardEmailCustomerDTO());
 	
-	public static String standardJsonEmailCustomerForEmailVerification()
-	{
-		return "{\"firstName\":\"dinesh\",\"lastName\":\"shende\",\"email\":\"dineshshe\",\"pin\":413133}";
 	}
-	
+		
 	public static String standardJsonMobileCustomer()
 	{
-		return "{\"firstName\":\"dinesh\",\"lastName\":\"shende\",\"mobile\":9960821869,\"pin\":413133}";
+		System.out.println(gson.toJson(standardMobileCustomerDTO()));
+		
+		return gson.toJson(standardMobileCustomerDTO());
+	
 	}
 	
 	public static CustomerIdTypeDTO standardGetByCustomerIdDTO()
@@ -237,14 +234,12 @@ public class QuickRegisterDataFixture {
 		return "{\"customerId\":"+CUST_ID+",\"customerType\":"+CUST_TYPE_CUSTOMER+"}";
 	}
 
-	/*
-	public static String standardJsonResetPasswordRedirect(String entity)
+	
+	public static String standardJsonQuickRegister()
 	{
-		System.out.println("{\"entity\":\""+entity+"\"}");
+		System.out.println(gson.toJson(standardEmailMobileCustomer()));
 		
-		return "{\"entity\":"+entity+"}";
+		return gson.toJson(standardEmailMobileCustomer());
 	}
-	*/
-
 	
 }

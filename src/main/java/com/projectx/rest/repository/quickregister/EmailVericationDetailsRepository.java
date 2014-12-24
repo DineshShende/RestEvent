@@ -5,6 +5,7 @@ import java.util.Date;
 import org.springframework.stereotype.Repository;
 
 import com.projectx.rest.domain.quickregister.EmailVerificationDetails;
+import com.projectx.rest.domain.quickregister.EmailVerificationDetailsKey;
 
 
 @Repository
@@ -19,6 +20,8 @@ public interface EmailVericationDetailsRepository {
 	Integer incrementResendCountByCustomerIdAndEmail(Long customerId,Integer customerType,String email);
 	
 	Long count();
+	
+	Boolean delete(EmailVerificationDetailsKey key);
 	
 	Boolean clearTestData();
 	

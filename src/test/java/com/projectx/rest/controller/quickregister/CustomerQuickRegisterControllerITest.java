@@ -29,8 +29,6 @@ import com.projectx.rest.config.Application;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
 @WebAppConfiguration
-
-
 @ActiveProfiles("Dev")
 public class CustomerQuickRegisterControllerITest {
 	
@@ -55,6 +53,31 @@ public class CustomerQuickRegisterControllerITest {
 		this.mockMvc.perform(get("/customer/quickregister/cleartestdata"));
 	}
 	
+
+	@Test
+	public void AddCustomerQuickRegisterWithEmailMobileCustomer() throws Exception {
+		
+		this.mockMvc.perform(
+	            post("/customer/quickregister")
+	                    .content(standardJsonEmailMobileCustomer())
+	                    .contentType(MediaType.APPLICATION_JSON)
+	                    .accept(MediaType.APPLICATION_JSON))
+	            .andDo(print())
+	            .andExpect(status().isOk())
+	            .andExpect(jsonPath("status").value(true))
+	            .andExpect(jsonPath("$.customer.firstName").value(standardEmailMobileCustomer().getFirstName()))
+	            .andExpect(jsonPath("$.customer.lastName").value(standardEmailMobileCustomer().getLastName()))
+	            .andExpect(jsonPath("$.customer.mobile").value(standardEmailMobileCustomer().getMobile()))
+	            .andExpect(jsonPath("$.customer.email").value(standardEmailMobileCustomer().getEmail()))
+	            .andExpect(jsonPath("$.customer.isMobileVerified").value(standardEmailMobileCustomer().getIsMobileVerified()))
+	            .andExpect(jsonPath("$.customer.isEmailVerified").value(standardEmailMobileCustomer().getIsEmailVerified()))
+	            .andExpect(jsonPath("$.customer.insertTime").exists())
+				.andExpect(jsonPath("$.customer.updateTime").exists())
+				.andExpect(jsonPath("$.customer.updatedBy").value(standardEmailMobileCustomer().getUpdatedBy()));
+		
+		
+	}
+
 	
 	@Test
 	public void checkIfExistStatusWithEmailMobileCustomer() throws Exception {
@@ -87,29 +110,6 @@ public class CustomerQuickRegisterControllerITest {
 	}
 	
 	
-	@Test
-	public void AddCustomerQuickRegisterWithEmailMobileCustomer() throws Exception {
-		
-		this.mockMvc.perform(
-	            post("/customer/quickregister")
-	                    .content(standardJsonEmailMobileCustomer())
-	                    .contentType(MediaType.APPLICATION_JSON)
-	                    .accept(MediaType.APPLICATION_JSON))
-	            .andDo(print())
-	            .andExpect(status().isOk())
-	            .andExpect(jsonPath("status").value(true))
-	            .andExpect(jsonPath("$.customer.firstName").value(standardEmailMobileCustomer().getFirstName()))
-	            .andExpect(jsonPath("$.customer.lastName").value(standardEmailMobileCustomer().getLastName()))
-	            .andExpect(jsonPath("$.customer.mobile").value(standardEmailMobileCustomer().getMobile()))
-	            .andExpect(jsonPath("$.customer.email").value(standardEmailMobileCustomer().getEmail()))
-	            .andExpect(jsonPath("$.customer.isMobileVerified").value(standardEmailMobileCustomer().getIsMobileVerified()))
-	            .andExpect(jsonPath("$.customer.isEmailVerified").value(standardEmailMobileCustomer().getIsEmailVerified()))
-	            .andExpect(jsonPath("$.customer.insertTime").exists())
-				.andExpect(jsonPath("$.customer.updateTime").exists())
-				.andExpect(jsonPath("$.customer.updatedBy").value(standardEmailMobileCustomer().getUpdatedBy()));
-		
-		
-	}
 	
 
 	@Test

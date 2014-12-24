@@ -4,6 +4,7 @@ import org.springframework.stereotype.Repository;
 
 import com.projectx.data.domain.quickregister.CustomerMobileVerificationDetailsByCustomerIdTypeAndMobileDTO;
 import com.projectx.rest.domain.quickregister.MobileVerificationDetails;
+import com.projectx.rest.domain.quickregister.MobileVerificationDetailsKey;
 import com.projectx.web.domain.quickregister.VerifyMobileDTO;
 
 @Repository
@@ -20,6 +21,8 @@ public interface MobileVerificationDetailsRepository {
 	Integer incrementResendCount(Long customerId,Integer customerType,Long mobile);
 	
 	Long count();
+	
+	Boolean delete(MobileVerificationDetailsKey key);
 	
 	Boolean clearTestData();
 	

@@ -11,7 +11,9 @@ import com.projectx.data.domain.quickregister.CustomerIdDTO;
 import com.projectx.data.domain.quickregister.CustomerIdTypeMobileDTO;
 import com.projectx.data.domain.quickregister.UpdateMobilePinAndMobileVerificationAttemptsAndResetCountDTO;
 import com.projectx.rest.domain.quickregister.EmailVerificationDetails;
+import com.projectx.rest.domain.quickregister.EmailVerificationDetailsKey;
 import com.projectx.rest.domain.quickregister.MobileVerificationDetails;
+import com.projectx.rest.domain.quickregister.MobileVerificationDetailsKey;
 import com.projectx.rest.repository.quickregister.MobileVerificationDetailsRepository;
 
 @Component
@@ -29,8 +31,12 @@ public class MobileVerificationDetailsRepositoryImpl implements MobileVerificati
 	@Override
 	public MobileVerificationDetails save(
 			MobileVerificationDetails mobileVerificationDetails) {
-			
+		
+		System.out.println(mobileVerificationDetails);
+		
 		MobileVerificationDetails savedEntity=restTemplate.postForObject(env.getProperty("data.url")+"/customer/quickregister/mobileVerification/saveMobileVerificationDetails", mobileVerificationDetails, MobileVerificationDetails.class);
+		
+		System.out.println(savedEntity);
 		
 		return savedEntity;
 		
@@ -99,6 +105,16 @@ public class MobileVerificationDetailsRepositoryImpl implements MobileVerificati
 		return status;
 	}
 
+
 	
+
+	@Override
+	public Boolean delete(MobileVerificationDetailsKey key) {
+		
+		Boolean updateStatus=restTemplate.postForObject(env.getProperty("data.url")+"/customer/quickregister/mobileVerification/deleteByKey", key, Boolean.class);
+		
+		return updateStatus;
+
+	}
 
 }

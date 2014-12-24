@@ -49,14 +49,13 @@ public class MobileVerificationHandler implements MobileVerificationService {
 	
 	@Override
 	public MobileVerificationDetails createCustomerMobileVerificationEntity(
-			QuickRegisterEntity customerQuickRegisterEntity) {
+			Long customerId,Integer customerType,Long mobile,Integer mobileType) {
 		
 		MobileVerificationDetails mobileVerificationDetails=new MobileVerificationDetails();
-		MobileVerificationDetailsKey key=new MobileVerificationDetailsKey(customerQuickRegisterEntity.getCustomerId(),
-				customerQuickRegisterEntity.getCustomerType(), customerQuickRegisterEntity.getMobile());
+		MobileVerificationDetailsKey key=new MobileVerificationDetailsKey(customerId,customerType,mobile);
 		
 		mobileVerificationDetails.setKey(key);
-		mobileVerificationDetails.setMobileType(CUST_MOBILE_TYPE_PRIMARY);
+		mobileVerificationDetails.setMobileType(mobileType);
 		mobileVerificationDetails.setMobilePin(handleCustomerVerification.genarateMobilePin());
 		mobileVerificationDetails.setMobileVerificationAttempts(0);
 		mobileVerificationDetails.setResendCount(0);
@@ -127,7 +126,8 @@ public class MobileVerificationHandler implements MobileVerificationService {
 		MobileVerificationDetails mobileVerificationDetails=customerMobileVerificationDetailsRepository
 				.getMobileVerificationDetailsByCustomerIdTypeAndMobile(customer.getCustomerId(),customer.getCustomerType(), customer.getMobile());
 		
-		Boolean sentStatus=messagerSender.sendPinSMS(customer,mobileVerificationDetails);
+		Boolean sentStatus=messagerSender
+				.sendPinSMS(customer.getFirstName(), customer.getLastName(), customer.getMobile(), mobileVerificationDetails.getMobilePin());
 		
 		if(updateStatus.equals(UPDATE_SUCESS) && sentStatus)
 			return true;
@@ -158,7 +158,8 @@ public class MobileVerificationHandler implements MobileVerificationService {
 	
 		
 		if(updateStatus.equals(UPDATE_SUCESS))
-			sentStatus=messagerSender.sendPinSMS(customer,mobileVerificationDetails);
+			sentStatus=messagerSender
+				.sendPinSMS(customer.getFirstName(), customer.getLastName(), customer.getMobile(), mobileVerificationDetails.getMobilePin());
 		
 		if(updateStatus.equals(UPDATE_SUCESS) && sentStatus)
 			return true;
@@ -188,6 +189,20 @@ public class MobileVerificationHandler implements MobileVerificationService {
 	public Boolean clearTestData() {
 
 		return customerMobileVerificationDetailsRepository.clearTestData();
+	}
+
+	@Override
+	public Boolean deleteByKey(MobileVerificationDetailsKey key) {
+
+		Boolean deletionStatus=customerMobileVerificationDetailsRepository.delete(key);
+		
+		return deletionStatus;
+	}
+
+	@Override
+	public Integer count() {
+		
+		return customerMobileVerificationDetailsRepository.count().intValue();
 	}
 
 

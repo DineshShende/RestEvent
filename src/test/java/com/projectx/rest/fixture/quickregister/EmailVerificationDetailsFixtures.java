@@ -13,8 +13,8 @@ import com.projectx.rest.domain.quickregister.EmailVerificationDetailsKey;
 
 public class EmailVerificationDetailsFixtures {
 	
-	public static String CUST_EMAIL_TYPE_PRIMARY="PRIMARY";
-	public static String CUST_EMAIL_TYPE_SECONDARY="SECONDARY";
+	public static Integer CUST_EMAIL_TYPE_PRIMARY=1;
+	public static Integer CUST_EMAIL_TYPE_SECONDARY=2;
 	public static Integer CUST_RESEND_COUNT=0;
 
 	//public static Integer CUST_TYPE_CUSTOMER=1;

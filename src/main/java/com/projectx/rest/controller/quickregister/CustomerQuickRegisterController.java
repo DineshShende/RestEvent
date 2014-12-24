@@ -1,5 +1,7 @@
 package com.projectx.rest.controller.quickregister;
 
+import java.util.Date;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -9,8 +11,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.projectx.data.domain.quickregister.CustomerIdTypeEmailDTO;
 import com.projectx.data.domain.quickregister.CustomerIdTypeMobileDTO;
 import com.projectx.data.domain.quickregister.UpdatePasswordAndPasswordTypeDTO;
+import com.projectx.rest.domain.completeregister.CustomerDocument;
 import com.projectx.rest.domain.quickregister.AuthenticationDetails;
-import com.projectx.rest.domain.quickregister.CustomerDocument;
 import com.projectx.rest.domain.quickregister.EmailVerificationDetails;
 import com.projectx.rest.domain.quickregister.MobileVerificationDetails;
 import com.projectx.rest.domain.quickregister.QuickRegisterEntity;
@@ -80,6 +82,12 @@ public class CustomerQuickRegisterController {
 		return customerQuickRegisterService.getCustomerDocumentById(customerIdDTO.getCustomerId());
 	}
 	
+	@RequestMapping(value="/customer")
+	public QuickRegisterEntity show()
+	{
+		return new QuickRegisterEntity(CUST_ID, CUST_FIRSTNAME, CUST_LASTNAME, CUST_EMAIL, CUST_MOBILE, CUST_PIN, false, false, CUST_EMAIL_TYPE_PRIMARY,
+				new Date(), new Date(), "CUST_ONLINE");
+	}
 	
 	/*
 	@RequestMapping(value="/customer")

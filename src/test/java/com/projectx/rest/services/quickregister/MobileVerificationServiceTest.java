@@ -1,8 +1,8 @@
 package com.projectx.rest.services.quickregister;
 
-import static com.projectx.rest.fixture.quickregister.EmailVerificationDetailsFixtures.standardCustomerEmailVerificationDetails;
+import static com.projectx.rest.fixture.quickregister.EmailVerificationDetailsFixtures.*;
 import static com.projectx.rest.fixture.quickregister.EmailVerificationDetailsFixtures.standardCustomerEmailVerificationDetailsWithOutPassword;
-import static com.projectx.rest.fixture.quickregister.MobileVericationDetailsFixtures.standardCustomerMobileVerificationDetails;
+import static com.projectx.rest.fixture.quickregister.MobileVericationDetailsFixtures.*;
 import static com.projectx.rest.fixture.quickregister.QuickRegisterDataFixture.standardEmailMobileCustomer;
 import static com.projectx.rest.fixture.quickregister.QuickRegisterDataFixture.standardEmailMobileCustomerAfterInitialization;
 import static org.junit.Assert.*;
@@ -47,7 +47,8 @@ public class MobileVerificationServiceTest {
 	public void createCustomerMobileVerificationEntity()
 	{
 		MobileVerificationDetails emailVerificationDetails=mobileVerificationService
-				.createCustomerMobileVerificationEntity(standardEmailMobileCustomer());
+				.createCustomerMobileVerificationEntity(standardEmailMobileCustomer().getCustomerId(),standardEmailMobileCustomer().getCustomerType(),
+						standardEmailMobileCustomer().getMobile(),CUST_MOBILE_TYPE_PRIMARY);
 		
 		assertEquals(standardCustomerMobileVerificationDetails().getKey(), emailVerificationDetails.getKey());
 	}

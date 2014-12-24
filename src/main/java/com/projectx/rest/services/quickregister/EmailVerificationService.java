@@ -1,6 +1,7 @@
 package com.projectx.rest.services.quickregister;
 
 import com.projectx.rest.domain.quickregister.EmailVerificationDetails;
+import com.projectx.rest.domain.quickregister.EmailVerificationDetailsKey;
 import com.projectx.rest.domain.quickregister.QuickRegisterEntity;
 
 public interface EmailVerificationService {
@@ -15,9 +16,13 @@ EmailVerificationDetails getCustomerEmailVerificationDetailsByCustomerIdTypeAndE
 	
 	Integer updateEmailHash(Long customerId,Integer customerType,String email);
 	
-	EmailVerificationDetails createCustomerEmailVerificationEntity(QuickRegisterEntity customerQuickRegisterEntity);
+	EmailVerificationDetails createCustomerEmailVerificationEntity(Long customerId,Integer customerType,String email,Integer emailType);
 	
 	EmailVerificationDetails saveCustomerEmailVerificationDetails(EmailVerificationDetails emailVerificationDetails);
+	
+	Boolean deleteByKey(EmailVerificationDetailsKey key);
+	
+	Integer count();
 	
 	Boolean clearTestData();
 }
