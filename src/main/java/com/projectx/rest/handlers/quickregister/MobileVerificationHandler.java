@@ -49,7 +49,7 @@ public class MobileVerificationHandler implements MobileVerificationService {
 	
 	@Override
 	public MobileVerificationDetails createCustomerMobileVerificationEntity(
-			Long customerId,Integer customerType,Long mobile,Integer mobileType) {
+			Long customerId,Integer customerType,Long mobile,Integer mobileType,String updatedBy) {
 		
 		MobileVerificationDetails mobileVerificationDetails=new MobileVerificationDetails();
 		MobileVerificationDetailsKey key=new MobileVerificationDetailsKey(customerId,customerType,mobile);
@@ -59,7 +59,9 @@ public class MobileVerificationHandler implements MobileVerificationService {
 		mobileVerificationDetails.setMobilePin(handleCustomerVerification.genarateMobilePin());
 		mobileVerificationDetails.setMobileVerificationAttempts(0);
 		mobileVerificationDetails.setResendCount(0);
-		
+		mobileVerificationDetails.setUpdatedBy(updatedBy);
+		mobileVerificationDetails.setInsertTime(new Date());
+		mobileVerificationDetails.setUpdateTime(new Date());
 		
 		return mobileVerificationDetails;
 	}

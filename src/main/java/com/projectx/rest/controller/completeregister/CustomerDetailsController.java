@@ -3,6 +3,7 @@ package com.projectx.rest.controller.completeregister;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -39,6 +40,17 @@ public class CustomerDetailsController {
 		System.out.println(savedEntity);
 		
 		return savedEntity;
+	}
+	
+	@RequestMapping(value="/getCustomerDetailsById/{customerId}",method=RequestMethod.GET)
+	public CustomerDetails getCustomerDetailsById(@PathVariable Long customerId)
+	{
+		CustomerDetails fetchedEntity=customerDetailsService.findById(customerId);
+		
+		if(fetchedEntity!=null)
+			return fetchedEntity;
+		else
+			return new CustomerDetails();
 	}
 	
 	@RequestMapping(value="/verifyMobileDetails",method=RequestMethod.POST)
@@ -78,6 +90,12 @@ public class CustomerDetailsController {
 		
 		return result;
 				
+	}
+	
+	@RequestMapping(value="/count",method=RequestMethod.GET)
+	public  Integer getCount()
+	{
+		return customerDetailsService.count();
 	}
 	
 	@RequestMapping(value="/clearTestData",method=RequestMethod.GET)

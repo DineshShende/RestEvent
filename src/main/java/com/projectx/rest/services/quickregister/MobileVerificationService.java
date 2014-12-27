@@ -17,7 +17,7 @@ public interface MobileVerificationService {
 	
 	Integer updateMobilePin(Long customerId,Integer customerType,Long mobile);
 
-	MobileVerificationDetails createCustomerMobileVerificationEntity(Long customerId,Integer customerType,Long mobile,Integer mobileType);
+	MobileVerificationDetails createCustomerMobileVerificationEntity(Long customerId,Integer customerType,Long mobile,Integer mobileType,String updatedBy);
 	
 	MobileVerificationDetails saveCustomerMobileVerificationDetails(MobileVerificationDetails mobileVerificationDetails);
 

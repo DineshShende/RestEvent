@@ -48,7 +48,7 @@ public class MobileVerificationServiceTest {
 	{
 		MobileVerificationDetails emailVerificationDetails=mobileVerificationService
 				.createCustomerMobileVerificationEntity(standardEmailMobileCustomer().getCustomerId(),standardEmailMobileCustomer().getCustomerType(),
-						standardEmailMobileCustomer().getMobile(),CUST_MOBILE_TYPE_PRIMARY);
+						standardEmailMobileCustomer().getMobile(),CUST_MOBILE_TYPE_PRIMARY,standardEmailMobileCustomer().getUpdatedBy());
 		
 		assertEquals(standardCustomerMobileVerificationDetails().getKey(), emailVerificationDetails.getKey());
 	}

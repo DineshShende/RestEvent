@@ -16,7 +16,7 @@ EmailVerificationDetails getCustomerEmailVerificationDetailsByCustomerIdTypeAndE
 	
 	Integer updateEmailHash(Long customerId,Integer customerType,String email);
 	
-	EmailVerificationDetails createCustomerEmailVerificationEntity(Long customerId,Integer customerType,String email,Integer emailType);
+	EmailVerificationDetails createCustomerEmailVerificationEntity(Long customerId,Integer customerType,String email,Integer emailType,String updatedBy);
 	
 	EmailVerificationDetails saveCustomerEmailVerificationDetails(EmailVerificationDetails emailVerificationDetails);
 	

@@ -236,7 +236,7 @@ public class QuickRegisterHandler implements
 		{
 			EmailVerificationDetails newCustomerEmailVerificationDetails=emailVerificationService
 					.createCustomerEmailVerificationEntity(savedCustomerQuickRegisterEntity.getCustomerId(),savedCustomerQuickRegisterEntity.getCustomerType(),
-							savedCustomerQuickRegisterEntity.getEmail(),CUST_EMAIL_TYPE_PRIMARY);
+							savedCustomerQuickRegisterEntity.getEmail(),CUST_EMAIL_TYPE_PRIMARY,savedCustomerQuickRegisterEntity.getUpdatedBy());
 			savedCustomerEmailVerificationDetails=emailVerificationService.saveCustomerEmailVerificationDetails(newCustomerEmailVerificationDetails);
 		}
 		
@@ -244,7 +244,7 @@ public class QuickRegisterHandler implements
 		{
 			MobileVerificationDetails newCustomerMobileVerificationDetails=mobileVerificationService
 					.createCustomerMobileVerificationEntity(savedCustomerQuickRegisterEntity.getCustomerId(),savedCustomerQuickRegisterEntity.getCustomerType(),
-							savedCustomerQuickRegisterEntity.getMobile(),CUST_MOBILE_TYPE_PRIMARY);
+							savedCustomerQuickRegisterEntity.getMobile(),CUST_MOBILE_TYPE_PRIMARY,savedCustomerQuickRegisterEntity.getUpdatedBy());
 			savedCustomerMobileVerificationDetails=mobileVerificationService.saveCustomerMobileVerificationDetails(newCustomerMobileVerificationDetails);
 
 		}

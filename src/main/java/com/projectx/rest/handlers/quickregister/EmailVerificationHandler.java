@@ -49,7 +49,7 @@ public class EmailVerificationHandler implements EmailVerificationService {
 	
 	@Override
 	public EmailVerificationDetails createCustomerEmailVerificationEntity(
-			Long customerId,Integer customerType,String email,Integer emailType) {
+			Long customerId,Integer customerType,String email,Integer emailType,String updatedBy) {
 		EmailVerificationDetails emailVerificationDetails=new EmailVerificationDetails();
 		
 		EmailVerificationDetailsKey  key=new EmailVerificationDetailsKey(customerId,customerType,email);
@@ -59,6 +59,9 @@ public class EmailVerificationHandler implements EmailVerificationService {
 		emailVerificationDetails.setEmailHashSentTime(new Date());
 		emailVerificationDetails.setEmailType(emailType);
 		emailVerificationDetails.setResendCount(0);
+		emailVerificationDetails.setUpdatedBy(updatedBy);
+		emailVerificationDetails.setInsertTime(new Date());
+		emailVerificationDetails.setInsertTime(new Date());
 		
 		return emailVerificationDetails;
 	}

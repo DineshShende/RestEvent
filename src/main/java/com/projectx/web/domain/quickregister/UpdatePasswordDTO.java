@@ -1,5 +1,7 @@
 package com.projectx.web.domain.quickregister;
 
+import com.projectx.rest.domain.quickregister.AuthenticationDetailsKey;
+
 public class UpdatePasswordDTO {
 
 	private Long customerId;
@@ -9,20 +11,15 @@ public class UpdatePasswordDTO {
 	private String password;
 
 	public UpdatePasswordDTO() {
-		super();
+
 	}
 
-	
-
-	public UpdatePasswordDTO(Long customerId, Integer customerType,
-			String password) {
+	public UpdatePasswordDTO(Long customerId, Integer customerType, String password) {
 		super();
 		this.customerId = customerId;
 		this.customerType = customerType;
 		this.password = password;
 	}
-
-
 
 	public Long getCustomerId() {
 		return customerId;
@@ -30,6 +27,14 @@ public class UpdatePasswordDTO {
 
 	public void setCustomerId(Long customerId) {
 		this.customerId = customerId;
+	}
+
+	public Integer getCustomerType() {
+		return customerType;
+	}
+
+	public void setCustomerType(Integer customerType) {
+		this.customerType = customerType;
 	}
 
 	public String getPassword() {
@@ -40,28 +45,12 @@ public class UpdatePasswordDTO {
 		this.password = password;
 	}
 
-	
-	
-	public Integer getCustomerType() {
-		return customerType;
-	}
-
-
-
-	public void setCustomerType(Integer customerType) {
-		this.customerType = customerType;
-	}
-
-
-
 	@Override
 	public String toString() {
 		return "UpdatePasswordDTO [customerId=" + customerId
 				+ ", customerType=" + customerType + ", password=" + password
 				+ "]";
 	}
-
-
 
 	@Override
 	public int hashCode() {
@@ -75,8 +64,6 @@ public class UpdatePasswordDTO {
 				+ ((password == null) ? 0 : password.hashCode());
 		return result;
 	}
-
-
 
 	@Override
 	public boolean equals(Object obj) {
@@ -105,8 +92,5 @@ public class UpdatePasswordDTO {
 		return true;
 	}
 
-
-	
-	
 	
 }

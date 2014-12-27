@@ -8,23 +8,24 @@ public class VerifyEmailDTO {
 	
 	private String email;
 	
-	private Integer emailPin;
-	
 	private String emailHash;
 
 	public VerifyEmailDTO() {
 
 	}
 
+	
+
 	public VerifyEmailDTO(Long customerId, Integer customerType, String email,
-			Integer emailPin, String emailHash) {
-		super();
+			String emailHash) {
+
 		this.customerId = customerId;
 		this.customerType = customerType;
 		this.email = email;
-		this.emailPin = emailPin;
 		this.emailHash = emailHash;
 	}
+
+
 
 	public Long getCustomerId() {
 		return customerId;
@@ -50,13 +51,7 @@ public class VerifyEmailDTO {
 		this.email = email;
 	}
 
-	public Integer getEmailPin() {
-		return emailPin;
-	}
 
-	public void setEmailPin(Integer emailPin) {
-		this.emailPin = emailPin;
-	}
 
 	public String getEmailHash() {
 		return emailHash;
@@ -66,12 +61,16 @@ public class VerifyEmailDTO {
 		this.emailHash = emailHash;
 	}
 
+
+
 	@Override
 	public String toString() {
 		return "VerifyEmailDTO [customerId=" + customerId + ", customerType="
-				+ customerType + ", email=" + email + ", emailPin=" + emailPin
-				+ ", emailHash=" + emailHash + "]";
+				+ customerType + ", email=" + email + ", emailHash="
+				+ emailHash + "]";
 	}
+
+
 
 	@Override
 	public int hashCode() {
@@ -84,10 +83,10 @@ public class VerifyEmailDTO {
 		result = prime * result + ((email == null) ? 0 : email.hashCode());
 		result = prime * result
 				+ ((emailHash == null) ? 0 : emailHash.hashCode());
-		result = prime * result
-				+ ((emailPin == null) ? 0 : emailPin.hashCode());
 		return result;
 	}
+
+
 
 	@Override
 	public boolean equals(Object obj) {
@@ -118,14 +117,9 @@ public class VerifyEmailDTO {
 				return false;
 		} else if (!emailHash.equals(other.emailHash))
 			return false;
-		if (emailPin == null) {
-			if (other.emailPin != null)
-				return false;
-		} else if (!emailPin.equals(other.emailPin))
-			return false;
 		return true;
 	}
-	
+
 	
 	
 }

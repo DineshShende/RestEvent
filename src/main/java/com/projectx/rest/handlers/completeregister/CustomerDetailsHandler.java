@@ -50,7 +50,7 @@ public class CustomerDetailsHandler implements CustomerDetailsService {
 		CustomerDetails newEntity=new CustomerDetails(quickRegisterEntity.getCustomerId(), quickRegisterEntity.getFirstName(), 
 				quickRegisterEntity.getLastName(), null, null, quickRegisterEntity.getMobile(),quickRegisterEntity.getIsMobileVerified(),
 				quickRegisterEntity.getEmail(), quickRegisterEntity.getIsEmailVerified(), null, null, null, null, null, 
-				null, null, new Date(), new Date(), "CUST_ONLINE");
+				false, null, new Date(), new Date(), "CUST_ONLINE");
 		
 		CustomerDetails createdEntity=customerDetailsRepository.save(newEntity);
 		
@@ -69,7 +69,7 @@ public class CustomerDetailsHandler implements CustomerDetailsService {
 		Boolean deletionStatusHomeAddress=true;
 		Boolean deletionStatusFirmAddress=true;
 		
-		if(oldEntity!=null)
+		if(oldEntity!=null && oldEntity.getCustomerId()!=null)
 		{
 			
 			if((oldEntity.getMobile()==null && customerDetails.getMobile()!=null) || 
@@ -86,7 +86,7 @@ public class CustomerDetailsHandler implements CustomerDetailsService {
 				if(!mobileDetailsExists && deletionStatusMobile)
 				{
 					MobileVerificationDetails createdEntity=mobileVerificationService
-							.createCustomerMobileVerificationEntity(oldEntity.getCustomerId(), 1, customerDetails.getMobile(), 1);
+							.createCustomerMobileVerificationEntity(oldEntity.getCustomerId(), 1, customerDetails.getMobile(), 1,customerDetails.getUpdatedBy());
 					
 					mobileVerificationService.saveCustomerMobileVerificationDetails(createdEntity);
 				}
@@ -108,7 +108,7 @@ public class CustomerDetailsHandler implements CustomerDetailsService {
 				if(!emailDetailsExists && deletionStatusEmail)
 				{
 					EmailVerificationDetails createdEntity=emailVerificationService
-							.createCustomerEmailVerificationEntity(oldEntity.getCustomerId(), 1, customerDetails.getEmail(), 1);
+							.createCustomerEmailVerificationEntity(oldEntity.getCustomerId(), 1, customerDetails.getEmail(), 1,customerDetails.getUpdatedBy());
 					
 					emailVerificationService.saveCustomerEmailVerificationDetails(createdEntity);
 				}
@@ -130,7 +130,7 @@ public class CustomerDetailsHandler implements CustomerDetailsService {
 				if(!mobileDetailsExists && deletionStatusSeconadryMobile)
 				{
 					MobileVerificationDetails createdEntity=mobileVerificationService
-							.createCustomerMobileVerificationEntity(oldEntity.getCustomerId(), 1, customerDetails.getSecondaryMobile(), 2);
+							.createCustomerMobileVerificationEntity(oldEntity.getCustomerId(), 1, customerDetails.getSecondaryMobile(), 2,customerDetails.getUpdatedBy());
 					
 					mobileVerificationService.saveCustomerMobileVerificationDetails(createdEntity);
 				}
@@ -138,6 +138,14 @@ public class CustomerDetailsHandler implements CustomerDetailsService {
 				
 			}
 			
+			if(customerDetails.getIsEmailVerified()==null)
+				customerDetails.setIsEmailVerified(oldEntity.getIsEmailVerified());
+			
+			if(customerDetails.getIsMobileVerified()==null)
+				customerDetails.setIsMobileVerified(oldEntity.getIsMobileVerified());
+			
+			if(customerDetails.getIsSecondaryMobileVerified()==null)
+				customerDetails.setIsSecondaryMobileVerified(oldEntity.getIsSecondaryMobileVerified());
 		
 			CustomerDetails updatedCustomerDetails=customerDetailsRepository.save(customerDetails);
 			
@@ -159,7 +167,59 @@ public class CustomerDetailsHandler implements CustomerDetailsService {
 			
 		}
 		else
-			return customerDetailsRepository.save(customerDetails);
+		{
+			Boolean mobileSavedStatus=true;
+			Boolean secondaryMobileSavedStatus=true;
+			Boolean emailSavedStatus=true;
+			
+			Boolean mobileDetailsExists=checkIfMobileSaved(customerDetails.getCustomerId(),1, customerDetails.getMobile());
+						
+			if(!mobileDetailsExists)
+			{
+				MobileVerificationDetails createdEntity=mobileVerificationService
+						.createCustomerMobileVerificationEntity(customerDetails.getCustomerId(), 1, customerDetails.getMobile(), 1,customerDetails.getUpdatedBy());
+				
+				if(mobileVerificationService.saveCustomerMobileVerificationDetails(createdEntity).getKey()!=null)
+					mobileSavedStatus=true;
+				else
+					mobileSavedStatus=false;
+			}
+			
+			mobileDetailsExists=checkIfMobileSaved(customerDetails.getCustomerId(),1, customerDetails.getSecondaryMobile());
+			
+			if(!mobileDetailsExists)
+			{
+				MobileVerificationDetails createdEntity=mobileVerificationService
+						.createCustomerMobileVerificationEntity(customerDetails.getCustomerId(), 1, customerDetails.getSecondaryMobile(), 2,customerDetails.getUpdatedBy());
+				
+				if(mobileVerificationService.saveCustomerMobileVerificationDetails(createdEntity).getKey()!=null)
+					secondaryMobileSavedStatus=true;
+				else
+					secondaryMobileSavedStatus=false;
+			}
+			
+			Boolean emailDetailsExists=checkIfEmailSaved(customerDetails.getCustomerId(),1, customerDetails.getEmail());
+			
+			if(!emailDetailsExists)
+			{
+				EmailVerificationDetails createdEntity=emailVerificationService
+						.createCustomerEmailVerificationEntity(customerDetails.getCustomerId(), 1, customerDetails.getEmail(), 1,customerDetails.getUpdatedBy());
+				
+				if(emailVerificationService.saveCustomerEmailVerificationDetails(createdEntity).getKey()!=null)
+					emailSavedStatus=true;
+				else	
+					emailSavedStatus=false;
+			}
+			
+			if(mobileSavedStatus && secondaryMobileSavedStatus && emailSavedStatus)
+				return customerDetailsRepository.save(customerDetails);
+			else
+			{
+				//If one of the creation fails rollback other created entities. 
+				
+				return new CustomerDetails();
+			}
+		}
 
 	}
 

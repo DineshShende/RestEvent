@@ -54,7 +54,7 @@ public class CustomerDetailsDataFixtures {
 		return new CustomerDetails(standardEmailMobileCustomer().getCustomerId(), standardEmailMobileCustomer().getFirstName(),
 				standardEmailMobileCustomer().getLastName(), null, null, standardEmailMobileCustomer().getMobile(), 
 				standardEmailMobileCustomer().getIsEmailVerified(),standardEmailMobileCustomer().getEmail(),
-				standardEmailMobileCustomer().getIsEmailVerified(), null, null, null, null, null, null,
+				standardEmailMobileCustomer().getIsEmailVerified(), null, null, null, null, null, false,
 				null, CUST_DATE, CUST_DATE, CUST_UPDATED_BY);
 	}
 	

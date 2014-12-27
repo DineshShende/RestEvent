@@ -5,6 +5,7 @@ import static com.projectx.rest.fixtures.quickregister.CustomerQuickRegisterData
 
 import java.text.NumberFormat;
 import java.text.ParsePosition;
+import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
@@ -118,6 +119,9 @@ public class AuthenticationHandler implements AuthenticationService {
 			String password=handleCustomerVerification.generatePassword();
 			customerAuthenticationDetails.setPassword(password);
 			customerAuthenticationDetails.setPasswordType(CUST_PASSWORD_TYPE_DEFAULT);
+			customerAuthenticationDetails.setInsertTime(new Date());
+			customerAuthenticationDetails.setUpdateTime(new Date());
+			customerAuthenticationDetails.setUpdatedBy("CUST_ONLINE");
 
 			 passwordUpdateStatus=customerAuthenticationDetailsRepository.updatePasswordAndPasswordTypeAndCounts 
 					 (customerAuthenticationDetails.getKey().getCustomerId(),customerAuthenticationDetails.getKey().getCustomerType(),
@@ -251,6 +255,9 @@ public class AuthenticationHandler implements AuthenticationService {
 		customerAuthenticationDetails.setMobile(customerQuickRegisterEntity.getMobile());
 		customerAuthenticationDetails.setLastUnsucessfullAttempts(0);;
 		customerAuthenticationDetails.setResendCount(0);
+		customerAuthenticationDetails.setInsertTime(new Date());
+		customerAuthenticationDetails.setUpdateTime(new Date());
+		customerAuthenticationDetails.setUpdatedBy("CUST_ONLINE");
 		
 		return customerAuthenticationDetails;
 	}

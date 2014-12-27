@@ -93,6 +93,20 @@ public class CustomerDetailsServiceTest {
 		assertEquals(1, customerDetailsService.count().intValue());
 		
 	}
+
+	@Test
+	public void mergeCustomerDetailsWithOutCreatingByQuickRegisterEntity()
+	{
+		assertEquals(0, customerDetailsService.count().intValue());
+				
+		CustomerDetails mergeEntity=customerDetailsService.mergeCustomerDetails(standardCustomerDetails(standardCustomerDetailsCopiedFromQuickRegisterEntity()));
+		
+		assertEquals(standardCustomerDetails(standardCustomerDetailsCopiedFromQuickRegisterEntity()), mergeEntity);
+		
+		assertEquals(1, customerDetailsService.count().intValue());
+		
+	}
+
 	
 	@Test
 	public void mergeCustomerDetailsWithNewSecondaryMobile()

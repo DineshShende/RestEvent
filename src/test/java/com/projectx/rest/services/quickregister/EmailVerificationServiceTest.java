@@ -58,7 +58,7 @@ public class EmailVerificationServiceTest {
 	{
 		EmailVerificationDetails emailVerificationDetails=emailVerificationService
 				.createCustomerEmailVerificationEntity(standardEmailMobileCustomer().getCustomerId(),standardEmailMobileCustomer().getCustomerType(),
-						standardEmailMobileCustomer().getEmail(),CUST_EMAIL_TYPE_PRIMARY);
+						standardEmailMobileCustomer().getEmail(),CUST_EMAIL_TYPE_PRIMARY,standardEmailMobileCustomer().getUpdatedBy());
 		
 		assertEquals(standardCustomerEmailVerificationDetailsWithOutPassword().getKey(), emailVerificationDetails.getKey());
 	}

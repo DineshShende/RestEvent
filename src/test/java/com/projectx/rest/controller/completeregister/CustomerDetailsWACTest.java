@@ -112,7 +112,7 @@ public class CustomerDetailsWACTest {
     .andExpect(jsonPath("$.nameOfFirm").doesNotExist())
     .andExpect(jsonPath("$.firmAddressId").doesNotExist())
     .andExpect(jsonPath("$.secondaryMobile").doesNotExist())
-    .andExpect(jsonPath("$.isSecondaryMobileVerified").doesNotExist())
+    .andExpect(jsonPath("$.isSecondaryMobileVerified").value(false))
     .andExpect(jsonPath("$.secondaryEmail").doesNotExist())
     .andExpect(jsonPath("$.dateOfBirth").doesNotExist())
     .andExpect(jsonPath("$.insertTime").exists())
@@ -291,8 +291,8 @@ public class CustomerDetailsWACTest {
 				emailVerificationService
 				.getCustomerEmailVerificationDetailsByCustomerIdTypeAndEmail(newEntity.getCustomerId(), 1, newEntity.getEmail());
 		
-		VerifyEmailDTO verifyEmailDTO=new VerifyEmailDTO(newEntity.getCustomerId(), 1, newEntity.getEmail(),
-				emailVerificationDetails.getEmailType(),emailVerificationDetails.getEmailHash());
+		VerifyEmailDTO verifyEmailDTO=new VerifyEmailDTO(newEntity.getCustomerId(),1, newEntity.getEmail(),
+				emailVerificationDetails.getEmailHash());
 		
 		this.mockMvc.perform(
 				post("/customer/verifyEmailDetails")
