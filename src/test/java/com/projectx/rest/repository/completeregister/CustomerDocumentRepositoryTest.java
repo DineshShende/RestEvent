@@ -1,7 +1,9 @@
 package com.projectx.rest.repository.completeregister;
 
+import static com.projectx.rest.fixture.completeregister.DocumentDetailsDataFixture.*;
 import static org.junit.Assert.*;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,8 +12,8 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.projectx.rest.config.Application;
-import com.projectx.rest.domain.completeregister.CustomerDocument;
-import com.projectx.rest.repository.completeregister.CustomerDocumentRepository;
+import com.projectx.rest.domain.completeregister.DocumentDetails;
+import com.projectx.rest.repository.completeregister.DocumentDetailsRepository;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes=Application.class)
@@ -20,25 +22,95 @@ public class CustomerDocumentRepositoryTest {
 
 	
 	@Autowired
-	CustomerDocumentRepository customerDocumentRepository;
+	DocumentDetailsRepository customerDocumentRepository;
 	
-	@Test
-	public void test() {
-		//fail("Not yet implemented");
+	@Before
+	public void setUp()
+	{
+		customerDocumentRepository.clearTestData();
 	}
 	
 	@Test
-	public void saveNewCustomerDocument()
+	public void environmentTest() {
+		
+	}
+	
+	@Test
+	public void saveDocumentDetails()
 	{
-		/*
-		CustomerDocument customerDocument=new CustomerDocument(3L, "ahakjdgskjagdkjgsjg".getBytes());
+		assertEquals(0, customerDocumentRepository.count().intValue());
 		
-		customerDocumentRepository.saveCustomerDocument(customerDocument);
+		assertEquals(standardDocumentDetails(), customerDocumentRepository.saveCustomerDocument(standardDocumentDetails()));
 		
-		customerDocument=customerDocumentRepository.getCustomerDocumentByCustomerId(3L);
+		assertEquals(1, customerDocumentRepository.count().intValue());
+	}
+	
+	
+	
+	@Test
+	public void saveAndGetByKeyDocumentDetails()
+	{
+		assertEquals(0, customerDocumentRepository.count().intValue());
 		
-		System.out.println(customerDocument);
-		*/
+		assertNull(customerDocumentRepository.getCustomerDocumentByCustomerId(standardDocumentKey()).getKey());
+		
+		assertEquals(standardDocumentDetails(), customerDocumentRepository.saveCustomerDocument(standardDocumentDetails()));
+		
+		assertEquals(standardDocumentDetails(), customerDocumentRepository.getCustomerDocumentByCustomerId(standardDocumentKey()));
+		
+		assertEquals(1, customerDocumentRepository.count().intValue());
+	}
+	
+	@Test
+	public void updateDocumentAndContentType()
+	{
+		assertEquals(0, customerDocumentRepository.count().intValue());
+		
+		assertEquals(standardDocumentDetails(), customerDocumentRepository.saveCustomerDocument(standardDocumentDetails()));
+		
+		assertEquals(standardDocumentDetails(), customerDocumentRepository.getCustomerDocumentByCustomerId(standardDocumentKey()));
+		
+		assertEquals(1, customerDocumentRepository.count().intValue());
+		
+		DocumentDetails updatedDocument=customerDocumentRepository.saveCustomerDocument(standardDocumentDetailsWithNewDocumentContentType());
+		
+		assertEquals(standardDocumentDetailsWithNewDocumentContentType(),
+				customerDocumentRepository.getCustomerDocumentByCustomerId(standardDocumentKey()));
+		
+		assertEquals(1, customerDocumentRepository.count().intValue());
+	}
+	
+	@Test
+	public void updateVerificationStatusAndRemark()
+	{
+		assertEquals(0, customerDocumentRepository.count().intValue());
+		
+		assertEquals(standardDocumentDetails(), customerDocumentRepository.saveCustomerDocument(standardDocumentDetails()));
+		
+		assertEquals(standardDocumentDetails(), customerDocumentRepository.getCustomerDocumentByCustomerId(standardDocumentKey()));
+		
+		assertEquals(1, customerDocumentRepository.count().intValue());
+		
+		DocumentDetails updatedDocument=customerDocumentRepository.saveCustomerDocument(standardDocumentDetailsWithNewVerificationStatusAndRemark());
+		
+		assertEquals(standardDocumentDetailsWithNewVerificationStatusAndRemark(),
+				customerDocumentRepository.getCustomerDocumentByCustomerId(standardDocumentKey()));
+		
+		assertEquals(1, customerDocumentRepository.count().intValue());
+	}
+	
+	@Test
+	public void deleteAll()
+	{
+		assertEquals(0, customerDocumentRepository.count().intValue());
+		
+		assertEquals(standardDocumentDetails(), customerDocumentRepository.saveCustomerDocument(standardDocumentDetails()));
+		
+		assertEquals(1, customerDocumentRepository.count().intValue());
+		
+		customerDocumentRepository.clearTestData();
+		
+		assertEquals(0, customerDocumentRepository.count().intValue());
 	}
 
 }

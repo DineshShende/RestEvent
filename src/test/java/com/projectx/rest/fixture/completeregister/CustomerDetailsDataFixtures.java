@@ -74,7 +74,7 @@ public class CustomerDetailsDataFixtures {
 				customerDetails.getLastName(), CUST_DATE, standardAddress(), customerDetails.getMobile(), 
 				customerDetails.getIsEmailVerified(),customerDetails.getEmail(),
 				customerDetails.getIsEmailVerified(), CUST_LANG, CUST_BUSINESS_DOMAIN, CUST_NAME_OF_FIRM, standardAddress(),
-				CUST_SEC_MOBILE, null,	CUST_SEC_EMAIL, CUST_DATE, CUST_DATE, CUST_UPDATED_BY);
+				CUST_SEC_MOBILE, false,	CUST_SEC_EMAIL, CUST_DATE, CUST_DATE, CUST_UPDATED_BY);
 		
 	}
 	

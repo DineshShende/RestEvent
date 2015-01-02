@@ -10,7 +10,7 @@ import org.springframework.web.client.RestTemplate;
 import com.projectx.data.domain.completeregister.UpdateAddressDTO;
 import com.projectx.data.domain.completeregister.UpdateMobileVerificationStatusDTO;
 import com.projectx.rest.domain.completeregister.CustomerDetails;
-import com.projectx.rest.domain.completeregister.CustomerDocument;
+
 import com.projectx.rest.repository.completeregister.CustomerDetailsRepository;
 
 @Component

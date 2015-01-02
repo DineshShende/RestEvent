@@ -1,11 +1,14 @@
 package com.projectx.rest.services.completeregister;
 
+import org.springframework.stereotype.Service;
+
 import com.projectx.rest.domain.completeregister.Address;
 import com.projectx.rest.domain.completeregister.CustomerDetails;
 import com.projectx.rest.domain.quickregister.EmailVerificationDetails;
 import com.projectx.rest.domain.quickregister.MobileVerificationDetails;
 import com.projectx.rest.domain.quickregister.QuickRegisterEntity;
 
+@Service
 public interface CustomerDetailsService {
 
 	CustomerDetails createCustomerDetailsFromQuickRegisterEntity(QuickRegisterEntity quickRegisterEntity);

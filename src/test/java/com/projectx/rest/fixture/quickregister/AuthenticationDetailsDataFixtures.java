@@ -41,7 +41,7 @@ public class AuthenticationDetailsDataFixtures {
 
 	public static AuthenticationDetails standardCustomerEmailAuthenticationDetailsWithOutPassword()
 	{
-		return new AuthenticationDetails(standardAuthenticationDetailsKey(), CUST_EMAIL,CUST_MOBILE, null, null,  null, CUST_RESEND_COUNT, CUST_LOGIN_VERIFICATION_ATTEMPTS,null,null,null);
+		return new AuthenticationDetails(standardAuthenticationDetailsKey(), CUST_EMAIL,CUST_MOBILE, null, null,  null, CUST_RESEND_COUNT, CUST_LOGIN_VERIFICATION_ATTEMPTS,CUST_DATE,CUST_DATE,CUST_UPDATED_BY);
 	}
 
 	

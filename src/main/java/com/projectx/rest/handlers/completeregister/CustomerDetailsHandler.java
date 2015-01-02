@@ -21,7 +21,7 @@ import com.projectx.rest.services.quickregister.MobileVerificationService;
 import com.projectx.rest.utils.MessagerSender;
 
 @Component
-@Profile(value="Dev")
+@Profile(value={"Dev","Test"})
 public class CustomerDetailsHandler implements CustomerDetailsService {
 
 	
@@ -148,7 +148,8 @@ public class CustomerDetailsHandler implements CustomerDetailsService {
 				customerDetails.setIsSecondaryMobileVerified(oldEntity.getIsSecondaryMobileVerified());
 		
 			CustomerDetails updatedCustomerDetails=customerDetailsRepository.save(customerDetails);
-			
+
+			/*
 			if(oldEntity.getHomeAddressId()!=null&&customerDetails.getHomeAddressId()!=null&&!oldEntity.getHomeAddressId().equals(customerDetails.getHomeAddressId()))
 			{
 				deletionStatusHomeAddress=addressService.deleteById(oldEntity.getHomeAddressId().getAddressId());				
@@ -158,7 +159,7 @@ public class CustomerDetailsHandler implements CustomerDetailsService {
 			{
 				deletionStatusFirmAddress=addressService.deleteById(oldEntity.getFirmAddressId().getAddressId());
 			}
-			
+			*/
 			//if(deletionStatusMobile && deletionStatusEmail && deletionStatusSeconadryMobile && deletionStatusHomeAddress && deletionStatusFirmAddress)
 				return updatedCustomerDetails;
 			

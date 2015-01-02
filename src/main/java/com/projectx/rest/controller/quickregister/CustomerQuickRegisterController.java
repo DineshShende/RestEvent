@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.projectx.data.domain.quickregister.CustomerIdTypeEmailDTO;
 import com.projectx.data.domain.quickregister.CustomerIdTypeMobileDTO;
 import com.projectx.data.domain.quickregister.UpdatePasswordAndPasswordTypeDTO;
-import com.projectx.rest.domain.completeregister.CustomerDocument;
 import com.projectx.rest.domain.quickregister.AuthenticationDetails;
 import com.projectx.rest.domain.quickregister.EmailVerificationDetails;
 import com.projectx.rest.domain.quickregister.MobileVerificationDetails;
@@ -70,17 +69,6 @@ public class CustomerQuickRegisterController {
 	}
 	//Document
 	
-	@RequestMapping(value="/saveCustomerDocument",method=RequestMethod.POST)
-	public CustomerDocument saveCustomerDocument(@RequestBody CustomerDocument customerDocument)
-	{
-		return customerQuickRegisterService.saveCustomerDocument(customerDocument);
-	}
-	
-	@RequestMapping(value="/getCustomerDocumentById",method=RequestMethod.POST)
-	public CustomerDocument getCustomerDocumentById(@RequestBody CustomerIdTypeDTO customerIdDTO)
-	{
-		return customerQuickRegisterService.getCustomerDocumentById(customerIdDTO.getCustomerId());
-	}
 	
 	@RequestMapping(value="/customer")
 	public QuickRegisterEntity show()

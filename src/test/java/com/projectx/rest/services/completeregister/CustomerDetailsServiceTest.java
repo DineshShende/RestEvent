@@ -208,11 +208,45 @@ public class CustomerDetailsServiceTest {
 		
 		mergeEntity=customerDetailsService.mergeCustomerDetails(standardCustomerDetailsWithNewHomeAddress(mergeEntity));
 		
-		assertNull(addressService.findById(oldHomeAddress.getAddressId()));
+		//assertNull(addressService.findById(oldHomeAddress.getAddressId()));
 		
 		assertEquals(1, customerDetailsService.count().intValue());
 		
 	}
+	
+	@Test
+	public void mergeCustomerDetailsWithHomeAddressPartialChanges() throws Exception
+	{
+		assertEquals(0, customerDetailsService.count().intValue());
+		
+		QuickRegisterEntity quickRegisterEntity=quickRegisterService
+				.saveNewCustomerQuickRegisterEntity(standardEmailMobileCustomer()).getCustomerQuickRegisterEntity();
+		
+		
+		CustomerDetails savedEntity=customerDetailsService.createCustomerDetailsFromQuickRegisterEntity(quickRegisterEntity);
+		
+		assertEquals(standardCustomerDetailsCopiedFromQuickRegisterEntity(), savedEntity);
+		
+		CustomerDetails mergeEntity=customerDetailsService.mergeCustomerDetails(standardCustomerDetails(savedEntity));
+		
+		Address oldHomeAddress=mergeEntity.getHomeAddressId();
+		
+		assertNotNull(addressService.findById(oldHomeAddress.getAddressId()));
+			
+		assertEquals(standardCustomerDetails(savedEntity), mergeEntity);
+		
+		mergeEntity.getHomeAddressId().setAddressLine("AT-BAYAJI NAGAR");
+		mergeEntity.getHomeAddressId().setCity("PUNE");
+		
+		
+		mergeEntity=customerDetailsService.mergeCustomerDetails(mergeEntity);
+		
+	//	assertNull(addressService.findById(oldHomeAddress.getAddressId()));
+		
+		assertEquals(1, customerDetailsService.count().intValue());
+		
+	}
+	
 	
 	@Test
 	public void saveAndCheckIfExistMobileVerificationDetails() throws Exception
@@ -283,7 +317,7 @@ public class CustomerDetailsServiceTest {
 				mobileVerificationService
 				.getCustomerMobileVerificationDetailsByCustomerIdTypeAndMobile(mergeEntity.getCustomerId(), 1, mergeEntity.getSecondaryMobile());
 		
-		assertEquals(null, customerDetailsService.findById(mergeEntity.getCustomerId()).getIsSecondaryMobileVerified());
+		assertEquals(false, customerDetailsService.findById(mergeEntity.getCustomerId()).getIsSecondaryMobileVerified());
 		
 		
 		assertEquals(false, customerDetailsService.verifyMobileDetails(mergeEntity.getCustomerId(),
@@ -391,5 +425,5 @@ public class CustomerDetailsServiceTest {
 		
 		assertEquals(1, customerDetailsService.count().intValue());
 	}
-
+	
 }

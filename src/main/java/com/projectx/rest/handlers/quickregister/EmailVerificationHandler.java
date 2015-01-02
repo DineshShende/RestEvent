@@ -61,7 +61,7 @@ public class EmailVerificationHandler implements EmailVerificationService {
 		emailVerificationDetails.setResendCount(0);
 		emailVerificationDetails.setUpdatedBy(updatedBy);
 		emailVerificationDetails.setInsertTime(new Date());
-		emailVerificationDetails.setInsertTime(new Date());
+		emailVerificationDetails.setUpdateTime(new Date());
 		
 		return emailVerificationDetails;
 	}

@@ -4,7 +4,7 @@ package com.projectx.rest.services.quickregister;
 import java.util.Date;
 
 import com.projectx.data.domain.quickregister.UpdatePasswordAndPasswordTypeDTO;
-import com.projectx.rest.domain.completeregister.CustomerDocument;
+
 import com.projectx.rest.domain.quickregister.AuthenticationDetails;
 import com.projectx.rest.domain.quickregister.EmailVerificationDetails;
 import com.projectx.rest.domain.quickregister.MobileVerificationDetails;
@@ -52,12 +52,6 @@ public interface QuickRegisterService {
 	void clearDataForTesting();
 
 	
-	
-	//Document
-	
-	CustomerDocument saveCustomerDocument(CustomerDocument customerDocument);
-	
-	CustomerDocument getCustomerDocumentById(Long customerId);
 	
 	
 	

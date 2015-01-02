@@ -13,14 +13,14 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import com.projectx.data.domain.quickregister.UpdatePasswordAndPasswordTypeDTO;
-import com.projectx.rest.domain.completeregister.CustomerDocument;
+
 import com.projectx.rest.domain.quickregister.AuthenticationDetails;
 import com.projectx.rest.domain.quickregister.EmailVerificationDetails;
 import com.projectx.rest.domain.quickregister.MobileVerificationDetails;
 import com.projectx.rest.domain.quickregister.CustomerQuickRegisterEmailMobileVerificationEntity;
 import com.projectx.rest.domain.quickregister.QuickRegisterEntity;
 import com.projectx.rest.domain.quickregister.CustomerQuickRegisterStatusEntity;
-import com.projectx.rest.repository.completeregister.CustomerDocumentRepository;
+import com.projectx.rest.repository.completeregister.DocumentDetailsRepository;
 import com.projectx.rest.repository.quickregister.AuthenticationDetailsRepository;
 import com.projectx.rest.repository.quickregister.EmailVericationDetailsRepository;
 import com.projectx.rest.repository.quickregister.MobileVerificationDetailsRepository;
@@ -57,7 +57,7 @@ public class QuickRegisterHandler implements
 	MobileVerificationService mobileVerificationService; 
 	
 	@Autowired
-	CustomerDocumentRepository customerDocumentRepository;
+	DocumentDetailsRepository customerDocumentRepository;
 	
 	@Autowired 
 	HandleCustomerVerification handleCustomerVerification;
@@ -328,24 +328,6 @@ public class QuickRegisterHandler implements
 
 		
 
-
-
-
-	@Override
-	public CustomerDocument saveCustomerDocument(
-			CustomerDocument customerDocument) {
-		
-		return customerDocumentRepository.saveCustomerDocument(customerDocument);
-	}
-
-	@Override
-	public CustomerDocument getCustomerDocumentById(
-			Long customerId) {
-		
-		return customerDocumentRepository.getCustomerDocumentByCustomerId(customerId);
-	}
-
-	
 	@Override
 	public void clearDataForTesting() {
 		customerQuickRegisterRepository.clearCustomerQuickRegister();

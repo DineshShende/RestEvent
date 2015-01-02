@@ -11,6 +11,7 @@ import java.util.concurrent.Future;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
+import org.springframework.mail.MailException;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
@@ -139,7 +140,36 @@ public class HandleCustomerVerification {
 		return true;
 	}
 	
-	
+	public Boolean sendEmailAsynchronous(String email,String message) 
+	{
+		
+		
+		SimpleMailMessage mailMessage=new SimpleMailMessage();
+		
+		Boolean status=null;
+		
+		mailMessage.setTo(email);
+		mailMessage.setSubject("Greetings from transportdeal.in");
+		mailMessage.setText(message);
+		
+		//System.out.println("Sending Email");
+		
+		try{
+		mailSender.send(mailMessage);
+		status=true;
+		//System.out.println("EmailSent");
+		}
+		catch(MailException e )
+		{
+			status=false;
+		}
+		finally
+		{
+			return status;
+		}
+		
+			
+	}
 	@Async
 	public Boolean sendSMS(Long mobile,String message)  
 	{

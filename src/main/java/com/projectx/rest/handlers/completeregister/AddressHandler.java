@@ -9,7 +9,7 @@ import com.projectx.rest.repository.completeregister.AddressRepository;
 import com.projectx.rest.services.completeregister.AddressService;
 
 @Component
-@Profile(value="Dev")
+@Profile(value={"Dev","Test"})
 public class AddressHandler implements AddressService {
 
 	@Autowired
