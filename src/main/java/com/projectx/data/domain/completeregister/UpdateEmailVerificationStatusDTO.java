@@ -1,26 +1,24 @@
-package com.projectx.data.domain.quickregister;
+package com.projectx.data.domain.completeregister;
 
-public class CustomerEmailVerificationDetailsByCustomerIdTypeAndEmailDTO {
+public class UpdateEmailVerificationStatusDTO {
 
 	private Long customerId;
 	
-	private Integer customerType; 
-	
 	private String email;
+	
+	private Boolean status;
 
-	public CustomerEmailVerificationDetailsByCustomerIdTypeAndEmailDTO() {
-		super();
+	public UpdateEmailVerificationStatusDTO() {
+
 	}
 
-
-	public CustomerEmailVerificationDetailsByCustomerIdTypeAndEmailDTO(
-			Long customerId, Integer customerType, String email) {
+	public UpdateEmailVerificationStatusDTO(Long customerId, String email,
+			Boolean status) {
 		super();
 		this.customerId = customerId;
-		this.customerType = customerType;
 		this.email = email;
+		this.status = status;
 	}
-
 
 	public Long getCustomerId() {
 		return customerId;
@@ -38,28 +36,19 @@ public class CustomerEmailVerificationDetailsByCustomerIdTypeAndEmailDTO {
 		this.email = email;
 	}
 
-	
-	
-	public Integer getCustomerType() {
-		return customerType;
+	public Boolean getStatus() {
+		return status;
 	}
 
-
-	public void setCustomerType(Integer customerType) {
-		this.customerType = customerType;
+	public void setStatus(Boolean status) {
+		this.status = status;
 	}
-
 
 	@Override
 	public String toString() {
-		return "CustomerEmailVerificationDetailsByCustomerIdAndEmailDTO [customerId="
-				+ customerId
-				+ ", customerType="
-				+ customerType
-				+ ", email="
-				+ email + "]";
+		return "UpdateEmailVerificationStatusDTO [customerId=" + customerId
+				+ ", email=" + email + ", status=" + status + "]";
 	}
-
 
 	@Override
 	public int hashCode() {
@@ -67,12 +56,10 @@ public class CustomerEmailVerificationDetailsByCustomerIdTypeAndEmailDTO {
 		int result = 1;
 		result = prime * result
 				+ ((customerId == null) ? 0 : customerId.hashCode());
-		result = prime * result
-				+ ((customerType == null) ? 0 : customerType.hashCode());
 		result = prime * result + ((email == null) ? 0 : email.hashCode());
+		result = prime * result + ((status == null) ? 0 : status.hashCode());
 		return result;
 	}
-
 
 	@Override
 	public boolean equals(Object obj) {
@@ -82,26 +69,24 @@ public class CustomerEmailVerificationDetailsByCustomerIdTypeAndEmailDTO {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		CustomerEmailVerificationDetailsByCustomerIdTypeAndEmailDTO other = (CustomerEmailVerificationDetailsByCustomerIdTypeAndEmailDTO) obj;
+		UpdateEmailVerificationStatusDTO other = (UpdateEmailVerificationStatusDTO) obj;
 		if (customerId == null) {
 			if (other.customerId != null)
 				return false;
 		} else if (!customerId.equals(other.customerId))
-			return false;
-		if (customerType == null) {
-			if (other.customerType != null)
-				return false;
-		} else if (!customerType.equals(other.customerType))
 			return false;
 		if (email == null) {
 			if (other.email != null)
 				return false;
 		} else if (!email.equals(other.email))
 			return false;
+		if (status == null) {
+			if (other.status != null)
+				return false;
+		} else if (!status.equals(other.status))
+			return false;
 		return true;
 	}
-
-
 	
 	
 	

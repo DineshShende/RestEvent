@@ -28,10 +28,10 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.annotation.JsonFormat.Value;
+import com.projectx.mvc.domain.quickregister.LoginVerificationDTO;
 import com.projectx.rest.controller.quickregister.CustomerQuickRegisterController;
 import com.projectx.rest.repositoryImpl.quickregister.QuickRegisterRepositoryImpl;
 import com.projectx.rest.services.quickregister.QuickRegisterService;
-import com.projectx.web.domain.quickregister.LoginVerificationDTO;
 
 
 public class CustomerQuickRegisterControllerStandAloneTest {
@@ -57,7 +57,7 @@ public class CustomerQuickRegisterControllerStandAloneTest {
 	@Test
 	public void getByCustomerIdWithEmailMobileCustomer() throws Exception {
 		
-		when(customerQuickRegisterService.getCustomerQuickRegisterEntityByCustomerId(standardEmailMobileCustomer().getCustomerId()))
+		when(customerQuickRegisterService.getByEntityId(standardEmailMobileCustomer().getCustomerId()))
 																				.thenReturn(standardEmailMobileCustomer());
 		
 		this.mockMvc.perform(
@@ -78,7 +78,7 @@ public class CustomerQuickRegisterControllerStandAloneTest {
 				.andExpect(jsonPath("$.updatedBy").value(standardEmailMobileCustomer().getUpdatedBy()));
 		
 			verify(customerQuickRegisterService,times(1))
-						.getCustomerQuickRegisterEntityByCustomerId(standardEmailMobileCustomer().getCustomerId());
+						.getByEntityId(standardEmailMobileCustomer().getCustomerId());
 			
 			verifyNoMoreInteractions(customerQuickRegisterService);
 	}

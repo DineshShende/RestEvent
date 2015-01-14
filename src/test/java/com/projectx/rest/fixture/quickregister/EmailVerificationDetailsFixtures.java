@@ -4,9 +4,12 @@ import static com.projectx.rest.fixture.quickregister.QuickRegisterDataFixture.*
 
 import java.util.Date;
 
-import com.projectx.data.domain.quickregister.CustomerEmailVerificationDetailsByCustomerIdTypeAndEmailDTO;
-import com.projectx.data.domain.quickregister.CustomerIdTypeEmailDTO;
+import com.google.gson.Gson;
+import com.projectx.data.domain.quickregister.CustomerEmailVerificationDetailsByCustomerIdTypeAndEmailTypeDTO;
+import com.projectx.data.domain.quickregister.CustomerIdTypeEmailTypeDTO;
 import com.projectx.data.domain.quickregister.UpdateEmailHashAndEmailHashSentTimeAndResendCountDTO;
+import com.projectx.data.domain.quickregister.UpdateEmailHashDTO;
+import com.projectx.mvc.domain.quickregister.VerifyEmailHashDTO;
 import com.projectx.rest.domain.quickregister.EmailVerificationDetails;
 import com.projectx.rest.domain.quickregister.EmailVerificationDetailsKey;
 
@@ -22,41 +25,43 @@ public class EmailVerificationDetailsFixtures {
 	public static Date CUST_DATE=new Date();
 	public static String CUST_UPDATED_BY="CUST_ONLINE";
 	
+	private static Gson gson=new Gson();
 	
 	public static EmailVerificationDetailsKey standardEmailVerificationDetailsKey()
 	{
-		return new EmailVerificationDetailsKey(CUST_ID, CUST_TYPE_CUSTOMER, CUST_EMAIL);
+		return new EmailVerificationDetailsKey(CUST_ID, ENTITY_TYPE_CUSTOMER, CUST_EMAIL_TYPE_PRIMARY);
 	}
 
 	public static EmailVerificationDetails standardCustomerEmailVerificationDetails()
 	{
-		return new EmailVerificationDetails(standardEmailVerificationDetailsKey(), CUST_EMAIL_TYPE_PRIMARY, CUST_EMAILHASH, CUST_DATE, CUST_RESEND_COUNT, CUST_DATE, CUST_UPDATE_TIME, CUST_UPDATED_BY);
+		return new EmailVerificationDetails(standardEmailVerificationDetailsKey(), CUST_EMAIL, CUST_EMAILHASH, CUST_DATE, CUST_RESEND_COUNT, CUST_DATE, CUST_UPDATE_TIME, CUST_UPDATED_BY);
 	}
 	
 	public static EmailVerificationDetails standardCustomerEmailVerificationDetailsWithOutPassword()
 	{
-		return new EmailVerificationDetails(standardEmailVerificationDetailsKey(), CUST_EMAIL_TYPE_PRIMARY, CUST_EMAILHASH, null, CUST_RESEND_COUNT, null, null, null);
+		return new EmailVerificationDetails(standardEmailVerificationDetailsKey(), CUST_EMAIL, CUST_EMAILHASH, null, CUST_RESEND_COUNT, null, null, null);
 	}
 	
 	
-	public static CustomerEmailVerificationDetailsByCustomerIdTypeAndEmailDTO standardCustomerEmailVerificationDetailsByCustomerIdAndEmailDTO()
+	public static CustomerEmailVerificationDetailsByCustomerIdTypeAndEmailTypeDTO standardCustomerEmailVerificationDetailsByCustomerIdAndEmailDTO()
 	{
-		return new CustomerEmailVerificationDetailsByCustomerIdTypeAndEmailDTO(CUST_ID,CUST_TYPE_CUSTOMER, CUST_EMAIL);
+		return new CustomerEmailVerificationDetailsByCustomerIdTypeAndEmailTypeDTO(CUST_ID,ENTITY_TYPE_CUSTOMER, CUST_EMAIL_TYPE_PRIMARY);
 	}
 	
 	public static UpdateEmailHashAndEmailHashSentTimeAndResendCountDTO standardUpdateEmailHashAndEmailHashSentTimeDTO()
 	{
-		return new UpdateEmailHashAndEmailHashSentTimeAndResendCountDTO(CUST_ID,CUST_TYPE_CUSTOMER, CUST_EMAIL, CUST_EMAILHASH_UPDATED, CUST_EMAIL_HASH_SENT_TIME,CUST_RESEND_COUNT+1);
+		return new UpdateEmailHashAndEmailHashSentTimeAndResendCountDTO(CUST_ID,ENTITY_TYPE_CUSTOMER, CUST_EMAIL_TYPE_PRIMARY, CUST_EMAILHASH_UPDATED, CUST_EMAIL_HASH_SENT_TIME,CUST_RESEND_COUNT+1);
 	}
 	
-	public static CustomerIdTypeEmailDTO standardCustomerIdEmailDTO()
+	public static CustomerIdTypeEmailTypeDTO standardCustomerIdEmailDTO()
 	{
-		return new CustomerIdTypeEmailDTO(CUST_ID,CUST_TYPE_CUSTOMER, CUST_EMAIL);
+		return new CustomerIdTypeEmailTypeDTO(CUST_ID,ENTITY_TYPE_CUSTOMER, CUST_EMAIL_TYPE_PRIMARY);
 	}
 	
 	public static String standardJsonUpdateEmailHashDTOMVC()
 	{
-		return "{\"customerId\":"+CUST_ID+",\"customerType\":"+CUST_TYPE_CUSTOMER+",\"email\":\""+CUST_EMAIL+"\"}";
+		
+		return "{\"customerId\":"+CUST_ID+",\"customerType\":"+ENTITY_TYPE_CUSTOMER+",\"emailType\":\""+CUST_EMAIL_TYPE_PRIMARY+"\"}";
 	}
 	
 	
@@ -65,16 +70,11 @@ public class EmailVerificationDetailsFixtures {
 	public static String standardJsonVerifyEmailHashDTO()
 	{
 		
-		StringBuilder jsonBuilder=new StringBuilder();
-		jsonBuilder.append("{\"customerId\":"+CUST_ID+",\"email\":\"");
-		jsonBuilder.append(CUST_EMAIL);
-		jsonBuilder.append("\",\"customerType\":"+CUST_TYPE_CUSTOMER+",\"emailHash\":\""+CUST_EMAILHASH+"\"}");
+		VerifyEmailHashDTO verifyEmailHashDTO=new VerifyEmailHashDTO(CUST_ID, CUST_EMAIL_TYPE_PRIMARY, CUST_EMAIL_TYPE_PRIMARY, CUST_EMAILHASH);
 		
-		System.out.println(jsonBuilder.toString());
-		
-		return jsonBuilder.toString();
+		System.out.println(gson.toJson(verifyEmailHashDTO));
 		  
-		//return gson.toJson(standardJsonVerifyEmailHashDTO());
+		return gson.toJson(verifyEmailHashDTO);
 	}
 	
 

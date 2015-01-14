@@ -9,7 +9,8 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
-import com.projectx.data.domain.quickregister.CustomerIdTypeEmailDTO;
+import com.projectx.data.domain.quickregister.CustomerIdTypeEmailTypeDTO;
+import com.projectx.data.domain.quickregister.EmailDTO;
 import com.projectx.data.domain.quickregister.UpdateEmailHashAndEmailHashSentTimeAndResendCountDTO;
 import com.projectx.rest.domain.quickregister.EmailVerificationDetails;
 import com.projectx.rest.domain.quickregister.EmailVerificationDetailsKey;
@@ -18,7 +19,7 @@ import com.projectx.rest.repository.quickregister.EmailVericationDetailsReposito
 
 @Component
 @Profile(value="Dev")
-@PropertySource(value="classpath:/application.properties")
+@PropertySource(value="classpath:/application.properties") 
 public class EmailVerificationDetailsRepositoryImpl implements EmailVericationDetailsRepository {
 
 	@Autowired
@@ -39,10 +40,10 @@ public class EmailVerificationDetailsRepositoryImpl implements EmailVericationDe
 	}
 
 	@Override
-	public EmailVerificationDetails getEmailVerificationDetailsByCustomerIdTypeAndEmail(
-			Long customerId,Integer customerType, String email) {
+	public EmailVerificationDetails getByEntityIdTypeAndEmailType(
+			Long customerId,Integer customerType, Integer emailType) {
 		
-		CustomerIdTypeEmailDTO emailDTO=new CustomerIdTypeEmailDTO(customerId,customerType, email);
+		CustomerIdTypeEmailTypeDTO emailDTO=new CustomerIdTypeEmailTypeDTO(customerId,customerType, emailType);
 		
 		EmailVerificationDetails savedEntity=restTemplate.postForObject(env.getProperty("data.url")+"/customer/quickregister/emailVerification/getEmailVerificationDetailsByCustomerIdAndEmail", emailDTO, EmailVerificationDetails.class);
 		
@@ -51,10 +52,10 @@ public class EmailVerificationDetailsRepositoryImpl implements EmailVericationDe
 
 	@Override
 	public Integer resetEmailHashAndEmailHashSentTime(Long customerId,Integer customerType,
-			String email, String emailHash, Date emailHashSentTime,
+			Integer emailType, String emailHash, Date emailHashSentTime,
 			Integer resetCount) {
 		UpdateEmailHashAndEmailHashSentTimeAndResendCountDTO dto=new UpdateEmailHashAndEmailHashSentTimeAndResendCountDTO
-				(customerId,customerType, email, emailHash, emailHashSentTime, resetCount);
+				(customerId,customerType, emailType, emailHash, emailHashSentTime, resetCount);
 		
 		Integer updateStatus=restTemplate.postForObject(env.getProperty("data.url")+"/customer/quickregister/emailVerification/resetEmailHashAndEmailHashSentTime", dto, Integer.class);
 		
@@ -63,9 +64,9 @@ public class EmailVerificationDetailsRepositoryImpl implements EmailVericationDe
 
 	@Override
 	public Integer incrementResendCountByCustomerIdAndEmail(Long customerId,Integer customerType,
-			String email) {
+			Integer emailType) {
 		
-		CustomerIdTypeEmailDTO emailDTO=new CustomerIdTypeEmailDTO(customerId,customerType, email);
+		CustomerIdTypeEmailTypeDTO emailDTO=new CustomerIdTypeEmailTypeDTO(customerId,customerType, emailType);
 		
 		Integer updateStatus=restTemplate.postForObject(env.getProperty("data.url")+"/customer/quickregister/emailVerification/incrementResendCountByCustomerIdAndEmail", emailDTO, Integer.class);
 		
@@ -94,6 +95,17 @@ public class EmailVerificationDetailsRepositoryImpl implements EmailVericationDe
 		return updateStatus;
 	
 		
+	}
+
+	@Override
+	public EmailVerificationDetails getByEmail(
+			String email) {
+		
+		EmailDTO emailDTO=new EmailDTO(email);
+		
+		EmailVerificationDetails savedEntity=restTemplate.postForObject(env.getProperty("data.url")+"/customer/quickregister/emailVerification/getEmailVerificationDetailsByEmail", emailDTO, EmailVerificationDetails.class);
+		
+		return savedEntity;
 	}
 
 	

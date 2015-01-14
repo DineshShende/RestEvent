@@ -1,4 +1,4 @@
-package com.projectx.web.domain.quickregister;
+package com.projectx.mvc.domain.quickregister;
 
 import org.springframework.web.context.request.async.DeferredResult;
 

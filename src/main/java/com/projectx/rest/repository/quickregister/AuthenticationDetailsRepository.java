@@ -14,11 +14,11 @@ public interface AuthenticationDetailsRepository  {
 	
 	AuthenticationDetails save(AuthenticationDetails authenticationDetails);
 	
-	AuthenticationDetails getCustomerAuthenticationDetailsByCustomerIdType(Long customerId,Integer customerType);
+	AuthenticationDetails getByCustomerIdType(Long customerId,Integer customerType);
 	
-	AuthenticationDetails getCustomerAuthenticationDetailsByEmail(String email);
+	AuthenticationDetails getByEmail(String email);
 	
-	AuthenticationDetails getCustomerAuthenticationDetailsByMobile(Long mobile);
+	AuthenticationDetails getByMobile(Long mobile);
 	
 	
 	Integer updatePasswordAndPasswordTypeAndCounts(Long customerId,Integer customerType,String password,String passwordType);

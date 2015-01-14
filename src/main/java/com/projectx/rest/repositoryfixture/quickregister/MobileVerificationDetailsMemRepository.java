@@ -6,12 +6,14 @@ import java.util.Map;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
-import com.projectx.data.domain.quickregister.CustomerMobileVerificationDetailsByCustomerIdTypeAndMobileDTO;
+import com.projectx.data.domain.quickregister.CustomerMobileVerificationDetailsByCustomerIdTypeAndMobileTypeDTO;
+import com.projectx.mvc.domain.quickregister.VerifyMobileDTO;
+import com.projectx.rest.domain.quickregister.EmailVerificationDetails;
+import com.projectx.rest.domain.quickregister.EmailVerificationDetailsKey;
 import com.projectx.rest.domain.quickregister.MobileVerificationDetails;
 import com.projectx.rest.domain.quickregister.QuickRegisterEntity;
 import com.projectx.rest.domain.quickregister.MobileVerificationDetailsKey;
 import com.projectx.rest.repository.quickregister.MobileVerificationDetailsRepository;
-import com.projectx.web.domain.quickregister.VerifyMobileDTO;
 
 
 
@@ -34,9 +36,9 @@ public class MobileVerificationDetailsMemRepository implements
 	}
 
 	@Override
-	public MobileVerificationDetails getMobileVerificationDetailsByCustomerIdTypeAndMobile(Long customerId,Integer customerType,Long mobile) {
+	public MobileVerificationDetails geByEntityIdTypeAndMobileType(Long customerId,Integer customerType,Integer mobileType) {
 		
-		MobileVerificationDetailsKey key=new MobileVerificationDetailsKey(customerId, customerType, mobile);
+		MobileVerificationDetailsKey key=new MobileVerificationDetailsKey(customerId, customerType, mobileType);
 		
 		MobileVerificationDetails customerMobileVerificationDetails;
 		
@@ -49,9 +51,9 @@ public class MobileVerificationDetailsMemRepository implements
 	}
 
 	@Override
-	public Integer updateMobilePinAndMobileVerificationAttemptsAndResendCount(Long customerId,Integer customerType,Long mobile,Integer mobilePin,Integer mobileVerificationAttempts,Integer resendCount) {
+	public Integer updateMobilePinAndMobileVerificationAttemptsAndResendCount(Long customerId,Integer customerType,Integer mobileType,Integer mobilePin,Integer mobileVerificationAttempts,Integer resendCount) {
 		
-		MobileVerificationDetailsKey key=new MobileVerificationDetailsKey(customerId, customerType, mobile);
+		MobileVerificationDetailsKey key=new MobileVerificationDetailsKey(customerId, customerType, mobileType);
 		
 		MobileVerificationDetails oldRecord=customerList.get(key);
 		if(oldRecord!=null)
@@ -88,9 +90,9 @@ public class MobileVerificationDetailsMemRepository implements
 
 	@Override
 	public Integer incrementMobileVerificationAttempts(Long customerId,Integer customerType,
-			Long mobile) {
+			Integer mobileType) {
 		
-		MobileVerificationDetailsKey key=new MobileVerificationDetailsKey(customerId, customerType, mobile);
+		MobileVerificationDetailsKey key=new MobileVerificationDetailsKey(customerId, customerType, mobileType);
 		
 		MobileVerificationDetails oldRecord=customerList.get(key);
 		if(oldRecord!=null)
@@ -108,9 +110,9 @@ public class MobileVerificationDetailsMemRepository implements
 	}
 
 	@Override
-	public Integer incrementResendCount(Long customerId,Integer customerType, Long mobile) {
+	public Integer incrementResendCount(Long customerId,Integer customerType, Integer mobileType) {
 		
-		MobileVerificationDetailsKey key=new MobileVerificationDetailsKey(customerId, customerType, mobile);
+		MobileVerificationDetailsKey key=new MobileVerificationDetailsKey(customerId, customerType, mobileType);
 		
 		MobileVerificationDetails oldRecord=customerList.get(key);
 		if(oldRecord!=null)
@@ -133,6 +135,21 @@ public class MobileVerificationDetailsMemRepository implements
 		customerList.remove(key);
 		
 		return true;
+		
+	}
+
+	@Override
+	public MobileVerificationDetails getByMobile(
+			Long mobile) {
+
+		for (MobileVerificationDetailsKey key : customerList.keySet()) {
+			
+			if(customerList.get(key).getMobile().equals(mobile))
+				return customerList.get(key);
+			
+		}
+		
+		return new MobileVerificationDetails();
 		
 	}
 

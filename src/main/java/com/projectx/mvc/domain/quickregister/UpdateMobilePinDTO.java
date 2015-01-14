@@ -1,22 +1,25 @@
-package com.projectx.web.domain.quickregister;
+package com.projectx.mvc.domain.quickregister;
 
 public class UpdateMobilePinDTO {
 
 	private Long customerId;
 	
 	private Integer customerType;
-	private Long mobile;
+	private Integer mobileType;
 	
 	public UpdateMobilePinDTO() {
 	
 	}
 
-	public UpdateMobilePinDTO(Long customerId, Integer customerType, Long mobile) {
+
+	public UpdateMobilePinDTO(Long customerId, Integer customerType,
+			Integer mobileType) {
 		super();
 		this.customerId = customerId;
 		this.customerType = customerType;
-		this.mobile = mobile;
+		this.mobileType = mobileType;
 	}
+
 
 	public Long getCustomerId() {
 		return customerId;
@@ -26,19 +29,19 @@ public class UpdateMobilePinDTO {
 		this.customerId = customerId;
 	}
 
-	public Long getMobile() {
-		return mobile;
+
+	
+	
+	public Integer getMobileType() {
+		return mobileType;
 	}
 
-	public void setMobile(Long mobile) {
-		this.mobile = mobile;
+
+	public void setMobileType(Integer mobileType) {
+		this.mobileType = mobileType;
 	}
 
-	@Override
-	public String toString() {
-		return "UpdateMobilePinDTO [customerId=" + customerId
-				+ ", customerType=" + customerType + ", mobile=" + mobile + "]";
-	}
+
 
 	
 	
@@ -50,6 +53,15 @@ public class UpdateMobilePinDTO {
 		this.customerType = customerType;
 	}
 
+
+	@Override
+	public String toString() {
+		return "UpdateMobilePinDTO [customerId=" + customerId
+				+ ", customerType=" + customerType + ", mobileType="
+				+ mobileType + "]";
+	}
+
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -58,9 +70,11 @@ public class UpdateMobilePinDTO {
 				+ ((customerId == null) ? 0 : customerId.hashCode());
 		result = prime * result
 				+ ((customerType == null) ? 0 : customerType.hashCode());
-		result = prime * result + ((mobile == null) ? 0 : mobile.hashCode());
+		result = prime * result
+				+ ((mobileType == null) ? 0 : mobileType.hashCode());
 		return result;
 	}
+
 
 	@Override
 	public boolean equals(Object obj) {
@@ -81,13 +95,14 @@ public class UpdateMobilePinDTO {
 				return false;
 		} else if (!customerType.equals(other.customerType))
 			return false;
-		if (mobile == null) {
-			if (other.mobile != null)
+		if (mobileType == null) {
+			if (other.mobileType != null)
 				return false;
-		} else if (!mobile.equals(other.mobile))
+		} else if (!mobileType.equals(other.mobileType))
 			return false;
 		return true;
 	}
 
-		
+
+	
 }

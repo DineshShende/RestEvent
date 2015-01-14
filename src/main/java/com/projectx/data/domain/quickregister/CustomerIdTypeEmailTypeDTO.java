@@ -1,20 +1,28 @@
-package com.projectx.web.domain.quickregister;
+package com.projectx.data.domain.quickregister;
 
-public class CustomerIdTypeDTO {
+public class CustomerIdTypeEmailTypeDTO {
 
 	private Long customerId;
 	
 	private Integer customerType;
+	
+	private Integer emailType;
+	
+	
+	public CustomerIdTypeEmailTypeDTO() {
 
-	public CustomerIdTypeDTO() {
-		
 	}
 
-	public CustomerIdTypeDTO(Long customerId, Integer customerType) {
+	public CustomerIdTypeEmailTypeDTO(Long customerId, Integer customerType,
+			Integer emailType) {
 		super();
 		this.customerId = customerId;
 		this.customerType = customerType;
+		this.emailType = emailType;
 	}
+
+
+
 
 	public Long getCustomerId() {
 		return customerId;
@@ -25,7 +33,15 @@ public class CustomerIdTypeDTO {
 		this.customerId = customerId;
 	}
 
-	
+
+	public Integer getEmailType() {
+		return emailType;
+	}
+
+	public void setEmailType(Integer emailType) {
+		this.emailType = emailType;
+	}
+
 	public Integer getCustomerType() {
 		return customerType;
 	}
@@ -36,8 +52,8 @@ public class CustomerIdTypeDTO {
 
 	@Override
 	public String toString() {
-		return "CustomerIdTypeDTO [customerId=" + customerId
-				+ ", customerType=" + customerType + "]";
+		return "CustomerIdTypeEmailDTO [customerId=" + customerId
+				+ ", customerType=" + customerType + ", email=" + emailType + "]";
 	}
 
 	@Override
@@ -48,6 +64,7 @@ public class CustomerIdTypeDTO {
 				+ ((customerId == null) ? 0 : customerId.hashCode());
 		result = prime * result
 				+ ((customerType == null) ? 0 : customerType.hashCode());
+		result = prime * result + ((emailType == null) ? 0 : emailType.hashCode());
 		return result;
 	}
 
@@ -59,7 +76,7 @@ public class CustomerIdTypeDTO {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		CustomerIdTypeDTO other = (CustomerIdTypeDTO) obj;
+		CustomerIdTypeEmailTypeDTO other = (CustomerIdTypeEmailTypeDTO) obj;
 		if (customerId == null) {
 			if (other.customerId != null)
 				return false;
@@ -70,10 +87,13 @@ public class CustomerIdTypeDTO {
 				return false;
 		} else if (!customerType.equals(other.customerType))
 			return false;
+		if (emailType == null) {
+			if (other.emailType != null)
+				return false;
+		} else if (!emailType.equals(other.emailType))
+			return false;
 		return true;
 	}
 
-
-	
-		
+			
 }

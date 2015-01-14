@@ -449,7 +449,6 @@ public class CustomerDetails {
 		return true;
 	}
 
-
 	
 	
 }

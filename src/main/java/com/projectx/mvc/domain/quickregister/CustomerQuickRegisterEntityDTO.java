@@ -1,4 +1,4 @@
-package com.projectx.web.domain.quickregister;
+package com.projectx.mvc.domain.quickregister;
 
 import com.projectx.rest.domain.quickregister.QuickRegisterEntity;
 
@@ -12,23 +12,22 @@ public class CustomerQuickRegisterEntityDTO {
 
 	private Integer pin;
 	
+	private Integer customerType;
 	
 	
 	public CustomerQuickRegisterEntityDTO()
 	{
 		
 	}
-	
-	
-	
+
 	public CustomerQuickRegisterEntityDTO(String firstName, String lastName,
-			String email, Long mobile, Integer pin) {
-		super();
+			String email, Long mobile, Integer pin, Integer customerType) {
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.email = email;
 		this.mobile = mobile;
 		this.pin = pin;
+		this.customerType = customerType;
 	}
 
 
@@ -41,6 +40,7 @@ public class CustomerQuickRegisterEntityDTO {
 		newCustomer.setEmail(this.email);
 		newCustomer.setMobile(this.mobile);
 		newCustomer.setPincode(this.pin);
+		newCustomer.setCustomerType(this.customerType);
 		//newCustomer.setIsEmailVerified(false);
 		//newCustomer.setIsMobileVerified(false);
 		
@@ -79,20 +79,28 @@ public class CustomerQuickRegisterEntityDTO {
 		this.pin = pin;
 	}
 
+	public Integer getCustomerType() {
+		return customerType;
+	}
+
+	public void setCustomerType(Integer customerType) {
+		this.customerType = customerType;
+	}
 
 	@Override
 	public String toString() {
 		return "CustomerQuickRegisterEntityDTO [firstName=" + firstName
 				+ ", lastName=" + lastName + ", email=" + email + ", mobile="
-				+ mobile + ", pin=" + pin + "]";
+				+ mobile + ", pin=" + pin + ", customerType=" + customerType
+				+ "]";
 	}
-	
-	
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result
+				+ ((customerType == null) ? 0 : customerType.hashCode());
 		result = prime * result + ((email == null) ? 0 : email.hashCode());
 		result = prime * result
 				+ ((firstName == null) ? 0 : firstName.hashCode());
@@ -103,8 +111,6 @@ public class CustomerQuickRegisterEntityDTO {
 		return result;
 	}
 
-
-
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -114,6 +120,11 @@ public class CustomerQuickRegisterEntityDTO {
 		if (getClass() != obj.getClass())
 			return false;
 		CustomerQuickRegisterEntityDTO other = (CustomerQuickRegisterEntityDTO) obj;
+		if (customerType == null) {
+			if (other.customerType != null)
+				return false;
+		} else if (!customerType.equals(other.customerType))
+			return false;
 		if (email == null) {
 			if (other.email != null)
 				return false;
@@ -142,8 +153,6 @@ public class CustomerQuickRegisterEntityDTO {
 		return true;
 	}
 
-
-	
-	
+		
 
 }

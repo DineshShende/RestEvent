@@ -38,7 +38,7 @@ public class DocumentDetailsRepositoryImpl implements
 	}
 
 	@Override
-	public DocumentDetails getCustomerDocumentByCustomerId(DocumentKey documentKey) {
+	public DocumentDetails getByCustomerId(DocumentKey documentKey) {
 		
 		DocumentDetails savedEntity=restTemplate.postForObject(env.getProperty("data.url")+"/document/getCustomerDocumentByKey",
 				documentKey, DocumentDetails.class);

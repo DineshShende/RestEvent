@@ -13,7 +13,7 @@ public class UpdateEmailHashAndEmailHashSentTimeAndResendCountDTO {
 	
 	private Integer customerType;
 	
-	private String email;
+	private Integer emailType;
 	
 	private String emailHash;
 	
@@ -28,12 +28,12 @@ public class UpdateEmailHashAndEmailHashSentTimeAndResendCountDTO {
 	
 
 	public UpdateEmailHashAndEmailHashSentTimeAndResendCountDTO(
-			Long customerId, Integer customerType, String email,
+			Long customerId, Integer customerType, Integer emailType,
 			String emailHash, Date emailHashSentTime, Integer resendCount) {
 		super();
 		this.customerId = customerId;
 		this.customerType = customerType;
-		this.email = email;
+		this.emailType = emailType;
 		this.emailHash = emailHash;
 		this.emailHashSentTime = emailHashSentTime;
 		this.resendCount = resendCount;
@@ -49,13 +49,17 @@ public class UpdateEmailHashAndEmailHashSentTimeAndResendCountDTO {
 		this.customerId = customerId;
 	}
 
-	public String getEmail() {
-		return email;
+	public Integer getEmailType() {
+		return emailType;
 	}
 
-	public void setEmail(String email) {
-		this.email = email;
+
+
+	public void setEmailType(Integer emailType) {
+		this.emailType = emailType;
 	}
+
+
 
 	public String getEmailHash() {
 		return emailHash;
@@ -102,8 +106,8 @@ public class UpdateEmailHashAndEmailHashSentTimeAndResendCountDTO {
 				+ customerId
 				+ ", customerType="
 				+ customerType
-				+ ", email="
-				+ email
+				+ ", emailType="
+				+ emailType
 				+ ", emailHash="
 				+ emailHash
 				+ ", emailHashSentTime="
@@ -120,7 +124,7 @@ public class UpdateEmailHashAndEmailHashSentTimeAndResendCountDTO {
 				+ ((customerId == null) ? 0 : customerId.hashCode());
 		result = prime * result
 				+ ((customerType == null) ? 0 : customerType.hashCode());
-		result = prime * result + ((email == null) ? 0 : email.hashCode());
+		result = prime * result + ((emailType == null) ? 0 : emailType.hashCode());
 		result = prime * result
 				+ ((emailHash == null) ? 0 : emailHash.hashCode());
 		result = prime
@@ -153,10 +157,10 @@ public class UpdateEmailHashAndEmailHashSentTimeAndResendCountDTO {
 				return false;
 		} else if (!customerType.equals(other.customerType))
 			return false;
-		if (email == null) {
-			if (other.email != null)
+		if (emailType == null) {
+			if (other.emailType != null)
 				return false;
-		} else if (!email.equals(other.email))
+		} else if (!emailType.equals(other.emailType))
 			return false;
 		if (emailHash == null) {
 			if (other.emailHash != null)

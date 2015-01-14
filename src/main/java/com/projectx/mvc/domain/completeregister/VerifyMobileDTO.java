@@ -3,11 +3,9 @@ package com.projectx.mvc.domain.completeregister;
 public class VerifyMobileDTO {
 	
 	
-	private Long customerId;
+	private Long entityId;
 	
-	private Integer customerType;
-	
-	private Long mobile;
+	private Integer entityType;
 	
 	private Integer mobileType;
 	
@@ -17,38 +15,32 @@ public class VerifyMobileDTO {
 
 	}
 
-	public VerifyMobileDTO(Long customerId, Integer customerType, Long mobile,
+	public VerifyMobileDTO(Long entityId, Integer entityType,
 			Integer mobileType, Integer mobilePin) {
 		super();
-		this.customerId = customerId;
-		this.customerType = customerType;
-		this.mobile = mobile;
+		this.entityId = entityId;
+		this.entityType = entityType;
 		this.mobileType = mobileType;
 		this.mobilePin = mobilePin;
 	}
 
-	public Long getCustomerId() {
-		return customerId;
+
+
+
+	public Long getEntityId() {
+		return entityId;
 	}
 
-	public void setCustomerId(Long customerId) {
-		this.customerId = customerId;
+	public void setEntityId(Long entityId) {
+		this.entityId = entityId;
 	}
 
-	public Integer getCustomerType() {
-		return customerType;
+	public Integer getEntityType() {
+		return entityType;
 	}
 
-	public void setCustomerType(Integer customerType) {
-		this.customerType = customerType;
-	}
-
-	public Long getMobile() {
-		return mobile;
-	}
-
-	public void setMobile(Long mobile) {
-		this.mobile = mobile;
+	public void setEntityType(Integer entityType) {
+		this.entityType = entityType;
 	}
 
 	public Integer getMobileType() {
@@ -69,9 +61,9 @@ public class VerifyMobileDTO {
 
 	@Override
 	public String toString() {
-		return "VerifyMobileDTO [customerId=" + customerId + ", customerType="
-				+ customerType + ", mobile=" + mobile + ", mobileType="
-				+ mobileType + ", mobilePin=" + mobilePin + "]";
+		return "VerifyMobileDTO [entityId=" + entityId + ", entityType="
+				+ entityType + ", mobileType=" + mobileType + ", mobilePin="
+				+ mobilePin + "]";
 	}
 
 	@Override
@@ -79,10 +71,9 @@ public class VerifyMobileDTO {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result
-				+ ((customerId == null) ? 0 : customerId.hashCode());
+				+ ((entityId == null) ? 0 : entityId.hashCode());
 		result = prime * result
-				+ ((customerType == null) ? 0 : customerType.hashCode());
-		result = prime * result + ((mobile == null) ? 0 : mobile.hashCode());
+				+ ((entityType == null) ? 0 : entityType.hashCode());
 		result = prime * result
 				+ ((mobilePin == null) ? 0 : mobilePin.hashCode());
 		result = prime * result
@@ -99,20 +90,15 @@ public class VerifyMobileDTO {
 		if (getClass() != obj.getClass())
 			return false;
 		VerifyMobileDTO other = (VerifyMobileDTO) obj;
-		if (customerId == null) {
-			if (other.customerId != null)
+		if (entityId == null) {
+			if (other.entityId != null)
 				return false;
-		} else if (!customerId.equals(other.customerId))
+		} else if (!entityId.equals(other.entityId))
 			return false;
-		if (customerType == null) {
-			if (other.customerType != null)
+		if (entityType == null) {
+			if (other.entityType != null)
 				return false;
-		} else if (!customerType.equals(other.customerType))
-			return false;
-		if (mobile == null) {
-			if (other.mobile != null)
-				return false;
-		} else if (!mobile.equals(other.mobile))
+		} else if (!entityType.equals(other.entityType))
 			return false;
 		if (mobilePin == null) {
 			if (other.mobilePin != null)
@@ -126,7 +112,7 @@ public class VerifyMobileDTO {
 			return false;
 		return true;
 	}
-	
+
 	
 
 }

@@ -6,11 +6,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.projectx.data.domain.quickregister.CustomerIdTypeEmailDTO;
+import com.projectx.data.domain.quickregister.CustomerIdTypeEmailTypeDTO;
+import com.projectx.mvc.domain.quickregister.UpdateEmailHashDTO;
+import com.projectx.mvc.domain.quickregister.VerifyEmailHashDTO;
 import com.projectx.rest.domain.quickregister.EmailVerificationDetails;
 import com.projectx.rest.services.quickregister.EmailVerificationService;
-import com.projectx.web.domain.quickregister.UpdateEmailHashDTO;
-import com.projectx.web.domain.quickregister.VerifyEmailHashDTO;
 
 @RestController
 @RequestMapping(value="/customer/quickregister")
@@ -22,7 +22,7 @@ public class EmailVerificationController {
 	@RequestMapping(value="/verifyEmailHash",method=RequestMethod.POST)
 	public Boolean verifyEmailHash(@RequestBody VerifyEmailHashDTO verifyEmail)
 	{
-		if(emailVerificationService.verifyEmailHash(verifyEmail.getCustomerId(),verifyEmail.getCustomerType(),verifyEmail.getEmail(), verifyEmail.getEmailHash()))
+		if(emailVerificationService.verifyEmailHash(verifyEmail.getCustomerId(),verifyEmail.getCustomerType(),verifyEmail.getEmailType(), verifyEmail.getEmailHash()))
 			return true;
 		else
 			return false;
@@ -31,14 +31,14 @@ public class EmailVerificationController {
 	@RequestMapping(value="/resetEmailHash",method=RequestMethod.POST)
 	public Boolean updateEmailHash(@RequestBody UpdateEmailHashDTO updateEmailHash)
 	{
-		return emailVerificationService.reSetEmailHash(updateEmailHash.getCustomerId(),updateEmailHash.getCustomerType(),updateEmailHash.getEmail());
+		return emailVerificationService.reSetEmailHash(updateEmailHash.getCustomerId(),updateEmailHash.getCustomerType(),updateEmailHash.getEmailType());
 	}
 	
 	@RequestMapping(value="/resendEmailHash",method=RequestMethod.POST)
 	public Boolean reSendEmailHash(@RequestBody UpdateEmailHashDTO updateEmailHash)
 	{
 				
-		Boolean result= emailVerificationService.reSendEmailHash(updateEmailHash.getCustomerId(),updateEmailHash.getCustomerType(),updateEmailHash.getEmail());
+		Boolean result= emailVerificationService.reSendEmailHash(updateEmailHash.getCustomerId(),updateEmailHash.getCustomerType(),updateEmailHash.getEmailType());
 		
 		return result;
 	}
@@ -46,10 +46,10 @@ public class EmailVerificationController {
 
 
 	@RequestMapping(value="/getEmailVerificationDetails",method=RequestMethod.POST)
-	public EmailVerificationDetails getEmailVerificationDetails(@RequestBody CustomerIdTypeEmailDTO emailDTO)
+	public EmailVerificationDetails getEmailVerificationDetails(@RequestBody CustomerIdTypeEmailTypeDTO emailDTO)
 	{
 		EmailVerificationDetails fetchedResult=emailVerificationService.
-				getCustomerEmailVerificationDetailsByCustomerIdTypeAndEmail(emailDTO.getCustomerId(),emailDTO.getCustomerType(),emailDTO.getEmail());
+				getByEntityIdTypeAndEmailType(emailDTO.getCustomerId(),emailDTO.getCustomerType(),emailDTO.getEmailType());
 		
 		return fetchedResult;
 	}

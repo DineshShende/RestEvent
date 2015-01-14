@@ -4,14 +4,14 @@ import static com.projectx.rest.fixture.quickregister.QuickRegisterDataFixture.*
 
 import java.util.Date;
 
-import com.projectx.data.domain.quickregister.CustomerIdTypeMobileDTO;
-import com.projectx.data.domain.quickregister.CustomerMobileVerificationDetailsByCustomerIdTypeAndMobileDTO;
+import com.projectx.data.domain.quickregister.CustomerIdTypeMobileTypeDTO;
+import com.projectx.data.domain.quickregister.CustomerMobileVerificationDetailsByCustomerIdTypeAndMobileTypeDTO;
 import com.projectx.data.domain.quickregister.MobileDTO;
 import com.projectx.data.domain.quickregister.UpdateMobilePinAndMobileVerificationAttemptsAndResetCountDTO;
 import com.projectx.data.domain.quickregister.UpdateMobileVerificationAttemptsDTO;
+import com.projectx.mvc.domain.quickregister.VerifyMobileDTO;
 import com.projectx.rest.domain.quickregister.MobileVerificationDetails;
 import com.projectx.rest.domain.quickregister.MobileVerificationDetailsKey;
-import com.projectx.web.domain.quickregister.VerifyMobileDTO;
 
 public class MobileVericationDetailsFixtures {
 
@@ -27,45 +27,45 @@ public class MobileVericationDetailsFixtures {
 				
 	public static MobileVerificationDetailsKey standardMobileVerificationDetailsKey()
 	{
-		return new MobileVerificationDetailsKey(CUST_ID, CUST_TYPE_CUSTOMER, CUST_MOBILE);
+		return new MobileVerificationDetailsKey(CUST_ID, ENTITY_TYPE_CUSTOMER, CUST_MOBILE_TYPE_PRIMARY);
 	}
 	
 	public static MobileVerificationDetails standardCustomerMobileVerificationDetails()
 	{
-		return new MobileVerificationDetails(standardMobileVerificationDetailsKey(), CUST_MOBILE_TYPE_PRIMARY, CUST_MOBILEPIN, CUST_RESEND_COUNT, CUST_RESEND_COUNT, CUST_DATE, CUST_DATE, CUST_UPDATED_BY);
+		return new MobileVerificationDetails(standardMobileVerificationDetailsKey(), CUST_MOBILE, CUST_MOBILEPIN, CUST_RESEND_COUNT, CUST_RESEND_COUNT, CUST_DATE, CUST_DATE, CUST_UPDATED_BY);
 	}
 	
 	
-	public static CustomerMobileVerificationDetailsByCustomerIdTypeAndMobileDTO standardCustomerMobileVerificationDetailsByCustomerIdAndMobileDTO()
+	public static CustomerMobileVerificationDetailsByCustomerIdTypeAndMobileTypeDTO standardCustomerMobileVerificationDetailsByCustomerIdAndMobileDTO()
 	{
-		return new CustomerMobileVerificationDetailsByCustomerIdTypeAndMobileDTO(CUST_ID,CUST_TYPE_CUSTOMER, CUST_MOBILE);
+		return new CustomerMobileVerificationDetailsByCustomerIdTypeAndMobileTypeDTO(CUST_ID,ENTITY_TYPE_CUSTOMER, CUST_MOBILE_TYPE_PRIMARY);
 	}
 	
 	public static UpdateMobilePinAndMobileVerificationAttemptsAndResetCountDTO standardUpdateMobilePinAndMobileVerificationAttemptsDTO()
 	{
-		return new UpdateMobilePinAndMobileVerificationAttemptsAndResetCountDTO(CUST_ID,CUST_TYPE_CUSTOMER, CUST_MOBILE, CUST_MOBILEPIN_UPDATED, CUST_MOBILE_VERIFICATION_ATTEMPTS+1,CUST_RESEND_COUNT+1);
+		return new UpdateMobilePinAndMobileVerificationAttemptsAndResetCountDTO(CUST_ID,ENTITY_TYPE_CUSTOMER, CUST_MOBILE_TYPE_PRIMARY, CUST_MOBILEPIN_UPDATED, CUST_MOBILE_VERIFICATION_ATTEMPTS+1,CUST_RESEND_COUNT+1);
 	}
 	
 
 	public static UpdateMobileVerificationAttemptsDTO standardUpdateMobileVerificationAttemptsDTO()
 	{
-		return new UpdateMobileVerificationAttemptsDTO(CUST_ID,CUST_TYPE_CUSTOMER, CUST_MOBILE, 1);
+		return new UpdateMobileVerificationAttemptsDTO(CUST_ID,ENTITY_TYPE_CUSTOMER, CUST_MOBILE, 1);
 	}
 	
-	public static CustomerIdTypeMobileDTO standardCustomerIdMobileDTO()
+	public static CustomerIdTypeMobileTypeDTO standardCustomerIdMobileDTO()
 	{
-		return new CustomerIdTypeMobileDTO(CUST_ID,CUST_TYPE_CUSTOMER, CUST_MOBILE);
+		return new CustomerIdTypeMobileTypeDTO(CUST_ID,ENTITY_TYPE_CUSTOMER, CUST_MOBILE_TYPE_PRIMARY);
 	}
 	
 	public static String standardJsonUpdateMobilePinDTOMVC()
 	{
-		return "{\"customerId\":"+CUST_ID+",\"customerType\":"+CUST_TYPE_CUSTOMER+",\"mobile\":"+CUST_MOBILE+"}";
+		return "{\"customerId\":"+CUST_ID+",\"customerType\":"+ENTITY_TYPE_CUSTOMER+",\"mobileType\":"+CUST_MOBILE_TYPE_PRIMARY+"}";
 	}
 	
 	
 	public static String standardJsonVerifyMobilePinDTO()
 	{
-		return "{\"customerId\":"+CUST_ID+",\"customerType\":"+CUST_TYPE_CUSTOMER+",\"mobile\":"+CUST_MOBILE+",\"mobilePin\":"+CUST_MOBILEPIN+"}";
+		return "{\"customerId\":"+CUST_ID+",\"customerType\":"+ENTITY_TYPE_CUSTOMER+",\"mobileType\":"+MOB_TYPE_PRIMARY+",\"mobilePin\":"+CUST_MOBILEPIN+"}";
 		   
 		//return gson.toJson(standardJsonVerifyMobilePinDTO()); 
 	}

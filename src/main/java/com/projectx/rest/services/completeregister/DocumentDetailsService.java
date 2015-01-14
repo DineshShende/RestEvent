@@ -7,7 +7,7 @@ public interface DocumentDetailsService {
 
 	public DocumentDetails saveCustomerDocument(DocumentDetails customerDocument);
 
-	public DocumentDetails getCustomerDocumentById(DocumentKey documentKey);
+	public DocumentDetails getById(DocumentKey documentKey);
 	
 	public DocumentDetails updateDocument(DocumentKey key,byte[] document,String contentType);
 	

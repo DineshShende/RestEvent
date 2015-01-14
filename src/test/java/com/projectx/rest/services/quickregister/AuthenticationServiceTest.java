@@ -1,14 +1,7 @@
 package com.projectx.rest.services.quickregister;
 
 import static com.projectx.rest.fixture.quickregister.AuthenticationDetailsDataFixtures.*;
-import static com.projectx.rest.fixture.quickregister.AuthenticationDetailsDataFixtures.standardCustomerEmailMobileAuthenticationDetails;
-import static com.projectx.rest.fixture.quickregister.QuickRegisterDataFixture.CUST_EMAILHASH;
-import static com.projectx.rest.fixture.quickregister.QuickRegisterDataFixture.CUST_ID;
-import static com.projectx.rest.fixture.quickregister.QuickRegisterDataFixture.CUST_PASSWORD_CHANGED;
 import static com.projectx.rest.fixture.quickregister.QuickRegisterDataFixture.*;
-import static com.projectx.rest.fixture.quickregister.QuickRegisterDataFixture.standardEmailMobileCustomer;
-import static com.projectx.rest.fixture.quickregister.QuickRegisterDataFixture.standardEmailMobileCustomerAfterSaving;
-import static com.projectx.rest.fixture.quickregister.QuickRegisterDataFixture.standardEmailMobileCustomerDTO;
 import static org.junit.Assert.*;
 
 import org.junit.Before;
@@ -19,13 +12,13 @@ import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import com.projectx.mvc.domain.quickregister.LoginVerificationDTO;
+import com.projectx.mvc.domain.quickregister.LoginVerificationWithDefaultEmailPasswordDTO;
 import com.projectx.rest.config.Application;
 import com.projectx.rest.domain.quickregister.AuthenticationDetails;
 import com.projectx.rest.domain.quickregister.EmailVerificationDetails;
 import com.projectx.rest.domain.quickregister.MobileVerificationDetails;
 import com.projectx.rest.domain.quickregister.CustomerQuickRegisterStatusEntity;
-import com.projectx.web.domain.quickregister.LoginVerificationDTO;
-import com.projectx.web.domain.quickregister.LoginVerificationWithDefaultEmailPasswordDTO;
 
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -65,12 +58,12 @@ public class AuthenticationServiceTest {
 	@Test
 	public void saveCustomerAuthenticationDetailsAndGetByCustomerId()
 	{
-		assertNull(authenticationService.getLoginDetailsByCustomerIdType(CUST_ID,CUST_TYPE_CUSTOMER).getKey());
+		assertNull(authenticationService.getByEntityIdType(CUST_ID,ENTITY_TYPE_CUSTOMER).getKey());
 		
 		AuthenticationDetails authenticationDetails=authenticationService.saveCustomerAuthenticationDetails(standardCustomerEmailAuthenticationDetails());
 		
 		assertEquals(standardCustomerEmailAuthenticationDetails(),authenticationService
-				.getLoginDetailsByCustomerIdType(authenticationDetails.getKey().getCustomerId(),authenticationDetails.getKey().getCustomerType()));
+				.getByEntityIdType(authenticationDetails.getKey().getCustomerId(),authenticationDetails.getKey().getCustomerType()));
 		
 	}
 
@@ -81,7 +74,7 @@ public class AuthenticationServiceTest {
 		authenticationService.saveCustomerAuthenticationDetails(standardCustomerEmailMobileAuthenticationDetails());
 		
 		AuthenticationDetails authenticationDetails=authenticationService.
-				getLoginDetailsByCustomerIdType(standardEmailMobileCustomer().getCustomerId(),standardEmailMobileCustomer().getCustomerType());
+				getByEntityIdType(standardEmailMobileCustomer().getCustomerId(),standardEmailMobileCustomer().getCustomerType());
 				
 		assertEquals(standardEmailMobileCustomer().getCustomerId(), authenticationDetails.getKey().getCustomerId());
 		assertEquals(standardEmailMobileCustomer().getEmail(), authenticationDetails.getEmail());
@@ -95,7 +88,7 @@ public class AuthenticationServiceTest {
 	public void getVerificationDetailsByCustomerIdFailingCase()
 	{
 		AuthenticationDetails authenticationDetails=authenticationService
-				.getLoginDetailsByCustomerIdType(standardEmailMobileCustomer().getCustomerId(),standardEmailMobileCustomer().getCustomerType());
+				.getByEntityIdType(standardEmailMobileCustomer().getCustomerId(),standardEmailMobileCustomer().getCustomerType());
 				
 		assertNull( authenticationDetails.getKey());
 		assertNull(authenticationDetails.getEmail());

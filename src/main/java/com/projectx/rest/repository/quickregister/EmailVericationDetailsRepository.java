@@ -13,11 +13,13 @@ public interface EmailVericationDetailsRepository {
 
 	EmailVerificationDetails save(EmailVerificationDetails mobileVerificationDetails);
 	
-	EmailVerificationDetails getEmailVerificationDetailsByCustomerIdTypeAndEmail(Long customerId,Integer customerType,String email);
+	EmailVerificationDetails getByEntityIdTypeAndEmailType(Long customerId,Integer customerType,Integer emailType);
 	
-	Integer resetEmailHashAndEmailHashSentTime(Long customerId,Integer customerType,String email,String emailHash,Date emailHashSentTime,Integer resetCount);
+	EmailVerificationDetails getByEmail(String email);
 	
-	Integer incrementResendCountByCustomerIdAndEmail(Long customerId,Integer customerType,String email);
+	Integer resetEmailHashAndEmailHashSentTime(Long customerId,Integer customerType,Integer emailType,String emailHash,Date emailHashSentTime,Integer resetCount);
+	
+	Integer incrementResendCountByCustomerIdAndEmail(Long customerId,Integer customerType,Integer emailType);
 	
 	Long count();
 	

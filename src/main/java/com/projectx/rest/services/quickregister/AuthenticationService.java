@@ -1,11 +1,11 @@
 package com.projectx.rest.services.quickregister;
 
 import com.projectx.data.domain.quickregister.UpdatePasswordAndPasswordTypeDTO;
+import com.projectx.mvc.domain.quickregister.CustomerIdTypeDTO;
+import com.projectx.mvc.domain.quickregister.LoginVerificationDTO;
+import com.projectx.mvc.domain.quickregister.LoginVerificationWithDefaultEmailPasswordDTO;
 import com.projectx.rest.domain.quickregister.AuthenticationDetails;
 import com.projectx.rest.domain.quickregister.QuickRegisterEntity;
-import com.projectx.web.domain.quickregister.CustomerIdTypeDTO;
-import com.projectx.web.domain.quickregister.LoginVerificationDTO;
-import com.projectx.web.domain.quickregister.LoginVerificationWithDefaultEmailPasswordDTO;
 
 public interface AuthenticationService {
 	
@@ -14,7 +14,7 @@ public interface AuthenticationService {
 	AuthenticationDetails saveCustomerAuthenticationDetails(
 			AuthenticationDetails entity);
 
-	AuthenticationDetails getLoginDetailsByCustomerIdType(Long customerId,Integer customerType);
+	AuthenticationDetails getByEntityIdType(Long customerId,Integer customerType);
 	
 	AuthenticationDetails verifyLoginDetails(LoginVerificationDTO loginVerificationDTO);
 	

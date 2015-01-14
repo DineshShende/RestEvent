@@ -5,7 +5,7 @@ import static com.projectx.rest.fixture.quickregister.MobileVericationDetailsFix
 import static com.projectx.rest.fixture.quickregister.QuickRegisterDataFixture.CUST_ID;
 import static com.projectx.rest.fixture.quickregister.QuickRegisterDataFixture.CUST_MOBILE;
 import static com.projectx.rest.fixture.quickregister.QuickRegisterDataFixture.CUST_MOBILEPIN;
-import static com.projectx.rest.fixture.quickregister.QuickRegisterDataFixture.CUST_TYPE_CUSTOMER;
+import static com.projectx.rest.fixture.quickregister.QuickRegisterDataFixture.*;
 
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -56,8 +56,8 @@ public class MobileVerificationControllerStandAloneTest {
 	@Test
 	public void addCustomerMobileVerification() throws Exception
 	{
-		when(mobileVerificationService.getCustomerMobileVerificationDetailsByCustomerIdTypeAndMobile(standardCustomerIdMobileDTO().getCustomerId(),
-				standardCustomerIdMobileDTO().getCustomerType(),standardCustomerIdMobileDTO().getMobile())).thenReturn(standardCustomerMobileVerificationDetails());
+		when(mobileVerificationService.getByEntityIdTypeAndMobileType(standardCustomerIdMobileDTO().getCustomerId(),
+				standardCustomerIdMobileDTO().getCustomerType(),standardCustomerIdMobileDTO().getMobileType())).thenReturn(standardCustomerMobileVerificationDetails());
 		
 	
 		this.mockMvc.perform(
@@ -68,8 +68,8 @@ public class MobileVerificationControllerStandAloneTest {
 		.andDo(print())
 		.andExpect(status().isOk())
 		//.andExpect(jsonPath("$.customerId").value(standardCustomerMobileVerificationDetails().getCustomerId()))
-	    .andExpect(jsonPath("$.mobileType").value(standardCustomerMobileVerificationDetails().getMobileType()))
-	    .andExpect(jsonPath("$.key.mobile").value(standardCustomerMobileVerificationDetails().getKey().getMobile()))
+	    .andExpect(jsonPath("$.key.mobileType").value(standardCustomerMobileVerificationDetails().getKey().getMobileType()))
+	    .andExpect(jsonPath("$.mobile").value(standardCustomerMobileVerificationDetails().getMobile()))
 	    .andExpect(jsonPath("$.mobilePin").value(standardCustomerMobileVerificationDetails().getMobilePin()))
 	    .andExpect(jsonPath("$.mobileVerificationAttempts").value(standardCustomerMobileVerificationDetails().getMobileVerificationAttempts()))
 	    .andExpect(jsonPath("$.resendCount").value(standardCustomerMobileVerificationDetails().getResendCount()));
@@ -84,7 +84,7 @@ public class MobileVerificationControllerStandAloneTest {
 	@Test
 	public void verifyMobilePinForMobileCustomer() throws Exception
 	{
-		when(mobileVerificationService.verifyMobilePin(CUST_ID,CUST_TYPE_CUSTOMER,CUST_MOBILE, CUST_MOBILEPIN)).thenReturn(true);
+		when(mobileVerificationService.verifyMobilePin(CUST_ID,ENTITY_TYPE_CUSTOMER,MOB_TYPE_PRIMARY, CUST_MOBILEPIN)).thenReturn(true);
 		
 		this.mockMvc.perform(
 	            post("/customer/quickregister/verifyMobilePin")
@@ -100,7 +100,7 @@ public class MobileVerificationControllerStandAloneTest {
 	@Test
 	public void reSetMobilePin() throws Exception
 	{
-		when(mobileVerificationService.reSetMobilePin(CUST_ID,CUST_TYPE_CUSTOMER,CUST_MOBILE)).thenReturn(true);
+		when(mobileVerificationService.reSetMobilePin(CUST_ID,ENTITY_TYPE_CUSTOMER,MOB_TYPE_PRIMARY)).thenReturn(true);
 		
 		this.mockMvc.perform(
 	            post("/customer/quickregister/resetMobilePin")
@@ -118,7 +118,7 @@ public class MobileVerificationControllerStandAloneTest {
 	@Test
 	public void reSendMobilePin() throws Exception
 	{
-		when(mobileVerificationService.reSendMobilePin(CUST_ID,CUST_TYPE_CUSTOMER,CUST_MOBILE)).thenReturn(true);
+		when(mobileVerificationService.reSendMobilePin(CUST_ID,ENTITY_TYPE_CUSTOMER,MOB_TYPE_PRIMARY)).thenReturn(true);
 		
 		this.mockMvc.perform(
 	            post("/customer/quickregister/resendMobilePin")

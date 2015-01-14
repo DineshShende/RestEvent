@@ -27,12 +27,12 @@ public class EmailVerificationDetailsMemRepository implements EmailVericationDet
 	}
 
 	@Override
-	public EmailVerificationDetails getEmailVerificationDetailsByCustomerIdTypeAndEmail(
-			Long customerId,Integer customerType, String email) {
+	public EmailVerificationDetails getByEntityIdTypeAndEmailType(
+			Long customerId,Integer customerType, Integer emailType) {
 
 		EmailVerificationDetails customerEmailVerificationDetails;
 		
-		EmailVerificationDetailsKey key=new EmailVerificationDetailsKey(customerId, customerType, email);
+		EmailVerificationDetailsKey key=new EmailVerificationDetailsKey(customerId, customerType, emailType);
 		
 		customerEmailVerificationDetails=customerList.get(key);
 		
@@ -58,10 +58,10 @@ public class EmailVerificationDetailsMemRepository implements EmailVericationDet
 
 	@Override
 	public Integer resetEmailHashAndEmailHashSentTime(Long customerId,Integer customerType,
-			String email, String emailHash, Date emailHashSentTime,
+			Integer emailType, String emailHash, Date emailHashSentTime,
 			Integer resetCount) {
 
-		EmailVerificationDetailsKey key=new EmailVerificationDetailsKey(customerId, customerType, email); 
+		EmailVerificationDetailsKey key=new EmailVerificationDetailsKey(customerId, customerType, emailType); 
 		
 		EmailVerificationDetails oldRecord=customerList.get(key);
 		if(oldRecord!=null)
@@ -85,10 +85,10 @@ public class EmailVerificationDetailsMemRepository implements EmailVericationDet
 
 	@Override
 	public Integer incrementResendCountByCustomerIdAndEmail(Long customerId,Integer customerType,
-			String email) {
+			Integer emailType) {
 
 
-		EmailVerificationDetailsKey key=new EmailVerificationDetailsKey(customerId, customerType, email);
+		EmailVerificationDetailsKey key=new EmailVerificationDetailsKey(customerId, customerType, emailType);
 		
 		EmailVerificationDetails oldRecord=customerList.get(key);
 		if(oldRecord!=null)
@@ -113,6 +113,20 @@ public class EmailVerificationDetailsMemRepository implements EmailVericationDet
 		customerList.remove(key);
 		
 		return true;
+	}
+
+	@Override
+	public EmailVerificationDetails getByEmail(
+			String email) {
+		
+		for (EmailVerificationDetailsKey key : customerList.keySet()) {
+			
+			if(customerList.get(key).getEmail().equals(email))
+				return customerList.get(key);
+			
+		}
+		
+		return new EmailVerificationDetails();
 	}
 
 }

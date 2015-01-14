@@ -11,11 +11,11 @@ import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import com.projectx.data.domain.completeregister.UpdateEmailVerificationStatusDTO;
 import com.projectx.data.domain.completeregister.UpdateMobileVerificationStatusDTO;
 import com.projectx.rest.config.Application;
 import com.projectx.rest.domain.completeregister.Address;
 import com.projectx.rest.domain.completeregister.CustomerDetails;
-
 
 import static com.projectx.rest.fixture.completeregister.CustomerDetailsDataFixtures.*;
 import static com.projectx.rest.fixture.completeregister.AddressDataFixture.*;
@@ -46,9 +46,9 @@ public class CustomerDetailsRepositoryTest {
 	{
 		assertEquals(0,customerDetailsCustomRepository.count().intValue());
 		
-		CustomerDetails savedEntity=customerDetailsCustomRepository.save(standardCustomerDetails(standardCustomerDetailsCopiedFromQuickRegisterEntity()));
+		CustomerDetails savedEntity=customerDetailsCustomRepository.save(standardCustomerDetails(standardCustomerFromQuickEntity()));
 		
-		assertEquals(standardCustomerDetails(standardCustomerDetailsCopiedFromQuickRegisterEntity()), savedEntity);
+		assertEquals(standardCustomerDetails(standardCustomerFromQuickEntity()), savedEntity);
 		
 		assertEquals(1,customerDetailsCustomRepository.count().intValue());
 	}
@@ -59,9 +59,9 @@ public class CustomerDetailsRepositoryTest {
 	{
 		assertEquals(0,customerDetailsCustomRepository.count().intValue());
 		
-		CustomerDetails savedEntity=customerDetailsCustomRepository.save(standardCustomerDetails(standardCustomerDetailsCopiedFromQuickRegisterEntity()));
+		CustomerDetails savedEntity=customerDetailsCustomRepository.save(standardCustomerDetails(standardCustomerFromQuickEntity()));
 		
-		assertEquals(standardCustomerDetails(standardCustomerDetailsCopiedFromQuickRegisterEntity()), customerDetailsCustomRepository.findOne(savedEntity.getCustomerId()));
+		assertEquals(standardCustomerDetails(standardCustomerFromQuickEntity()), customerDetailsCustomRepository.findOne(savedEntity.getCustomerId()));
 		
 		assertEquals(1,customerDetailsCustomRepository.count().intValue());
 	}
@@ -72,9 +72,9 @@ public class CustomerDetailsRepositoryTest {
 	{
 		assertEquals(0,customerDetailsCustomRepository.count().intValue());
 		
-		CustomerDetails savedEntity=customerDetailsCustomRepository.save(standardCustomerDetailsCopiedFromQuickRegisterEntity());
+		CustomerDetails savedEntity=customerDetailsCustomRepository.save(standardCustomerFromQuickEntity());
 		
-		assertEquals(standardCustomerDetailsCopiedFromQuickRegisterEntity(), 
+		assertEquals(standardCustomerFromQuickEntity(), 
 				customerDetailsCustomRepository.findOne(savedEntity.getCustomerId()));
 		
 		assertEquals(1,customerDetailsCustomRepository.count().intValue());
@@ -82,8 +82,8 @@ public class CustomerDetailsRepositoryTest {
 		CustomerDetails newEntityToMerge=savedEntity;
 		
 		newEntityToMerge.setDateOfBirth(CUST_DATE);
-		newEntityToMerge.setHomeAddressId(standardCustomerDetails(standardCustomerDetailsCopiedFromQuickRegisterEntity()).getHomeAddressId());
-		newEntityToMerge.setFirmAddressId(standardCustomerDetails(standardCustomerDetailsCopiedFromQuickRegisterEntity()).getFirmAddressId());
+		newEntityToMerge.setHomeAddressId(standardCustomerDetails(standardCustomerFromQuickEntity()).getHomeAddressId());
+		newEntityToMerge.setFirmAddressId(standardCustomerDetails(standardCustomerFromQuickEntity()).getFirmAddressId());
 		newEntityToMerge.setLanguage(CUST_LANG);
 		newEntityToMerge.setBusinessDomain(CUST_BUSINESS_DOMAIN);
 		newEntityToMerge.setNameOfFirm(CUST_NAME_OF_FIRM);
@@ -98,13 +98,13 @@ public class CustomerDetailsRepositoryTest {
 	}
 	
 	
-	
+	/*
 	@Test
 	public void updateHomeAddress()
 	{
 		assertEquals(0, customerDetailsCustomRepository.count().intValue());
 		
-		CustomerDetails savedEntity=customerDetailsCustomRepository.save(standardCustomerDetails(standardCustomerDetailsCopiedFromQuickRegisterEntity()));
+		CustomerDetails savedEntity=customerDetailsCustomRepository.save(standardCustomerDetails(standardCustomerFromQuickEntity()));
 		
 		assertEquals(1, customerDetailsCustomRepository.count().intValue());
 		
@@ -125,7 +125,7 @@ public class CustomerDetailsRepositoryTest {
 	{
 		assertEquals(0, customerDetailsCustomRepository.count().intValue());
 		
-		CustomerDetails savedEntity=customerDetailsCustomRepository.save(standardCustomerDetails(standardCustomerDetailsCopiedFromQuickRegisterEntity()));
+		CustomerDetails savedEntity=customerDetailsCustomRepository.save(standardCustomerDetails(standardCustomerFromQuickEntity()));
 		
 		assertEquals(1, customerDetailsCustomRepository.count().intValue());
 		
@@ -138,7 +138,7 @@ public class CustomerDetailsRepositoryTest {
 		
 		
 	}
-	
+	*/
 	
 	
 	@Test
@@ -146,14 +146,14 @@ public class CustomerDetailsRepositoryTest {
 	{
 		assertEquals(0, customerDetailsCustomRepository.count().intValue());
 		
-		CustomerDetails savedEntity=customerDetailsCustomRepository.save(standardCustomerDetails(standardCustomerDetailsCopiedFromQuickRegisterEntity()));
+		CustomerDetails savedEntity=customerDetailsCustomRepository.save(standardCustomerDetails(standardCustomerFromQuickEntity()));
 		
 		assertEquals(1, customerDetailsCustomRepository.count().intValue());
 		
 		
 		
 		assertEquals(1, customerDetailsCustomRepository
-				.updateMobileVerificationStatus(new UpdateMobileVerificationStatusDTO(savedEntity.getCustomerId(), true)).intValue());
+				.updateMobileVerificationStatus(new UpdateMobileVerificationStatusDTO(savedEntity.getCustomerId(),savedEntity.getMobile(), true)).intValue());
 		
 	}
 	
@@ -164,12 +164,12 @@ public class CustomerDetailsRepositoryTest {
 	{
 		assertEquals(0, customerDetailsCustomRepository.count().intValue());
 		
-		CustomerDetails savedEntity=customerDetailsCustomRepository.save(standardCustomerDetails(standardCustomerDetailsCopiedFromQuickRegisterEntity()));
+		CustomerDetails savedEntity=customerDetailsCustomRepository.save(standardCustomerDetails(standardCustomerFromQuickEntity()));
 		
 		assertEquals(1, customerDetailsCustomRepository.count().intValue());
 		
 		assertEquals(1, customerDetailsCustomRepository
-				.updateSecondaryMobileVerificationStatus(new UpdateMobileVerificationStatusDTO(savedEntity.getCustomerId(), true)).intValue());
+				.updateSecondaryMobileVerificationStatus(new UpdateMobileVerificationStatusDTO(savedEntity.getCustomerId(),savedEntity.getSecondaryMobile(), true)).intValue());
 		
 	}
 	
@@ -178,12 +178,12 @@ public class CustomerDetailsRepositoryTest {
 	{
 		assertEquals(0, customerDetailsCustomRepository.count().intValue());
 		
-		CustomerDetails savedEntity=customerDetailsCustomRepository.save(standardCustomerDetails(standardCustomerDetailsCopiedFromQuickRegisterEntity()));
+		CustomerDetails savedEntity=customerDetailsCustomRepository.save(standardCustomerDetails(standardCustomerFromQuickEntity()));
 		
 		assertEquals(1, customerDetailsCustomRepository.count().intValue());
 		
 		assertEquals(1, customerDetailsCustomRepository
-				.updateEmailVerificationStatus(new UpdateMobileVerificationStatusDTO(savedEntity.getCustomerId(), true)).intValue());
+				.updateEmailVerificationStatus(new UpdateEmailVerificationStatusDTO(savedEntity.getCustomerId(),savedEntity.getEmail(), true)).intValue());
 		
 	}
 	

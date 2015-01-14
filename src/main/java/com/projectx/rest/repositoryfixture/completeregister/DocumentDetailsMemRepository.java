@@ -25,7 +25,7 @@ public class DocumentDetailsMemRepository implements DocumentDetailsRepository {
 	}
 
 	@Override
-	public DocumentDetails getCustomerDocumentByCustomerId(
+	public DocumentDetails getByCustomerId(
 			DocumentKey documentKey) {
 
 		DocumentDetails fetchedEntity=documentList.get(documentKey);

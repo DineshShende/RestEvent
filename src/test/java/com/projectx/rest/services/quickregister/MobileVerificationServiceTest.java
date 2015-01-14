@@ -1,10 +1,8 @@
 package com.projectx.rest.services.quickregister;
 
-import static com.projectx.rest.fixture.quickregister.EmailVerificationDetailsFixtures.*;
-import static com.projectx.rest.fixture.quickregister.EmailVerificationDetailsFixtures.standardCustomerEmailVerificationDetailsWithOutPassword;
+
 import static com.projectx.rest.fixture.quickregister.MobileVericationDetailsFixtures.*;
-import static com.projectx.rest.fixture.quickregister.QuickRegisterDataFixture.standardEmailMobileCustomer;
-import static com.projectx.rest.fixture.quickregister.QuickRegisterDataFixture.standardEmailMobileCustomerAfterInitialization;
+import static com.projectx.rest.fixture.quickregister.QuickRegisterDataFixture.*;
 import static org.junit.Assert.*;
 
 import org.junit.Before;
@@ -16,8 +14,8 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.projectx.rest.config.Application;
-import com.projectx.rest.domain.quickregister.EmailVerificationDetails;
 import com.projectx.rest.domain.quickregister.MobileVerificationDetails;
+import com.projectx.rest.domain.quickregister.MobileVerificationDetailsKey;
 import com.projectx.rest.domain.quickregister.QuickRegisterEntity;
 
 
@@ -29,13 +27,18 @@ public class MobileVerificationServiceTest {
 	@Autowired
 	MobileVerificationService mobileVerificationService;
 	
+	@Autowired
+	QuickRegisterService customerQuickRegisterHandler;
+	
+	
 	@Before
 	public void clearTestData()
 	{
 		mobileVerificationService.clearTestData();
+		customerQuickRegisterHandler.clearDataForTesting();
 	}
 	
-	
+	/*
 	@Test
 	public void environmentTest() {
 		
@@ -68,4 +71,29 @@ public class MobileVerificationServiceTest {
 	}
 	
 
+	@Test
+	public void checkIfEmailExist() throws Exception
+	{
+	
+		assertEquals("NOTEXIST", mobileVerificationService.checkIfMobileAlreadyExist(CUST_ID, QUICK_TYPE_CUSTOMER, standardEmailCustomerDTO().getMobile()));
+		
+				
+		QuickRegisterEntity handledEntity=customerQuickRegisterHandler
+				.handleNewCustomerQuickRegister(standardMobileCustomerDTO()).getCustomer();
+		
+		assertEquals("EXIST", mobileVerificationService.checkIfMobileAlreadyExist(handledEntity.getCustomerId(), QUICK_TYPE_CUSTOMER, handledEntity.getMobile()));
+		
+		assertEquals("EXISTWITHOTHERENTITY", mobileVerificationService.checkIfMobileAlreadyExist(CUST_ID, QUICK_TYPE_VENDOR, handledEntity.getMobile()));
+	}
+*/
+	
+	@Test
+	public void deleteKey()
+	{
+		MobileVerificationDetails savedEntity=mobileVerificationService.saveDetails(standardCustomerMobileVerificationDetails());
+		
+		assertTrue(mobileVerificationService
+				.deleteByKey(savedEntity.getKey()));
+		
+	}
 }

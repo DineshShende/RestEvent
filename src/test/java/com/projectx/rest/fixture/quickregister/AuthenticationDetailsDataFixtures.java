@@ -7,12 +7,12 @@ import java.util.Date;
 import com.projectx.data.domain.quickregister.UpdateEmailPassword;
 import com.projectx.data.domain.quickregister.UpdatePasswordAndPasswordTypeDTO;
 import com.projectx.data.domain.quickregister.VerifyLoginDetailsDataDTO;
+import com.projectx.mvc.domain.quickregister.CustomerIdTypeDTO;
+import com.projectx.mvc.domain.quickregister.LoginVerificationDTO;
+import com.projectx.mvc.domain.quickregister.LoginVerificationWithDefaultEmailPasswordDTO;
+import com.projectx.mvc.domain.quickregister.UpdatePasswordDTO;
 import com.projectx.rest.domain.quickregister.AuthenticationDetails;
 import com.projectx.rest.domain.quickregister.AuthenticationDetailsKey;
-import com.projectx.web.domain.quickregister.CustomerIdTypeDTO;
-import com.projectx.web.domain.quickregister.LoginVerificationDTO;
-import com.projectx.web.domain.quickregister.LoginVerificationWithDefaultEmailPasswordDTO;
-import com.projectx.web.domain.quickregister.UpdatePasswordDTO;
 
 
 public class AuthenticationDetailsDataFixtures {
@@ -30,14 +30,18 @@ public class AuthenticationDetailsDataFixtures {
 	
 	public static AuthenticationDetailsKey standardAuthenticationDetailsKey()
 	{
-		return new AuthenticationDetailsKey(CUST_ID, CUST_TYPE_CUSTOMER);
+		return new AuthenticationDetailsKey(CUST_ID, ENTITY_TYPE_CUSTOMER);
 	}
+	
+	
 	
 	public static AuthenticationDetails standardCustomerEmailMobileAuthenticationDetails()
 	{
 		
 		return new AuthenticationDetails(standardAuthenticationDetailsKey(), CUST_EMAIL, CUST_MOBILE, CUST_PASSWORD_DEFAULT, CUST_PASSWORD_TYPE_DEFAULT, CUST_EMAILHASH, CUST_RESEND_COUNT, CUST_LOGIN_VERIFICATION_ATTEMPTS,CUST_DATE,CUST_DATE,CUST_UPDATED_BY);
 	}
+	
+	
 
 	public static AuthenticationDetails standardCustomerEmailAuthenticationDetailsWithOutPassword()
 	{
@@ -73,7 +77,7 @@ public class AuthenticationDetailsDataFixtures {
 	
 	public static UpdatePasswordAndPasswordTypeDTO standardUpdatePasswordAndPasswordTypeDTO()
 	{
-		return new UpdatePasswordAndPasswordTypeDTO(CUST_ID,CUST_TYPE_CUSTOMER, CUST_PASSWORD_CHANGED,CUST_PASSWORD_TYPE_CHANGED);
+		return new UpdatePasswordAndPasswordTypeDTO(CUST_ID,ENTITY_TYPE_CUSTOMER, CUST_PASSWORD_CHANGED,CUST_PASSWORD_TYPE_CHANGED);
 	}
 //	
 //	public static UpdateCountByCustomerId standardUpdateCountByCustomerId()
@@ -83,12 +87,12 @@ public class AuthenticationDetailsDataFixtures {
 
 	public static UpdateEmailPassword standardUpdateEmailPassword()
 	{
-		return new UpdateEmailPassword(CUST_ID,CUST_TYPE_CUSTOMER, CUST_EMAILHASH_UPDATED);
+		return new UpdateEmailPassword(CUST_ID,ENTITY_TYPE_CUSTOMER, CUST_EMAILHASH_UPDATED);
 	}
 	
 	public static UpdatePasswordDTO standardUpdatePasswordDTO()
 	{
-		return new UpdatePasswordDTO(CUST_ID,CUST_TYPE_CUSTOMER, CUST_PASSWORD_CHANGED);
+		return new UpdatePasswordDTO(CUST_ID,ENTITY_TYPE_CUSTOMER, CUST_PASSWORD_CHANGED);
 	}
 	
 	public static LoginVerificationDTO standardLoginVerificationWithEmail()
@@ -104,7 +108,7 @@ public class AuthenticationDetailsDataFixtures {
 	
 	public static LoginVerificationWithDefaultEmailPasswordDTO standardEmailLoginVerification()
 	{
-		return new LoginVerificationWithDefaultEmailPasswordDTO(CUST_ID,CUST_TYPE_CUSTOMER, CUST_EMAILHASH);
+		return new LoginVerificationWithDefaultEmailPasswordDTO(CUST_ID,ENTITY_TYPE_CUSTOMER, CUST_EMAILHASH);
 	}
 	
 	public static VerifyLoginDetailsDataDTO standardVerifyLoginDetailsDataWithEmail()
@@ -130,7 +134,7 @@ public class AuthenticationDetailsDataFixtures {
 	
 	public static CustomerIdTypeDTO standardCustomerIdDTO()
 	{
-		return new CustomerIdTypeDTO(CUST_ID,CUST_TYPE_CUSTOMER);
+		return new CustomerIdTypeDTO(CUST_ID,ENTITY_TYPE_CUSTOMER);
 	}
 	
 	

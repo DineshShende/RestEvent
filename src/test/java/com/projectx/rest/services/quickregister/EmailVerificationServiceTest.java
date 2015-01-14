@@ -57,7 +57,7 @@ public class EmailVerificationServiceTest {
 	public void createCustomerEmailVerificationEntity()
 	{
 		EmailVerificationDetails emailVerificationDetails=emailVerificationService
-				.createCustomerEmailVerificationEntity(standardEmailMobileCustomer().getCustomerId(),standardEmailMobileCustomer().getCustomerType(),
+				.createEntity(standardEmailMobileCustomer().getCustomerId(),standardEmailMobileCustomer().getCustomerType(),
 						standardEmailMobileCustomer().getEmail(),CUST_EMAIL_TYPE_PRIMARY,standardEmailMobileCustomer().getUpdatedBy());
 		
 		assertEquals(standardCustomerEmailVerificationDetailsWithOutPassword().getKey(), emailVerificationDetails.getKey());
@@ -67,105 +67,120 @@ public class EmailVerificationServiceTest {
 	@Test
 	public void saveCustomerEmailVerificationEntityAndGetByCustomerIdAndEmail()
 	{
-		EmailVerificationDetails savedEntity=emailVerificationService.saveCustomerEmailVerificationDetails(standardCustomerEmailVerificationDetails());
+		EmailVerificationDetails savedEntity=emailVerificationService.saveDetails(standardCustomerEmailVerificationDetails());
 		
-		EmailVerificationDetails fetchedEntity=emailVerificationService.getCustomerEmailVerificationDetailsByCustomerIdTypeAndEmail(
-				savedEntity.getKey().getCustomerId(),savedEntity.getKey().getCustomerType(), savedEntity.getKey().getEmail());
+		EmailVerificationDetails fetchedEntity=emailVerificationService.getByEntityIdTypeAndEmailType(
+				savedEntity.getKey().getCustomerId(),savedEntity.getKey().getCustomerType(), 1);
 		
 		assertEquals(savedEntity, fetchedEntity);
 	}
 	
 	
-@Test 
-public void verifyEmailHashMobilePinWithEmailMobileCustomer() throws Exception
-{
-	assertNull(customerQuickRegisterHandler.getCustomerQuickRegisterEntityByCustomerId(CUST_ID).getCustomerId());
-
-	CustomerQuickRegisterStatusEntity handledEntity=customerQuickRegisterHandler
-			.handleNewCustomerQuickRegister(standardEmailMobileCustomerDTO());
-
-	AuthenticationDetails authenticationDetails=authenticationService
-			.getLoginDetailsByCustomerIdType(handledEntity.getCustomer().getCustomerId(),handledEntity.getCustomer().getCustomerType());
+	@Test 
+	public void verifyEmailHashMobilePinWithEmailMobileCustomer() throws Exception
+	{
+		assertNull(customerQuickRegisterHandler.getByEntityId(CUST_ID).getCustomerId());
 	
-	EmailVerificationDetails emailVerificationDetails=emailVerificationService
-			.getCustomerEmailVerificationDetailsByCustomerIdTypeAndEmail(handledEntity.getCustomer().getCustomerId(),
-					handledEntity.getCustomer().getCustomerType(),handledEntity.getCustomer().getEmail());
+		CustomerQuickRegisterStatusEntity handledEntity=customerQuickRegisterHandler
+				.handleNewCustomerQuickRegister(standardEmailMobileCustomerDTO());
 	
-	MobileVerificationDetails mobileVerificationDetails=mobileVerificationService
-			.getCustomerMobileVerificationDetailsByCustomerIdTypeAndMobile(handledEntity.getCustomer().getCustomerId(),
-					handledEntity.getCustomer().getCustomerType(),handledEntity.getCustomer().getMobile());
-	assertNull(authenticationDetails.getPassword());
-	assertNull(authenticationDetails.getPasswordType());
-	assertNull(authenticationDetails.getEmailPassword());
+		AuthenticationDetails authenticationDetails=authenticationService
+				.getByEntityIdType(handledEntity.getCustomer().getCustomerId(),handledEntity.getCustomer().getCustomerType());
+		
+		EmailVerificationDetails emailVerificationDetails=emailVerificationService
+				.getByEntityIdTypeAndEmailType(handledEntity.getCustomer().getCustomerId(),
+						handledEntity.getCustomer().getCustomerType(),1);
+		
+		MobileVerificationDetails mobileVerificationDetails=mobileVerificationService
+				.getByEntityIdTypeAndMobileType(handledEntity.getCustomer().getCustomerId(),
+						handledEntity.getCustomer().getCustomerType(),1);
+		assertNull(authenticationDetails.getPassword());
+		assertNull(authenticationDetails.getPasswordType());
+		assertNull(authenticationDetails.getEmailPassword());
+		
+		assertTrue(emailVerificationService.verifyEmailHashUpdateStatusAndSendPassword(handledEntity.getCustomer().getCustomerId(),
+				handledEntity.getCustomer().getCustomerType(),1, emailVerificationDetails.getEmailHash()));
+		
+		authenticationDetails=authenticationService.
+				getByEntityIdType(handledEntity.getCustomer().getCustomerId(),handledEntity.getCustomer().getCustomerType());
+		
+		assertNotNull(authenticationDetails.getPassword());
+		assertNotNull(authenticationDetails.getPasswordType());
+		assertNotNull(authenticationDetails.getEmailPassword());
+		
+		String oldPassword=authenticationDetails.getPassword();
+		String oldPasswordType=authenticationDetails.getPasswordType();
+		String oldEmailPassword=authenticationDetails.getEmailPassword();
+		
+		assertFalse(customerQuickRegisterHandler.getByEntityId(handledEntity.getCustomer().getCustomerId()).getIsMobileVerified());
+		assertTrue(customerQuickRegisterHandler.getByEntityId(handledEntity.getCustomer().getCustomerId()).getIsEmailVerified());
 	
-	assertTrue(emailVerificationService.verifyEmailHash(handledEntity.getCustomer().getCustomerId(),
-			handledEntity.getCustomer().getCustomerType(),handledEntity.getCustomer().getEmail(), emailVerificationDetails.getEmailHash()));
+		
+		assertTrue(mobileVerificationService
+				.verifyMobilePinUpdateStatusAndSendPassword(handledEntity.getCustomer().getCustomerId(),handledEntity.getCustomer().getCustomerType(),
+						1,mobileVerificationDetails.getMobilePin()));
+		
+		authenticationDetails=authenticationService
+				.getByEntityIdType(handledEntity.getCustomer().getCustomerId(),handledEntity.getCustomer().getCustomerType());
+		
+		assertEquals(oldPassword,authenticationDetails.getPassword());
+		assertEquals(oldPasswordType,authenticationDetails.getPasswordType());
+		assertEquals(oldEmailPassword, authenticationDetails.getEmailPassword());
+		
+		assertTrue(customerQuickRegisterHandler.getByEntityId(handledEntity.getCustomer().getCustomerId()).getIsMobileVerified());
+		
+		assertTrue(customerQuickRegisterHandler.getByEntityId(handledEntity.getCustomer().getCustomerId()).getIsEmailVerified());
 	
-	authenticationDetails=authenticationService.
-			getLoginDetailsByCustomerIdType(handledEntity.getCustomer().getCustomerId(),handledEntity.getCustomer().getCustomerType());
+		
+	}
 	
-	assertNotNull(authenticationDetails.getPassword());
-	assertNotNull(authenticationDetails.getPasswordType());
-	assertNotNull(authenticationDetails.getEmailPassword());
+	@Test 
+	public void verifyEmailWithEmailCustomer() throws Exception
+	{
+		assertNull(customerQuickRegisterHandler.getByEntityId(CUST_ID).getCustomerId());
 	
-	String oldPassword=authenticationDetails.getPassword();
-	String oldPasswordType=authenticationDetails.getPasswordType();
-	String oldEmailPassword=authenticationDetails.getEmailPassword();
+		QuickRegisterEntity handledEntity=customerQuickRegisterHandler
+				.handleNewCustomerQuickRegister(standardEmailCustomerDTO()).getCustomer();
+		
+		
+		EmailVerificationDetails emailVerificationDetail=emailVerificationService.getByEntityIdTypeAndEmailType
+													(handledEntity.getCustomerId(),handledEntity.getCustomerType(), 1); 
+		
+		AuthenticationDetails authenticationDetails=authenticationService
+				.getByEntityIdType(handledEntity.getCustomerId(),handledEntity.getCustomerType());
+		
+		assertNull(authenticationDetails.getPassword());
+		assertNull(authenticationDetails.getPasswordType());
 	
-	assertFalse(customerQuickRegisterHandler.getCustomerQuickRegisterEntityByCustomerId(handledEntity.getCustomer().getCustomerId()).getIsMobileVerified());
-	assertTrue(customerQuickRegisterHandler.getCustomerQuickRegisterEntityByCustomerId(handledEntity.getCustomer().getCustomerId()).getIsEmailVerified());
-
+		
+		assertTrue(emailVerificationService.verifyEmailHashUpdateStatusAndSendPassword(handledEntity.getCustomerId(),
+				handledEntity.getCustomerType(),1 ,emailVerificationDetail.getEmailHash()));
+		
+		authenticationDetails=authenticationService.getByEntityIdType(handledEntity.getCustomerId(),handledEntity.getCustomerType());
+		
+		assertNotNull(authenticationDetails.getPassword());
+		assertNotNull(authenticationDetails.getPasswordType());
+		assertNotNull(authenticationDetails.getEmailPassword());
 	
-	assertTrue(mobileVerificationService
-			.verifyMobilePin(handledEntity.getCustomer().getCustomerId(),handledEntity.getCustomer().getCustomerType(),
-					handledEntity.getCustomer().getMobile(),mobileVerificationDetails.getMobilePin()));
+		assertTrue(customerQuickRegisterHandler.getByEntityId(handledEntity.getCustomerId()).getIsEmailVerified());
+		
+		
+	}
 	
-	authenticationDetails=authenticationService
-			.getLoginDetailsByCustomerIdType(handledEntity.getCustomer().getCustomerId(),handledEntity.getCustomer().getCustomerType());
+	@Test
+	public void checkIfEmailExist() throws Exception
+	{
 	
-	assertEquals(oldPassword,authenticationDetails.getPassword());
-	assertEquals(oldPasswordType,authenticationDetails.getPasswordType());
-	assertEquals(oldEmailPassword, authenticationDetails.getEmailPassword());
+		assertEquals("NOTEXIST", emailVerificationService.checkIfEmailAlreadyExist(CUST_ID, ENTITY_TYPE_CUSTOMER,ENTITY_TYPE_CUSTOMER, CUST_EMAIL));
+		
+				
+		QuickRegisterEntity handledEntity=customerQuickRegisterHandler
+				.handleNewCustomerQuickRegister(standardEmailCustomerDTO()).getCustomer();
+		
+		assertEquals("EXIST", emailVerificationService.checkIfEmailAlreadyExist(handledEntity.getCustomerId(), ENTITY_TYPE_CUSTOMER,ENTITY_TYPE_CUSTOMER, CUST_EMAIL));
+		
+		assertEquals("EXISTWITHOTHERENTITY", emailVerificationService.checkIfEmailAlreadyExist(CUST_ID, ENTITY_TYPE_VENDOR,ENTITY_TYPE_CUSTOMER, CUST_EMAIL));
+	}
 	
-	assertTrue(customerQuickRegisterHandler.getCustomerQuickRegisterEntityByCustomerId(handledEntity.getCustomer().getCustomerId()).getIsMobileVerified());
-	assertTrue(customerQuickRegisterHandler.getCustomerQuickRegisterEntityByCustomerId(handledEntity.getCustomer().getCustomerId()).getIsEmailVerified());
-
-	
-}
-
-@Test 
-public void verifyEmailWithEmailCustomer() throws Exception
-{
-	assertNull(customerQuickRegisterHandler.getCustomerQuickRegisterEntityByCustomerId(CUST_ID).getCustomerId());
-
-	QuickRegisterEntity handledEntity=customerQuickRegisterHandler
-			.handleNewCustomerQuickRegister(standardEmailCustomerDTO()).getCustomer();
-	
-	
-	EmailVerificationDetails emailVerificationDetail=emailVerificationService.getCustomerEmailVerificationDetailsByCustomerIdTypeAndEmail
-												(handledEntity.getCustomerId(),handledEntity.getCustomerType(), handledEntity.getEmail()); 
-	
-	AuthenticationDetails authenticationDetails=authenticationService
-			.getLoginDetailsByCustomerIdType(handledEntity.getCustomerId(),handledEntity.getCustomerType());
-	
-	assertNull(authenticationDetails.getPassword());
-	assertNull(authenticationDetails.getPasswordType());
-
-	
-	assertTrue(emailVerificationService.verifyEmailHash(handledEntity.getCustomerId(),
-			handledEntity.getCustomerType(),handledEntity.getEmail() ,emailVerificationDetail.getEmailHash()));
-	
-	authenticationDetails=authenticationService.getLoginDetailsByCustomerIdType(handledEntity.getCustomerId(),handledEntity.getCustomerType());
-	
-	assertNotNull(authenticationDetails.getPassword());
-	assertNotNull(authenticationDetails.getPasswordType());
-	assertNotNull(authenticationDetails.getEmailPassword());
-
-	assertTrue(customerQuickRegisterHandler.getCustomerQuickRegisterEntityByCustomerId(handledEntity.getCustomerId()).getIsEmailVerified());
-	
-	
-}
-
-
 	
 }

@@ -8,9 +8,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 import com.projectx.data.domain.completeregister.UpdateAddressDTO;
+import com.projectx.data.domain.completeregister.UpdateEmailVerificationStatusDTO;
 import com.projectx.data.domain.completeregister.UpdateMobileVerificationStatusDTO;
 import com.projectx.rest.domain.completeregister.CustomerDetails;
-
 import com.projectx.rest.repository.completeregister.CustomerDetailsRepository;
 
 @Component
@@ -48,6 +48,7 @@ public class CustomerDetailsRepositoryImpl implements CustomerDetailsRepository 
 		
 	}
 
+	/*
 	@Override
 	public CustomerDetails updateFirmAddress(UpdateAddressDTO addressDTO) {
 
@@ -68,7 +69,7 @@ public class CustomerDetailsRepositoryImpl implements CustomerDetailsRepository 
 		
 		
 	}
-
+*/
 	@Override
 	public Integer updateMobileVerificationStatus(
 			UpdateMobileVerificationStatusDTO verificationStatusDTO) {
@@ -92,7 +93,7 @@ public class CustomerDetailsRepositoryImpl implements CustomerDetailsRepository 
 
 	@Override
 	public Integer updateEmailVerificationStatus(
-			UpdateMobileVerificationStatusDTO verificationStatusDTO) {
+			UpdateEmailVerificationStatusDTO verificationStatusDTO) {
 
 		Integer updatedStatus=restTemplate.postForObject(env.getProperty("data.url")+"/customer/completeregister/updateEmailVerificationStatus",
 				verificationStatusDTO, Integer.class);

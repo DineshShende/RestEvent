@@ -1,45 +1,61 @@
-package com.projectx.web.domain.quickregister;
+package com.projectx.mvc.domain.quickregister;
 
-public class LoginVerificationWithDefaultEmailPasswordDTO {
+public class VerifyMobilePinDTO {
 	
 	private Long customerId;
 	
 	private Integer customerType;
 	
-	private String emailPassword;
+	private Integer mobileType;
+	
+	private Integer mobilePin;
+	
 
-	public LoginVerificationWithDefaultEmailPasswordDTO() {
-
+	public VerifyMobilePinDTO() {
+	
 	}
 
-	public LoginVerificationWithDefaultEmailPasswordDTO(Long customerId,
-			Integer customerType, String emailPassword) {
+
+	public VerifyMobilePinDTO(Long customerId, Integer customerType,
+			Integer mobileType, Integer mobilePin) {
 		super();
 		this.customerId = customerId;
 		this.customerType = customerType;
-		this.emailPassword = emailPassword;
+		this.mobileType = mobileType;
+		this.mobilePin = mobilePin;
 	}
-
-
 
 	public Long getCustomerId() {
 		return customerId;
 	}
 
+
 	public void setCustomerId(Long customerId) {
 		this.customerId = customerId;
 	}
 
-	public String getEmailPassword() {
-		return emailPassword;
-	}
-
-	public void setEmailPassword(String emailPassword) {
-		this.emailPassword = emailPassword;
-	}
 
 	
-	
+
+	public Integer getMobileType() {
+		return mobileType;
+	}
+
+
+	public void setMobileType(Integer mobileType) {
+		this.mobileType = mobileType;
+	}
+
+
+	public Integer getMobilePin() {
+		return mobilePin;
+	}
+
+
+	public void setMobilePin(Integer mobilePin) {
+		this.mobilePin = mobilePin;
+	}
+
 	public Integer getCustomerType() {
 		return customerType;
 	}
@@ -48,12 +64,14 @@ public class LoginVerificationWithDefaultEmailPasswordDTO {
 		this.customerType = customerType;
 	}
 
+
 	@Override
 	public String toString() {
-		return "LoginVerificationWithDefaultEmailPasswordDTO [customerId="
-				+ customerId + ", customerType=" + customerType
-				+ ", emailPassword=" + emailPassword + "]";
+		return "VerifyMobilePinDTO [customerId=" + customerId
+				+ ", customerType=" + customerType + ", mobileType="
+				+ mobileType + ", mobilePin=" + mobilePin + "]";
 	}
+
 
 	@Override
 	public int hashCode() {
@@ -64,9 +82,12 @@ public class LoginVerificationWithDefaultEmailPasswordDTO {
 		result = prime * result
 				+ ((customerType == null) ? 0 : customerType.hashCode());
 		result = prime * result
-				+ ((emailPassword == null) ? 0 : emailPassword.hashCode());
+				+ ((mobilePin == null) ? 0 : mobilePin.hashCode());
+		result = prime * result
+				+ ((mobileType == null) ? 0 : mobileType.hashCode());
 		return result;
 	}
+
 
 	@Override
 	public boolean equals(Object obj) {
@@ -76,7 +97,7 @@ public class LoginVerificationWithDefaultEmailPasswordDTO {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		LoginVerificationWithDefaultEmailPasswordDTO other = (LoginVerificationWithDefaultEmailPasswordDTO) obj;
+		VerifyMobilePinDTO other = (VerifyMobilePinDTO) obj;
 		if (customerId == null) {
 			if (other.customerId != null)
 				return false;
@@ -87,10 +108,15 @@ public class LoginVerificationWithDefaultEmailPasswordDTO {
 				return false;
 		} else if (!customerType.equals(other.customerType))
 			return false;
-		if (emailPassword == null) {
-			if (other.emailPassword != null)
+		if (mobilePin == null) {
+			if (other.mobilePin != null)
 				return false;
-		} else if (!emailPassword.equals(other.emailPassword))
+		} else if (!mobilePin.equals(other.mobilePin))
+			return false;
+		if (mobileType == null) {
+			if (other.mobileType != null)
+				return false;
+		} else if (!mobileType.equals(other.mobileType))
 			return false;
 		return true;
 	}

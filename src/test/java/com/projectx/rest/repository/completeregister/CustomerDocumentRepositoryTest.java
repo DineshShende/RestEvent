@@ -52,11 +52,11 @@ public class CustomerDocumentRepositoryTest {
 	{
 		assertEquals(0, customerDocumentRepository.count().intValue());
 		
-		assertNull(customerDocumentRepository.getCustomerDocumentByCustomerId(standardDocumentKey()).getKey());
+		assertNull(customerDocumentRepository.getByCustomerId(standardDocumentKey()).getKey());
 		
 		assertEquals(standardDocumentDetails(), customerDocumentRepository.saveCustomerDocument(standardDocumentDetails()));
 		
-		assertEquals(standardDocumentDetails(), customerDocumentRepository.getCustomerDocumentByCustomerId(standardDocumentKey()));
+		assertEquals(standardDocumentDetails(), customerDocumentRepository.getByCustomerId(standardDocumentKey()));
 		
 		assertEquals(1, customerDocumentRepository.count().intValue());
 	}
@@ -68,14 +68,14 @@ public class CustomerDocumentRepositoryTest {
 		
 		assertEquals(standardDocumentDetails(), customerDocumentRepository.saveCustomerDocument(standardDocumentDetails()));
 		
-		assertEquals(standardDocumentDetails(), customerDocumentRepository.getCustomerDocumentByCustomerId(standardDocumentKey()));
+		assertEquals(standardDocumentDetails(), customerDocumentRepository.getByCustomerId(standardDocumentKey()));
 		
 		assertEquals(1, customerDocumentRepository.count().intValue());
 		
 		DocumentDetails updatedDocument=customerDocumentRepository.saveCustomerDocument(standardDocumentDetailsWithNewDocumentContentType());
 		
 		assertEquals(standardDocumentDetailsWithNewDocumentContentType(),
-				customerDocumentRepository.getCustomerDocumentByCustomerId(standardDocumentKey()));
+				customerDocumentRepository.getByCustomerId(standardDocumentKey()));
 		
 		assertEquals(1, customerDocumentRepository.count().intValue());
 	}
@@ -87,14 +87,14 @@ public class CustomerDocumentRepositoryTest {
 		
 		assertEquals(standardDocumentDetails(), customerDocumentRepository.saveCustomerDocument(standardDocumentDetails()));
 		
-		assertEquals(standardDocumentDetails(), customerDocumentRepository.getCustomerDocumentByCustomerId(standardDocumentKey()));
+		assertEquals(standardDocumentDetails(), customerDocumentRepository.getByCustomerId(standardDocumentKey()));
 		
 		assertEquals(1, customerDocumentRepository.count().intValue());
 		
 		DocumentDetails updatedDocument=customerDocumentRepository.saveCustomerDocument(standardDocumentDetailsWithNewVerificationStatusAndRemark());
 		
 		assertEquals(standardDocumentDetailsWithNewVerificationStatusAndRemark(),
-				customerDocumentRepository.getCustomerDocumentByCustomerId(standardDocumentKey()));
+				customerDocumentRepository.getByCustomerId(standardDocumentKey()));
 		
 		assertEquals(1, customerDocumentRepository.count().intValue());
 	}

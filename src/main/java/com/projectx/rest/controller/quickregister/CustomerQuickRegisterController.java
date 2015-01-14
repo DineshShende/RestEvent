@@ -8,26 +8,26 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.projectx.data.domain.quickregister.CustomerIdTypeEmailDTO;
-import com.projectx.data.domain.quickregister.CustomerIdTypeMobileDTO;
+import com.projectx.data.domain.quickregister.CustomerIdTypeEmailTypeDTO;
+import com.projectx.data.domain.quickregister.CustomerIdTypeMobileTypeDTO;
 import com.projectx.data.domain.quickregister.UpdatePasswordAndPasswordTypeDTO;
+import com.projectx.mvc.domain.quickregister.CustomerIdTypeDTO;
+import com.projectx.mvc.domain.quickregister.CustomerQuickRegisterEntityDTO;
+import com.projectx.mvc.domain.quickregister.CustomerQuickRegisterStringStatusEntity;
+import com.projectx.mvc.domain.quickregister.LoginVerificationDTO;
+import com.projectx.mvc.domain.quickregister.LoginVerificationWithDefaultEmailPasswordDTO;
+import com.projectx.mvc.domain.quickregister.ResetPasswordRedirectDTO;
+import com.projectx.mvc.domain.quickregister.UpdateEmailHashDTO;
+import com.projectx.mvc.domain.quickregister.UpdateMobilePinDTO;
+import com.projectx.mvc.domain.quickregister.UpdatePasswordDTO;
+import com.projectx.mvc.domain.quickregister.VerifyEmailHashDTO;
+import com.projectx.mvc.domain.quickregister.VerifyMobilePinDTO;
 import com.projectx.rest.domain.quickregister.AuthenticationDetails;
 import com.projectx.rest.domain.quickregister.EmailVerificationDetails;
 import com.projectx.rest.domain.quickregister.MobileVerificationDetails;
 import com.projectx.rest.domain.quickregister.QuickRegisterEntity;
 import com.projectx.rest.domain.quickregister.CustomerQuickRegisterStatusEntity;
 import com.projectx.rest.services.quickregister.QuickRegisterService;
-import com.projectx.web.domain.quickregister.CustomerIdTypeDTO;
-import com.projectx.web.domain.quickregister.CustomerQuickRegisterEntityDTO;
-import com.projectx.web.domain.quickregister.CustomerQuickRegisterStringStatusEntity;
-import com.projectx.web.domain.quickregister.LoginVerificationDTO;
-import com.projectx.web.domain.quickregister.LoginVerificationWithDefaultEmailPasswordDTO;
-import com.projectx.web.domain.quickregister.ResetPasswordRedirectDTO;
-import com.projectx.web.domain.quickregister.UpdateEmailHashDTO;
-import com.projectx.web.domain.quickregister.UpdateMobilePinDTO;
-import com.projectx.web.domain.quickregister.UpdatePasswordDTO;
-import com.projectx.web.domain.quickregister.VerifyEmailHashDTO;
-import com.projectx.web.domain.quickregister.VerifyMobilePinDTO;
 
 import static com.projectx.rest.fixtures.quickregister.CustomerQuickRegisterDataFixture.*;
 
@@ -55,7 +55,7 @@ public class CustomerQuickRegisterController {
 	@RequestMapping(value="/getByCustomerId",method=RequestMethod.POST)
 	public QuickRegisterEntity getCustomerByCustomerId(@RequestBody CustomerIdTypeDTO customerIdDTO)
 	{
-		QuickRegisterEntity fetchedEntity=customerQuickRegisterService.getCustomerQuickRegisterEntityByCustomerId(customerIdDTO.getCustomerId());
+		QuickRegisterEntity fetchedEntity=customerQuickRegisterService.getByEntityId(customerIdDTO.getCustomerId());
 		
 		return fetchedEntity;
 	}

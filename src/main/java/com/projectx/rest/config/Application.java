@@ -8,8 +8,16 @@ import java.util.Date;
 import java.util.Properties;
 import java.util.concurrent.ScheduledFuture;
 
+import javax.transaction.HeuristicMixedException;
+import javax.transaction.HeuristicRollbackException;
+import javax.transaction.NotSupportedException;
+import javax.transaction.RollbackException;
+import javax.transaction.SystemException;
+import javax.transaction.UserTransaction;
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.context.annotation.AdviceMode;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -21,6 +29,9 @@ import org.springframework.scheduling.Trigger;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.transaction.jta.JtaTransactionManager;
 import org.springframework.web.client.RestTemplate;
 
 import com.projectx.rest.handlers.quickregister.Receiver;
@@ -31,7 +42,9 @@ import com.projectx.rest.handlers.quickregister.Receiver;
 //@EnableAsync
 //@EnableScheduling
 @ComponentScan(basePackages="com.projectx")
+@EnableTransactionManagement
 //@ImportResource(value="/schedule-config.xml")
+
 //@Configuration(value="/schedule-config.xml")
 public class Application {
 
@@ -73,6 +86,58 @@ public class Application {
     {
     	return new SecureRandom();
     }
+    
+    /*
+    @Bean PlatformTransactionManager  transactionManager()
+    {
+    	JtaTransactionManager transactionManager=new JtaTransactionManager(new UserTransaction() {
+			
+			@Override
+			public void setTransactionTimeout(int seconds) throws SystemException {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void setRollbackOnly() throws IllegalStateException, SystemException {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void rollback() throws IllegalStateException, SecurityException,
+					SystemException {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public int getStatus() throws SystemException {
+				// TODO Auto-generated method stub
+				return 0;
+			}
+			
+			@Override
+			public void commit() throws RollbackException, HeuristicMixedException,
+					HeuristicRollbackException, SecurityException,
+					IllegalStateException, SystemException {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void begin() throws NotSupportedException, SystemException {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+    	
+    	
+    	
+    	return transactionManager; 
+    }
+    */
+    
     /*------------AMQP
      * 
      * 

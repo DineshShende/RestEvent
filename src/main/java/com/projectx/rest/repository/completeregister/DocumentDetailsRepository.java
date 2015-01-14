@@ -10,7 +10,7 @@ public interface DocumentDetailsRepository {
 
 	DocumentDetails saveCustomerDocument(DocumentDetails customerDocument);
 	
-	DocumentDetails getCustomerDocumentByCustomerId(DocumentKey documentKey);
+	DocumentDetails getByCustomerId(DocumentKey documentKey);
 
 	Integer count();
 	

@@ -11,7 +11,7 @@ public class MobileVerificationDetails {
 
 	private MobileVerificationDetailsKey key;
 	
-	private Integer mobileType;
+	private Long  mobile;
 		
 	private Integer mobilePin;
 	
@@ -33,12 +33,12 @@ public class MobileVerificationDetails {
 	
 	
 	public MobileVerificationDetails(MobileVerificationDetailsKey key,
-			Integer mobileType, Integer mobilePin,
+			Long mobile, Integer mobilePin,
 			Integer mobileVerificationAttempts, Integer resendCount,
 			Date insertTime, Date updateTime, String updatedBy) {
 		super();
 		this.key = key;
-		this.mobileType = mobileType;
+		this.mobile = mobile;
 		this.mobilePin = mobilePin;
 		this.mobileVerificationAttempts = mobileVerificationAttempts;
 		this.resendCount = resendCount;
@@ -57,13 +57,17 @@ public class MobileVerificationDetails {
 		this.key = key;
 	}
 
-	public Integer getMobileType() {
-		return mobileType;
+	public Long getMobile() {
+		return mobile;
 	}
 
-	public void setMobileType(Integer mobileType) {
-		this.mobileType = mobileType;
+
+
+	public void setMobile(Long mobile) {
+		this.mobile = mobile;
 	}
+
+
 
 	public Integer getMobilePin() {
 		return mobilePin;
@@ -130,7 +134,7 @@ public class MobileVerificationDetails {
 	@Override
 	public String toString() {
 		return "MobileVerificationDetails [key=" + key + ", mobileType="
-				+ mobileType + ", mobilePin=" + mobilePin
+				+ mobile + ", mobilePin=" + mobilePin
 				+ ", mobileVerificationAttempts=" + mobileVerificationAttempts
 				+ ", resendCount=" + resendCount + ", insertTime=" + insertTime
 				+ ", UpdateTime=" + UpdateTime + ", updatedBy=" + updatedBy
@@ -151,7 +155,7 @@ public class MobileVerificationDetails {
 		result = prime * result
 				+ ((mobilePin == null) ? 0 : mobilePin.hashCode());
 		result = prime * result
-				+ ((mobileType == null) ? 0 : mobileType.hashCode());
+				+ ((mobile == null) ? 0 : mobile.hashCode());
 		result = prime
 				* result
 				+ ((mobileVerificationAttempts == null) ? 0
@@ -194,10 +198,10 @@ public class MobileVerificationDetails {
 				return false;
 		} else if (!mobilePin.equals(other.mobilePin))
 			return false;
-		if (mobileType == null) {
-			if (other.mobileType != null)
+		if (mobile == null) {
+			if (other.mobile != null)
 				return false;
-		} else if (!mobileType.equals(other.mobileType))
+		} else if (!mobile.equals(other.mobile))
 			return false;
 		if (mobileVerificationAttempts == null) {
 			if (other.mobileVerificationAttempts != null)

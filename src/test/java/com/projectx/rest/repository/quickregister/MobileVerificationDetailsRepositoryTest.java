@@ -45,9 +45,9 @@ public class MobileVerificationDetailsRepositoryTest {
 	{
 		assertEquals(0, customerMobileVerificationDetailsRepository.count().intValue());
 		
-		assertNull(customerMobileVerificationDetailsRepository.getMobileVerificationDetailsByCustomerIdTypeAndMobile(standardCustomerMobileVerificationDetailsByCustomerIdAndMobileDTO().getCustomerId(),
+		assertNull(customerMobileVerificationDetailsRepository.geByEntityIdTypeAndMobileType(standardCustomerMobileVerificationDetailsByCustomerIdAndMobileDTO().getCustomerId(),
 				standardCustomerMobileVerificationDetailsByCustomerIdAndMobileDTO().getCustomerType(),
-				standardCustomerMobileVerificationDetailsByCustomerIdAndMobileDTO().getMobile()).getKey());
+				MOB_TYPE_PRIMARY).getKey());
 		
 		MobileVerificationDetails savedEntity=customerMobileVerificationDetailsRepository.save(standardCustomerMobileVerificationDetails());
 		
@@ -55,11 +55,30 @@ public class MobileVerificationDetailsRepositoryTest {
 		
 		assertEquals(1, customerMobileVerificationDetailsRepository.count().intValue());
 		
-		assertEquals(savedEntity,customerMobileVerificationDetailsRepository.getMobileVerificationDetailsByCustomerIdTypeAndMobile(standardCustomerMobileVerificationDetailsByCustomerIdAndMobileDTO().getCustomerId(),
+		assertEquals(savedEntity,customerMobileVerificationDetailsRepository.geByEntityIdTypeAndMobileType(standardCustomerMobileVerificationDetailsByCustomerIdAndMobileDTO().getCustomerId(),
 				standardCustomerMobileVerificationDetailsByCustomerIdAndMobileDTO().getCustomerType(),
-				standardCustomerMobileVerificationDetailsByCustomerIdAndMobileDTO().getMobile()));
+				MOB_TYPE_PRIMARY));
 	}
+
 	
+	@Test
+	public void saveAndGetByMobile()
+	{
+		assertEquals(0, customerMobileVerificationDetailsRepository.count().intValue());
+		
+		assertNull(customerMobileVerificationDetailsRepository.getByMobile(
+				CUST_MOBILE).getKey());
+		
+		MobileVerificationDetails savedEntity=customerMobileVerificationDetailsRepository.save(standardCustomerMobileVerificationDetails());
+		
+		assertEquals(standardCustomerMobileVerificationDetails(), savedEntity);
+		
+		assertEquals(1, customerMobileVerificationDetailsRepository.count().intValue());
+		
+		assertEquals(savedEntity,customerMobileVerificationDetailsRepository.getByMobile(
+				savedEntity.getMobile()));
+	}
+
 	
 	@Test
 	public void updateMobilePinAndMobileVerificationAttempts()
@@ -68,22 +87,22 @@ public class MobileVerificationDetailsRepositoryTest {
 		
 		assertEquals(0, customerMobileVerificationDetailsRepository.updateMobilePinAndMobileVerificationAttemptsAndResendCount(standardUpdateMobilePinAndMobileVerificationAttemptsDTO().getCustomerId(),
 				standardUpdateMobilePinAndMobileVerificationAttemptsDTO().getCustomerType(),
-				standardUpdateMobilePinAndMobileVerificationAttemptsDTO().getMobile(),standardUpdateMobilePinAndMobileVerificationAttemptsDTO().getMobilePin(),
+				standardUpdateMobilePinAndMobileVerificationAttemptsDTO().getMobileType(),standardUpdateMobilePinAndMobileVerificationAttemptsDTO().getMobilePin(),
 				standardUpdateMobilePinAndMobileVerificationAttemptsDTO().getMobileVerificationAttempts(), standardUpdateMobilePinAndMobileVerificationAttemptsDTO().getResendCount()).intValue());
 		
 		MobileVerificationDetails oldSaved=customerMobileVerificationDetailsRepository.save(standardCustomerMobileVerificationDetails());
 		
 		
-		assertEquals(CUST_MOBILEPIN, customerMobileVerificationDetailsRepository.getMobileVerificationDetailsByCustomerIdTypeAndMobile(oldSaved.getKey().getCustomerId(),oldSaved.getKey().getCustomerType(), oldSaved.getKey().getMobile()).getMobilePin());
+		assertEquals(CUST_MOBILEPIN, customerMobileVerificationDetailsRepository.geByEntityIdTypeAndMobileType(oldSaved.getKey().getCustomerId(),oldSaved.getKey().getCustomerType(), oldSaved.getKey().getMobileType()).getMobilePin());
 		
 		
 		assertEquals(1, customerMobileVerificationDetailsRepository.updateMobilePinAndMobileVerificationAttemptsAndResendCount(standardUpdateMobilePinAndMobileVerificationAttemptsDTO().getCustomerId(),
 				standardUpdateMobilePinAndMobileVerificationAttemptsDTO().getCustomerType(),
-				standardUpdateMobilePinAndMobileVerificationAttemptsDTO().getMobile(),standardUpdateMobilePinAndMobileVerificationAttemptsDTO().getMobilePin(),
+				standardUpdateMobilePinAndMobileVerificationAttemptsDTO().getMobileType(),standardUpdateMobilePinAndMobileVerificationAttemptsDTO().getMobilePin(),
 				standardUpdateMobilePinAndMobileVerificationAttemptsDTO().getMobileVerificationAttempts(), standardUpdateMobilePinAndMobileVerificationAttemptsDTO().getResendCount()).intValue());
 		
-		assertEquals(CUST_MOBILEPIN_UPDATED, customerMobileVerificationDetailsRepository.getMobileVerificationDetailsByCustomerIdTypeAndMobile(oldSaved.getKey().getCustomerId(),
-				oldSaved.getKey().getCustomerType(), oldSaved.getKey().getMobile()).getMobilePin());
+		assertEquals(CUST_MOBILEPIN_UPDATED, customerMobileVerificationDetailsRepository.geByEntityIdTypeAndMobileType(oldSaved.getKey().getCustomerId(),
+				oldSaved.getKey().getCustomerType(), oldSaved.getKey().getMobileType()).getMobilePin());
 		
 		
 	}
@@ -96,19 +115,19 @@ public class MobileVerificationDetailsRepositoryTest {
 		
 		assertEquals(new Integer(0), customerMobileVerificationDetailsRepository.incrementMobileVerificationAttempts(
 				standardCustomerIdMobileDTO().getCustomerId(),standardCustomerIdMobileDTO().getCustomerType(),
-				standardCustomerIdMobileDTO().getMobile()));
+				standardCustomerIdMobileDTO().getMobileType()));
 		
 		MobileVerificationDetails oldSaved=customerMobileVerificationDetailsRepository.save(standardCustomerMobileVerificationDetails());
 		
-		assertEquals(new Integer(0), customerMobileVerificationDetailsRepository.getMobileVerificationDetailsByCustomerIdTypeAndMobile(
-				oldSaved.getKey().getCustomerId(),oldSaved.getKey().getCustomerType(), oldSaved.getKey().getMobile()).getMobileVerificationAttempts());
+		assertEquals(new Integer(0), customerMobileVerificationDetailsRepository.geByEntityIdTypeAndMobileType(
+				oldSaved.getKey().getCustomerId(),oldSaved.getKey().getCustomerType(), oldSaved.getKey().getMobileType()).getMobileVerificationAttempts());
 		
 		assertEquals(new Integer(1), customerMobileVerificationDetailsRepository.incrementMobileVerificationAttempts(standardCustomerIdMobileDTO().getCustomerId()
 				,standardCustomerIdMobileDTO().getCustomerType(),
-				standardCustomerIdMobileDTO().getMobile()));
+				standardCustomerIdMobileDTO().getMobileType()));
 		
 		assertEquals(new Integer(1), customerMobileVerificationDetailsRepository
-				.getMobileVerificationDetailsByCustomerIdTypeAndMobile(oldSaved.getKey().getCustomerId(),oldSaved.getKey().getCustomerType(), oldSaved.getKey().getMobile()).getMobileVerificationAttempts());
+				.geByEntityIdTypeAndMobileType(oldSaved.getKey().getCustomerId(),oldSaved.getKey().getCustomerType(), oldSaved.getKey().getMobileType()).getMobileVerificationAttempts());
 		
 	}
 	
@@ -119,19 +138,19 @@ public class MobileVerificationDetailsRepositoryTest {
 		
 		assertEquals(new Integer(0), customerMobileVerificationDetailsRepository.incrementResendCount(
 				standardCustomerIdMobileDTO().getCustomerId(),standardCustomerIdMobileDTO().getCustomerType(),
-				standardCustomerIdMobileDTO().getMobile()));
+				standardCustomerIdMobileDTO().getMobileType()));
 		
 		MobileVerificationDetails oldSaved=customerMobileVerificationDetailsRepository.save(standardCustomerMobileVerificationDetails());
 		
 		assertEquals(new Integer(0), customerMobileVerificationDetailsRepository
-				.getMobileVerificationDetailsByCustomerIdTypeAndMobile(oldSaved.getKey().getCustomerId(),oldSaved.getKey().getCustomerType(), oldSaved.getKey().getMobile()).getResendCount());
+				.geByEntityIdTypeAndMobileType(oldSaved.getKey().getCustomerId(),oldSaved.getKey().getCustomerType(), oldSaved.getKey().getMobileType()).getResendCount());
 		
 		assertEquals(new Integer(1), customerMobileVerificationDetailsRepository.incrementResendCount(standardCustomerIdMobileDTO().getCustomerId(),
 				standardCustomerIdMobileDTO().getCustomerType(),
-				standardCustomerIdMobileDTO().getMobile()));
+				standardCustomerIdMobileDTO().getMobileType()));
 		
 		assertEquals(new Integer(1), customerMobileVerificationDetailsRepository
-				.getMobileVerificationDetailsByCustomerIdTypeAndMobile(oldSaved.getKey().getCustomerId(),oldSaved.getKey().getCustomerType(), oldSaved.getKey().getMobile()).getResendCount());
+				.geByEntityIdTypeAndMobileType(oldSaved.getKey().getCustomerId(),oldSaved.getKey().getCustomerType(), oldSaved.getKey().getMobileType()).getResendCount());
 	}
 	
 	

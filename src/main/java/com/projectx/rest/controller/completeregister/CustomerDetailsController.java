@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.projectx.data.domain.quickregister.CustomerIdTypeEmailDTO;
-import com.projectx.data.domain.quickregister.CustomerIdTypeMobileDTO;
+import com.projectx.data.domain.quickregister.CustomerIdTypeEmailTypeDTO;
+import com.projectx.data.domain.quickregister.CustomerIdTypeMobileTypeDTO;
 import com.projectx.mvc.domain.completeregister.VerifyEmailDTO;
 import com.projectx.mvc.domain.completeregister.VerifyMobileDTO;
 import com.projectx.rest.domain.completeregister.CustomerDetails;
@@ -57,8 +57,8 @@ public class CustomerDetailsController {
 	public Boolean verifyMobileDetails(@RequestBody VerifyMobileDTO verifyMobileDTO)
 	{
 		Boolean result=customerDetailsService
-				.verifyMobileDetails(verifyMobileDTO.getCustomerId(), verifyMobileDTO.getCustomerType(), 
-						verifyMobileDTO.getMobile(), verifyMobileDTO.getMobileType(), verifyMobileDTO.getMobilePin());
+				.verifyMobileDetails(verifyMobileDTO.getEntityId(), verifyMobileDTO.getEntityType(), 
+						verifyMobileDTO.getMobileType(), verifyMobileDTO.getMobilePin());
 		
 		return result;
 	}
@@ -67,26 +67,26 @@ public class CustomerDetailsController {
 	public Boolean verifyEmailDetails(@RequestBody VerifyEmailDTO verifyEmailDTO)
 	{
 		Boolean result=customerDetailsService
-						.verifyEmailDetails(verifyEmailDTO.getCustomerId(), verifyEmailDTO.getCustomerType(),
-								verifyEmailDTO.getEmail(),  verifyEmailDTO.getEmailHash());
+						.verifyEmailDetails(verifyEmailDTO.getEntityId(), verifyEmailDTO.getEntityType(),
+								verifyEmailDTO.getEmailType(),  verifyEmailDTO.getEmailHash());
 		return result;
 	}
 	
 	@RequestMapping(value="/sendMobileVerificationDetails",method=RequestMethod.POST)
-	public Boolean sendMobileVerificationDetails(@RequestBody CustomerIdTypeMobileDTO customerIdTypeMobileDTO)
+	public Boolean sendMobileVerificationDetails(@RequestBody CustomerIdTypeMobileTypeDTO customerIdTypeMobileDTO)
 	{
 		Boolean result=customerDetailsService
-				.sendMobileVerificationDetails(customerIdTypeMobileDTO.getCustomerId(), customerIdTypeMobileDTO.getCustomerType(), customerIdTypeMobileDTO.getMobile());
+				.sendMobileVerificationDetails(customerIdTypeMobileDTO.getCustomerId(), customerIdTypeMobileDTO.getCustomerType(), customerIdTypeMobileDTO.getMobileType());
 		
 		return result;
 				
 	}
 	
 	@RequestMapping(value="/sendEmailVerificationDetails",method=RequestMethod.POST)
-	public Boolean sendEmailVerificationDetails(@RequestBody CustomerIdTypeEmailDTO customerIdTypeEmailDTO)
+	public Boolean sendEmailVerificationDetails(@RequestBody CustomerIdTypeEmailTypeDTO customerIdTypeEmailDTO)
 	{
 		Boolean result=customerDetailsService
-				.sendEmailVerificationDetails(customerIdTypeEmailDTO.getCustomerId(), customerIdTypeEmailDTO.getCustomerType(), customerIdTypeEmailDTO.getEmail());
+				.sendEmailVerificationDetails(customerIdTypeEmailDTO.getCustomerId(), customerIdTypeEmailDTO.getCustomerType(), customerIdTypeEmailDTO.getEmailType());
 		
 		return result;
 				

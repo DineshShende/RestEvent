@@ -31,7 +31,7 @@ public class DocumentDetailsController {
 	@RequestMapping(value="/getCustomerDocumentById",method=RequestMethod.POST)
 	public DocumentDetails getCustomerDocumentById(@RequestBody DocumentKey documentKey)
 	{
-		DocumentDetails fetchedEntity=documentDetailsService.getCustomerDocumentById(documentKey);
+		DocumentDetails fetchedEntity=documentDetailsService.getById(documentKey);
 		
 		return fetchedEntity;
 	}

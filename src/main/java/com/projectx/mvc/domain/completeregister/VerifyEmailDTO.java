@@ -2,11 +2,11 @@ package com.projectx.mvc.domain.completeregister;
 
 public class VerifyEmailDTO {
 
-	private Long customerId;
+	private Long entityId;
 	
-	private Integer customerType;
+	private Integer entityType;
 	
-	private String email;
+	private Integer emailType;
 	
 	private String emailHash;
 
@@ -14,79 +14,79 @@ public class VerifyEmailDTO {
 
 	}
 
-	
-
-	public VerifyEmailDTO(Long customerId, Integer customerType, String email,
+	public VerifyEmailDTO(Long entityId, Integer entityType, Integer emailType,
 			String emailHash) {
-
-		this.customerId = customerId;
-		this.customerType = customerType;
-		this.email = email;
+		super();
+		this.entityId = entityId;
+		this.entityType = entityType;
+		this.emailType = emailType;
 		this.emailHash = emailHash;
 	}
 
 
 
-	public Long getCustomerId() {
-		return customerId;
-	}
 
-	public void setCustomerId(Long customerId) {
-		this.customerId = customerId;
-	}
-
-	public Integer getCustomerType() {
-		return customerType;
-	}
-
-	public void setCustomerType(Integer customerType) {
-		this.customerType = customerType;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
+	public Long getEntityId() {
+		return entityId;
 	}
 
 
+
+	public void setEntityId(Long entityId) {
+		this.entityId = entityId;
+	}
+
+
+
+	public Integer getEntityType() {
+		return entityType;
+	}
+
+
+
+	public void setEntityType(Integer entityType) {
+		this.entityType = entityType;
+	}
+
+	public Integer getEmailType() {
+		return emailType;
+	}
+
+	public void setEmailType(Integer emailType) {
+		this.emailType = emailType;
+	}
 
 	public String getEmailHash() {
 		return emailHash;
 	}
 
+
+
 	public void setEmailHash(String emailHash) {
 		this.emailHash = emailHash;
 	}
 
-
-
 	@Override
 	public String toString() {
-		return "VerifyEmailDTO [customerId=" + customerId + ", customerType="
-				+ customerType + ", email=" + email + ", emailHash="
+		return "VerifyEmailDTO [entityId=" + entityId + ", entityType="
+				+ entityType + ", emailType=" + emailType + ", emailHash="
 				+ emailHash + "]";
 	}
-
-
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result
-				+ ((customerId == null) ? 0 : customerId.hashCode());
-		result = prime * result
-				+ ((customerType == null) ? 0 : customerType.hashCode());
-		result = prime * result + ((email == null) ? 0 : email.hashCode());
-		result = prime * result
 				+ ((emailHash == null) ? 0 : emailHash.hashCode());
+		result = prime * result
+				+ ((emailType == null) ? 0 : emailType.hashCode());
+		result = prime * result
+				+ ((entityId == null) ? 0 : entityId.hashCode());
+		result = prime * result
+				+ ((entityType == null) ? 0 : entityType.hashCode());
 		return result;
 	}
-
-
 
 	@Override
 	public boolean equals(Object obj) {
@@ -97,29 +97,29 @@ public class VerifyEmailDTO {
 		if (getClass() != obj.getClass())
 			return false;
 		VerifyEmailDTO other = (VerifyEmailDTO) obj;
-		if (customerId == null) {
-			if (other.customerId != null)
-				return false;
-		} else if (!customerId.equals(other.customerId))
-			return false;
-		if (customerType == null) {
-			if (other.customerType != null)
-				return false;
-		} else if (!customerType.equals(other.customerType))
-			return false;
-		if (email == null) {
-			if (other.email != null)
-				return false;
-		} else if (!email.equals(other.email))
-			return false;
 		if (emailHash == null) {
 			if (other.emailHash != null)
 				return false;
 		} else if (!emailHash.equals(other.emailHash))
 			return false;
+		if (emailType == null) {
+			if (other.emailType != null)
+				return false;
+		} else if (!emailType.equals(other.emailType))
+			return false;
+		if (entityId == null) {
+			if (other.entityId != null)
+				return false;
+		} else if (!entityId.equals(other.entityId))
+			return false;
+		if (entityType == null) {
+			if (other.entityType != null)
+				return false;
+		} else if (!entityType.equals(other.entityType))
+			return false;
 		return true;
 	}
 
-	
+
 	
 }

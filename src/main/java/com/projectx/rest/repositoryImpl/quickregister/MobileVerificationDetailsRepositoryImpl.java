@@ -8,7 +8,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 import com.projectx.data.domain.quickregister.CustomerIdDTO;
-import com.projectx.data.domain.quickregister.CustomerIdTypeMobileDTO;
+import com.projectx.data.domain.quickregister.CustomerIdTypeMobileTypeDTO;
+import com.projectx.data.domain.quickregister.EmailDTO;
+import com.projectx.data.domain.quickregister.MobileDTO;
 import com.projectx.data.domain.quickregister.UpdateMobilePinAndMobileVerificationAttemptsAndResetCountDTO;
 import com.projectx.rest.domain.quickregister.EmailVerificationDetails;
 import com.projectx.rest.domain.quickregister.EmailVerificationDetailsKey;
@@ -43,10 +45,10 @@ public class MobileVerificationDetailsRepositoryImpl implements MobileVerificati
 	}
 
 	@Override
-	public MobileVerificationDetails getMobileVerificationDetailsByCustomerIdTypeAndMobile(
-			Long customerId,Integer customerType, Long mobile) {
+	public MobileVerificationDetails geByEntityIdTypeAndMobileType(
+			Long customerId,Integer customerType, Integer mobileType) {
 
-		CustomerIdTypeMobileDTO mobileDTO=new CustomerIdTypeMobileDTO(customerId,customerType, mobile);
+		CustomerIdTypeMobileTypeDTO mobileDTO=new CustomerIdTypeMobileTypeDTO(customerId,customerType, mobileType);
 		
 		MobileVerificationDetails savedEntity=restTemplate.postForObject(env.getProperty("data.url")+"/customer/quickregister/mobileVerification/getMobileVerificationDetailsByCustomerIdAndMobile", mobileDTO, MobileVerificationDetails.class);
 		
@@ -58,12 +60,12 @@ public class MobileVerificationDetailsRepositoryImpl implements MobileVerificati
 
 	@Override
 	public Integer updateMobilePinAndMobileVerificationAttemptsAndResendCount(
-			Long customerId,Integer customerType, Long mobile, Integer mobilePin,
+			Long customerId,Integer customerType, Integer mobileType, Integer mobilePin,
 			Integer mobileVerificationAttempts, Integer resendCount) {
 		
 		
 		UpdateMobilePinAndMobileVerificationAttemptsAndResetCountDTO dto=new UpdateMobilePinAndMobileVerificationAttemptsAndResetCountDTO
-				(customerId,customerType, mobile, mobilePin, mobileVerificationAttempts, resendCount);
+				(customerId,customerType, mobileType, mobilePin, mobileVerificationAttempts, resendCount);
 		
 		Integer updateStatus=restTemplate.postForObject(env.getProperty("data.url")+"/customer/quickregister/mobileVerification/updateMobilePinAndMobileVerificationAttemptsAndResendCount", dto, Integer.class);
 		
@@ -72,9 +74,9 @@ public class MobileVerificationDetailsRepositoryImpl implements MobileVerificati
 
 	@Override
 	public Integer incrementMobileVerificationAttempts(Long customerId,Integer customerType,
-			Long mobile) {
+			Integer mobileType) {
 			
-		CustomerIdTypeMobileDTO mobileDTO=new CustomerIdTypeMobileDTO(customerId,customerType, mobile);
+		CustomerIdTypeMobileTypeDTO mobileDTO=new CustomerIdTypeMobileTypeDTO(customerId,customerType, mobileType);
 		
 		Integer updateStatus=restTemplate.postForObject(env.getProperty("data.url")+"/customer/quickregister/mobileVerification/incrementMobileVerificationAttempts", mobileDTO, Integer.class);
 		
@@ -83,9 +85,9 @@ public class MobileVerificationDetailsRepositoryImpl implements MobileVerificati
 	}
 
 	@Override
-	public Integer incrementResendCount(Long customerId,Integer customerType, Long mobile) {
+	public Integer incrementResendCount(Long customerId,Integer customerType, Integer mobileType) {
 
-		CustomerIdTypeMobileDTO mobileDTO=new CustomerIdTypeMobileDTO(customerId,customerType, mobile);
+		CustomerIdTypeMobileTypeDTO mobileDTO=new CustomerIdTypeMobileTypeDTO(customerId,customerType, mobileType);
 		
 		Integer updateStatus=restTemplate.postForObject(env.getProperty("data.url")+"/customer/quickregister/mobileVerification/incrementResendCount", mobileDTO, Integer.class);
 		
@@ -114,6 +116,18 @@ public class MobileVerificationDetailsRepositoryImpl implements MobileVerificati
 		Boolean updateStatus=restTemplate.postForObject(env.getProperty("data.url")+"/customer/quickregister/mobileVerification/deleteByKey", key, Boolean.class);
 		
 		return updateStatus;
+
+	}
+
+	@Override
+	public MobileVerificationDetails getByMobile(
+			Long mobile) {
+		
+		MobileDTO mobileDTO=new MobileDTO(mobile);
+		
+		MobileVerificationDetails savedEntity=restTemplate.postForObject(env.getProperty("data.url")+"/customer/quickregister/mobileVerification/getMobileVerificationDetailsByMobile", mobileDTO, MobileVerificationDetails.class);
+		
+		return savedEntity;
 
 	}
 

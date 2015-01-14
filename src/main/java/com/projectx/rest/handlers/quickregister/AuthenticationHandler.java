@@ -12,6 +12,9 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import com.projectx.data.domain.quickregister.UpdatePasswordAndPasswordTypeDTO;
+import com.projectx.mvc.domain.quickregister.CustomerIdTypeDTO;
+import com.projectx.mvc.domain.quickregister.LoginVerificationDTO;
+import com.projectx.mvc.domain.quickregister.LoginVerificationWithDefaultEmailPasswordDTO;
 import com.projectx.rest.domain.quickregister.AuthenticationDetails;
 import com.projectx.rest.domain.quickregister.AuthenticationDetailsKey;
 import com.projectx.rest.domain.quickregister.QuickRegisterEntity;
@@ -21,9 +24,6 @@ import com.projectx.rest.services.quickregister.QuickRegisterService;
 import com.projectx.rest.utils.HandleCustomerVerification;
 import com.projectx.rest.utils.MessageBuilder;
 import com.projectx.rest.utils.MessagerSender;
-import com.projectx.web.domain.quickregister.CustomerIdTypeDTO;
-import com.projectx.web.domain.quickregister.LoginVerificationDTO;
-import com.projectx.web.domain.quickregister.LoginVerificationWithDefaultEmailPasswordDTO;
 
 
 @Component
@@ -55,11 +55,11 @@ public class AuthenticationHandler implements AuthenticationService {
 		
 		if(isMobileNumber(loginVerificationDTO.getLoginEntity()))
 		{
-			customerAuthenticationDetails=customerAuthenticationDetailsRepository.getCustomerAuthenticationDetailsByMobile(Long.parseLong(loginVerificationDTO.getLoginEntity()));
+			customerAuthenticationDetails=customerAuthenticationDetailsRepository.getByMobile(Long.parseLong(loginVerificationDTO.getLoginEntity()));
 		}
 		else
 		{
-			customerAuthenticationDetails=customerAuthenticationDetailsRepository.getCustomerAuthenticationDetailsByEmail(loginVerificationDTO.getLoginEntity());
+			customerAuthenticationDetails=customerAuthenticationDetailsRepository.getByEmail(loginVerificationDTO.getLoginEntity());
 		}
 		
 		if(customerAuthenticationDetails.getKey()!=null && !loginVerificationDTO.getPassword().equals(customerAuthenticationDetails.getPassword()))
@@ -82,7 +82,7 @@ public class AuthenticationHandler implements AuthenticationService {
 
 		AuthenticationDetails customerAuthenticationDetails=new AuthenticationDetails(); 
 		
-		customerAuthenticationDetails=customerAuthenticationDetailsRepository.getCustomerAuthenticationDetailsByCustomerIdType(
+		customerAuthenticationDetails=customerAuthenticationDetailsRepository.getByCustomerIdType(
 				emailPasswordDTO.getCustomerId(),emailPasswordDTO.getCustomerType());
 		
 		if(customerAuthenticationDetails.getKey()!=null &&
@@ -108,7 +108,7 @@ public class AuthenticationHandler implements AuthenticationService {
 		Integer passwordUpdateStatus=new Integer(1);
 		Integer emailPasswordUpdateStatus=new Integer(1);
 		
-		AuthenticationDetails customerAuthenticationDetails=customerAuthenticationDetailsRepository.getCustomerAuthenticationDetailsByCustomerIdType(customer.getCustomerId(),customer.getCustomerType());
+		AuthenticationDetails customerAuthenticationDetails=customerAuthenticationDetailsRepository.getByCustomerIdType(customer.getCustomerId(),customer.getCustomerType());
 		
 		if(!resetFlag && (customerAuthenticationDetails.getPasswordType()!=null && 
 				customerAuthenticationDetails.getPasswordType().equals(CUST_PASSWORD_TYPE_CHANGED)))
@@ -169,7 +169,7 @@ public class AuthenticationHandler implements AuthenticationService {
 			QuickRegisterEntity customer) {
 
 		AuthenticationDetails customerAuthenticationDetails=customerAuthenticationDetailsRepository
-				.getCustomerAuthenticationDetailsByCustomerIdType(customer.getCustomerId(),customer.getCustomerType());
+				.getByCustomerIdType(customer.getCustomerId(),customer.getCustomerType());
 		
 			
 		if(customer.getEmail()!=null && customer.getIsEmailVerified())
@@ -206,9 +206,9 @@ public class AuthenticationHandler implements AuthenticationService {
 	}
 
 	@Override
-	public AuthenticationDetails getLoginDetailsByCustomerIdType(Long customerId,Integer customerType)
+	public AuthenticationDetails getByEntityIdType(Long customerId,Integer customerType)
 	{
-		return customerAuthenticationDetailsRepository.getCustomerAuthenticationDetailsByCustomerIdType(customerId,customerType);
+		return customerAuthenticationDetailsRepository.getByCustomerIdType(customerId,customerType);
 	}
 	
 	@Override
@@ -224,7 +224,7 @@ public class AuthenticationHandler implements AuthenticationService {
 	public Boolean resetPassword(CustomerIdTypeDTO customerIdDTO) 
 	{
 		QuickRegisterEntity customer=customerQuickRegisterService
-				.getCustomerQuickRegisterEntityByCustomerId(customerIdDTO.getCustomerId());
+				.getByEntityId(customerIdDTO.getCustomerId());
 		
 		return sendDefaultPassword(customer,true);
 	}
@@ -236,7 +236,7 @@ public class AuthenticationHandler implements AuthenticationService {
 	public Boolean resendPassword(CustomerIdTypeDTO customerIdDTO) {
 
 		QuickRegisterEntity customer=customerQuickRegisterService
-				.getCustomerQuickRegisterEntityByCustomerId(customerIdDTO.getCustomerId());
+				.getByEntityId(customerIdDTO.getCustomerId());
 		
 		return resendDefaultPassword(customer);
 	}
@@ -272,11 +272,11 @@ public class AuthenticationHandler implements AuthenticationService {
 		
 		if(isMobileNumber(entity))
 		{
-			quickRegisterEntity=customerQuickRegisterService.getCustomerQuickRegisterEntityByMobile(Long.parseLong(entity));
+			quickRegisterEntity=customerQuickRegisterService.getByMobile(Long.parseLong(entity));
 		}
 		else
 		{
-			quickRegisterEntity=customerQuickRegisterService.getCustomerQuickRegisterEntityByEmail(entity);
+			quickRegisterEntity=customerQuickRegisterService.getByEmail(entity);
 		}
 				
 		return quickRegisterEntity;

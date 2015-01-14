@@ -7,19 +7,25 @@ import com.projectx.rest.domain.quickregister.QuickRegisterEntity;
 
 public interface MobileVerificationService {
 	
-	MobileVerificationDetails getCustomerMobileVerificationDetailsByCustomerIdTypeAndMobile(Long customerId,Integer customerType,Long mobile);
+	MobileVerificationDetails getByEntityIdTypeAndMobileType(Long customerId,Integer customerType,Integer mobileType);
+	
+	MobileVerificationDetails getByMobile(Long mobile);
+	
+	String checkIfMobileAlreadyExist(Long customerId,Integer customerType,Integer mobileType,Long mobile);
 
-	Boolean reSendMobilePin(Long customerId,Integer customerType,Long mobile);
+	Boolean reSendMobilePin(Long customerId,Integer customerType,Integer mobileType);
 	
-	Boolean reSetMobilePin(Long customerId,Integer customerType,Long mobile);
+	Boolean reSetMobilePin(Long customerId,Integer customerType,Integer mobileType);
 	
-	Boolean verifyMobilePin(Long customerId,Integer customerType,Long mobile,Integer mobilePin);
+	Boolean verifyMobilePin(Long customerId,Integer customerType,Integer mobileType,Integer mobilePin);
 	
-	Integer updateMobilePin(Long customerId,Integer customerType,Long mobile);
+	Boolean verifyMobilePinUpdateStatusAndSendPassword(Long customerId,Integer customerType,Integer mobileType,Integer mobilePin);
+	
+	Integer updateMobilePin(Long customerId,Integer customerType,Integer mobileType);
 
-	MobileVerificationDetails createCustomerMobileVerificationEntity(Long customerId,Integer customerType,Long mobile,Integer mobileType,String updatedBy);
+	MobileVerificationDetails createEntity(Long customerId,Integer customerType,Long mobile,Integer mobileType,String updatedBy);
 	
-	MobileVerificationDetails saveCustomerMobileVerificationDetails(MobileVerificationDetails mobileVerificationDetails);
+	MobileVerificationDetails saveDetails(MobileVerificationDetails mobileVerificationDetails);
 
 	Boolean deleteByKey(MobileVerificationDetailsKey key);
 	

@@ -2,6 +2,7 @@ package com.projectx.rest.services.completeregister;
 
 import org.springframework.stereotype.Service;
 
+import com.projectx.mvc.domain.completeregister.CustomerDetailsAndUpdateStatusDTO;
 import com.projectx.rest.domain.completeregister.Address;
 import com.projectx.rest.domain.completeregister.CustomerDetails;
 import com.projectx.rest.domain.quickregister.EmailVerificationDetails;
@@ -13,32 +14,26 @@ public interface CustomerDetailsService {
 
 	CustomerDetails createCustomerDetailsFromQuickRegisterEntity(QuickRegisterEntity quickRegisterEntity);
 	
+	CustomerDetails setMetaData(CustomerDetails customerDetails,CustomerDetails oldEntity);
+	
 	CustomerDetails mergeCustomerDetails(CustomerDetails customerDetails);
 	
 	CustomerDetails findById(Long customerId);
 	
-	Boolean checkIfMobileSaved(Long customerId,Integer customerType,Long mobile);
+	Boolean verifyMobileDetails(Long customerId,Integer customerType,Integer mobileType,Integer mobilePin);
 	
-	MobileVerificationDetails saveMobileVerificationDetails(MobileVerificationDetails mobileVerificationDetails);
+	Boolean verifyEmailDetails(Long customerId,Integer customerType,Integer emailType,String emailHash);
 	
-	Boolean checkIfEmailSaved(Long customerId,Integer customerType,String email);
+	Boolean sendMobileVerificationDetails(Long customerId,Integer customerType,Integer mobileType);
 	
-	EmailVerificationDetails saveEmailVerificationDetails(EmailVerificationDetails emailVerificationDetails);
-	
-	Boolean verifyMobileDetails(Long customerId,Integer customerType,Long mobile,Integer mobileType,Integer mobilePin);
-	
-	Boolean verifyEmailDetails(Long customerId,Integer customerType,String email,String emailHash);
-	
-	Boolean sendMobileVerificationDetails(Long customerId,Integer customerType,Long mobile);
-	
-	Boolean sendEmailVerificationDetails(Long customerId,Integer customerType,String email);
-	
-	//CustomerDetails updateHomeAddress(Long customerId,Address address);
-	
-	//CustomerDetails updateFirmAddress(Long customerId,Address address);
+	Boolean sendEmailVerificationDetails(Long customerId,Integer customerType,Integer emailType);
 	
 	void clearTestData();
 	
 	Integer count();
+	
+	//CustomerDetails updateHomeAddress(Long customerId,Address address);
+	
+	//CustomerDetails updateFirmAddress(Long customerId,Address address);
 	
 }

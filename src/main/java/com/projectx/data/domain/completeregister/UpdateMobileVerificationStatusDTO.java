@@ -4,17 +4,22 @@ public class UpdateMobileVerificationStatusDTO {
 
 	private Long customerId;
 	
+	private Long mobile;
+	
 	private Boolean status;
 
 	public UpdateMobileVerificationStatusDTO() {
 
 	}
 
-	public UpdateMobileVerificationStatusDTO(Long customerId, Boolean status) {
+	public UpdateMobileVerificationStatusDTO(Long customerId, Long mobile,
+			Boolean status) {
 		super();
 		this.customerId = customerId;
+		this.mobile = mobile;
 		this.status = status;
 	}
+
 
 	public Long getCustomerId() {
 		return customerId;
@@ -32,10 +37,19 @@ public class UpdateMobileVerificationStatusDTO {
 		this.status = status;
 	}
 
+	
+	public Long getMobile() {
+		return mobile;
+	}
+
+	public void setMobile(Long mobile) {
+		this.mobile = mobile;
+	}
+
 	@Override
 	public String toString() {
 		return "UpdateMobileVerificationStatusDTO [customerId=" + customerId
-				+ ", status=" + status + "]";
+				+ ", mobile=" + mobile + ", status=" + status + "]";
 	}
 
 	@Override
@@ -44,6 +58,7 @@ public class UpdateMobileVerificationStatusDTO {
 		int result = 1;
 		result = prime * result
 				+ ((customerId == null) ? 0 : customerId.hashCode());
+		result = prime * result + ((mobile == null) ? 0 : mobile.hashCode());
 		result = prime * result + ((status == null) ? 0 : status.hashCode());
 		return result;
 	}
@@ -62,6 +77,11 @@ public class UpdateMobileVerificationStatusDTO {
 				return false;
 		} else if (!customerId.equals(other.customerId))
 			return false;
+		if (mobile == null) {
+			if (other.mobile != null)
+				return false;
+		} else if (!mobile.equals(other.mobile))
+			return false;
 		if (status == null) {
 			if (other.status != null)
 				return false;
@@ -69,7 +89,7 @@ public class UpdateMobileVerificationStatusDTO {
 			return false;
 		return true;
 	}
-	
-	
+
+		
 	
 }

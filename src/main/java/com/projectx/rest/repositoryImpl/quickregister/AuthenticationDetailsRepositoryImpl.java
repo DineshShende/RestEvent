@@ -10,12 +10,12 @@ import org.springframework.web.client.RestTemplate;
 import com.projectx.data.domain.quickregister.UpdateEmailPassword;
 import com.projectx.data.domain.quickregister.UpdatePasswordAndPasswordTypeDTO;
 import com.projectx.data.domain.quickregister.VerifyLoginDetailsDataDTO;
+import com.projectx.mvc.domain.quickregister.CustomerIdTypeDTO;
+import com.projectx.mvc.domain.quickregister.GetByEmailDTO;
+import com.projectx.mvc.domain.quickregister.GetByMobileDTO;
+import com.projectx.mvc.domain.quickregister.LoginVerificationDTO;
 import com.projectx.rest.domain.quickregister.AuthenticationDetails;
 import com.projectx.rest.repository.quickregister.AuthenticationDetailsRepository;
-import com.projectx.web.domain.quickregister.CustomerIdTypeDTO;
-import com.projectx.web.domain.quickregister.GetByEmailDTO;
-import com.projectx.web.domain.quickregister.GetByMobileDTO;
-import com.projectx.web.domain.quickregister.LoginVerificationDTO;
 
 @Component
 @Profile("Dev")
@@ -53,7 +53,7 @@ public class AuthenticationDetailsRepositoryImpl implements AuthenticationDetail
 	}
 
 	@Override
-	public AuthenticationDetails getCustomerAuthenticationDetailsByCustomerIdType(Long customerId,Integer customerType) {
+	public AuthenticationDetails getByCustomerIdType(Long customerId,Integer customerType) {
 		
 		CustomerIdTypeDTO customerIdDTO=new CustomerIdTypeDTO(customerId,customerType);
 		
@@ -107,7 +107,7 @@ public class AuthenticationDetailsRepositoryImpl implements AuthenticationDetail
 	}
 
 	@Override
-	public AuthenticationDetails getCustomerAuthenticationDetailsByEmail(
+	public AuthenticationDetails getByEmail(
 			String email) {
 		GetByEmailDTO getByEmailDTO=new GetByEmailDTO(email);
 		
@@ -121,7 +121,7 @@ public class AuthenticationDetailsRepositoryImpl implements AuthenticationDetail
 	}
 
 	@Override
-	public AuthenticationDetails getCustomerAuthenticationDetailsByMobile(
+	public AuthenticationDetails getByMobile(
 			Long mobile) {
 
 		GetByMobileDTO getByMobilelDTO=new GetByMobileDTO(mobile);

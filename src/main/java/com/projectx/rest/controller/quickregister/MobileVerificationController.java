@@ -6,11 +6,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.projectx.data.domain.quickregister.CustomerIdTypeMobileDTO;
+import com.projectx.data.domain.quickregister.CustomerIdTypeMobileTypeDTO;
+import com.projectx.mvc.domain.quickregister.UpdateMobilePinDTO;
+import com.projectx.mvc.domain.quickregister.VerifyMobilePinDTO;
 import com.projectx.rest.domain.quickregister.MobileVerificationDetails;
 import com.projectx.rest.services.quickregister.MobileVerificationService;
-import com.projectx.web.domain.quickregister.UpdateMobilePinDTO;
-import com.projectx.web.domain.quickregister.VerifyMobilePinDTO;
 
 @RestController
 @RequestMapping(value="/customer/quickregister")
@@ -24,7 +24,7 @@ public class MobileVerificationController {
 	public Boolean verifyMobilePin(@RequestBody VerifyMobilePinDTO verifyMobile)
 	{
 		if(mobileVerificationService.verifyMobilePin(verifyMobile.getCustomerId(),verifyMobile.getCustomerType(),
-				verifyMobile.getMobile(), verifyMobile.getMobilePin()))
+				verifyMobile.getMobileType(), verifyMobile.getMobilePin()))
 			return true;
 		else
 			return false;
@@ -35,7 +35,7 @@ public class MobileVerificationController {
 	public Boolean updateMobilePin(@RequestBody UpdateMobilePinDTO updateMobilePin)
 	{
 		return mobileVerificationService.reSetMobilePin(updateMobilePin.getCustomerId(),updateMobilePin.getCustomerType(),
-				updateMobilePin.getMobile());
+				updateMobilePin.getMobileType());
 	}
 	
 	
@@ -43,18 +43,18 @@ public class MobileVerificationController {
 	public Boolean reSendMobilePin(@RequestBody UpdateMobilePinDTO updateMobilePin)
 	{
 		Boolean result= mobileVerificationService.reSendMobilePin(updateMobilePin.getCustomerId(),updateMobilePin.getCustomerType(),
-				updateMobilePin.getMobile());
+				updateMobilePin.getMobileType());
 		
 		return result;
 	}
 	
 
 	@RequestMapping(value="/getMobileVerificationDetails",method=RequestMethod.POST)
-	public MobileVerificationDetails getMobileVerificationDetails(@RequestBody CustomerIdTypeMobileDTO mobileDTO)
+	public MobileVerificationDetails getMobileVerificationDetails(@RequestBody CustomerIdTypeMobileTypeDTO mobileDTO)
 	{
 		MobileVerificationDetails fetchedResult=mobileVerificationService.
-				getCustomerMobileVerificationDetailsByCustomerIdTypeAndMobile(mobileDTO.getCustomerId(),mobileDTO.getCustomerType(),
-						mobileDTO.getMobile());
+				getByEntityIdTypeAndMobileType(mobileDTO.getCustomerId(),mobileDTO.getCustomerType(),
+						mobileDTO.getMobileType());
 		
 		return fetchedResult;
 	}

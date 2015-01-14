@@ -7,6 +7,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.util.Date;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,14 +23,15 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import com.projectx.data.domain.quickregister.CustomerIdTypeEmailDTO;
-import com.projectx.data.domain.quickregister.CustomerIdTypeMobileDTO;
+import com.projectx.data.domain.quickregister.CustomerIdTypeEmailTypeDTO;
+import com.projectx.data.domain.quickregister.CustomerIdTypeMobileTypeDTO;
 import com.projectx.mvc.domain.completeregister.VerifyEmailDTO;
 import com.projectx.mvc.domain.completeregister.VerifyMobileDTO;
 import com.projectx.rest.config.Application;
 import com.projectx.rest.domain.completeregister.CustomerDetails;
 import com.projectx.rest.domain.quickregister.EmailVerificationDetails;
 import com.projectx.rest.domain.quickregister.MobileVerificationDetails;
+import com.projectx.rest.domain.quickregister.MobileVerificationDetailsKey;
 import com.projectx.rest.domain.quickregister.QuickRegisterEntity;
 import com.projectx.rest.services.completeregister.CustomerDetailsService;
 import com.projectx.rest.services.quickregister.EmailVerificationService;
@@ -100,13 +103,13 @@ public class CustomerDetailsWACTest {
 				.accept(MediaType.APPLICATION_JSON))
 	.andDo(print())
 	.andExpect(status().isOk())
-	.andExpect(jsonPath("$.firstName").value(standardCustomerDetailsCopiedFromQuickRegisterEntity().getFirstName()))
-    .andExpect(jsonPath("$.lastName").value(standardCustomerDetailsCopiedFromQuickRegisterEntity().getLastName()))
+	.andExpect(jsonPath("$.firstName").value(standardCustomerFromQuickEntity().getFirstName()))
+    .andExpect(jsonPath("$.lastName").value(standardCustomerFromQuickEntity().getLastName()))
     .andExpect(jsonPath("$.homeAddressId").doesNotExist())
-    .andExpect(jsonPath("$.mobile").value(standardCustomerDetailsCopiedFromQuickRegisterEntity().getMobile()))
-    .andExpect(jsonPath("$.email").value(standardCustomerDetailsCopiedFromQuickRegisterEntity().getEmail()))
-    .andExpect(jsonPath("$.isMobileVerified").value(standardCustomerDetailsCopiedFromQuickRegisterEntity().getIsMobileVerified()))
-    .andExpect(jsonPath("$.isEmailVerified").value(standardCustomerDetailsCopiedFromQuickRegisterEntity().getIsEmailVerified()))
+    .andExpect(jsonPath("$.mobile").value(standardCustomerFromQuickEntity().getMobile()))
+    .andExpect(jsonPath("$.email").value(standardCustomerFromQuickEntity().getEmail()))
+    .andExpect(jsonPath("$.isMobileVerified").value(standardCustomerFromQuickEntity().getIsMobileVerified()))
+    .andExpect(jsonPath("$.isEmailVerified").value(standardCustomerFromQuickEntity().getIsEmailVerified()))
     .andExpect(jsonPath("$.language").doesNotExist())
     .andExpect(jsonPath("$.businessDomain").doesNotExist())
     .andExpect(jsonPath("$.nameOfFirm").doesNotExist())
@@ -117,7 +120,7 @@ public class CustomerDetailsWACTest {
     .andExpect(jsonPath("$.dateOfBirth").doesNotExist())
     .andExpect(jsonPath("$.insertTime").exists())
 	.andExpect(jsonPath("$.updateTime").exists())
-	.andExpect(jsonPath("$.updatedBy").value(standardCustomerDetailsCopiedFromQuickRegisterEntity().getUpdatedBy()));
+	.andExpect(jsonPath("$.updatedBy").value(standardCustomerFromQuickEntity().getUpdatedBy()));
 	
 	
 	}
@@ -128,39 +131,39 @@ public class CustomerDetailsWACTest {
 	{
 		this.mockMvc.perform(
 				post("/customer")
-				.content(standardJsonCustomerDetails(standardCustomerDetails(standardCustomerDetailsCopiedFromQuickRegisterEntity())))
+				.content(standardJsonCustomerDetails(standardCustomerDetails(standardCustomerFromQuickEntity())))
 				.contentType(MediaType.APPLICATION_JSON)
 				.accept(MediaType.APPLICATION_JSON))
 	.andDo(print())
 	.andExpect(status().isOk())
-	.andExpect(jsonPath("$.firstName").value(standardCustomerDetails(standardCustomerDetailsCopiedFromQuickRegisterEntity()).getFirstName()))
-    .andExpect(jsonPath("$.lastName").value(standardCustomerDetails(standardCustomerDetailsCopiedFromQuickRegisterEntity()).getLastName()))
+	.andExpect(jsonPath("$.firstName").value(standardCustomerDetails(standardCustomerFromQuickEntity()).getFirstName()))
+    .andExpect(jsonPath("$.lastName").value(standardCustomerDetails(standardCustomerFromQuickEntity()).getLastName()))
     .andExpect(jsonPath("$.homeAddressId.customerType").value(standardAddress().getCustomerType()))
     .andExpect(jsonPath("$.homeAddressId.addressLine").value(standardAddress().getAddressLine()))
     .andExpect(jsonPath("$.homeAddressId.city").value(standardAddress().getCity()))
     .andExpect(jsonPath("$.homeAddressId.district").value(standardAddress().getDistrict()))
     .andExpect(jsonPath("$.homeAddressId.state").value(standardAddress().getState()))
     .andExpect(jsonPath("$.homeAddressId.pincode").value(standardAddress().getPincode()))
-    .andExpect(jsonPath("$.mobile").value(standardCustomerDetails(standardCustomerDetailsCopiedFromQuickRegisterEntity()).getMobile()))
-    .andExpect(jsonPath("$.email").value(standardCustomerDetails(standardCustomerDetailsCopiedFromQuickRegisterEntity()).getEmail()))
-    .andExpect(jsonPath("$.isMobileVerified").value(standardCustomerDetails(standardCustomerDetailsCopiedFromQuickRegisterEntity()).getIsMobileVerified()))
-    .andExpect(jsonPath("$.isEmailVerified").value(standardCustomerDetails(standardCustomerDetailsCopiedFromQuickRegisterEntity()).getIsEmailVerified()))
-    .andExpect(jsonPath("$.language").value(standardCustomerDetails(standardCustomerDetailsCopiedFromQuickRegisterEntity()).getLanguage()))
-    .andExpect(jsonPath("$.businessDomain").value(standardCustomerDetails(standardCustomerDetailsCopiedFromQuickRegisterEntity()).getBusinessDomain()))
-    .andExpect(jsonPath("$.nameOfFirm").value(standardCustomerDetails(standardCustomerDetailsCopiedFromQuickRegisterEntity()).getNameOfFirm()))
+    .andExpect(jsonPath("$.mobile").value(standardCustomerDetails(standardCustomerFromQuickEntity()).getMobile()))
+    .andExpect(jsonPath("$.email").value(standardCustomerDetails(standardCustomerFromQuickEntity()).getEmail()))
+    .andExpect(jsonPath("$.isMobileVerified").value(standardCustomerDetails(standardCustomerFromQuickEntity()).getIsMobileVerified()))
+    .andExpect(jsonPath("$.isEmailVerified").value(standardCustomerDetails(standardCustomerFromQuickEntity()).getIsEmailVerified()))
+    .andExpect(jsonPath("$.language").value(standardCustomerDetails(standardCustomerFromQuickEntity()).getLanguage()))
+    .andExpect(jsonPath("$.businessDomain").value(standardCustomerDetails(standardCustomerFromQuickEntity()).getBusinessDomain()))
+    .andExpect(jsonPath("$.nameOfFirm").value(standardCustomerDetails(standardCustomerFromQuickEntity()).getNameOfFirm()))
     .andExpect(jsonPath("$.firmAddressId.customerType").value(standardAddress().getCustomerType()))
     .andExpect(jsonPath("$.firmAddressId.addressLine").value(standardAddress().getAddressLine()))
     .andExpect(jsonPath("$.firmAddressId.city").value(standardAddress().getCity()))
     .andExpect(jsonPath("$.firmAddressId.district").value(standardAddress().getDistrict()))
     .andExpect(jsonPath("$.firmAddressId.state").value(standardAddress().getState()))
     .andExpect(jsonPath("$.firmAddressId.pincode").value(standardAddress().getPincode()))
-    .andExpect(jsonPath("$.secondaryMobile").value(standardCustomerDetails(standardCustomerDetailsCopiedFromQuickRegisterEntity()).getSecondaryMobile()))
-    .andExpect(jsonPath("$.isSecondaryMobileVerified").value(standardCustomerDetails(standardCustomerDetailsCopiedFromQuickRegisterEntity()).getIsSecondaryMobileVerified()))
-    .andExpect(jsonPath("$.secondaryEmail").value(standardCustomerDetails(standardCustomerDetailsCopiedFromQuickRegisterEntity()).getSecondaryEmail()))
+    .andExpect(jsonPath("$.secondaryMobile").value(standardCustomerDetails(standardCustomerFromQuickEntity()).getSecondaryMobile()))
+    .andExpect(jsonPath("$.isSecondaryMobileVerified").value(standardCustomerDetails(standardCustomerFromQuickEntity()).getIsSecondaryMobileVerified()))
+    .andExpect(jsonPath("$.secondaryEmail").value(standardCustomerDetails(standardCustomerFromQuickEntity()).getSecondaryEmail()))
     .andExpect(jsonPath("$.dateOfBirth").exists())
     .andExpect(jsonPath("$.insertTime").exists())
 	.andExpect(jsonPath("$.updateTime").exists())
-	.andExpect(jsonPath("$.updatedBy").value(standardCustomerDetailsCopiedFromQuickRegisterEntity().getUpdatedBy()));
+	.andExpect(jsonPath("$.updatedBy").value(standardCustomerFromQuickEntity().getUpdatedBy()));
 	
 	
 	}
@@ -176,42 +179,43 @@ public class CustomerDetailsWACTest {
 		
 		this.mockMvc.perform(
 				post("/customer")
-				.content(standardJsonCustomerDetails(standardCustomerDetails(standardCustomerDetailsCopiedFromQuickRegisterEntity())))
+				.content(standardJsonCustomerDetails(standardCustomerDetails(standardCustomerFromQuickEntity())))
 				.contentType(MediaType.APPLICATION_JSON)
 				.accept(MediaType.APPLICATION_JSON))
 	.andDo(print())
 	.andExpect(status().isOk())
-	.andExpect(jsonPath("$.firstName").value(standardCustomerDetails(standardCustomerDetailsCopiedFromQuickRegisterEntity()).getFirstName()))
-    .andExpect(jsonPath("$.lastName").value(standardCustomerDetails(standardCustomerDetailsCopiedFromQuickRegisterEntity()).getLastName()))
+	.andExpect(jsonPath("$.firstName").value(standardCustomerDetails(standardCustomerFromQuickEntity()).getFirstName()))
+    .andExpect(jsonPath("$.lastName").value(standardCustomerDetails(standardCustomerFromQuickEntity()).getLastName()))
     .andExpect(jsonPath("$.homeAddressId.customerType").value(standardAddress().getCustomerType()))
     .andExpect(jsonPath("$.homeAddressId.addressLine").value(standardAddress().getAddressLine()))
     .andExpect(jsonPath("$.homeAddressId.city").value(standardAddress().getCity()))
     .andExpect(jsonPath("$.homeAddressId.district").value(standardAddress().getDistrict()))
     .andExpect(jsonPath("$.homeAddressId.state").value(standardAddress().getState()))
     .andExpect(jsonPath("$.homeAddressId.pincode").value(standardAddress().getPincode()))
-    .andExpect(jsonPath("$.mobile").value(standardCustomerDetails(standardCustomerDetailsCopiedFromQuickRegisterEntity()).getMobile()))
-    .andExpect(jsonPath("$.email").value(standardCustomerDetails(standardCustomerDetailsCopiedFromQuickRegisterEntity()).getEmail()))
-    .andExpect(jsonPath("$.isMobileVerified").value(standardCustomerDetails(standardCustomerDetailsCopiedFromQuickRegisterEntity()).getIsMobileVerified()))
-    .andExpect(jsonPath("$.isEmailVerified").value(standardCustomerDetails(standardCustomerDetailsCopiedFromQuickRegisterEntity()).getIsEmailVerified()))
-    .andExpect(jsonPath("$.language").value(standardCustomerDetails(standardCustomerDetailsCopiedFromQuickRegisterEntity()).getLanguage()))
-    .andExpect(jsonPath("$.businessDomain").value(standardCustomerDetails(standardCustomerDetailsCopiedFromQuickRegisterEntity()).getBusinessDomain()))
-    .andExpect(jsonPath("$.nameOfFirm").value(standardCustomerDetails(standardCustomerDetailsCopiedFromQuickRegisterEntity()).getNameOfFirm()))
+    .andExpect(jsonPath("$.mobile").value(standardCustomerDetails(standardCustomerFromQuickEntity()).getMobile()))
+    .andExpect(jsonPath("$.email").value(standardCustomerDetails(standardCustomerFromQuickEntity()).getEmail()))
+    .andExpect(jsonPath("$.isMobileVerified").value(standardCustomerDetails(standardCustomerFromQuickEntity()).getIsMobileVerified()))
+    .andExpect(jsonPath("$.isEmailVerified").value(standardCustomerDetails(standardCustomerFromQuickEntity()).getIsEmailVerified()))
+    .andExpect(jsonPath("$.language").value(standardCustomerDetails(standardCustomerFromQuickEntity()).getLanguage()))
+    .andExpect(jsonPath("$.businessDomain").value(standardCustomerDetails(standardCustomerFromQuickEntity()).getBusinessDomain()))
+    .andExpect(jsonPath("$.nameOfFirm").value(standardCustomerDetails(standardCustomerFromQuickEntity()).getNameOfFirm()))
     .andExpect(jsonPath("$.firmAddressId.customerType").value(standardAddress().getCustomerType()))
     .andExpect(jsonPath("$.firmAddressId.addressLine").value(standardAddress().getAddressLine()))
     .andExpect(jsonPath("$.firmAddressId.city").value(standardAddress().getCity()))
     .andExpect(jsonPath("$.firmAddressId.district").value(standardAddress().getDistrict()))
     .andExpect(jsonPath("$.firmAddressId.state").value(standardAddress().getState()))
     .andExpect(jsonPath("$.firmAddressId.pincode").value(standardAddress().getPincode()))
-    .andExpect(jsonPath("$.secondaryMobile").value(standardCustomerDetails(standardCustomerDetailsCopiedFromQuickRegisterEntity()).getSecondaryMobile()))
-    .andExpect(jsonPath("$.isSecondaryMobileVerified").value(standardCustomerDetails(standardCustomerDetailsCopiedFromQuickRegisterEntity()).getIsSecondaryMobileVerified()))
-    .andExpect(jsonPath("$.secondaryEmail").value(standardCustomerDetails(standardCustomerDetailsCopiedFromQuickRegisterEntity()).getSecondaryEmail()))
+    .andExpect(jsonPath("$.secondaryMobile").value(standardCustomerDetails(standardCustomerFromQuickEntity()).getSecondaryMobile()))
+    .andExpect(jsonPath("$.isSecondaryMobileVerified").value(standardCustomerDetails(standardCustomerFromQuickEntity()).getIsSecondaryMobileVerified()))
+    .andExpect(jsonPath("$.secondaryEmail").value(standardCustomerDetails(standardCustomerFromQuickEntity()).getSecondaryEmail()))
     .andExpect(jsonPath("$.dateOfBirth").exists())
     .andExpect(jsonPath("$.insertTime").exists())
 	.andExpect(jsonPath("$.updateTime").exists())
-	.andExpect(jsonPath("$.updatedBy").value(standardCustomerDetailsCopiedFromQuickRegisterEntity().getUpdatedBy()));
+	.andExpect(jsonPath("$.updatedBy").value(standardCustomerFromQuickEntity().getUpdatedBy()));
 	
 	
 	}
+	
 	
 	@Test
 	public void verifySecondaryMobileDetails() throws Exception
@@ -225,11 +229,19 @@ public class CustomerDetailsWACTest {
 		CustomerDetails customerDetails=customerDetailsService.mergeCustomerDetails(standardCustomerDetails(newEntity));
 		
 		MobileVerificationDetails mobileVerificationDetails=
-				mobileVerificationService
-				.getCustomerMobileVerificationDetailsByCustomerIdTypeAndMobile(customerDetails.getCustomerId(), 1, customerDetails.getSecondaryMobile());
+				new MobileVerificationDetails(new MobileVerificationDetailsKey(customerDetails.getCustomerId(), 1, 2),
+						standardCustomerDetails(newEntity).getSecondaryMobile(), 123456, 0, 0, new Date(), new Date(), CUST_UPDATED_BY);
 		
-		VerifyMobileDTO verifyMobileDTO=new VerifyMobileDTO(customerDetails.getCustomerId(), 1, customerDetails.getSecondaryMobile(),
-				mobileVerificationDetails.getMobileType(), mobileVerificationDetails.getMobilePin());
+		mobileVerificationDetails=mobileVerificationService.saveDetails(mobileVerificationDetails);
+		
+		/*
+		MobileVerificationDetails mobileVerificationDetails=
+				mobileVerificationService
+				.getByEntityIdTypeAndMobileType(customerDetails.getCustomerId(), 1, MOB_TYPE_SECONDARY);
+		*/		
+		
+		VerifyMobileDTO verifyMobileDTO=new VerifyMobileDTO(customerDetails.getCustomerId(), 1,
+				mobileVerificationDetails.getKey().getMobileType(), mobileVerificationDetails.getMobilePin());
 		
 		this.mockMvc.perform(
 				post("/customer/verifyMobileDetails")
@@ -259,10 +271,10 @@ public class CustomerDetailsWACTest {
 	
 		MobileVerificationDetails mobileVerificationDetails=
 				mobileVerificationService
-				.getCustomerMobileVerificationDetailsByCustomerIdTypeAndMobile(customerDetails.getCustomerId(), 1, customerDetails.getMobile());
+				.getByEntityIdTypeAndMobileType(customerDetails.getCustomerId(), 1, MOB_TYPE_PRIMARY);
 		
-		VerifyMobileDTO verifyMobileDTO=new VerifyMobileDTO(customerDetails.getCustomerId(), 1, customerDetails.getMobile(),
-				mobileVerificationDetails.getMobileType(), mobileVerificationDetails.getMobilePin());
+		VerifyMobileDTO verifyMobileDTO=new VerifyMobileDTO(customerDetails.getCustomerId(), 1, 
+				mobileVerificationDetails.getKey().getMobileType(), mobileVerificationDetails.getMobilePin());
 		
 		this.mockMvc.perform(
 				post("/customer/verifyMobileDetails")
@@ -289,9 +301,9 @@ public class CustomerDetailsWACTest {
 		
 		EmailVerificationDetails emailVerificationDetails=
 				emailVerificationService
-				.getCustomerEmailVerificationDetailsByCustomerIdTypeAndEmail(newEntity.getCustomerId(), 1, newEntity.getEmail());
+				.getByEntityIdTypeAndEmailType(newEntity.getCustomerId(), 1, EMAIL_TYPE_PRIMARY);
 		
-		VerifyEmailDTO verifyEmailDTO=new VerifyEmailDTO(newEntity.getCustomerId(),1, newEntity.getEmail(),
+		VerifyEmailDTO verifyEmailDTO=new VerifyEmailDTO(newEntity.getCustomerId(),1, EMAIL_TYPE_PRIMARY,
 				emailVerificationDetails.getEmailHash());
 		
 		this.mockMvc.perform(
@@ -316,7 +328,7 @@ public class CustomerDetailsWACTest {
 		
 		CustomerDetails newEntity=customerDetailsService.createCustomerDetailsFromQuickRegisterEntity(quickRegisterEntity);
 		
-		CustomerIdTypeMobileDTO customerIdTypeMobileDTO=new CustomerIdTypeMobileDTO(newEntity.getCustomerId(), 1, newEntity.getMobile());
+		CustomerIdTypeMobileTypeDTO customerIdTypeMobileDTO=new CustomerIdTypeMobileTypeDTO(newEntity.getCustomerId(), 1, MOB_TYPE_PRIMARY);
 		
 		this.mockMvc.perform(
 				post("/customer/sendMobileVerificationDetails")
@@ -340,7 +352,7 @@ public class CustomerDetailsWACTest {
 		
 		CustomerDetails newEntity=customerDetailsService.createCustomerDetailsFromQuickRegisterEntity(quickRegisterEntity);
 		
-		CustomerIdTypeEmailDTO customerIdTypeEmailDTO=new CustomerIdTypeEmailDTO(newEntity.getCustomerId(), 1, newEntity.getEmail());
+		CustomerIdTypeEmailTypeDTO customerIdTypeEmailDTO=new CustomerIdTypeEmailTypeDTO(newEntity.getCustomerId(), 1, EMAIL_TYPE_PRIMARY);
 		
 		this.mockMvc.perform(
 				post("/customer/sendEmailVerificationDetails")

@@ -6,19 +6,25 @@ import com.projectx.rest.domain.quickregister.QuickRegisterEntity;
 
 public interface EmailVerificationService {
 
-EmailVerificationDetails getCustomerEmailVerificationDetailsByCustomerIdTypeAndEmail(Long customerId,Integer customerType,String email);
+    EmailVerificationDetails getByEntityIdTypeAndEmailType(Long customerId,Integer customerType,Integer emailType);
+    
+    EmailVerificationDetails getByEmail(String email);
+    
+    String checkIfEmailAlreadyExist(Long customerId,Integer customerType,Integer emailType,String email);
+    
+    Boolean reSendEmailHash(Long customerId,Integer customerType,Integer emailType);
 	
-	Boolean reSendEmailHash(Long customerId,Integer customerType,String email);
+	Boolean reSetEmailHash(Long customerId,Integer customerType,Integer emailType);
 	
-	Boolean reSetEmailHash(Long customerId,Integer customerType,String email);
+	Boolean verifyEmailHash(Long customerId,Integer customerType,Integer emailType,String emailHash);
 	
-	Boolean verifyEmailHash(Long customerId,Integer customerType,String email,String emailHash);
+	Boolean verifyEmailHashUpdateStatusAndSendPassword(Long customerId,Integer customerType,Integer emailType, String emailHash);
 	
-	Integer updateEmailHash(Long customerId,Integer customerType,String email);
+	Integer updateEmailHash(Long customerId,Integer customerType,Integer emailType);
 	
-	EmailVerificationDetails createCustomerEmailVerificationEntity(Long customerId,Integer customerType,String email,Integer emailType,String updatedBy);
+	EmailVerificationDetails createEntity(Long customerId,Integer customerType,String email,Integer emailType,String updatedBy);
 	
-	EmailVerificationDetails saveCustomerEmailVerificationDetails(EmailVerificationDetails emailVerificationDetails);
+	EmailVerificationDetails saveDetails(EmailVerificationDetails emailVerificationDetails);
 	
 	Boolean deleteByKey(EmailVerificationDetailsKey key);
 	

@@ -9,8 +9,8 @@ import java.util.Date;
 import com.google.gson.Gson;
 import com.projectx.data.domain.completeregister.UpdateAddressDTO;
 import com.projectx.data.domain.completeregister.UpdateMobileVerificationStatusDTO;
-import com.projectx.data.domain.quickregister.CustomerIdTypeEmailDTO;
-import com.projectx.data.domain.quickregister.CustomerIdTypeMobileDTO;
+import com.projectx.data.domain.quickregister.CustomerIdTypeEmailTypeDTO;
+import com.projectx.data.domain.quickregister.CustomerIdTypeMobileTypeDTO;
 import com.projectx.mvc.domain.completeregister.VerifyEmailDTO;
 import com.projectx.mvc.domain.completeregister.VerifyMobileDTO;
 import com.projectx.rest.domain.completeregister.Address;
@@ -34,6 +34,8 @@ public class CustomerDetailsDataFixtures {
 	
 	public static String CUST_EMAIL_NEW="dineshshende@gmail.com";
 	
+	public static Integer CUST_TYPE_CUSTOMER=1;
+	
 	public static Date CUST_DATE=new Date();
 	
 	static Gson gson=new Gson();
@@ -49,7 +51,7 @@ public class CustomerDetailsDataFixtures {
 	}
 */
 	
-	public static CustomerDetails standardCustomerDetailsCopiedFromQuickRegisterEntity()
+	public static CustomerDetails standardCustomerFromQuickEntity()
 	{
 		return new CustomerDetails(standardEmailMobileCustomer().getCustomerId(), standardEmailMobileCustomer().getFirstName(),
 				standardEmailMobileCustomer().getLastName(), null, null, standardEmailMobileCustomer().getMobile(), 
@@ -78,9 +80,19 @@ public class CustomerDetailsDataFixtures {
 		
 	}
 	
+	public static CustomerDetails standardCustomerDetailsWithOldMobileSceMobileEmail(CustomerDetails customerDetails,Long mobile,Long secMobolie,String email)
+	{
+		return new CustomerDetails(customerDetails.getCustomerId(), customerDetails.getFirstName(),
+				customerDetails.getLastName(), CUST_DATE, standardAddress(), mobile, 
+				customerDetails.getIsEmailVerified(),email,
+				customerDetails.getIsEmailVerified(), CUST_LANG, CUST_BUSINESS_DOMAIN, CUST_NAME_OF_FIRM, standardAddress(),
+				secMobolie, false,	CUST_SEC_EMAIL, CUST_DATE, CUST_DATE, CUST_UPDATED_BY);
+		
+	}
+	
 	public static CustomerDetails standardCustomerDetailsWithNewSecondaryMobile(CustomerDetails customerDetails)
 	{
-		return new CustomerDetails(standardEmailMobileCustomer().getCustomerId(), standardEmailMobileCustomer().getFirstName(),
+		return new CustomerDetails(customerDetails.getCustomerId(), standardEmailMobileCustomer().getFirstName(),
 				standardEmailMobileCustomer().getLastName(), CUST_DATE, customerDetails.getHomeAddressId(), standardEmailMobileCustomer().getMobile(), 
 				standardEmailMobileCustomer().getIsEmailVerified(),standardEmailMobileCustomer().getEmail(),
 				standardEmailMobileCustomer().getIsEmailVerified(), CUST_LANG, CUST_BUSINESS_DOMAIN, CUST_NAME_OF_FIRM, customerDetails.getFirmAddressId(),
@@ -97,6 +109,7 @@ public class CustomerDetailsDataFixtures {
 				CUST_SEC_MOBILE_NEW, null,	CUST_SEC_EMAIL, CUST_DATE, CUST_DATE, CUST_UPDATED_BY);
 		
 	}
+	
 	
 	public static CustomerDetails standardCustomerDetailsWithNewEmail(CustomerDetails customerDetails)
 	{
@@ -126,7 +139,7 @@ public class CustomerDetailsDataFixtures {
 	
 	public static UpdateMobileVerificationStatusDTO standardMobileVerificationStatusDTO()
 	{
-		return new UpdateMobileVerificationStatusDTO(CUST_ID, true);
+		return new UpdateMobileVerificationStatusDTO(CUST_ID,CUST_MOBILE, true);
 	}
 	
 	
@@ -169,14 +182,14 @@ public class CustomerDetailsDataFixtures {
 		
 		return gson.toJson(customerDetails);
 	}
-	
+/*	
 	public static String standardJsonUpdateAddress()
 	{
 		System.out.println(gson.toJson(standardUpdateAddressDTO()));
 		
 		return gson.toJson(standardUpdateAddressDTO());
 	}
-	
+*/	
 	public static String standardJsonUpdateMobileVerificationStatus()
 	{
 		System.out.println(gson.toJson(standardMobileVerificationStatusDTO()));
@@ -199,14 +212,14 @@ public class CustomerDetailsDataFixtures {
 		return gson.toJson(verifyEmailDTO);
 	}
 	
-	public static String standardJsonCustomerIdTypeMobileDTO(CustomerIdTypeMobileDTO idTypeMobileDTO)
+	public static String standardJsonCustomerIdTypeMobileDTO(CustomerIdTypeMobileTypeDTO idTypeMobileDTO)
 	{
 		System.out.println(gson.toJson(idTypeMobileDTO));
 		
 		return gson.toJson(idTypeMobileDTO);
 	}
 	
-	public static String standardJsonCustomerIdTypeEmailDTO(CustomerIdTypeEmailDTO idTypeEmailDTO)
+	public static String standardJsonCustomerIdTypeEmailDTO(CustomerIdTypeEmailTypeDTO idTypeEmailDTO)
 	{
 		System.out.println(gson.toJson(idTypeEmailDTO));
 		

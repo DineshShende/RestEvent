@@ -41,7 +41,7 @@ public class AuthenticationDetailsMemRepository implements AuthenticationDetails
 	
 
 	@Override
-	public AuthenticationDetails getCustomerAuthenticationDetailsByEmail(String email) {
+	public AuthenticationDetails getByEmail(String email) {
 		
 		for(AuthenticationDetailsKey key:customerList.keySet())
 		{
@@ -56,7 +56,7 @@ public class AuthenticationDetailsMemRepository implements AuthenticationDetails
 
 
 	@Override
-	public AuthenticationDetails getCustomerAuthenticationDetailsByMobile(Long mobile) {
+	public AuthenticationDetails getByMobile(Long mobile) {
 		
 		for(AuthenticationDetailsKey key:customerList.keySet())
 		{
@@ -71,7 +71,7 @@ public class AuthenticationDetailsMemRepository implements AuthenticationDetails
 
 
 	@Override
-	public AuthenticationDetails getCustomerAuthenticationDetailsByCustomerIdType(Long customerId,Integer customerType) {
+	public AuthenticationDetails getByCustomerIdType(Long customerId,Integer customerType) {
 		
 		AuthenticationDetails fetchedEntity= customerList.get(new AuthenticationDetailsKey(customerId, customerType));
 		

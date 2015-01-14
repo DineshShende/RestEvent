@@ -1,27 +1,23 @@
-package com.projectx.web.domain.quickregister;
+package com.projectx.mvc.domain.quickregister;
 
-public class VerifyMobilePinDTO {
-	
+public class VerifyEmailHashDTO {
+
 	private Long customerId;
-	
 	private Integer customerType;
+	private Integer emailType;
+	private String emailHash;
 	
-	private Long mobile;
-	
-	private Integer mobilePin;
-	
-
-	public VerifyMobilePinDTO() {
+	public VerifyEmailHashDTO() {
 	
 	}
 
-	public VerifyMobilePinDTO(Long customerId, Integer customerType,
-			Long mobile, Integer mobilePin) {
+	public VerifyEmailHashDTO(Long customerId, Integer customerType,
+			Integer emailType, String emailHash) {
 		super();
 		this.customerId = customerId;
 		this.customerType = customerType;
-		this.mobile = mobile;
-		this.mobilePin = mobilePin;
+		this.emailType = emailType;
+		this.emailHash = emailHash;
 	}
 
 
@@ -32,34 +28,34 @@ public class VerifyMobilePinDTO {
 		return customerId;
 	}
 
-
 	public void setCustomerId(Long customerId) {
 		this.customerId = customerId;
 	}
 
 
-	public Long getMobile() {
-		return mobile;
+	public Integer getEmailType() {
+		return emailType;
 	}
 
-
-	public void setMobile(Long mobile) {
-		this.mobile = mobile;
+	public void setEmailType(Integer emailType) {
+		this.emailType = emailType;
 	}
 
-
-	public Integer getMobilePin() {
-		return mobilePin;
+	public String getEmailHash() {
+		return emailHash;
 	}
 
-
-	public void setMobilePin(Integer mobilePin) {
-		this.mobilePin = mobilePin;
+	public void setEmailHash(String emailHash) {
+		this.emailHash = emailHash;
 	}
 
+	
+	
 	public Integer getCustomerType() {
 		return customerType;
 	}
+
+
 
 	public void setCustomerType(Integer customerType) {
 		this.customerType = customerType;
@@ -67,9 +63,9 @@ public class VerifyMobilePinDTO {
 
 	@Override
 	public String toString() {
-		return "VerifyMobilePinDTO [customerId=" + customerId
-				+ ", customerType=" + customerType + ", mobile=" + mobile
-				+ ", mobilePin=" + mobilePin + "]";
+		return "VerifyEmailHashDTO [customerId=" + customerId
+				+ ", customerType=" + customerType + ", emailType=" + emailType
+				+ ", emailHash=" + emailHash + "]";
 	}
 
 	@Override
@@ -80,9 +76,10 @@ public class VerifyMobilePinDTO {
 				+ ((customerId == null) ? 0 : customerId.hashCode());
 		result = prime * result
 				+ ((customerType == null) ? 0 : customerType.hashCode());
-		result = prime * result + ((mobile == null) ? 0 : mobile.hashCode());
 		result = prime * result
-				+ ((mobilePin == null) ? 0 : mobilePin.hashCode());
+				+ ((emailHash == null) ? 0 : emailHash.hashCode());
+		result = prime * result
+				+ ((emailType == null) ? 0 : emailType.hashCode());
 		return result;
 	}
 
@@ -94,7 +91,7 @@ public class VerifyMobilePinDTO {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		VerifyMobilePinDTO other = (VerifyMobilePinDTO) obj;
+		VerifyEmailHashDTO other = (VerifyEmailHashDTO) obj;
 		if (customerId == null) {
 			if (other.customerId != null)
 				return false;
@@ -105,20 +102,22 @@ public class VerifyMobilePinDTO {
 				return false;
 		} else if (!customerType.equals(other.customerType))
 			return false;
-		if (mobile == null) {
-			if (other.mobile != null)
+		if (emailHash == null) {
+			if (other.emailHash != null)
 				return false;
-		} else if (!mobile.equals(other.mobile))
+		} else if (!emailHash.equals(other.emailHash))
 			return false;
-		if (mobilePin == null) {
-			if (other.mobilePin != null)
+		if (emailType == null) {
+			if (other.emailType != null)
 				return false;
-		} else if (!mobilePin.equals(other.mobilePin))
+		} else if (!emailType.equals(other.emailType))
 			return false;
 		return true;
 	}
 
-	
-	
+
+
+
+
 	
 }

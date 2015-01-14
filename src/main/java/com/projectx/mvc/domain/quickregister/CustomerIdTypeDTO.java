@@ -1,28 +1,20 @@
-package com.projectx.data.domain.quickregister;
+package com.projectx.mvc.domain.quickregister;
 
-public class CustomerIdTypeEmailDTO {
+public class CustomerIdTypeDTO {
 
 	private Long customerId;
 	
 	private Integer customerType;
-	
-	private String email;
-	
-	
-	public CustomerIdTypeEmailDTO() {
 
+	public CustomerIdTypeDTO() {
+		
 	}
 
-	public CustomerIdTypeEmailDTO(Long customerId, Integer customerType,
-			String email) {
+	public CustomerIdTypeDTO(Long customerId, Integer customerType) {
 		super();
 		this.customerId = customerId;
 		this.customerType = customerType;
-		this.email = email;
 	}
-
-
-
 
 	public Long getCustomerId() {
 		return customerId;
@@ -33,18 +25,6 @@ public class CustomerIdTypeEmailDTO {
 		this.customerId = customerId;
 	}
 
-
-	public String getEmail() {
-		return email;
-	}
-
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-
-	
 	
 	public Integer getCustomerType() {
 		return customerType;
@@ -56,8 +36,8 @@ public class CustomerIdTypeEmailDTO {
 
 	@Override
 	public String toString() {
-		return "CustomerIdTypeEmailDTO [customerId=" + customerId
-				+ ", customerType=" + customerType + ", email=" + email + "]";
+		return "CustomerIdTypeDTO [customerId=" + customerId
+				+ ", customerType=" + customerType + "]";
 	}
 
 	@Override
@@ -68,7 +48,6 @@ public class CustomerIdTypeEmailDTO {
 				+ ((customerId == null) ? 0 : customerId.hashCode());
 		result = prime * result
 				+ ((customerType == null) ? 0 : customerType.hashCode());
-		result = prime * result + ((email == null) ? 0 : email.hashCode());
 		return result;
 	}
 
@@ -80,7 +59,7 @@ public class CustomerIdTypeEmailDTO {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		CustomerIdTypeEmailDTO other = (CustomerIdTypeEmailDTO) obj;
+		CustomerIdTypeDTO other = (CustomerIdTypeDTO) obj;
 		if (customerId == null) {
 			if (other.customerId != null)
 				return false;
@@ -91,13 +70,10 @@ public class CustomerIdTypeEmailDTO {
 				return false;
 		} else if (!customerType.equals(other.customerType))
 			return false;
-		if (email == null) {
-			if (other.email != null)
-				return false;
-		} else if (!email.equals(other.email))
-			return false;
 		return true;
 	}
 
-			
+
+	
+		
 }

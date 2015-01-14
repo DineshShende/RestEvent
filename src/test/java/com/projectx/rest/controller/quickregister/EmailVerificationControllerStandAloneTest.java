@@ -56,7 +56,7 @@ public class EmailVerificationControllerStandAloneTest {
 	@Test
 	public void verifyEmailHashForEmailCustomer() throws Exception
 	{
-		when(emailVerificationService.verifyEmailHash(CUST_ID,CUST_TYPE_CUSTOMER,CUST_EMAIL ,CUST_EMAILHASH)).thenReturn(true);
+		when(emailVerificationService.verifyEmailHash(CUST_ID,ENTITY_TYPE_CUSTOMER,EMAIL_TYPE_PRIMARY ,CUST_EMAILHASH)).thenReturn(true);
 		
 		
 		this.mockMvc.perform(
@@ -73,7 +73,7 @@ public class EmailVerificationControllerStandAloneTest {
 	@Test
 	public void reSetEmailHash() throws Exception
 	{
-		when(emailVerificationService.reSetEmailHash(CUST_ID,CUST_TYPE_CUSTOMER,CUST_EMAIL)).thenReturn(true);
+		when(emailVerificationService.reSetEmailHash(CUST_ID,ENTITY_TYPE_CUSTOMER,EMAIL_TYPE_PRIMARY)).thenReturn(true);
 		
 		this.mockMvc.perform(
 	            post("/customer/quickregister/resetEmailHash")
@@ -89,7 +89,7 @@ public class EmailVerificationControllerStandAloneTest {
 	@Test
 	public void reSendEmailHash() throws Exception
 	{
-		when(emailVerificationService.reSendEmailHash(CUST_ID,CUST_TYPE_CUSTOMER,CUST_EMAIL)).thenReturn(true);
+		when(emailVerificationService.reSendEmailHash(CUST_ID,ENTITY_TYPE_CUSTOMER,EMAIL_TYPE_PRIMARY)).thenReturn(true);
 		
 		this.mockMvc.perform(
 	            post("/customer/quickregister/resendEmailHash")
@@ -105,8 +105,8 @@ public class EmailVerificationControllerStandAloneTest {
 	@Test
 	public void addCustomerEmailVerification() throws Exception
 	{
-		when(emailVerificationService.getCustomerEmailVerificationDetailsByCustomerIdTypeAndEmail(standardCustomerIdEmailDTO().getCustomerId(),
-				standardCustomerIdEmailDTO().getCustomerType(),standardCustomerIdEmailDTO().getEmail())).thenReturn(standardCustomerEmailVerificationDetails());
+		when(emailVerificationService.getByEntityIdTypeAndEmailType(standardCustomerIdEmailDTO().getCustomerId(),
+				standardCustomerIdEmailDTO().getCustomerType(),standardCustomerIdEmailDTO().getEmailType())).thenReturn(standardCustomerEmailVerificationDetails());
 		
 		this.mockMvc.perform(
 				post("/customer/quickregister/getEmailVerificationDetails")
@@ -116,8 +116,8 @@ public class EmailVerificationControllerStandAloneTest {
 		.andDo(print())
 		.andExpect(status().isOk())
 		//.andExpect(jsonPath("$.customerId").value(standardCustomerMobileVerificationDetails().getCustomerId()))
-	    .andExpect(jsonPath("$.emailType").value(standardCustomerEmailVerificationDetails().getEmailType()))
-	    .andExpect(jsonPath("$.key.email").value(standardCustomerEmailVerificationDetails().getKey().getEmail()))
+	    .andExpect(jsonPath("$.key.emailType").value(standardCustomerEmailVerificationDetails().getKey().getEmailType()))
+	    .andExpect(jsonPath("$.email").value(standardCustomerEmailVerificationDetails().getEmail()))
 	    .andExpect(jsonPath("$.emailHash").value(standardCustomerEmailVerificationDetails().getEmailHash()))
 	    .andExpect(jsonPath("$.emailHashSentTime").exists())
 	    .andExpect(jsonPath("$.resendCount").value(standardCustomerEmailVerificationDetails().getResendCount()));

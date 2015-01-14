@@ -2,41 +2,29 @@ package com.projectx.rest.handlers.quickregister;
 
 import static com.projectx.rest.fixtures.quickregister.CustomerQuickRegisterDataFixture.*;
 
-import java.text.NumberFormat;
-import java.text.ParsePosition;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
-import com.projectx.data.domain.quickregister.UpdatePasswordAndPasswordTypeDTO;
-
+import com.projectx.mvc.domain.quickregister.CustomerQuickRegisterEntityDTO;
+import com.projectx.mvc.domain.quickregister.CustomerQuickRegisterStringStatusEntity;
 import com.projectx.rest.domain.quickregister.AuthenticationDetails;
+import com.projectx.rest.domain.quickregister.CustomerQuickRegisterEmailMobileVerificationEntity;
+import com.projectx.rest.domain.quickregister.CustomerQuickRegisterStatusEntity;
 import com.projectx.rest.domain.quickregister.EmailVerificationDetails;
 import com.projectx.rest.domain.quickregister.MobileVerificationDetails;
-import com.projectx.rest.domain.quickregister.CustomerQuickRegisterEmailMobileVerificationEntity;
 import com.projectx.rest.domain.quickregister.QuickRegisterEntity;
-import com.projectx.rest.domain.quickregister.CustomerQuickRegisterStatusEntity;
 import com.projectx.rest.repository.completeregister.DocumentDetailsRepository;
-import com.projectx.rest.repository.quickregister.AuthenticationDetailsRepository;
-import com.projectx.rest.repository.quickregister.EmailVericationDetailsRepository;
-import com.projectx.rest.repository.quickregister.MobileVerificationDetailsRepository;
 import com.projectx.rest.repository.quickregister.QuickRegisterRepository;
-import com.projectx.rest.services.quickregister.QuickRegisterService;
 import com.projectx.rest.services.quickregister.EmailVerificationService;
 import com.projectx.rest.services.quickregister.MobileVerificationService;
+import com.projectx.rest.services.quickregister.QuickRegisterService;
 import com.projectx.rest.utils.HandleCustomerVerification;
 import com.projectx.rest.utils.MessageBuilder;
 import com.projectx.rest.utils.MessagerSender;
-import com.projectx.web.domain.quickregister.CustomerIdTypeDTO;
-import com.projectx.web.domain.quickregister.CustomerQuickRegisterEntityDTO;
-import com.projectx.web.domain.quickregister.CustomerQuickRegisterStringStatusEntity;
-import com.projectx.web.domain.quickregister.LoginVerificationDTO;
-import com.projectx.web.domain.quickregister.LoginVerificationWithDefaultEmailPasswordDTO;
-import com.sun.mail.imap.protocol.MessageSet;
 
 @Component
 @Profile(value={"Dev","Test"})
@@ -87,40 +75,40 @@ public class QuickRegisterHandler implements
 	
 		QuickRegisterEntity returnEntity=new QuickRegisterEntity();
 		
-		QuickRegisterEntity entityByEmail=returnEntity;
+		EmailVerificationDetails entityByEmail=new EmailVerificationDetails();
 		
-		QuickRegisterEntity entityByMobile=returnEntity;
+		MobileVerificationDetails entityByMobile=new MobileVerificationDetails();
 		
 		if(customer.getEmail()!=null)
-			entityByEmail=customerQuickRegisterRepository.findByEmail(customer.getEmail());
+			entityByEmail=emailVerificationService.getByEmail(customer.getEmail());
 		
 		if(customer.getMobile()!=null)
-			entityByMobile=customerQuickRegisterRepository.findByMobile(customer.getMobile());
+			entityByMobile=mobileVerificationService.getByMobile(customer.getMobile());
 		
 
-		if(entityByEmail.getCustomerId()!=null && entityByMobile.getCustomerId()!=null && !entityByEmail.getCustomerId().equals(entityByMobile.getCustomerId()))
+		if(entityByEmail.getKey()!=null && entityByMobile.getKey()!=null && !entityByEmail.getKey().getCustomerId().equals(entityByMobile.getKey().getCustomerId())&&!entityByEmail.getKey().getCustomerType().equals(entityByMobile.getKey().getCustomerType()))
 		{
 			return new CustomerQuickRegisterStringStatusEntity(REGISTER_FISHY, new QuickRegisterEntity());
 		}
 		
 		
-		if(customer.getEmail()!=null && entityByEmail.getCustomerId()!=null)
+		if(customer.getEmail()!=null && entityByEmail.getKey()!=null)
 		{
-			returnEntity=entityByEmail;
+			returnEntity=getByEmail(customer.getEmail());
 			
 			emailAlreadyExist=true;
 			
-			if(entityByEmail.getIsEmailVerified())
+			if(returnEntity.getIsEmailVerified())
 				emailVerified=true;
 		}
 		
-		if(customer.getMobile()!=null && entityByMobile.getCustomerId()!=null)
+		if(customer.getMobile()!=null && entityByMobile.getKey()!=null)
 		{
-			returnEntity=entityByMobile;
+			returnEntity=getByMobile(customer.getMobile());
 			
 			mobileAlreadyExist=true;
 			
-			if(entityByMobile.getIsMobileVerified())
+			if(returnEntity.getIsMobileVerified())
 				mobileVerified=true;
 		}
 		
@@ -172,7 +160,8 @@ public class QuickRegisterHandler implements
 		if(customerToProcess.getMobile()!=null){
 			customerToProcess.setIsMobileVerified(false);
 		}
-		customerToProcess.setCustomerType(CUST_TYPE_CUSTOMER);
+		//TODO
+		customerToProcess.setCustomerType(customer.getCustomerType());
 
 		return customerToProcess;
 	}
@@ -201,7 +190,7 @@ public class QuickRegisterHandler implements
 	
 	
 	@Override
-	public QuickRegisterEntity getCustomerQuickRegisterEntityByCustomerId(
+	public QuickRegisterEntity getByEntityId(
 			Long customerId) {
 		
 		return customerQuickRegisterRepository.findByCustomerId(customerId);
@@ -209,14 +198,14 @@ public class QuickRegisterHandler implements
 
 	
 	@Override
-	public QuickRegisterEntity getCustomerQuickRegisterEntityByEmail(
+	public QuickRegisterEntity getByEmail(
 			String email) {
 		
 		return customerQuickRegisterRepository.findByEmail(email);
 	}
 
 	@Override
-	public QuickRegisterEntity getCustomerQuickRegisterEntityByMobile(
+	public QuickRegisterEntity getByMobile(
 			Long mobile) {
 		
 		return customerQuickRegisterRepository.findByMobile(mobile);
@@ -235,18 +224,20 @@ public class QuickRegisterHandler implements
 		if(savedCustomerQuickRegisterEntity.getEmail()!=null)
 		{
 			EmailVerificationDetails newCustomerEmailVerificationDetails=emailVerificationService
-					.createCustomerEmailVerificationEntity(savedCustomerQuickRegisterEntity.getCustomerId(),savedCustomerQuickRegisterEntity.getCustomerType(),
+					.createEntity(savedCustomerQuickRegisterEntity.getCustomerId(),savedCustomerQuickRegisterEntity.getCustomerType(),
 							savedCustomerQuickRegisterEntity.getEmail(),CUST_EMAIL_TYPE_PRIMARY,savedCustomerQuickRegisterEntity.getUpdatedBy());
-			savedCustomerEmailVerificationDetails=emailVerificationService.saveCustomerEmailVerificationDetails(newCustomerEmailVerificationDetails);
+			savedCustomerEmailVerificationDetails=emailVerificationService.saveDetails(newCustomerEmailVerificationDetails);
 		}
 		
 		if(savedCustomerQuickRegisterEntity.getMobile()!=null)
 		{
 			MobileVerificationDetails newCustomerMobileVerificationDetails=mobileVerificationService
-					.createCustomerMobileVerificationEntity(savedCustomerQuickRegisterEntity.getCustomerId(),savedCustomerQuickRegisterEntity.getCustomerType(),
+					.createEntity(savedCustomerQuickRegisterEntity.getCustomerId(),savedCustomerQuickRegisterEntity.getCustomerType(),
 							savedCustomerQuickRegisterEntity.getMobile(),CUST_MOBILE_TYPE_PRIMARY,savedCustomerQuickRegisterEntity.getUpdatedBy());
-			savedCustomerMobileVerificationDetails=mobileVerificationService.saveCustomerMobileVerificationDetails(newCustomerMobileVerificationDetails);
+			savedCustomerMobileVerificationDetails=mobileVerificationService.saveDetails(newCustomerMobileVerificationDetails);
 
+			//TODO
+			//If exception occurs here
 		}
 		
 		AuthenticationDetails customerAuthenticationDetails=authenticationHandler.createCustomerAuthenticationDetails(savedCustomerQuickRegisterEntity);
@@ -325,9 +316,6 @@ public class QuickRegisterHandler implements
 		return updatedStatus;
 	}
 
-
-		
-
 	@Override
 	public void clearDataForTesting() {
 		customerQuickRegisterRepository.clearCustomerQuickRegister();
@@ -336,11 +324,6 @@ public class QuickRegisterHandler implements
 		emailVerificationService.clearTestData();
 		
 	}
-
-
-	
-	
-
 
 
 }

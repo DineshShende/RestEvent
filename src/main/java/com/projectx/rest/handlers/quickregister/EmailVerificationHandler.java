@@ -8,10 +8,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
+import com.projectx.rest.domain.completeregister.CustomerDetails;
+import com.projectx.rest.domain.completeregister.VendorDetails;
 import com.projectx.rest.domain.quickregister.EmailVerificationDetails;
 import com.projectx.rest.domain.quickregister.EmailVerificationDetailsKey;
 import com.projectx.rest.domain.quickregister.QuickRegisterEntity;
 import com.projectx.rest.repository.quickregister.EmailVericationDetailsRepository;
+import com.projectx.rest.services.completeregister.CustomerDetailsService;
+import com.projectx.rest.services.completeregister.VendorDetailsService;
 import com.projectx.rest.services.quickregister.AuthenticationService;
 import com.projectx.rest.services.quickregister.QuickRegisterService;
 import com.projectx.rest.services.quickregister.EmailVerificationService;
@@ -31,6 +35,12 @@ public class EmailVerificationHandler implements EmailVerificationService {
 	QuickRegisterService customerQuickRegisterService; 
 	
 	@Autowired
+	CustomerDetailsService customerDetailsService;
+	
+	@Autowired
+	VendorDetailsService vendorDetailsService;
+	
+	@Autowired
 	AuthenticationService authenticationHandler;
 	
 	@Autowired
@@ -47,17 +57,22 @@ public class EmailVerificationHandler implements EmailVerificationService {
 	
 	private static final Integer EMAIL_VALIDITY_TIME_IN_HRS=24;
 	
+	private static final Integer ENTITY_TYPE_CUSTOMER=new Integer(1);
+	
+	private static final Integer ENTITY_TYPE_VENDOR=new Integer(2);
+	
+	
 	@Override
-	public EmailVerificationDetails createCustomerEmailVerificationEntity(
+	public EmailVerificationDetails createEntity(
 			Long customerId,Integer customerType,String email,Integer emailType,String updatedBy) {
 		EmailVerificationDetails emailVerificationDetails=new EmailVerificationDetails();
 		
-		EmailVerificationDetailsKey  key=new EmailVerificationDetailsKey(customerId,customerType,email);
+		EmailVerificationDetailsKey  key=new EmailVerificationDetailsKey(customerId,customerType,emailType);
 		
 		emailVerificationDetails.setKey(key);
 		emailVerificationDetails.setEmailHash(handleCustomerVerification.generateEmailHash());
 		emailVerificationDetails.setEmailHashSentTime(new Date());
-		emailVerificationDetails.setEmailType(emailType);
+		emailVerificationDetails.setEmail(email);
 		emailVerificationDetails.setResendCount(0);
 		emailVerificationDetails.setUpdatedBy(updatedBy);
 		emailVerificationDetails.setInsertTime(new Date());
@@ -67,7 +82,7 @@ public class EmailVerificationHandler implements EmailVerificationService {
 	}
 	
 	@Override
-	public EmailVerificationDetails saveCustomerEmailVerificationDetails(
+	public EmailVerificationDetails saveDetails(
 			EmailVerificationDetails emailVerificationDetails) {
 		
 		EmailVerificationDetails verificationDetails=customerEmailVericationDetailsRepository.save(emailVerificationDetails);
@@ -78,20 +93,20 @@ public class EmailVerificationHandler implements EmailVerificationService {
 
 
 	@Override
-	public EmailVerificationDetails getCustomerEmailVerificationDetailsByCustomerIdTypeAndEmail(
-			Long customerId,Integer customerType, String email) {
+	public EmailVerificationDetails getByEntityIdTypeAndEmailType(
+			Long customerId,Integer customerType, Integer emailType) {
 		EmailVerificationDetails fetchedEmailVerificationDetails=customerEmailVericationDetailsRepository.
-					getEmailVerificationDetailsByCustomerIdTypeAndEmail(customerId,customerType, email);
+					getByEntityIdTypeAndEmailType(customerId,customerType, emailType);
 		return fetchedEmailVerificationDetails;
 	}
 
-	
-	
+
 	@Override
-	public Boolean verifyEmailHash(Long customerId,Integer customerType,String email, String emailHash) {
+	public Boolean verifyEmailHashUpdateStatusAndSendPassword(Long customerId,Integer customerType,Integer emailType, String emailHash) {
 		
-		QuickRegisterEntity fetchedEntity=customerQuickRegisterService.getCustomerQuickRegisterEntityByCustomerId(customerId);
-		EmailVerificationDetails emailVerificationDetails=getCustomerEmailVerificationDetailsByCustomerIdTypeAndEmail(customerId, customerType,email);
+		QuickRegisterEntity fetchedEntity=customerQuickRegisterService.getByEntityId(customerId);
+		EmailVerificationDetails emailVerificationDetails=
+				getByEntityIdTypeAndEmailType(customerId, customerType,emailType);
 			
 		if(fetchedEntity.getCustomerId()==null||emailVerificationDetails.getKey()==null)
 			return false;
@@ -130,21 +145,85 @@ public class EmailVerificationHandler implements EmailVerificationService {
 		}
 		
 	}
+	
+	@Override
+	public Boolean verifyEmailHash(Long customerId,Integer customerType,Integer emailType, String emailHash) {
+		
+		
+		EmailVerificationDetails emailVerificationDetails=getByEntityIdTypeAndEmailType(customerId, customerType,emailType);
+			
+		if(emailVerificationDetails.getKey()==null)
+			return false;
+	
+		Date emailHashSentTime=emailVerificationDetails.getEmailHashSentTime();
+		
+		Date verificationTime=new Date();
+		
+		long dateDiffernce=verificationTime.getTime()-emailHashSentTime.getTime();
+		
+		long diffHours = dateDiffernce / (60 * 60 * 1000);
+		
+		
+		if(emailVerificationDetails.getEmailHash().equals(emailHash) && diffHours<EMAIL_VALIDITY_TIME_IN_HRS)
+		{
+			return true;			
+		}
+		else
+		{
+			return false;
+		}
+		
+	}
 
 	@Override
-	public Boolean reSetEmailHash(Long customerId,Integer customerType,String email) {
+	public Boolean reSetEmailHash(Long customerId,Integer customerType,Integer emailType) {
 		
 		Integer updateStatus=new Integer(0);
 			
-		updateStatus= updateEmailHash(customerId,customerType, email);
+		updateStatus= updateEmailHash(customerId,customerType, emailType);
 		
-		QuickRegisterEntity customer=customerQuickRegisterService.getCustomerQuickRegisterEntityByCustomerId(customerId);
+		
+		String firstName=null;
+		String lastName = null;
+		
+		QuickRegisterEntity quickRegisterEntity=customerQuickRegisterService.getByEntityId(customerId);
+		
+		if(customerType.equals(ENTITY_TYPE_CUSTOMER))
+		{
+			if(quickRegisterEntity.getCustomerId()!=null)
+			{
+				firstName=quickRegisterEntity.getFirstName();
+				lastName=quickRegisterEntity.getLastName();
+			}
+			else
+			{	
+				CustomerDetails customerDetails=customerDetailsService.findById(customerId);
+				firstName=customerDetails.getFirstName();
+				lastName=customerDetails.getLastName();
+			}
+			
+		}
+		else if(customerType.equals(ENTITY_TYPE_VENDOR))
+		{
+			if(quickRegisterEntity.getCustomerId()!=null)
+			{
+				firstName=quickRegisterEntity.getFirstName();
+				lastName=quickRegisterEntity.getLastName();
+			}
+			else
+			{
+				VendorDetails vendorDetails=vendorDetailsService.findById(customerId);
+				firstName=vendorDetails.getFirstName();
+				lastName=vendorDetails.getLastName();
+			}
+		}		
+		
 		EmailVerificationDetails emailVerificationDetails=customerEmailVericationDetailsRepository
-				.getEmailVerificationDetailsByCustomerIdTypeAndEmail(customer.getCustomerId(),customer.getCustomerType(), customer.getEmail());
+				.getByEntityIdTypeAndEmailType(customerId,customerType, emailType);
 		
 		Boolean sentStatus=messagerSender
-				.sendHashEmail(customer.getCustomerId(), customer.getFirstName(), customer.getLastName(),
-						customer.getEmail(), emailVerificationDetails.getEmailHash());
+				.sendHashEmail(customerId, firstName, lastName,
+						emailVerificationDetails.getEmail(), emailVerificationDetails.getEmailHash());
 		
 		if(updateStatus.equals(UPDATE_SUCESS) && sentStatus)
 			return true;
@@ -153,22 +232,57 @@ public class EmailVerificationHandler implements EmailVerificationService {
 	}
 
 	@Override
-	public Boolean reSendEmailHash(Long customerId,Integer customerType, String email) {
+	public Boolean reSendEmailHash(Long customerId,Integer customerType,Integer emailType) {
 
 		Integer updateStatus=new Integer(0);
 		Boolean sentStatus=false;
 		
-		QuickRegisterEntity customer=customerQuickRegisterService.getCustomerQuickRegisterEntityByCustomerId(customerId);
+
+		String firstName=null;
+		String lastName = null;
+		
+		QuickRegisterEntity quickRegisterEntity=customerQuickRegisterService.getByEntityId(customerId);
+		
+		if(customerType.equals(ENTITY_TYPE_CUSTOMER))
+		{
+			if(quickRegisterEntity.getCustomerId()!=null)
+			{
+				firstName=quickRegisterEntity.getFirstName();
+				lastName=quickRegisterEntity.getLastName();
+			}
+			else
+			{	
+				CustomerDetails customerDetails=customerDetailsService.findById(customerId);
+				firstName=customerDetails.getFirstName();
+				lastName=customerDetails.getLastName();
+			}
+			
+		}
+		else if(customerType.equals(ENTITY_TYPE_VENDOR))
+		{
+			if(quickRegisterEntity.getCustomerId()!=null)
+			{
+				firstName=quickRegisterEntity.getFirstName();
+				lastName=quickRegisterEntity.getLastName();
+			}
+			else
+			{
+				VendorDetails vendorDetails=vendorDetailsService.findById(customerId);
+				firstName=vendorDetails.getFirstName();
+				lastName=vendorDetails.getLastName();
+			}
+		}
+		
 		EmailVerificationDetails emailVerificationDetails=customerEmailVericationDetailsRepository
-				.getEmailVerificationDetailsByCustomerIdTypeAndEmail(customer.getCustomerId(),customer.getCustomerType(), customer.getEmail());
+				.getByEntityIdTypeAndEmailType(customerId,customerType, emailType);
 		
 		
-		updateStatus=customerEmailVericationDetailsRepository.incrementResendCountByCustomerIdAndEmail(customerId,customerType, email);
+		updateStatus=customerEmailVericationDetailsRepository.incrementResendCountByCustomerIdAndEmail(customerId,customerType, emailType);
 		
 		if(updateStatus.equals(UPDATE_SUCESS))
 			sentStatus=messagerSender
-				.sendHashEmail(customer.getCustomerId(), customer.getFirstName(), customer.getLastName(),
-						customer.getEmail(), emailVerificationDetails.getEmailHash());
+				.sendHashEmail(customerId, firstName,lastName,
+						emailVerificationDetails.getEmail(), emailVerificationDetails.getEmailHash());
 				
 		if(updateStatus.equals(UPDATE_SUCESS) && sentStatus)
 			return true;
@@ -178,11 +292,11 @@ public class EmailVerificationHandler implements EmailVerificationService {
 	}
 
 	@Override
-	public Integer updateEmailHash(Long customerId,Integer customerType,String email) {
+	public Integer updateEmailHash(Long customerId,Integer customerType,Integer emailType) {
 		
 		String emailHash=handleCustomerVerification.generateEmailHash();
 		
-		return customerEmailVericationDetailsRepository.resetEmailHashAndEmailHashSentTime(customerId,customerType, email, emailHash, new Date(), 0);
+		return customerEmailVericationDetailsRepository.resetEmailHashAndEmailHashSentTime(customerId,customerType, emailType, emailHash, new Date(), 0);
 		
 	}
 
@@ -206,5 +320,30 @@ public class EmailVerificationHandler implements EmailVerificationService {
 		return customerEmailVericationDetailsRepository.count().intValue();
 	}
 
+	@Override
+	public EmailVerificationDetails getByEmail(
+			String email) {
+		
+		EmailVerificationDetails fetchedEmailVerificationDetails=customerEmailVericationDetailsRepository.
+				getByEmail(email);
+	return fetchedEmailVerificationDetails;
+
+	}
+
+	@Override
+	public String checkIfEmailAlreadyExist(Long customerId,Integer customerType,Integer emailType,String email) {
+		
+		EmailVerificationDetails fetchedEntity=customerEmailVericationDetailsRepository.getByEmail(email);
+		
+		if(fetchedEntity.getKey()!=null && fetchedEntity.getKey().getCustomerId().equals(customerId)&&
+				fetchedEntity.getKey().getCustomerType().equals(customerType) && fetchedEntity.getKey().getEmailType().equals(emailType))
+			return "EXIST";
+		else if(fetchedEntity.getKey()!=null)
+			return "EXISTWITHOTHERENTITY";
+		else
+			return "NOTEXIST";
+	}
+
+	
 	
 }

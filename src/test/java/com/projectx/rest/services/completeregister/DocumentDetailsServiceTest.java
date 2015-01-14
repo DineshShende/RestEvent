@@ -54,7 +54,7 @@ public class DocumentDetailsServiceTest {
 		
 		DocumentDetails savedEntity=documentDetailsService.saveCustomerDocument(standardDocumentDetailsWithDummyDocument());
 		
-		assertEquals(standardDocumentDetailsWithDummyDocument(), documentDetailsService.getCustomerDocumentById(savedEntity.getKey()));
+		assertEquals(standardDocumentDetailsWithDummyDocument(), documentDetailsService.getById(savedEntity.getKey()));
 		
 		assertEquals(1,documentDetailsService.count().intValue());
 	}

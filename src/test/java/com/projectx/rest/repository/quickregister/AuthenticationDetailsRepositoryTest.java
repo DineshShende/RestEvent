@@ -71,10 +71,10 @@ public class AuthenticationDetailsRepositoryTest {
 				standardUpdatePasswordAndPasswordTypeDTO().getCustomerType(),
 				standardUpdatePasswordAndPasswordTypeDTO().getPassword(), standardUpdatePasswordAndPasswordTypeDTO().getPasswordType()).intValue());
 		
-		assertEquals(CUST_PASSWORD_CHANGED, customerAuthenticationDetailsRepository.getCustomerAuthenticationDetailsByCustomerIdType(standardAuthenticationDetailsKey().getCustomerId(),
+		assertEquals(CUST_PASSWORD_CHANGED, customerAuthenticationDetailsRepository.getByCustomerIdType(standardAuthenticationDetailsKey().getCustomerId(),
 				standardUpdatePasswordAndPasswordTypeDTO().getCustomerType()).getPassword());
 		
-		assertEquals(CUST_PASSWORD_TYPE_CHANGED, customerAuthenticationDetailsRepository.getCustomerAuthenticationDetailsByCustomerIdType(savedEntity.getKey().getCustomerId(),
+		assertEquals(CUST_PASSWORD_TYPE_CHANGED, customerAuthenticationDetailsRepository.getByCustomerIdType(savedEntity.getKey().getCustomerId(),
 				savedEntity.getKey().getCustomerType()).getPasswordType());
 		
 	}
@@ -95,10 +95,10 @@ public class AuthenticationDetailsRepositoryTest {
 		assertEquals(1, customerAuthenticationDetailsRepository.updateEmailPasswordAndPasswordTypeAndCounts(standardUpdateEmailPassword().getCustomerId(),
 				standardUpdateEmailPassword().getCustomerType(),standardUpdateEmailPassword().getEmailPassword()).intValue());
 		
-		assertEquals(CUST_EMAILHASH_UPDATED, customerAuthenticationDetailsRepository.getCustomerAuthenticationDetailsByCustomerIdType(savedEntity.getKey().getCustomerId(),
+		assertEquals(CUST_EMAILHASH_UPDATED, customerAuthenticationDetailsRepository.getByCustomerIdType(savedEntity.getKey().getCustomerId(),
 				savedEntity.getKey().getCustomerType()).getEmailPassword());
 		
-		assertEquals(CUST_PASSWORD_TYPE_DEFAULT, customerAuthenticationDetailsRepository.getCustomerAuthenticationDetailsByCustomerIdType(savedEntity.getKey().getCustomerId(),
+		assertEquals(CUST_PASSWORD_TYPE_DEFAULT, customerAuthenticationDetailsRepository.getByCustomerIdType(savedEntity.getKey().getCustomerId(),
 				savedEntity.getKey().getCustomerType()).getPasswordType());
 		
 		
@@ -116,7 +116,7 @@ public class AuthenticationDetailsRepositoryTest {
 		
 		assertEquals(1, customerAuthenticationDetailsRepository.incrementResendCount(standardCustomerIdDTO().getCustomerId(),standardCustomerIdDTO().getCustomerType()).intValue());
 		
-		assertEquals(1, customerAuthenticationDetailsRepository.getCustomerAuthenticationDetailsByCustomerIdType(savedEntity.getKey().getCustomerId(),standardCustomerIdDTO().getCustomerType()).getResendCount().intValue());
+		assertEquals(1, customerAuthenticationDetailsRepository.getByCustomerIdType(savedEntity.getKey().getCustomerId(),standardCustomerIdDTO().getCustomerType()).getResendCount().intValue());
 	}
 	
 	
@@ -133,7 +133,7 @@ public class AuthenticationDetailsRepositoryTest {
 		assertEquals(1, customerAuthenticationDetailsRepository.incrementLastUnsucessfullAttempts(standardCustomerIdDTO().getCustomerId(),
 				standardCustomerIdDTO().getCustomerType()).intValue());
 		
-		assertEquals(1, customerAuthenticationDetailsRepository.getCustomerAuthenticationDetailsByCustomerIdType
+		assertEquals(1, customerAuthenticationDetailsRepository.getByCustomerIdType
 				(savedEntity.getKey().getCustomerId(),savedEntity.getKey().getCustomerType()).getLastUnsucessfullAttempts().intValue());
 
 		
@@ -150,7 +150,7 @@ public class AuthenticationDetailsRepositoryTest {
 		
 		assertEquals(1,customerAuthenticationDetailsRepository.count().intValue());
 		
-		assertEquals(standardCustomerEmailMobileAuthenticationDetails(), customerAuthenticationDetailsRepository.getCustomerAuthenticationDetailsByCustomerIdType
+		assertEquals(standardCustomerEmailMobileAuthenticationDetails(), customerAuthenticationDetailsRepository.getByCustomerIdType
 				(savedEntity.getKey().getCustomerId(),savedEntity.getKey().getCustomerType()));
 		
 	}
@@ -165,7 +165,7 @@ public class AuthenticationDetailsRepositoryTest {
 		
 		assertEquals(1,customerAuthenticationDetailsRepository.count().intValue());
 		
-		assertEquals(standardCustomerEmailMobileAuthenticationDetails(), customerAuthenticationDetailsRepository.getCustomerAuthenticationDetailsByEmail(savedEntity.getEmail()));
+		assertEquals(standardCustomerEmailMobileAuthenticationDetails(), customerAuthenticationDetailsRepository.getByEmail(savedEntity.getEmail()));
 		
 	}
 	
@@ -179,7 +179,7 @@ public class AuthenticationDetailsRepositoryTest {
 		assertEquals(1,customerAuthenticationDetailsRepository.count().intValue());
 		
 		assertEquals(standardCustomerEmailMobileAuthenticationDetails(), customerAuthenticationDetailsRepository.
-				getCustomerAuthenticationDetailsByMobile(savedEntity.getMobile()));
+				getByMobile(savedEntity.getMobile()));
 		
 	}
 

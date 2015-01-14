@@ -19,6 +19,13 @@ public class AsyncTestController {
 	@RequestMapping(value="/sendEmail",method=RequestMethod.POST)
 	public Boolean sendEmail(@RequestBody EmailMessageDTO emailMessageDTO)
 	{
+		try {
+			Thread.sleep(300000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		Boolean result=handleCustomerVerification.sendEmailAsynchronous(emailMessageDTO.getEmail(), emailMessageDTO.getMessage());
 		
 		return result;

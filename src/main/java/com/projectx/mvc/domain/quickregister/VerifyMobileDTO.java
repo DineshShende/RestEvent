@@ -1,4 +1,4 @@
-package com.projectx.web.domain.quickregister;
+package com.projectx.mvc.domain.quickregister;
 
 public class VerifyMobileDTO {
 	

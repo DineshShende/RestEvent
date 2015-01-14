@@ -39,10 +39,10 @@ public class DocumentDetailsHandler implements DocumentDetailsService {
 	 */
 	@Override
 	
-	public DocumentDetails getCustomerDocumentById(
+	public DocumentDetails getById(
 			DocumentKey documentKey) {
 		
-		DocumentDetails fetchedEntity=documentDetailsRepository.getCustomerDocumentByCustomerId(documentKey);
+		DocumentDetails fetchedEntity=documentDetailsRepository.getByCustomerId(documentKey);
 		
 		return fetchedEntity;
 	}
@@ -51,12 +51,14 @@ public class DocumentDetailsHandler implements DocumentDetailsService {
 	public DocumentDetails updateDocument(DocumentKey key, byte[] document,
 			String contentType) {
 		
-		DocumentDetails fetchedEntity=documentDetailsRepository.getCustomerDocumentByCustomerId(key);
+		DocumentDetails fetchedEntity=documentDetailsRepository.getByCustomerId(key);
 		
 		if(fetchedEntity!=null)
 		{
 			fetchedEntity.setDocument(document);
 			fetchedEntity.setContentType(contentType);
+			fetchedEntity.setVerificationRemark("NOT VERIFIED");
+			fetchedEntity.setVerificationStatus(1);
 			fetchedEntity.setUpdatedBy("CUST_ONLINE");
 			fetchedEntity.setUpdateTime(new Date());
 		
@@ -73,7 +75,7 @@ public class DocumentDetailsHandler implements DocumentDetailsService {
 	public DocumentDetails updateVerificationStatusAndRemark(DocumentKey key,
 			Integer verificationStatus, String verificationRemark) {
 		
-		DocumentDetails fetchedEntity=documentDetailsRepository.getCustomerDocumentByCustomerId(key);
+		DocumentDetails fetchedEntity=documentDetailsRepository.getByCustomerId(key);
 		
 		if(fetchedEntity!=null)
 		{

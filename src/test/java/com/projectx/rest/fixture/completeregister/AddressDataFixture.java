@@ -42,4 +42,5 @@ public class AddressDataFixture {
 	{
 		return new Address(ADDRESS_CUST_TYPE, "Updated", "Updated", "Updated", "Updated", 111111, ADDRESS_DATE, ADDRESS_DATE, ADDRESS_UPDATED_BY);
 	}
+
 }

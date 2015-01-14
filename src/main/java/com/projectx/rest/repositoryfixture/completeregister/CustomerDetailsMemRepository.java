@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import com.projectx.data.domain.completeregister.UpdateAddressDTO;
+import com.projectx.data.domain.completeregister.UpdateEmailVerificationStatusDTO;
 import com.projectx.data.domain.completeregister.UpdateMobileVerificationStatusDTO;
 import com.projectx.rest.domain.completeregister.CustomerDetails;
 import com.projectx.rest.domain.quickregister.AuthenticationDetails;
@@ -28,6 +29,7 @@ public class CustomerDetailsMemRepository implements CustomerDetailsRepository {
 		return customerDetails;
 	}
 
+	/*
 	@Override
 	public CustomerDetails updateFirmAddress(UpdateAddressDTO addressDTO) {
 
@@ -68,7 +70,7 @@ public class CustomerDetailsMemRepository implements CustomerDetailsRepository {
 
 
 	}
-
+*/
 	@Override
 	public Integer updateMobileVerificationStatus(
 			UpdateMobileVerificationStatusDTO verificationStatusDTO) {
@@ -102,6 +104,7 @@ public class CustomerDetailsMemRepository implements CustomerDetailsRepository {
 		{	
 			list.remove(verificationStatusDTO.getCustomerId());
 		
+			oldRecord.setMobile(verificationStatusDTO.getMobile());
 			oldRecord.setIsSecondaryMobileVerified(verificationStatusDTO.getStatus());
 
 			list.put(verificationStatusDTO.getCustomerId(), oldRecord);
@@ -115,7 +118,7 @@ public class CustomerDetailsMemRepository implements CustomerDetailsRepository {
 
 	@Override
 	public Integer updateEmailVerificationStatus(
-			UpdateMobileVerificationStatusDTO verificationStatusDTO) {
+			UpdateEmailVerificationStatusDTO verificationStatusDTO) {
 		
 		CustomerDetails oldRecord=list.get(verificationStatusDTO.getCustomerId());
 		
@@ -123,6 +126,7 @@ public class CustomerDetailsMemRepository implements CustomerDetailsRepository {
 		{	
 			list.remove(verificationStatusDTO.getCustomerId());
 		
+			oldRecord.setEmail(verificationStatusDTO.getEmail());
 			oldRecord.setIsEmailVerified(verificationStatusDTO.getStatus());
 
 			list.put(verificationStatusDTO.getCustomerId(), oldRecord);

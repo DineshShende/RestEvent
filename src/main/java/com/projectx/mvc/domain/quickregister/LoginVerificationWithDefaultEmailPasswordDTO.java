@@ -1,25 +1,23 @@
-package com.projectx.web.domain.quickregister;
+package com.projectx.mvc.domain.quickregister;
 
-public class UpdateEmailHashDTO {
-
+public class LoginVerificationWithDefaultEmailPasswordDTO {
+	
 	private Long customerId;
 	
 	private Integer customerType;
 	
-	private String email;
-	
-	public UpdateEmailHashDTO() {
-	
+	private String emailPassword;
+
+	public LoginVerificationWithDefaultEmailPasswordDTO() {
+
 	}
 
-	
-
-	public UpdateEmailHashDTO(Long customerId, Integer customerType,
-			String email) {
+	public LoginVerificationWithDefaultEmailPasswordDTO(Long customerId,
+			Integer customerType, String emailPassword) {
 		super();
 		this.customerId = customerId;
 		this.customerType = customerType;
-		this.email = email;
+		this.emailPassword = emailPassword;
 	}
 
 
@@ -32,36 +30,30 @@ public class UpdateEmailHashDTO {
 		this.customerId = customerId;
 	}
 
-	public String getEmail() {
-		return email;
+	public String getEmailPassword() {
+		return emailPassword;
 	}
 
-	public void setEmail(String email) {
-		this.email = email;
+	public void setEmailPassword(String emailPassword) {
+		this.emailPassword = emailPassword;
 	}
-	
-	
-	
 
+	
+	
 	public Integer getCustomerType() {
 		return customerType;
 	}
-
-
 
 	public void setCustomerType(Integer customerType) {
 		this.customerType = customerType;
 	}
 
-
-
 	@Override
 	public String toString() {
-		return "UpdateEmailHashDTO [customerId=" + customerId
-				+ ", customerType=" + customerType + ", email=" + email + "]";
+		return "LoginVerificationWithDefaultEmailPasswordDTO [customerId="
+				+ customerId + ", customerType=" + customerType
+				+ ", emailPassword=" + emailPassword + "]";
 	}
-
-
 
 	@Override
 	public int hashCode() {
@@ -71,11 +63,10 @@ public class UpdateEmailHashDTO {
 				+ ((customerId == null) ? 0 : customerId.hashCode());
 		result = prime * result
 				+ ((customerType == null) ? 0 : customerType.hashCode());
-		result = prime * result + ((email == null) ? 0 : email.hashCode());
+		result = prime * result
+				+ ((emailPassword == null) ? 0 : emailPassword.hashCode());
 		return result;
 	}
-
-
 
 	@Override
 	public boolean equals(Object obj) {
@@ -85,7 +76,7 @@ public class UpdateEmailHashDTO {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		UpdateEmailHashDTO other = (UpdateEmailHashDTO) obj;
+		LoginVerificationWithDefaultEmailPasswordDTO other = (LoginVerificationWithDefaultEmailPasswordDTO) obj;
 		if (customerId == null) {
 			if (other.customerId != null)
 				return false;
@@ -96,15 +87,13 @@ public class UpdateEmailHashDTO {
 				return false;
 		} else if (!customerType.equals(other.customerType))
 			return false;
-		if (email == null) {
-			if (other.email != null)
+		if (emailPassword == null) {
+			if (other.emailPassword != null)
 				return false;
-		} else if (!email.equals(other.email))
+		} else if (!emailPassword.equals(other.emailPassword))
 			return false;
 		return true;
 	}
 
-
-
-		
+	
 }

@@ -11,15 +11,15 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.projectx.data.domain.quickregister.UpdatePasswordAndPasswordTypeDTO;
+import com.projectx.mvc.domain.quickregister.CustomerIdTypeDTO;
+import com.projectx.mvc.domain.quickregister.LoginVerificationDTO;
+import com.projectx.mvc.domain.quickregister.LoginVerificationWithDefaultEmailPasswordDTO;
+import com.projectx.mvc.domain.quickregister.ResetPasswordRedirectDTO;
+import com.projectx.mvc.domain.quickregister.UpdatePasswordDTO;
 import com.projectx.rest.domain.quickregister.AuthenticationDetails;
 import com.projectx.rest.domain.quickregister.AuthenticationDetailsKey;
 import com.projectx.rest.domain.quickregister.QuickRegisterEntity;
 import com.projectx.rest.services.quickregister.AuthenticationService;
-import com.projectx.web.domain.quickregister.CustomerIdTypeDTO;
-import com.projectx.web.domain.quickregister.LoginVerificationDTO;
-import com.projectx.web.domain.quickregister.LoginVerificationWithDefaultEmailPasswordDTO;
-import com.projectx.web.domain.quickregister.ResetPasswordRedirectDTO;
-import com.projectx.web.domain.quickregister.UpdatePasswordDTO;
 
 @RestController
 @RequestMapping(value="/customer/quickregister")
@@ -85,7 +85,7 @@ public class AuthenticationController {
 	public AuthenticationDetails getAuthenticationDetailsByCustomerId(@RequestBody CustomerIdTypeDTO customerId)
 	{
 		AuthenticationDetails verifiedEntity= authenticationService
-				.getLoginDetailsByCustomerIdType(customerId.getCustomerId(),customerId.getCustomerType());
+				.getByEntityIdType(customerId.getCustomerId(),customerId.getCustomerType());
 		
 		return verifiedEntity;
 	}
