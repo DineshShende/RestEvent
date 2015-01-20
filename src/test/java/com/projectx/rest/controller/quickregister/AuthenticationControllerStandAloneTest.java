@@ -7,7 +7,7 @@ import static com.projectx.rest.fixture.quickregister.AuthenticationDetailsDataF
 import static com.projectx.rest.fixture.quickregister.AuthenticationDetailsDataFixtures.standardJsonLoginVerification;
 import static com.projectx.rest.fixture.quickregister.AuthenticationDetailsDataFixtures.standardJsonUpdatePasswordAndPasswordType;
 import static com.projectx.rest.fixture.quickregister.AuthenticationDetailsDataFixtures.standardLoginVerificationWithEmail;
-import static com.projectx.rest.fixture.quickregister.AuthenticationDetailsDataFixtures.standardUpdatePasswordAndPasswordTypeDTO;
+import static com.projectx.rest.fixture.quickregister.AuthenticationDetailsDataFixtures.standardUpdatePasswordEmailPasswordAndPasswordTypeDTO;
 import static com.projectx.rest.fixture.quickregister.AuthenticationDetailsDataFixtures.standardUpdatePasswordDTO;
 import static com.projectx.rest.fixture.quickregister.QuickRegisterDataFixture.CUST_MOBILE;
 import static com.projectx.rest.fixture.quickregister.QuickRegisterDataFixture.standardEmailMobileCustomer;

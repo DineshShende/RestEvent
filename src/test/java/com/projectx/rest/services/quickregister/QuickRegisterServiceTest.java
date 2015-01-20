@@ -44,6 +44,176 @@ public class QuickRegisterServiceTest {
 		quickRegisterService.clearDataForTesting();
 	}
 	
+	@Test
+	public void checkIfEmailCustomerExist() throws Exception {
+
+		assertEquals(REGISTER_NOT_REGISTERED,quickRegisterService
+				.checkIfAlreadyRegistered(standardEmailCustomerDTO()).getStatus());
+		
+		
+		QuickRegisterEntity fetchedEntity=quickRegisterService.handleNewCustomerQuickRegister(standardEmailCustomerDTO()).getCustomer();
+		
+		
+		
+		assertEquals(REGISTER_EMAIL_ALREADY_REGISTERED_NOT_VERIFIED,quickRegisterService
+				.checkIfAlreadyRegistered(standardEmailMobileCustomerDTO()).getStatus());
+
+		
+		assertEquals(REGISTER_EMAIL_ALREADY_REGISTERED_NOT_VERIFIED,quickRegisterService
+				.checkIfAlreadyRegistered(standardEmailCustomerDTO()).getStatus());
+
+		
+		assertEquals(REGISTER_NOT_REGISTERED,quickRegisterService
+				.checkIfAlreadyRegistered(standardMobileCustomerDTO()).getStatus());
+		
+		
+		EmailVerificationDetails emailVerificationDetails=emailVerificationService.getByEntityIdTypeAndEmailType
+				(fetchedEntity.getCustomerId(),fetchedEntity.getCustomerType(),1);
+
+		
+		assertTrue(emailVerificationService.verifyEmailHashUpdateStatusAndSendPassword(fetchedEntity.getCustomerId(),
+				fetchedEntity.getCustomerType(),1, emailVerificationDetails.getEmailHash()));
+
+
+		assertEquals(REGISTER_EMAIL_ALREADY_REGISTERED_VERIFIED,quickRegisterService
+				.checkIfAlreadyRegistered(standardEmailMobileCustomerDTO()).getStatus());
+
+		
+		assertEquals(REGISTER_EMAIL_ALREADY_REGISTERED_VERIFIED,quickRegisterService
+				.checkIfAlreadyRegistered(standardEmailCustomerDTO()).getStatus());
+
+		
+		
+	}
+
+	
+	@Test
+	public void checkIfMobileCustomerExist() throws Exception {
+
+		assertEquals(REGISTER_NOT_REGISTERED,quickRegisterService
+				.checkIfAlreadyRegistered(standardMobileCustomerDTO()).getStatus());
+
+		QuickRegisterEntity fetchedEntity=quickRegisterService.handleNewCustomerQuickRegister(standardMobileCustomerDTO()).getCustomer();
+				
+		assertEquals(REGISTER_MOBILE_ALREADY_REGISTERED_NOT_VERIFIED,quickRegisterService
+				.checkIfAlreadyRegistered(standardEmailMobileCustomerDTO()).getStatus());
+
+		
+		assertEquals(REGISTER_NOT_REGISTERED,quickRegisterService
+				.checkIfAlreadyRegistered(standardEmailCustomerDTO()).getStatus());
+
+		assertEquals(REGISTER_MOBILE_ALREADY_REGISTERED_NOT_VERIFIED,quickRegisterService
+				.checkIfAlreadyRegistered(standardMobileCustomerDTO()).getStatus());
+		
+		
+		
+		//TODO
+	}
+
+	
+	@Test
+	public void checkIfEmailMobileCustomerExistEmailVerfiedFirst() throws Exception {
+
+		assertEquals(REGISTER_NOT_REGISTERED,quickRegisterService
+				.checkIfAlreadyRegistered(standardEmailMobileCustomerDTO()).getStatus());
+		
+		QuickRegisterEntity fetchedEntity=quickRegisterService.handleNewCustomerQuickRegister(standardEmailMobileCustomerDTO()).getCustomer();
+		
+		
+		assertEquals(REGISTER_EMAIL_MOBILE_ALREADY_REGISTERED_EMAIL_MOBILE_UNVERIFIED,quickRegisterService
+				.checkIfAlreadyRegistered(standardEmailMobileCustomerDTO()).getStatus());
+
+		
+		assertEquals(REGISTER_EMAIL_ALREADY_REGISTERED_NOT_VERIFIED,quickRegisterService
+				.checkIfAlreadyRegistered(standardEmailCustomerDTO()).getStatus());
+
+		assertEquals(REGISTER_MOBILE_ALREADY_REGISTERED_NOT_VERIFIED,quickRegisterService
+				.checkIfAlreadyRegistered(standardMobileCustomerDTO()).getStatus());
+		
+	
+		
+		EmailVerificationDetails emailVerificationDetails=emailVerificationService.getByEntityIdTypeAndEmailType
+				(fetchedEntity.getCustomerId(),fetchedEntity.getCustomerType(),1);
+
+		
+		assertTrue(emailVerificationService
+				.verifyEmailHashUpdateStatusAndSendPassword(fetchedEntity.getCustomerId(),fetchedEntity.getCustomerType(),EMAIL_TYPE_PRIMARY,emailVerificationDetails.getEmailHash()));
+		
+		assertEquals(REGISTER_EMAIL_MOBILE_ALREADY_REGISTERED_EMAIL_VERIFIED ,quickRegisterService
+				.checkIfAlreadyRegistered(standardEmailMobileCustomerDTO()).getStatus());
+		
+		
+		MobileVerificationDetails mobileVerificationDetails=mobileVerificationService.getByEntityIdTypeAndMobileType
+				(fetchedEntity.getCustomerId(),fetchedEntity.getCustomerType(), MOB_TYPE_PRIMARY);
+		
+		
+		assertTrue(mobileVerificationService.verifyMobilePinUpdateStatusAndSendPassword(fetchedEntity.getCustomerId(),
+				fetchedEntity.getCustomerType(),MOB_TYPE_PRIMARY ,mobileVerificationDetails.getMobilePin()));
+		
+		assertEquals(REGISTER_EMAIL_MOBILE_ALREADY_REGISTERED_EMAIL_MOBILE_VERIFIED,quickRegisterService
+				.checkIfAlreadyRegistered(standardEmailMobileCustomerDTO()).getStatus());
+		
+		assertEquals(REGISTER_EMAIL_ALREADY_REGISTERED_VERIFIED,quickRegisterService
+				.checkIfAlreadyRegistered(standardEmailCustomerDTO()).getStatus());
+
+		assertEquals(REGISTER_MOBILE_ALREADY_REGISTERED_VERIFIED,quickRegisterService
+				.checkIfAlreadyRegistered(standardMobileCustomerDTO()).getStatus());
+		
+		
+	}
+
+	
+	@Test
+	public void checkIfEmailMobileCustomerExistMobileVerfiedFirst() throws Exception {
+
+		assertEquals(REGISTER_NOT_REGISTERED,quickRegisterService
+				.checkIfAlreadyRegistered(standardEmailMobileCustomerDTO()).getStatus());
+		
+		QuickRegisterEntity fetchedEntity=quickRegisterService.handleNewCustomerQuickRegister(standardEmailMobileCustomerDTO()).getCustomer();
+		
+		
+		
+		assertEquals(REGISTER_EMAIL_MOBILE_ALREADY_REGISTERED_EMAIL_MOBILE_UNVERIFIED,quickRegisterService
+				.checkIfAlreadyRegistered(standardEmailMobileCustomerDTO()).getStatus());
+
+		
+		assertEquals(REGISTER_EMAIL_ALREADY_REGISTERED_NOT_VERIFIED,quickRegisterService
+				.checkIfAlreadyRegistered(standardEmailCustomerDTO()).getStatus());
+
+		assertEquals(REGISTER_MOBILE_ALREADY_REGISTERED_NOT_VERIFIED,quickRegisterService
+				.checkIfAlreadyRegistered(standardMobileCustomerDTO()).getStatus());
+
+		
+		MobileVerificationDetails mobileVerificationDetails=mobileVerificationService.getByEntityIdTypeAndMobileType
+				(fetchedEntity.getCustomerId(),fetchedEntity.getCustomerType(), MOB_TYPE_PRIMARY);
+				
+		assertTrue(mobileVerificationService.verifyMobilePinUpdateStatusAndSendPassword(fetchedEntity.getCustomerId(),
+				fetchedEntity.getCustomerType(),MOB_TYPE_PRIMARY ,mobileVerificationDetails.getMobilePin()));
+		
+		assertEquals(REGISTER_EMAIL_MOBILE_ALREADY_REGISTERED_MOBILE_VERIFIED ,quickRegisterService
+				.checkIfAlreadyRegistered(standardEmailMobileCustomerDTO()).getStatus());
+		
+		
+		EmailVerificationDetails emailVerificationDetails=emailVerificationService.getByEntityIdTypeAndEmailType
+				(fetchedEntity.getCustomerId(),fetchedEntity.getCustomerType(), EMAIL_TYPE_PRIMARY);
+		
+		
+		
+		assertTrue(emailVerificationService.verifyEmailHashUpdateStatusAndSendPassword(fetchedEntity.getCustomerId(), 
+				fetchedEntity.getCustomerType(),EMAIL_TYPE_PRIMARY,emailVerificationDetails.getEmailHash()));
+		
+		assertEquals(REGISTER_EMAIL_MOBILE_ALREADY_REGISTERED_EMAIL_MOBILE_VERIFIED,quickRegisterService
+				.checkIfAlreadyRegistered(standardEmailMobileCustomerDTO()).getStatus());
+		
+		assertEquals(REGISTER_EMAIL_ALREADY_REGISTERED_VERIFIED,quickRegisterService
+				.checkIfAlreadyRegistered(standardEmailCustomerDTO()).getStatus());
+
+		assertEquals(REGISTER_MOBILE_ALREADY_REGISTERED_VERIFIED,quickRegisterService
+				.checkIfAlreadyRegistered(standardMobileCustomerDTO()).getStatus());
+		
+		
+	}
+
 	
 	@Test
 	public void saveCustomerQuickRegisterEntity() throws Exception
@@ -177,163 +347,7 @@ public class QuickRegisterServiceTest {
 		
 	}
 
-	@Test
-	public void checkIfEmailCustomerExist() throws Exception {
-
-		assertEquals(REGISTER_NOT_REGISTERED,quickRegisterService
-				.checkIfAlreadyRegistered(standardEmailCustomerDTO()).getStatus());
-		
-		
-		QuickRegisterEntity fetchedEntity=quickRegisterService.handleNewCustomerQuickRegister(standardEmailCustomerDTO()).getCustomer();
-		EmailVerificationDetails emailVerificationDetails=emailVerificationService.getByEntityIdTypeAndEmailType
-															(fetchedEntity.getCustomerId(),fetchedEntity.getCustomerType(),1);
-		
-		
-		assertEquals(REGISTER_EMAIL_ALREADY_REGISTERED_NOT_VERIFIED,quickRegisterService
-				.checkIfAlreadyRegistered(standardEmailMobileCustomerDTO()).getStatus());
-
-		
-		assertEquals(REGISTER_EMAIL_ALREADY_REGISTERED_NOT_VERIFIED,quickRegisterService
-				.checkIfAlreadyRegistered(standardEmailCustomerDTO()).getStatus());
-
-		
-		assertEquals(REGISTER_NOT_REGISTERED,quickRegisterService
-				.checkIfAlreadyRegistered(standardMobileCustomerDTO()).getStatus());
-		
-		assertTrue(emailVerificationService.verifyEmailHashUpdateStatusAndSendPassword(fetchedEntity.getCustomerId(),
-				fetchedEntity.getCustomerType(),1, emailVerificationDetails.getEmailHash()));
-
-
-		assertEquals(REGISTER_EMAIL_ALREADY_REGISTERED_VERIFIED,quickRegisterService
-				.checkIfAlreadyRegistered(standardEmailMobileCustomerDTO()).getStatus());
-
-		
-		assertEquals(REGISTER_EMAIL_ALREADY_REGISTERED_VERIFIED,quickRegisterService
-				.checkIfAlreadyRegistered(standardEmailCustomerDTO()).getStatus());
-
-		
-		
-	}
-
 	
-	@Test
-	public void checkIfMobileCustomerExist() throws Exception {
-
-		assertEquals(REGISTER_NOT_REGISTERED,quickRegisterService
-				.checkIfAlreadyRegistered(standardMobileCustomerDTO()).getStatus());
-
-		QuickRegisterEntity fetchedEntity=quickRegisterService.handleNewCustomerQuickRegister(standardMobileCustomerDTO()).getCustomer();
-				
-		assertEquals(REGISTER_MOBILE_ALREADY_REGISTERED_NOT_VERIFIED,quickRegisterService
-				.checkIfAlreadyRegistered(standardEmailMobileCustomerDTO()).getStatus());
-
-		
-		assertEquals(REGISTER_NOT_REGISTERED,quickRegisterService
-				.checkIfAlreadyRegistered(standardEmailCustomerDTO()).getStatus());
-
-		assertEquals(REGISTER_MOBILE_ALREADY_REGISTERED_NOT_VERIFIED,quickRegisterService
-				.checkIfAlreadyRegistered(standardMobileCustomerDTO()).getStatus());
-		
-		
-		
-		//TODO
-	}
-
-	
-	@Test
-	public void checkIfEmailMobileCustomerExistEmailVerfiedFirst() throws Exception {
-
-		assertEquals(REGISTER_NOT_REGISTERED,quickRegisterService
-				.checkIfAlreadyRegistered(standardEmailMobileCustomerDTO()).getStatus());
-		
-		QuickRegisterEntity fetchedEntity=quickRegisterService.handleNewCustomerQuickRegister(standardEmailMobileCustomerDTO()).getCustomer();
-		
-		EmailVerificationDetails emailVerificationDetails=emailVerificationService.getByEntityIdTypeAndEmailType
-				(fetchedEntity.getCustomerId(),fetchedEntity.getCustomerType(), EMAIL_TYPE_PRIMARY);
-		
-		MobileVerificationDetails mobileVerificationDetails=mobileVerificationService.getByEntityIdTypeAndMobileType
-				(fetchedEntity.getCustomerId(),fetchedEntity.getCustomerType(), MOB_TYPE_PRIMARY);
-		
-		assertEquals(REGISTER_EMAIL_MOBILE_ALREADY_REGISTERED_EMAIL_MOBILE_UNVERIFIED,quickRegisterService
-				.checkIfAlreadyRegistered(standardEmailMobileCustomerDTO()).getStatus());
-
-		
-		assertEquals(REGISTER_EMAIL_ALREADY_REGISTERED_NOT_VERIFIED,quickRegisterService
-				.checkIfAlreadyRegistered(standardEmailCustomerDTO()).getStatus());
-
-		assertEquals(REGISTER_MOBILE_ALREADY_REGISTERED_NOT_VERIFIED,quickRegisterService
-				.checkIfAlreadyRegistered(standardMobileCustomerDTO()).getStatus());
-		
-		
-		
-		assertTrue(emailVerificationService
-				.verifyEmailHashUpdateStatusAndSendPassword(fetchedEntity.getCustomerId(),fetchedEntity.getCustomerType(),EMAIL_TYPE_PRIMARY,emailVerificationDetails.getEmailHash()));
-		
-		assertEquals(REGISTER_EMAIL_MOBILE_ALREADY_REGISTERED_EMAIL_VERIFIED ,quickRegisterService
-				.checkIfAlreadyRegistered(standardEmailMobileCustomerDTO()).getStatus());
-		
-		assertTrue(mobileVerificationService.verifyMobilePinUpdateStatusAndSendPassword(fetchedEntity.getCustomerId(),
-				fetchedEntity.getCustomerType(),MOB_TYPE_PRIMARY ,mobileVerificationDetails.getMobilePin()));
-		
-		assertEquals(REGISTER_EMAIL_MOBILE_ALREADY_REGISTERED_EMAIL_MOBILE_VERIFIED,quickRegisterService
-				.checkIfAlreadyRegistered(standardEmailMobileCustomerDTO()).getStatus());
-		
-		assertEquals(REGISTER_EMAIL_ALREADY_REGISTERED_VERIFIED,quickRegisterService
-				.checkIfAlreadyRegistered(standardEmailCustomerDTO()).getStatus());
-
-		assertEquals(REGISTER_MOBILE_ALREADY_REGISTERED_VERIFIED,quickRegisterService
-				.checkIfAlreadyRegistered(standardMobileCustomerDTO()).getStatus());
-		
-		
-	}
-
-	
-	@Test
-	public void checkIfEmailMobileCustomerExistMobileVerfiedFirst() throws Exception {
-
-		assertEquals(REGISTER_NOT_REGISTERED,quickRegisterService
-				.checkIfAlreadyRegistered(standardEmailMobileCustomerDTO()).getStatus());
-		
-		QuickRegisterEntity fetchedEntity=quickRegisterService.handleNewCustomerQuickRegister(standardEmailMobileCustomerDTO()).getCustomer();
-		
-		EmailVerificationDetails emailVerificationDetails=emailVerificationService.getByEntityIdTypeAndEmailType
-				(fetchedEntity.getCustomerId(),fetchedEntity.getCustomerType(), EMAIL_TYPE_PRIMARY);
-		
-		MobileVerificationDetails mobileVerificationDetails=mobileVerificationService.getByEntityIdTypeAndMobileType
-				(fetchedEntity.getCustomerId(),fetchedEntity.getCustomerType(), MOB_TYPE_PRIMARY);
-		
-		assertEquals(REGISTER_EMAIL_MOBILE_ALREADY_REGISTERED_EMAIL_MOBILE_UNVERIFIED,quickRegisterService
-				.checkIfAlreadyRegistered(standardEmailMobileCustomerDTO()).getStatus());
-
-		
-		assertEquals(REGISTER_EMAIL_ALREADY_REGISTERED_NOT_VERIFIED,quickRegisterService
-				.checkIfAlreadyRegistered(standardEmailCustomerDTO()).getStatus());
-
-		assertEquals(REGISTER_MOBILE_ALREADY_REGISTERED_NOT_VERIFIED,quickRegisterService
-				.checkIfAlreadyRegistered(standardMobileCustomerDTO()).getStatus());
-		
-				
-		assertTrue(mobileVerificationService.verifyMobilePinUpdateStatusAndSendPassword(fetchedEntity.getCustomerId(),
-				fetchedEntity.getCustomerType(),MOB_TYPE_PRIMARY ,mobileVerificationDetails.getMobilePin()));
-		
-		assertEquals(REGISTER_EMAIL_MOBILE_ALREADY_REGISTERED_MOBILE_VERIFIED ,quickRegisterService
-				.checkIfAlreadyRegistered(standardEmailMobileCustomerDTO()).getStatus());
-		
-		assertTrue(emailVerificationService.verifyEmailHashUpdateStatusAndSendPassword(fetchedEntity.getCustomerId(), 
-				fetchedEntity.getCustomerType(),EMAIL_TYPE_PRIMARY,emailVerificationDetails.getEmailHash()));
-		
-		assertEquals(REGISTER_EMAIL_MOBILE_ALREADY_REGISTERED_EMAIL_MOBILE_VERIFIED,quickRegisterService
-				.checkIfAlreadyRegistered(standardEmailMobileCustomerDTO()).getStatus());
-		
-		assertEquals(REGISTER_EMAIL_ALREADY_REGISTERED_VERIFIED,quickRegisterService
-				.checkIfAlreadyRegistered(standardEmailCustomerDTO()).getStatus());
-
-		assertEquals(REGISTER_MOBILE_ALREADY_REGISTERED_VERIFIED,quickRegisterService
-				.checkIfAlreadyRegistered(standardMobileCustomerDTO()).getStatus());
-		
-		
-	}
-
 
 	
 

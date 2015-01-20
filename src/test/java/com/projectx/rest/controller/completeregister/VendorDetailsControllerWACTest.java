@@ -88,9 +88,11 @@ public class VendorDetailsControllerWACTest {
 	@Test
 	public void createFromQuickRegister() throws Exception {
 		
+		QuickRegisterEntity quickRegisterEntity=quickRegisterService.saveCustomerQuickRegisterEntity(standardEmailMobileVendor());
+		
 		this.mockMvc.perform(
 				post("/vendor/createFromQuickRegister")
-				.content(standardJsonQuickRegisterVendor())
+				.content(standardJsonQuickRegisterVendor(quickRegisterEntity))
 				.contentType(MediaType.APPLICATION_JSON)
 				.accept(MediaType.APPLICATION_JSON))
 		.andDo(print())
@@ -141,25 +143,29 @@ public class VendorDetailsControllerWACTest {
 		.andExpect(jsonPath("$.updateTime").exists())
 		.andExpect(jsonPath("$.updatedBy").value(standardVendorCreatedFromQuickRegister().getUpdatedBy()));
 	
+		
+		
 	}
 	
 	@Test
 	public void getVendorDetailsById() throws Exception {
 		
+		QuickRegisterEntity quickRegisterEntity=quickRegisterService.saveCustomerQuickRegisterEntity(standardEmailMobileVendorQuick());
+		
 		this.mockMvc.perform(
 				post("/vendor/createFromQuickRegister")
-				.content(standardJsonQuickRegisterVendor())
+				.content(standardJsonQuickRegisterVendor(quickRegisterEntity))
 				.contentType(MediaType.APPLICATION_JSON)
 				.accept(MediaType.APPLICATION_JSON));
 		
 		this.mockMvc.perform(
 				post("/vendor/update")
-				.content(standardJsonVendor(standardVendor()))
+				.content(standardJsonVendor(standardVendor(quickRegisterEntity.getCustomerId())))
 				.contentType(MediaType.APPLICATION_JSON)
 				.accept(MediaType.APPLICATION_JSON));
 		
 		this.mockMvc.perform(
-				get("/vendor/getVendorDetailsById/"+standardVendor().getVendorId())
+				get("/vendor/getVendorDetailsById/"+quickRegisterEntity.getCustomerId())
 																			)
 		.andDo(print())
 		.andExpect(status().isOk())
@@ -198,9 +204,9 @@ public class VendorDetailsControllerWACTest {
 		
 		MobileVerificationDetails mobileVerificationDetails=
 				mobileVerificationService
-				.getByEntityIdTypeAndMobileType(vendorDetails.getVendorId(), 2, MOB_TYPE_PRIMARY);
+				.getByEntityIdTypeAndMobileType(vendorDetails.getVendorId(), ENTITY_TYPE_VENDOR, MOB_TYPE_PRIMARY);
 		
-		VerifyMobileDTO verifyMobileDTO=new VerifyMobileDTO(vendorDetails.getVendorId(), 2,
+		VerifyMobileDTO verifyMobileDTO=new VerifyMobileDTO(vendorDetails.getVendorId(), ENTITY_TYPE_VENDOR,
 				mobileVerificationDetails.getKey().getMobileType(), mobileVerificationDetails.getMobilePin());
 		
 		this.mockMvc.perform(
@@ -228,9 +234,9 @@ public class VendorDetailsControllerWACTest {
 		
 		EmailVerificationDetails emailVerificationDetails=
 				emailVerificationService
-				.getByEntityIdTypeAndEmailType(vendorDetails.getVendorId(), 2, EMAIL_TYPE_PRIMARY);
+				.getByEntityIdTypeAndEmailType(vendorDetails.getVendorId(), ENTITY_TYPE_VENDOR, EMAIL_TYPE_PRIMARY);
 		
-		VerifyEmailDTO verifyEmailDTO=new VerifyEmailDTO(vendorDetails.getVendorId(), 2, EMAIL_TYPE_PRIMARY,emailVerificationDetails.getEmailHash());
+		VerifyEmailDTO verifyEmailDTO=new VerifyEmailDTO(vendorDetails.getVendorId(), ENTITY_TYPE_VENDOR, EMAIL_TYPE_PRIMARY,emailVerificationDetails.getEmailHash());
 		
 		this.mockMvc.perform(
 				post("/vendor/verifyEmailDetails")
@@ -249,12 +255,12 @@ public class VendorDetailsControllerWACTest {
 	{
 		
 		QuickRegisterEntity quickRegisterEntity=quickRegisterService
-				.saveNewCustomerQuickRegisterEntity(standardEmailMobileCustomer()).getCustomerQuickRegisterEntity();
+				.saveNewCustomerQuickRegisterEntity(standardEmailMobileVendorQuick()).getCustomerQuickRegisterEntity();
 		
 		
 		VendorDetails newEntity=vendorDetailsService.createCustomerDetailsFromQuickRegisterEntity(quickRegisterEntity);
 		
-		CustomerIdTypeMobileTypeDTO customerIdTypeMobileDTO=new CustomerIdTypeMobileTypeDTO(newEntity.getVendorId(), 1, MOB_TYPE_PRIMARY);
+		CustomerIdTypeMobileTypeDTO customerIdTypeMobileDTO=new CustomerIdTypeMobileTypeDTO(newEntity.getVendorId(), ENTITY_TYPE_VENDOR, MOB_TYPE_PRIMARY);
 		
 		this.mockMvc.perform(
 				post("/customer/sendMobileVerificationDetails")
@@ -273,12 +279,12 @@ public class VendorDetailsControllerWACTest {
 	{
 		
 		QuickRegisterEntity quickRegisterEntity=quickRegisterService
-				.saveNewCustomerQuickRegisterEntity(standardEmailMobileCustomer()).getCustomerQuickRegisterEntity();
+				.saveNewCustomerQuickRegisterEntity(standardEmailMobileVendorQuick()).getCustomerQuickRegisterEntity();
 		
 		
 		VendorDetails newEntity=vendorDetailsService.createCustomerDetailsFromQuickRegisterEntity(quickRegisterEntity);
 		
-		CustomerIdTypeEmailTypeDTO customerIdTypeEmailDTO=new CustomerIdTypeEmailTypeDTO(newEntity.getVendorId(), 1, EMAIL_TYPE_PRIMARY);
+		CustomerIdTypeEmailTypeDTO customerIdTypeEmailDTO=new CustomerIdTypeEmailTypeDTO(newEntity.getVendorId(), ENTITY_TYPE_VENDOR, EMAIL_TYPE_PRIMARY);
 		
 		this.mockMvc.perform(
 				post("/customer/sendEmailVerificationDetails")

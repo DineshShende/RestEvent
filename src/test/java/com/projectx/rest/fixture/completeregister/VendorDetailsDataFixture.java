@@ -9,6 +9,7 @@ import com.projectx.rest.domain.completeregister.Address;
 import com.projectx.rest.domain.completeregister.VendorDetails;
 import com.projectx.rest.domain.quickregister.AuthenticationDetails;
 import com.projectx.rest.domain.quickregister.AuthenticationDetailsKey;
+import com.projectx.rest.domain.quickregister.QuickRegisterEntity;
 
 import static com.projectx.rest.fixture.quickregister.QuickRegisterDataFixture.*;
 import static com.projectx.rest.fixture.completeregister.AddressDataFixture.*;
@@ -39,9 +40,20 @@ public class VendorDetailsDataFixture {
 	
 	private static Gson gson=new Gson();
 	
+	public static QuickRegisterEntity standardEmailMobileVendorQuick()
+	{
+		return new QuickRegisterEntity(VENDOR_ID, VENDER_FIRSTNAME, VENDER_LASTNAME, VENDOR_EMAIL, VENDOR_MOBILE, ADDRESS_PINCODE, VENDOR_STATUS_FALSE, VENDOR_STATUS_FALSE, ENTITY_TYPE_VENDOR, VENDOR_DATE, VENDOR_DATE, VENDOR_UPDATEDBY);
+	}
+	
 	public static VendorDetails standardVendor()
 	{
 		return new VendorDetails(VENDOR_ID, VENDER_FIRSTNAME, VENDER_LASTNAME, VENDOR_DATE, VENDOR_ADDRESS, VENDOR_MOBILE, VENDOR_STATUS_FALSE,
+				VENDOR_EMAIL,VENDOR_STATUS_FALSE, VENDOR_LANGUAGE, VENDOR_DATE, VENDOR_DATE, VENDOR_UPDATEDBY);
+	}
+	
+	public static VendorDetails standardVendor(Long vendorId)
+	{
+		return new VendorDetails(vendorId, VENDER_FIRSTNAME, VENDER_LASTNAME, VENDOR_DATE, VENDOR_ADDRESS, VENDOR_MOBILE, VENDOR_STATUS_FALSE,
 				VENDOR_EMAIL,VENDOR_STATUS_FALSE, VENDOR_LANGUAGE, VENDOR_DATE, VENDOR_DATE, VENDOR_UPDATEDBY);
 	}
 	
@@ -52,6 +64,15 @@ public class VendorDetailsDataFixture {
 				standardEmailMobileVendor().getIsMobileVerified(),standardEmailMobileVendor().getEmail(),standardEmailMobileVendor().getIsEmailVerified(),
 				null, standardEmailMobileVendor().getInsertTime(), new Date(), standardEmailMobileVendor().getUpdatedBy());
 	}
+	
+	public static VendorDetails standardVendorCreatedFromQuickRegister(Long vendorId)
+	{
+		return new VendorDetails(vendorId, standardEmailMobileVendor().getFirstName(),
+				standardEmailMobileVendor().getLastName(), null, null, standardEmailMobileVendor().getMobile(), 
+				standardEmailMobileVendor().getIsMobileVerified(),standardEmailMobileVendor().getEmail(),standardEmailMobileVendor().getIsEmailVerified(),
+				null, standardEmailMobileVendor().getInsertTime(), new Date(), standardEmailMobileVendor().getUpdatedBy());
+	}
+	
 	
 	public static VendorDetails standardVendor(VendorDetails vendorDetails)
 	{

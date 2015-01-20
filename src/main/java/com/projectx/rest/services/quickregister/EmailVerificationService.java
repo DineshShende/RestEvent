@@ -10,7 +10,9 @@ public interface EmailVerificationService {
     
     EmailVerificationDetails getByEmail(String email);
     
-    String checkIfEmailAlreadyExist(Long customerId,Integer customerType,Integer emailType,String email);
+    Boolean sendOrResendOrResetEmailHash(Long customerId,Integer customerType,Integer emailType,Boolean resetFlag,Boolean resendFlag);
+    
+    Boolean sendEmailHash(Long customerId,Integer customerType,Integer emailType);
     
     Boolean reSendEmailHash(Long customerId,Integer customerType,Integer emailType);
 	
@@ -31,4 +33,6 @@ public interface EmailVerificationService {
 	Integer count();
 	
 	Boolean clearTestData();
+	
+	//String checkIfEmailAlreadyExist(Long customerId,Integer customerType,Integer emailType,String email);
 }

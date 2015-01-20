@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.projectx.data.domain.quickregister.CustomerIdTypeEmailTypeDTO;
 import com.projectx.data.domain.quickregister.CustomerIdTypeMobileTypeDTO;
-import com.projectx.data.domain.quickregister.UpdatePasswordAndPasswordTypeDTO;
+import com.projectx.data.domain.quickregister.UpdatePasswordEmailPasswordAndPasswordTypeDTO;
 import com.projectx.mvc.domain.quickregister.CustomerIdTypeDTO;
 import com.projectx.mvc.domain.quickregister.CustomerQuickRegisterEntityDTO;
 import com.projectx.mvc.domain.quickregister.CustomerQuickRegisterStringStatusEntity;

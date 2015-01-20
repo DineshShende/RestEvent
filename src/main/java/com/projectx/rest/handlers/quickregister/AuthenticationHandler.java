@@ -6,22 +6,29 @@ import static com.projectx.rest.fixtures.quickregister.CustomerQuickRegisterData
 import java.text.NumberFormat;
 import java.text.ParsePosition;
 import java.util.Date;
+import java.util.HashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import com.projectx.data.domain.quickregister.UpdatePasswordAndPasswordTypeDTO;
+import com.projectx.data.domain.quickregister.UpdatePasswordEmailPasswordAndPasswordTypeDTO;
 import com.projectx.mvc.domain.quickregister.CustomerIdTypeDTO;
 import com.projectx.mvc.domain.quickregister.LoginVerificationDTO;
 import com.projectx.mvc.domain.quickregister.LoginVerificationWithDefaultEmailPasswordDTO;
+import com.projectx.rest.domain.completeregister.CustomerDetails;
+import com.projectx.rest.domain.completeregister.VendorDetails;
 import com.projectx.rest.domain.quickregister.AuthenticationDetails;
 import com.projectx.rest.domain.quickregister.AuthenticationDetailsKey;
 import com.projectx.rest.domain.quickregister.QuickRegisterEntity;
 import com.projectx.rest.repository.quickregister.AuthenticationDetailsRepository;
+import com.projectx.rest.services.completeregister.CustomerDetailsService;
+import com.projectx.rest.services.completeregister.VendorDetailsService;
 import com.projectx.rest.services.quickregister.AuthenticationService;
 import com.projectx.rest.services.quickregister.QuickRegisterService;
 import com.projectx.rest.utils.HandleCustomerVerification;
+import com.projectx.rest.utils.InformationMapper;
 import com.projectx.rest.utils.MessageBuilder;
 import com.projectx.rest.utils.MessagerSender;
 
@@ -40,12 +47,45 @@ public class AuthenticationHandler implements AuthenticationService {
 	QuickRegisterService customerQuickRegisterService;
 	
 	@Autowired
+	CustomerDetailsService customerDetailsService;
+	
+	@Autowired
+	VendorDetailsService vendorDetailsService;
+
+	@Autowired
+	InformationMapper informationMapper; 
+	
+	@Autowired
 	MessageBuilder messageBuilder;
 	
 	@Autowired
 	MessagerSender messagerSender;
 	
 	private static final Integer UPDATE_SUCESS=new Integer(1);
+	
+
+
+	@Override
+	public AuthenticationDetails createCustomerAuthenticationDetails(
+			QuickRegisterEntity customerQuickRegisterEntity)
+	{
+	
+		AuthenticationDetails customerAuthenticationDetails=new AuthenticationDetails();
+		
+		AuthenticationDetailsKey key=new AuthenticationDetailsKey(customerQuickRegisterEntity.getCustomerId(),
+				customerQuickRegisterEntity.getCustomerType());
+		customerAuthenticationDetails.setKey(key);
+		customerAuthenticationDetails.setEmail(customerQuickRegisterEntity.getEmail());
+		customerAuthenticationDetails.setMobile(customerQuickRegisterEntity.getMobile());
+		customerAuthenticationDetails.setLastUnsucessfullAttempts(0);;
+		customerAuthenticationDetails.setResendCount(0);
+		customerAuthenticationDetails.setInsertTime(new Date());
+		customerAuthenticationDetails.setUpdateTime(new Date());
+		customerAuthenticationDetails.setUpdatedBy("CUST_ONLINE");
+		
+		return customerAuthenticationDetails;
+	}
+
 	
 	@Override
 	public AuthenticationDetails verifyLoginDetails(
@@ -99,16 +139,28 @@ public class AuthenticationHandler implements AuthenticationService {
 		
 	}
 
-
+	
 	@Override
-	public Boolean sendDefaultPassword(QuickRegisterEntity customer,Boolean resetFlag) 
-	{
+	public Boolean sendOrResendOrResetDefaultPassword(Long entityId,
+			Integer entityType, Boolean resetFlag, Boolean resendFlag) {
+		
+		
+		HashMap<String,Object> infoMap=informationMapper.getBasicInfoByEntityIdType(entityId, entityType);
+
+		String firstName=(String)infoMap.get("firstName");
+		String lastName = (String)infoMap.get("lastName");
+		String email=(String)infoMap.get("email");
+		Boolean isEmailVerified=(Boolean)infoMap.get("isEmailVerified");
+		Long mobile=(Long)infoMap.get("mobile");
+		Boolean isMobileVerified=(Boolean)infoMap.get("isMobileVerified");
+		
+		
 		Boolean emailSendStatus=true;
 		Boolean smsSendStatus=true;
 		Integer passwordUpdateStatus=new Integer(1);
-		Integer emailPasswordUpdateStatus=new Integer(1);
+		Integer resendStatus=new Integer(1);
 		
-		AuthenticationDetails customerAuthenticationDetails=customerAuthenticationDetailsRepository.getByCustomerIdType(customer.getCustomerId(),customer.getCustomerType());
+		AuthenticationDetails customerAuthenticationDetails=customerAuthenticationDetailsRepository.getByCustomerIdType(entityId,entityType);
 		
 		if(!resetFlag && (customerAuthenticationDetails.getPasswordType()!=null && 
 				customerAuthenticationDetails.getPasswordType().equals(CUST_PASSWORD_TYPE_CHANGED)))
@@ -119,47 +171,62 @@ public class AuthenticationHandler implements AuthenticationService {
 			String password=handleCustomerVerification.generatePassword();
 			customerAuthenticationDetails.setPassword(password);
 			customerAuthenticationDetails.setPasswordType(CUST_PASSWORD_TYPE_DEFAULT);
-			customerAuthenticationDetails.setInsertTime(new Date());
 			customerAuthenticationDetails.setUpdateTime(new Date());
 			customerAuthenticationDetails.setUpdatedBy("CUST_ONLINE");
 
-			 passwordUpdateStatus=customerAuthenticationDetailsRepository.updatePasswordAndPasswordTypeAndCounts 
-					 (customerAuthenticationDetails.getKey().getCustomerId(),customerAuthenticationDetails.getKey().getCustomerType(),
-							 customerAuthenticationDetails.getPassword(), customerAuthenticationDetails.getPasswordType());
-			 if(customer.getEmail()!=null)
+
+			 if(email!=null)
 			 {	 
 				 String emailPassword=handleCustomerVerification.generateEmailHash();
 				 customerAuthenticationDetails.setEmailPassword(emailPassword);
-				 emailPasswordUpdateStatus=customerAuthenticationDetailsRepository
-						 .updateEmailPasswordAndPasswordTypeAndCounts(customerAuthenticationDetails.getKey().getCustomerId(),
-								 customerAuthenticationDetails.getKey().getCustomerType(),customerAuthenticationDetails.getEmailPassword());
+				 
+				 passwordUpdateStatus=customerAuthenticationDetailsRepository
+						 .updatePasswordEmailPasswordAndPasswordTypeAndCounts(customerAuthenticationDetails.getKey().getCustomerId(),
+								 customerAuthenticationDetails.getKey().getCustomerType(), customerAuthenticationDetails.getPassword(),
+								 customerAuthenticationDetails.getEmailPassword(), customerAuthenticationDetails.getPasswordType());
 						 
-			 }			 
+			 }
+			 else
+			 {
+				 passwordUpdateStatus=customerAuthenticationDetailsRepository.updatePasswordEmailPasswordAndPasswordTypeAndCounts 
+						 (customerAuthenticationDetails.getKey().getCustomerId(),customerAuthenticationDetails.getKey().getCustomerType(),
+								 customerAuthenticationDetails.getPassword(),null, customerAuthenticationDetails.getPasswordType());
+			 }
 			 
 		}
-		
-		//CustomerAuthenticationDetails customerAuthenticationDetailsUpdated=customerAuthenticationDetailsRepository
-		//		.getCustomerAuthenticationDetailsByCustomerId(customer.getCustomerId());
-		
-					
-		if(customer.getEmail()!=null && customer.getIsEmailVerified())
+									
+		if(email!=null && isEmailVerified)
 		{
-			messagerSender.sendPasswordEmail(customer.getCustomerId(), customer.getFirstName(), customer.getLastName(),
-					customer.getEmail(), customerAuthenticationDetails.getEmailPassword());
+			messagerSender.sendPasswordEmail(entityId, firstName, lastName,
+					email, customerAuthenticationDetails.getEmailPassword());
 		}	
 		
-		if(customer.getMobile()!=null && customer.getIsMobileVerified())
+		if(mobile!=null && isMobileVerified)
 		{
 			
-			messagerSender.sendPasswordSMS(customer.getFirstName(), customer.getLastName(), customer.getMobile(),
+			messagerSender.sendPasswordSMS(firstName, lastName, mobile,
 					customerAuthenticationDetails.getPassword());
 		}	
 		
-		if(passwordUpdateStatus.equals(UPDATE_SUCESS) && emailSendStatus && smsSendStatus && emailPasswordUpdateStatus.equals(UPDATE_SUCESS))
+		if(resendFlag)
+			resendStatus=customerAuthenticationDetailsRepository.incrementResendCount(entityId,entityType);
+		
+		if(passwordUpdateStatus.equals(UPDATE_SUCESS) && emailSendStatus && smsSendStatus&&resendStatus.equals(UPDATE_SUCESS))
 			return true;
 		else
 			return false;
+
 		
+	}
+
+	
+
+	@Override
+	public Boolean sendDefaultPassword(QuickRegisterEntity customer,Boolean resetFlag) 
+	{
+		Boolean status=sendOrResendOrResetDefaultPassword(customer.getCustomerId(), customer.getCustomerType(), resetFlag, false);
+		
+		return status;		
 		
 	}
 	
@@ -168,36 +235,35 @@ public class AuthenticationHandler implements AuthenticationService {
 	public Boolean resendDefaultPassword(
 			QuickRegisterEntity customer) {
 
-		AuthenticationDetails customerAuthenticationDetails=customerAuthenticationDetailsRepository
-				.getByCustomerIdType(customer.getCustomerId(),customer.getCustomerType());
+		Boolean status=sendOrResendOrResetDefaultPassword(customer.getCustomerId(), customer.getCustomerType(), false, true);
 		
-			
-		if(customer.getEmail()!=null && customer.getIsEmailVerified())
-		{
-			messagerSender.sendPasswordEmail(customer.getCustomerId(), customer.getFirstName(), customer.getLastName(),
-					customer.getEmail(), customerAuthenticationDetails.getEmailPassword());
-		}	
-		
-		if(customer.getMobile()!=null && customer.getIsMobileVerified())
-		{
-			
-			messagerSender.sendPasswordSMS(customer.getFirstName(), customer.getLastName(), customer.getMobile(),
-					customerAuthenticationDetails.getPassword());
-		}	
-		
-		Integer updateStatus=customerAuthenticationDetailsRepository.incrementResendCount(customer.getCustomerId(),customer.getCustomerType());
-		
-		if(updateStatus.equals(UPDATE_SUCESS))
-			return true;
-		else
-			return false;
+		return status;
 	}
+
+	@Override
+	public Boolean resetPassword(CustomerIdTypeDTO customerIdDTO) 
+	{
+		QuickRegisterEntity customer=customerQuickRegisterService
+				.getByEntityId(customerIdDTO.getCustomerId());
+		
+		return sendDefaultPassword(customer,true);
+	}
+	
+	@Override
+	public Boolean resendPassword(CustomerIdTypeDTO customerIdDTO) {
+
+		QuickRegisterEntity customer=customerQuickRegisterService
+				.getByEntityId(customerIdDTO.getCustomerId());
+		
+		return resendDefaultPassword(customer);
+	}
+
 
 	@Override
 	public Boolean updatePassword(UpdatePasswordAndPasswordTypeDTO updatePasswordDTO)
 	{
-		Integer updateStatus=customerAuthenticationDetailsRepository.updatePasswordAndPasswordTypeAndCounts(updatePasswordDTO.getCustomerId(),
-				updatePasswordDTO.getCustomerType(),updatePasswordDTO.getPassword(), CUST_PASSWORD_TYPE_CHANGED);
+		Integer updateStatus=customerAuthenticationDetailsRepository.updatePasswordEmailPasswordAndPasswordTypeAndCounts(updatePasswordDTO.getCustomerId(),
+				updatePasswordDTO.getCustomerType(),updatePasswordDTO.getPassword(),null, CUST_PASSWORD_TYPE_CHANGED);
 		
 		if(updateStatus.equals(UPDATE_SUCESS))
 			return true;
@@ -220,47 +286,7 @@ public class AuthenticationHandler implements AuthenticationService {
 		return customerAuthenticationDetails;
 	}
 
-	@Override
-	public Boolean resetPassword(CustomerIdTypeDTO customerIdDTO) 
-	{
-		QuickRegisterEntity customer=customerQuickRegisterService
-				.getByEntityId(customerIdDTO.getCustomerId());
-		
-		return sendDefaultPassword(customer,true);
-	}
-	
-	
 
-
-	@Override
-	public Boolean resendPassword(CustomerIdTypeDTO customerIdDTO) {
-
-		QuickRegisterEntity customer=customerQuickRegisterService
-				.getByEntityId(customerIdDTO.getCustomerId());
-		
-		return resendDefaultPassword(customer);
-	}
-
-	@Override
-	public AuthenticationDetails createCustomerAuthenticationDetails(
-			QuickRegisterEntity customerQuickRegisterEntity)
-	{
-	
-		AuthenticationDetails customerAuthenticationDetails=new AuthenticationDetails();
-		
-		AuthenticationDetailsKey key=new AuthenticationDetailsKey(customerQuickRegisterEntity.getCustomerId(),
-				customerQuickRegisterEntity.getCustomerType());
-		customerAuthenticationDetails.setKey(key);
-		customerAuthenticationDetails.setEmail(customerQuickRegisterEntity.getEmail());
-		customerAuthenticationDetails.setMobile(customerQuickRegisterEntity.getMobile());
-		customerAuthenticationDetails.setLastUnsucessfullAttempts(0);;
-		customerAuthenticationDetails.setResendCount(0);
-		customerAuthenticationDetails.setInsertTime(new Date());
-		customerAuthenticationDetails.setUpdateTime(new Date());
-		customerAuthenticationDetails.setUpdatedBy("CUST_ONLINE");
-		
-		return customerAuthenticationDetails;
-	}
 	
 	
 	@Override
@@ -301,5 +327,6 @@ public class AuthenticationHandler implements AuthenticationService {
 		return customerAuthenticationDetailsRepository.clearLoginDetailsForTesting();
 		 
 	}
+
 
 }

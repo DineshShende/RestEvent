@@ -1,5 +1,6 @@
 package com.projectx.rest.controller.quickregister;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,7 +23,8 @@ public class EmailVerificationController {
 	@RequestMapping(value="/verifyEmailHash",method=RequestMethod.POST)
 	public Boolean verifyEmailHash(@RequestBody VerifyEmailHashDTO verifyEmail)
 	{
-		if(emailVerificationService.verifyEmailHash(verifyEmail.getCustomerId(),verifyEmail.getCustomerType(),verifyEmail.getEmailType(), verifyEmail.getEmailHash()))
+	
+		if(emailVerificationService.verifyEmailHashUpdateStatusAndSendPassword(verifyEmail.getCustomerId(),verifyEmail.getCustomerType(),verifyEmail.getEmailType(), verifyEmail.getEmailHash()))
 			return true;
 		else
 			return false;

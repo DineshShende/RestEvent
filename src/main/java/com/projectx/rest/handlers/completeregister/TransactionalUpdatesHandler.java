@@ -4,8 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
+import com.projectx.data.domain.completeregister.CustomerOrVendorDetailsDTO;
 import com.projectx.rest.domain.completeregister.CustomerDetails;
 import com.projectx.rest.domain.completeregister.VendorDetails;
+import com.projectx.rest.domain.quickregister.CustomerQuickRegisterEmailMobileVerificationEntity;
+import com.projectx.rest.domain.quickregister.QuickRegisterEntity;
 import com.projectx.rest.repository.completeregister.TransactionalUpdatesRepository;
 import com.projectx.rest.services.completeregister.TransactionalUpdatesService;
 
@@ -41,6 +44,21 @@ public class TransactionalUpdatesHandler implements
 			Long entityId, Integer entityType, Integer emailType) {
 
 		return transactionalUpdatesRepository.updateEmailInDetailsEnityAndAuthenticationDetails(entityId, entityType, emailType);
+	}
+
+	@Override
+	public CustomerQuickRegisterEmailMobileVerificationEntity saveNewQuickRegisterEntity(
+			QuickRegisterEntity quickRegisterEntity) {
+		
+		return transactionalUpdatesRepository.saveNewQuickRegisterEntity(quickRegisterEntity);
+		
+	}
+
+	@Override
+	public CustomerOrVendorDetailsDTO deleteQuickRegisterEntityCreateDetails(
+			QuickRegisterEntity quickRegisterEntity) {
+		
+		return transactionalUpdatesRepository.deleteQuickRegisterEntityCreateDetails(quickRegisterEntity);
 	}
 
 }

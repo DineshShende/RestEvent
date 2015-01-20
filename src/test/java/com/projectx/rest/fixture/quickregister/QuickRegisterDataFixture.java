@@ -274,10 +274,24 @@ public class QuickRegisterDataFixture {
 		return gson.toJson(standardEmailMobileCustomer());
 	}
 	
+	public static String standardJsonQuickRegister(QuickRegisterEntity quickRegisterEntity)
+	{
+		System.out.println(gson.toJson(quickRegisterEntity));
+		
+		return gson.toJson(quickRegisterEntity);
+	}
+	
 	public static String standardJsonQuickRegisterVendor()
 	{
 		System.out.println(gson.toJson(standardEmailMobileVendor()));
 		
 		return gson.toJson(standardEmailMobileVendor());
+	}
+	
+	public static String standardJsonQuickRegisterVendor(QuickRegisterEntity quickRegisterEntity)
+	{
+		System.out.println(gson.toJson(quickRegisterEntity));
+		
+		return gson.toJson(quickRegisterEntity);
 	}
 }

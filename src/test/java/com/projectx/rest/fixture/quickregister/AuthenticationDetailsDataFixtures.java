@@ -5,7 +5,7 @@ import static com.projectx.rest.fixture.quickregister.QuickRegisterDataFixture.*
 import java.util.Date;
 
 import com.projectx.data.domain.quickregister.UpdateEmailPassword;
-import com.projectx.data.domain.quickregister.UpdatePasswordAndPasswordTypeDTO;
+import com.projectx.data.domain.quickregister.UpdatePasswordEmailPasswordAndPasswordTypeDTO;
 import com.projectx.data.domain.quickregister.VerifyLoginDetailsDataDTO;
 import com.projectx.mvc.domain.quickregister.CustomerIdTypeDTO;
 import com.projectx.mvc.domain.quickregister.LoginVerificationDTO;
@@ -75,9 +75,9 @@ public class AuthenticationDetailsDataFixtures {
 	}
 
 	
-	public static UpdatePasswordAndPasswordTypeDTO standardUpdatePasswordAndPasswordTypeDTO()
+	public static UpdatePasswordEmailPasswordAndPasswordTypeDTO standardUpdatePasswordEmailPasswordAndPasswordTypeDTO()
 	{
-		return new UpdatePasswordAndPasswordTypeDTO(CUST_ID,ENTITY_TYPE_CUSTOMER, CUST_PASSWORD_CHANGED,CUST_PASSWORD_TYPE_CHANGED);
+		return new UpdatePasswordEmailPasswordAndPasswordTypeDTO(CUST_ID,ENTITY_TYPE_CUSTOMER, CUST_PASSWORD_CHANGED,CUST_EMAILHASH_UPDATED,CUST_PASSWORD_TYPE_CHANGED);
 	}
 //	
 //	public static UpdateCountByCustomerId standardUpdateCountByCustomerId()
@@ -185,10 +185,10 @@ public class AuthenticationDetailsDataFixtures {
 	{
 		StringBuilder jsonBuilder=new StringBuilder();
 
-		jsonBuilder.append("{\"customerId\":"+standardUpdatePasswordAndPasswordTypeDTO().getCustomerId()+",");
+		jsonBuilder.append("{\"customerId\":"+standardUpdatePasswordEmailPasswordAndPasswordTypeDTO().getCustomerId()+",");
 		
-		jsonBuilder.append("\"customerType\":"+standardUpdatePasswordAndPasswordTypeDTO().getCustomerType()+",");
-		jsonBuilder.append("\"password\":\""+standardUpdatePasswordAndPasswordTypeDTO().getPassword()+"\"}");
+		jsonBuilder.append("\"customerType\":"+standardUpdatePasswordEmailPasswordAndPasswordTypeDTO().getCustomerType()+",");
+		jsonBuilder.append("\"password\":\""+standardUpdatePasswordEmailPasswordAndPasswordTypeDTO().getPassword()+"\"}");
 	//	jsonBuilder.append("\"passwordType\":\""+standardUpdatePasswordAndPasswordTypeDTO().getPasswordType()+"\"}");
 		
 		

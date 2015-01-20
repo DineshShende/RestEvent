@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.projectx.data.domain.quickregister.UpdatePasswordAndPasswordTypeDTO;
+import com.projectx.data.domain.quickregister.UpdatePasswordEmailPasswordAndPasswordTypeDTO;
 import com.projectx.mvc.domain.quickregister.CustomerIdTypeDTO;
 import com.projectx.mvc.domain.quickregister.LoginVerificationDTO;
 import com.projectx.mvc.domain.quickregister.LoginVerificationWithDefaultEmailPasswordDTO;
@@ -76,6 +77,7 @@ public class AuthenticationController {
 	{
 		UpdatePasswordAndPasswordTypeDTO updatePassword=new UpdatePasswordAndPasswordTypeDTO(
 				updatePasswordDTO.getCustomerId(),updatePasswordDTO.getCustomerType(),updatePasswordDTO.getPassword(), CUST_PASSWORD_TYPE_CHANGED);	
+		
 		Boolean result=authenticationService.updatePassword(updatePassword);
 		
 		return result;

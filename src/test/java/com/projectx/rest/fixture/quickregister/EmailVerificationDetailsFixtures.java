@@ -67,10 +67,10 @@ public class EmailVerificationDetailsFixtures {
 	
 	
 	
-	public static String standardJsonVerifyEmailHashDTO()
+	public static String standardJsonVerifyEmailHashDTO(Long customerId,Integer entityType,Integer emailType,String emailHash)
 	{
 		
-		VerifyEmailHashDTO verifyEmailHashDTO=new VerifyEmailHashDTO(CUST_ID, CUST_EMAIL_TYPE_PRIMARY, CUST_EMAIL_TYPE_PRIMARY, CUST_EMAILHASH);
+		VerifyEmailHashDTO verifyEmailHashDTO=new VerifyEmailHashDTO(customerId, entityType, emailType, emailHash);
 		
 		System.out.println(gson.toJson(verifyEmailHashDTO));
 		  

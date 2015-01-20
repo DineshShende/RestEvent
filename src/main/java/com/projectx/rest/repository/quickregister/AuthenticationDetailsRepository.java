@@ -21,9 +21,9 @@ public interface AuthenticationDetailsRepository  {
 	AuthenticationDetails getByMobile(Long mobile);
 	
 	
-	Integer updatePasswordAndPasswordTypeAndCounts(Long customerId,Integer customerType,String password,String passwordType);
+	Integer updatePasswordEmailPasswordAndPasswordTypeAndCounts(Long customerId,Integer customerType,String password,String emailPassword,String passwordType);
 	
-	Integer updateEmailPasswordAndPasswordTypeAndCounts(Long customerId,Integer customerType,String emailPassword);
+	//Integer updateEmailPasswordAndPasswordTypeAndCounts(Long customerId,Integer customerType,String emailPassword);
 	
 	Integer incrementResendCount(Long customerId,Integer customerType);
 	

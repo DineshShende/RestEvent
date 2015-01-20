@@ -49,6 +49,14 @@ public class VendorDetailsServiceTest {
 	@Autowired
 	AddressService addressService;
 	
+	private Integer ENTITY_TYPE_VENDOR=2;
+	
+	private Integer ENTITY_TYPE_PRIMARY=1;
+	
+	private Integer ENTITY_TYPE_SECONDARY=2;
+	
+	
+	
 	@Before
 	@After
 	public void setUp()
@@ -65,19 +73,24 @@ public class VendorDetailsServiceTest {
 		
 		
 	}
-	
+
 	@Test
 	public void createCustomerDetailsFromQuickRegisterEntity()
 	{
 		assertEquals(0, vendorDetailsService.count().intValue());
 		
-		VendorDetails savedEntity=vendorDetailsService.createCustomerDetailsFromQuickRegisterEntity(standardEmailMobileVendor());
+		assertNull(vendorDetailsService.createCustomerDetailsFromQuickRegisterEntity(standardEmailMobileVendor()));
 		
-		assertEquals(standardVendorCreatedFromQuickRegister(), savedEntity);
+		QuickRegisterEntity quickRegisterEntity=quickRegisterService.saveCustomerQuickRegisterEntity(standardEmailMobileVendor());
+		
+		VendorDetails savedEntity=vendorDetailsService.createCustomerDetailsFromQuickRegisterEntity(quickRegisterEntity);
+		
+		assertEquals(standardVendorCreatedFromQuickRegister(savedEntity.getVendorId()), savedEntity);
 		
 		assertEquals(1, vendorDetailsService.count().intValue());
 		
 	}
+	
 	
 	@Test
 	public void update()
@@ -85,9 +98,11 @@ public class VendorDetailsServiceTest {
 		
 		assertEquals(0, vendorDetailsService.count().intValue());
 		
-		VendorDetails savedEntity=vendorDetailsService.createCustomerDetailsFromQuickRegisterEntity(standardEmailMobileVendor());
+		QuickRegisterEntity quickRegisterEntity=quickRegisterService.saveCustomerQuickRegisterEntity(standardEmailMobileVendor());
 		
-		assertEquals(standardVendorCreatedFromQuickRegister(), savedEntity);
+		VendorDetails savedEntity=vendorDetailsService.createCustomerDetailsFromQuickRegisterEntity(quickRegisterEntity);
+		
+		assertEquals(standardVendorCreatedFromQuickRegister(savedEntity.getVendorId()), savedEntity);
 		
 		assertEquals(1, vendorDetailsService.count().intValue());
 		
@@ -100,20 +115,125 @@ public class VendorDetailsServiceTest {
 		assertEquals(1, vendorDetailsService.count().intValue());
 	}
 	
+	
+	
 	@Test
 	public void findById()
 	{
 		assertEquals(0, vendorDetailsService.count().intValue());
 		
-		VendorDetails savedEntity=vendorDetailsService.createCustomerDetailsFromQuickRegisterEntity(standardEmailMobileVendor());
+		QuickRegisterEntity quickRegisterEntity=quickRegisterService.saveCustomerQuickRegisterEntity(standardEmailMobileVendor());
 		
-		assertEquals(standardVendorCreatedFromQuickRegister(), savedEntity);
+		VendorDetails savedEntity=vendorDetailsService.createCustomerDetailsFromQuickRegisterEntity(quickRegisterEntity);
+		
+		assertEquals(standardVendorCreatedFromQuickRegister(savedEntity.getVendorId()), savedEntity);
 		
 		assertEquals(1, vendorDetailsService.count().intValue());
 		
 		assertEquals(savedEntity, vendorDetailsService.findById(savedEntity.getVendorId()));
 	}
 	
+	
+	
+	@Test
+	public void verifyMobileDetails() throws Exception
+	{
+		assertEquals(0, vendorDetailsService.count().intValue());
+		
+		QuickRegisterEntity quickRegisterEntity=quickRegisterService
+				.saveNewCustomerQuickRegisterEntity(standardEmailMobileVendor()).getCustomerQuickRegisterEntity();
+		
+		VendorDetails savedEntity=vendorDetailsService.createCustomerDetailsFromQuickRegisterEntity(quickRegisterEntity);
+		
+		assertEquals(standardVendorCreatedFromQuickRegister(savedEntity.getVendorId()), savedEntity);
+		
+		MobileVerificationDetails mobileVerificationDetails=
+				mobileVerificationService.getByEntityIdTypeAndMobileType(savedEntity.getVendorId(),
+						ENTITY_TYPE_VENDOR, MOB_TYPE_PRIMARY);
+		
+		assertFalse(savedEntity.getIsMobileVerified());
+		
+		assertTrue(vendorDetailsService.verifyMobileDetails(savedEntity.getVendorId(), ENTITY_TYPE_VENDOR, MOB_TYPE_PRIMARY, mobileVerificationDetails.getMobilePin()));
+		
+		assertTrue(vendorDetailsService.findById(savedEntity.getVendorId()).getIsMobileVerified());
+	}
+	
+	
+	
+	@Test
+	public void verifyEmailDetails() throws Exception
+	{
+		assertEquals(0, vendorDetailsService.count().intValue());
+		
+		QuickRegisterEntity quickRegisterEntity=quickRegisterService
+				.saveNewCustomerQuickRegisterEntity(standardEmailMobileVendor()).getCustomerQuickRegisterEntity();
+		
+		VendorDetails savedEntity=vendorDetailsService.createCustomerDetailsFromQuickRegisterEntity(quickRegisterEntity);
+		
+		assertEquals(standardVendor(savedEntity), vendorDetailsService.updateVendorDetails(standardVendor(savedEntity)));
+		
+		EmailVerificationDetails emailVerificationDetails=
+				emailVerificationService.getByEntityIdTypeAndEmailType(savedEntity.getVendorId(),
+						ENTITY_TYPE_VENDOR, EMAIL_TYPE_PRIMARY);
+		
+		assertFalse(savedEntity.getIsEmailVerified());
+		
+		assertTrue(vendorDetailsService.verifyEmailDetails(savedEntity.getVendorId(), ENTITY_TYPE_VENDOR, EMAIL_TYPE_PRIMARY, emailVerificationDetails.getEmailHash()));
+		
+		assertTrue(vendorDetailsService.findById(savedEntity.getVendorId()).getIsEmailVerified());
+	}
+
+
+	
+	@Test
+	public void sendMobileVerificationDetails() throws Exception
+	{
+		assertEquals(0, vendorDetailsService.count().intValue());
+		
+		QuickRegisterEntity quickRegisterEntity=quickRegisterService
+				.saveNewCustomerQuickRegisterEntity(standardEmailMobileVendor()).getCustomerQuickRegisterEntity();
+		
+		VendorDetails savedEntity=vendorDetailsService.createCustomerDetailsFromQuickRegisterEntity(quickRegisterEntity);
+		
+		assertTrue(vendorDetailsService.sendMobileVerificationDetails(savedEntity.getVendorId(), ENTITY_TYPE_VENDOR, MOB_TYPE_PRIMARY));
+	}
+	
+	@Test
+	public void sendEmailVerificationDetails() throws Exception
+	{
+		assertEquals(0, vendorDetailsService.count().intValue());
+		
+		QuickRegisterEntity quickRegisterEntity=quickRegisterService
+				.saveNewCustomerQuickRegisterEntity(standardEmailMobileVendor()).getCustomerQuickRegisterEntity();
+		
+		VendorDetails savedEntity=vendorDetailsService.createCustomerDetailsFromQuickRegisterEntity(quickRegisterEntity);
+		
+		assertTrue(vendorDetailsService.sendEmailVerificationDetails(savedEntity.getVendorId(), ENTITY_TYPE_VENDOR, EMAIL_TYPE_PRIMARY));
+	}
+	
+	@Test
+	public void count()
+	{
+		assertEquals(0, vendorDetailsService.count().intValue());
+	}
+	
+	@Test
+	public void clearTestData() throws Exception
+	{
+	
+		assertEquals(0, vendorDetailsService.count().intValue());
+		
+		QuickRegisterEntity quickRegisterEntity=quickRegisterService
+				.saveNewCustomerQuickRegisterEntity(standardEmailMobileVendor()).getCustomerQuickRegisterEntity();
+		
+		VendorDetails savedEntity=vendorDetailsService.createCustomerDetailsFromQuickRegisterEntity(quickRegisterEntity);
+		
+		vendorDetailsService.clearTestData();
+		
+		assertEquals(0, vendorDetailsService.count().intValue());
+	}
+	
+	/*
 	@Test
 	public void checkIfMobileSaved() throws Exception
 	{
@@ -174,99 +294,7 @@ public class VendorDetailsServiceTest {
 		
 		assertEquals(1, emailVerificationService.count().intValue());
 	}
-	
-	@Test
-	public void verifyMobileDetails() throws Exception
-	{
-		assertEquals(0, vendorDetailsService.count().intValue());
-		
-		QuickRegisterEntity quickRegisterEntity=quickRegisterService
-				.saveNewCustomerQuickRegisterEntity(standardEmailMobileVendor()).getCustomerQuickRegisterEntity();
-		
-		VendorDetails savedEntity=vendorDetailsService.createCustomerDetailsFromQuickRegisterEntity(quickRegisterEntity);
-		
-		assertEquals(standardVendor(savedEntity), vendorDetailsService.updateVendorDetails(standardVendor(savedEntity)));
-		
-		MobileVerificationDetails mobileVerificationDetails=
-				mobileVerificationService.getByEntityIdTypeAndMobileType(savedEntity.getVendorId(),
-						2, MOB_TYPE_PRIMARY);
-		
-		assertFalse(savedEntity.getIsMobileVerified());
-		
-		assertTrue(vendorDetailsService.verifyMobileDetails(savedEntity.getVendorId(), 2, MOB_TYPE_PRIMARY, mobileVerificationDetails.getMobilePin()));
-		
-		assertTrue(vendorDetailsService.findById(savedEntity.getVendorId()).getIsMobileVerified());
-	}
-	
-	@Test
-	public void verifyEmailDetails() throws Exception
-	{
-		assertEquals(0, vendorDetailsService.count().intValue());
-		
-		QuickRegisterEntity quickRegisterEntity=quickRegisterService
-				.saveNewCustomerQuickRegisterEntity(standardEmailMobileVendor()).getCustomerQuickRegisterEntity();
-		
-		VendorDetails savedEntity=vendorDetailsService.createCustomerDetailsFromQuickRegisterEntity(quickRegisterEntity);
-		
-		assertEquals(standardVendor(savedEntity), vendorDetailsService.updateVendorDetails(standardVendor(savedEntity)));
-		
-		EmailVerificationDetails emailVerificationDetails=
-				emailVerificationService.getByEntityIdTypeAndEmailType(savedEntity.getVendorId(),
-						2, EMAIL_TYPE_PRIMARY);
-		
-		assertFalse(savedEntity.getIsEmailVerified());
-		
-		assertTrue(vendorDetailsService.verifyEmailDetails(savedEntity.getVendorId(), 2, EMAIL_TYPE_PRIMARY, emailVerificationDetails.getEmailHash()));
-		
-		assertTrue(vendorDetailsService.findById(savedEntity.getVendorId()).getIsEmailVerified());
-	}
+	*/
 
-	@Test
-	public void sendMobileVerificationDetails() throws Exception
-	{
-		assertEquals(0, vendorDetailsService.count().intValue());
-		
-		QuickRegisterEntity quickRegisterEntity=quickRegisterService
-				.saveNewCustomerQuickRegisterEntity(standardEmailMobileVendor()).getCustomerQuickRegisterEntity();
-		
-		VendorDetails savedEntity=vendorDetailsService.createCustomerDetailsFromQuickRegisterEntity(quickRegisterEntity);
-		
-		assertTrue(vendorDetailsService.sendMobileVerificationDetails(savedEntity.getVendorId(), 2, MOB_TYPE_PRIMARY));
-	}
-	
-	@Test
-	public void sendEmailVerificationDetails() throws Exception
-	{
-		assertEquals(0, vendorDetailsService.count().intValue());
-		
-		QuickRegisterEntity quickRegisterEntity=quickRegisterService
-				.saveNewCustomerQuickRegisterEntity(standardEmailMobileVendor()).getCustomerQuickRegisterEntity();
-		
-		VendorDetails savedEntity=vendorDetailsService.createCustomerDetailsFromQuickRegisterEntity(quickRegisterEntity);
-		
-		assertTrue(vendorDetailsService.sendEmailVerificationDetails(savedEntity.getVendorId(), 2, EMAIL_TYPE_PRIMARY));
-	}
-	
-	@Test
-	public void count()
-	{
-		assertEquals(0, vendorDetailsService.count().intValue());
-	}
-	
-	@Test
-	public void clearTestData() throws Exception
-	{
-	
-		assertEquals(0, vendorDetailsService.count().intValue());
-		
-		QuickRegisterEntity quickRegisterEntity=quickRegisterService
-				.saveNewCustomerQuickRegisterEntity(standardEmailMobileVendor()).getCustomerQuickRegisterEntity();
-		
-		VendorDetails savedEntity=vendorDetailsService.createCustomerDetailsFromQuickRegisterEntity(quickRegisterEntity);
-		
-		vendorDetailsService.clearTestData();
-		
-		assertEquals(0, vendorDetailsService.count().intValue());
-	}
 	
 }

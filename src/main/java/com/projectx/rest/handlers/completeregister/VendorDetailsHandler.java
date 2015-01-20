@@ -47,11 +47,7 @@ public class VendorDetailsHandler implements VendorDetailsService {
 	public VendorDetails createCustomerDetailsFromQuickRegisterEntity(
 			QuickRegisterEntity quickRegisterEntity) {
 
-		VendorDetails newEntity=new VendorDetails(quickRegisterEntity.getCustomerId(),quickRegisterEntity.getFirstName(),quickRegisterEntity.getLastName(),
-				null, null, quickRegisterEntity.getMobile(), quickRegisterEntity.getIsMobileVerified(), quickRegisterEntity.getEmail(),
-				quickRegisterEntity.getIsEmailVerified(), null, quickRegisterEntity.getInsertTime(), new Date(), "CUST_ONLINE");
-		
-		VendorDetails savedEntity=vendorDetailsRepository.save(newEntity);
+		VendorDetails savedEntity=transactionalUpdatesService.deleteQuickRegisterEntityCreateDetails(quickRegisterEntity).getVendorDetails();
 		
 		return savedEntity;
 		
@@ -60,7 +56,7 @@ public class VendorDetailsHandler implements VendorDetailsService {
 	@Override
 	public VendorDetails updateVendorDetails(VendorDetails vendorDetails) {
 		
-		VendorDetails updatedEntity=vendorDetailsRepository.save(vendorDetails);
+		VendorDetails updatedEntity=transactionalUpdatesService.updateVendorDetails(vendorDetails);
 		
 		return updatedEntity;
 	}
@@ -71,46 +67,6 @@ public class VendorDetailsHandler implements VendorDetailsService {
 		VendorDetails fetchedEntity=vendorDetailsRepository.findOne(vendorId);
 		
 		return fetchedEntity;
-		
-	}
-
-	@Override
-	public String checkIfMobileSaved(Long vendorId, Integer entityType,Integer mobileType,
-			Long mobile) {
-
-		String status=mobileVerificationService.checkIfMobileAlreadyExist(vendorId, entityType,mobileType, mobile);
-		
-		return status;
-		
-	}
-
-	@Override
-	public MobileVerificationDetails saveMobileVerificationDetails(
-			MobileVerificationDetails mobileVerificationDetails) {
-
-		MobileVerificationDetails savedEntity=mobileVerificationService.saveDetails(mobileVerificationDetails);
-		
-		return savedEntity;
-		
-	}
-
-	@Override
-	public String checkIfEmailSaved(Long vendorId, Integer entityType,Integer emailType,
-			String email) {
-
-		String status=emailVerificationService.checkIfEmailAlreadyExist(vendorId, entityType,emailType, email);
-		
-		return status;
-		
-	}
-
-	@Override
-	public EmailVerificationDetails saveEmailVerificationDetails(
-			EmailVerificationDetails emailVerificationDetails) {
-
-		EmailVerificationDetails savedEntity=emailVerificationService.saveDetails(emailVerificationDetails);
-		
-		return savedEntity;
 		
 	}
 
@@ -166,13 +122,7 @@ public class VendorDetailsHandler implements VendorDetailsService {
 	public Boolean sendMobileVerificationDetails(Long vendorId,
 			Integer entityType, Integer mobileType) {
 
-		MobileVerificationDetails fetchedEntity=mobileVerificationService
-				.getByEntityIdTypeAndMobileType(vendorId, entityType, mobileType);
-		
-		VendorDetails vendorDetails=vendorDetailsRepository.findOne(vendorId);
-		
-		Boolean sendStatus=messagerSender.sendPinSMS(vendorDetails.getFirstName(), vendorDetails.getLastName(), 
-				fetchedEntity.getMobile(), fetchedEntity.getMobilePin());
+		Boolean sendStatus=mobileVerificationService.sendMobilePin(vendorId, entityType, mobileType);
 		
 		return sendStatus;		
 	}
@@ -181,13 +131,7 @@ public class VendorDetailsHandler implements VendorDetailsService {
 	public Boolean sendEmailVerificationDetails(Long vendorId,
 			Integer entityType, Integer emailType) {
 
-		EmailVerificationDetails emailVerificationDetails=
-				emailVerificationService.getByEntityIdTypeAndEmailType(vendorId, entityType, emailType);
-		
-		VendorDetails vendorDetails=vendorDetailsRepository.findOne(vendorId);
-		
-		Boolean sendStatus=messagerSender.sendHashEmail(vendorDetails.getVendorId(), vendorDetails.getFirstName(),
-				vendorDetails.getLastName(), emailVerificationDetails.getEmail(), emailVerificationDetails.getEmailHash());
+		Boolean sendStatus=emailVerificationService.sendEmailHash(vendorId, entityType, emailType);
 		
 		return sendStatus;
 	
@@ -209,5 +153,52 @@ public class VendorDetailsHandler implements VendorDetailsService {
 		
 		return count;
 	}
+
+	/*
+	 	@Override
+	public String checkIfMobileSaved(Long vendorId, Integer entityType,Integer mobileType,
+			Long mobile) {
+
+		String status=mobileVerificationService.checkIfMobileAlreadyExist(vendorId, entityType,mobileType, mobile);
+		
+		return status;
+		
+	}
+
+	@Override
+	public String checkIfEmailSaved(Long vendorId, Integer entityType,Integer emailType,
+			String email) {
+
+		String status=emailVerificationService.checkIfEmailAlreadyExist(vendorId, entityType,emailType, email);
+		
+		return status;
+		
+	}
+	
+		@Override
+	public MobileVerificationDetails saveMobileVerificationDetails(
+			MobileVerificationDetails mobileVerificationDetails) {
+
+		MobileVerificationDetails savedEntity=mobileVerificationService.saveDetails(mobileVerificationDetails);
+		
+		return savedEntity;
+		
+	}
+	
+
+
+	@Override
+	public EmailVerificationDetails saveEmailVerificationDetails(
+			EmailVerificationDetails emailVerificationDetails) {
+
+		EmailVerificationDetails savedEntity=emailVerificationService.saveDetails(emailVerificationDetails);
+		
+		return savedEntity;
+		
+	}
+	 
+	 
+	 * 
+	 */
 	
 }	

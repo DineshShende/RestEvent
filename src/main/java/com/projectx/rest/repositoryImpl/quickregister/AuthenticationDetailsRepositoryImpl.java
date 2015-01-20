@@ -1,6 +1,7 @@
 package com.projectx.rest.repositoryImpl.quickregister;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
@@ -8,7 +9,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 import com.projectx.data.domain.quickregister.UpdateEmailPassword;
-import com.projectx.data.domain.quickregister.UpdatePasswordAndPasswordTypeDTO;
+import com.projectx.data.domain.quickregister.UpdatePasswordEmailPasswordAndPasswordTypeDTO;
 import com.projectx.data.domain.quickregister.VerifyLoginDetailsDataDTO;
 import com.projectx.mvc.domain.quickregister.CustomerIdTypeDTO;
 import com.projectx.mvc.domain.quickregister.GetByEmailDTO;
@@ -28,6 +29,10 @@ public class AuthenticationDetailsRepositoryImpl implements AuthenticationDetail
 	@Autowired
 	Environment env;
 
+	/*
+	@Value("${data.url}")
+	String baseUrl;
+	*/
 	
 	@Override
 	public AuthenticationDetails save(
@@ -35,21 +40,10 @@ public class AuthenticationDetailsRepositoryImpl implements AuthenticationDetail
 		
 		AuthenticationDetails savedEntity=restTemplate.postForObject(env.getProperty("data.url")+"/customer/quickregister/customerAuthentication/saveLoginDetails", authenticationDetails, AuthenticationDetails.class);
 		
+		//System.out.println(baseUrl);
+		
 		return savedEntity;
 		
-	}
-	@Override
-	public Integer count() {
-		Integer count=restTemplate.getForObject(env.getProperty("data.url")+"/customer/quickregister/customerAuthentication/getCount", Integer.class);
-		
-		return count;
-	}
-
-	@Override
-	public Boolean clearLoginDetailsForTesting() {
-		Boolean status=restTemplate.getForObject(env.getProperty("data.url")+"/customer/quickregister/customerAuthentication/clearForTesting", Boolean.class);
-		
-		return status;
 	}
 
 	@Override
@@ -66,16 +60,19 @@ public class AuthenticationDetailsRepositoryImpl implements AuthenticationDetail
 	}
 
 	@Override
-	public Integer updatePasswordAndPasswordTypeAndCounts(Long customerId,Integer customerType,
-			String password, String passwordType) {
+	public Integer updatePasswordEmailPasswordAndPasswordTypeAndCounts(Long customerId,Integer customerType,String password,
+			String emailPassword, String passwordType) {
 		
-		UpdatePasswordAndPasswordTypeDTO passwordAndPasswordTypeDTO=new UpdatePasswordAndPasswordTypeDTO(customerId,customerType, password, passwordType);
+		UpdatePasswordEmailPasswordAndPasswordTypeDTO passwordAndPasswordTypeDTO=new UpdatePasswordEmailPasswordAndPasswordTypeDTO(customerId,customerType, password, emailPassword,passwordType);
 
-		Integer updateStatus=restTemplate.postForObject(env.getProperty("data.url")+"/customer/quickregister/customerAuthentication/updatePasswordAndPasswordTypeAndCounts", passwordAndPasswordTypeDTO, Integer.class);
+		System.out.println(passwordAndPasswordTypeDTO);
+		
+		Integer updateStatus=restTemplate.postForObject(env.getProperty("data.url")+"/customer/quickregister/customerAuthentication/updatePasswordEmailPasswordAndPasswordTypeAndCounts", passwordAndPasswordTypeDTO, Integer.class);
 		
 		return updateStatus;
 	}
 
+	/*
 	@Override
 	public Integer updateEmailPasswordAndPasswordTypeAndCounts(Long customerId,Integer customerType,
 			String emailPassword) {
@@ -85,6 +82,7 @@ public class AuthenticationDetailsRepositoryImpl implements AuthenticationDetail
 		
 		return updateStatus;
 	}
+	*/
 
 	@Override
 	public Integer incrementResendCount(Long customerId,Integer customerType) {
@@ -133,6 +131,20 @@ public class AuthenticationDetailsRepositoryImpl implements AuthenticationDetail
 		
 		return fetchedEntity;
 
+	}
+
+	@Override
+	public Integer count() {
+		Integer count=restTemplate.getForObject(env.getProperty("data.url")+"/customer/quickregister/customerAuthentication/getCount", Integer.class);
+		
+		return count;
+	}
+
+	@Override
+	public Boolean clearLoginDetailsForTesting() {
+		Boolean status=restTemplate.getForObject(env.getProperty("data.url")+"/customer/quickregister/customerAuthentication/clearForTesting", Boolean.class);
+		
+		return status;
 	}
 	
 	/*

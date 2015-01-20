@@ -11,7 +11,9 @@ public interface MobileVerificationService {
 	
 	MobileVerificationDetails getByMobile(Long mobile);
 	
-	String checkIfMobileAlreadyExist(Long customerId,Integer customerType,Integer mobileType,Long mobile);
+	Boolean sendOrResendOrResetMobilePin(Long entityId,Integer entityType,Integer mobileType,Boolean resetFlag,Boolean resendFlag);
+	
+	Boolean sendMobilePin(Long entityId,Integer entityType,Integer mobileType);
 
 	Boolean reSendMobilePin(Long customerId,Integer customerType,Integer mobileType);
 	
@@ -32,5 +34,7 @@ public interface MobileVerificationService {
 	Integer count();
 	
 	Boolean clearTestData();
+	
+	//String checkIfMobileAlreadyExist(Long customerId,Integer customerType,Integer mobileType,Long mobile);
 
 }

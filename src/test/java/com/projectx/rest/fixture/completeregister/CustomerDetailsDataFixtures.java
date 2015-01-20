@@ -60,6 +60,15 @@ public class CustomerDetailsDataFixtures {
 				null, CUST_DATE, CUST_DATE, CUST_UPDATED_BY);
 	}
 	
+	public static CustomerDetails standardCustomerFromQuickEntity(Long customerId)
+	{
+		return new CustomerDetails(customerId, standardEmailMobileCustomer().getFirstName(),
+				standardEmailMobileCustomer().getLastName(), null, null, standardEmailMobileCustomer().getMobile(), 
+				standardEmailMobileCustomer().getIsEmailVerified(),standardEmailMobileCustomer().getEmail(),
+				standardEmailMobileCustomer().getIsEmailVerified(), null, null, null, null, null, false,
+				null, CUST_DATE, CUST_DATE, CUST_UPDATED_BY);
+	}
+	
 	public static CustomerDetails standardCustomerDetailsFirstPart()
 	{
 		return new CustomerDetails(standardEmailMobileCustomer().getCustomerId(), standardEmailMobileCustomer().getFirstName(),

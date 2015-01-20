@@ -23,7 +23,7 @@ public class MobileVerificationController {
 	@RequestMapping(value="/verifyMobilePin",method=RequestMethod.POST)
 	public Boolean verifyMobilePin(@RequestBody VerifyMobilePinDTO verifyMobile)
 	{
-		if(mobileVerificationService.verifyMobilePin(verifyMobile.getCustomerId(),verifyMobile.getCustomerType(),
+		if(mobileVerificationService.verifyMobilePinUpdateStatusAndSendPassword(verifyMobile.getCustomerId(),verifyMobile.getCustomerType(),
 				verifyMobile.getMobileType(), verifyMobile.getMobilePin()))
 			return true;
 		else

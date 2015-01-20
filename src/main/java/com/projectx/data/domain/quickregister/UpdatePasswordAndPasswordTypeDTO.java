@@ -1,16 +1,20 @@
 package com.projectx.data.domain.quickregister;
 
 public class UpdatePasswordAndPasswordTypeDTO {
-
+	
 	private Long customerId;
+	
 	private Integer customerType;
+	
 	private String password;
+	
 	private String passwordType;
-	
-	
+
 	public UpdatePasswordAndPasswordTypeDTO() {
-		
+	
 	}
+
+
 
 	public UpdatePasswordAndPasswordTypeDTO(Long customerId,
 			Integer customerType, String password, String passwordType) {
@@ -23,37 +27,13 @@ public class UpdatePasswordAndPasswordTypeDTO {
 
 
 
-
 	public Long getCustomerId() {
 		return customerId;
 	}
 
-
 	public void setCustomerId(Long customerId) {
 		this.customerId = customerId;
 	}
-
-
-	public String getPassword() {
-		return password;
-	}
-
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
-
-	public String getPasswordType() {
-		return passwordType;
-	}
-
-
-	public void setPasswordType(String passwordType) {
-		this.passwordType = passwordType;
-	}
-
-	
 
 	public Integer getCustomerType() {
 		return customerType;
@@ -63,12 +43,36 @@ public class UpdatePasswordAndPasswordTypeDTO {
 		this.customerType = customerType;
 	}
 
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	
+	
+	public String getPasswordType() {
+		return passwordType;
+	}
+
+
+
+	public void setPasswordType(String passwordType) {
+		this.passwordType = passwordType;
+	}
+
+
+
 	@Override
 	public String toString() {
 		return "UpdatePasswordAndPasswordTypeDTO [customerId=" + customerId
 				+ ", customerType=" + customerType + ", password=" + password
 				+ ", passwordType=" + passwordType + "]";
 	}
+
+
 
 	@Override
 	public int hashCode() {
@@ -84,6 +88,8 @@ public class UpdatePasswordAndPasswordTypeDTO {
 				+ ((passwordType == null) ? 0 : passwordType.hashCode());
 		return result;
 	}
+
+
 
 	@Override
 	public boolean equals(Object obj) {
@@ -117,6 +123,9 @@ public class UpdatePasswordAndPasswordTypeDTO {
 		return true;
 	}
 
-		
+
+
 	
+	
+
 }

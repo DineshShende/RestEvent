@@ -7,7 +7,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -21,12 +23,11 @@ import static com.projectx.rest.fixture.quickregister.QuickRegisterDataFixture.*
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes=Application.class)
 @ActiveProfiles("Dev")
+
 public class AuthenticationDetailsRepositoryTest {
 
 	@Autowired
 	AuthenticationDetailsRepository customerAuthenticationDetailsRepository;
-	
-
 	
 	@Before
 	public void clearTestData()
@@ -57,7 +58,7 @@ public class AuthenticationDetailsRepositoryTest {
 	
 	
 	@Test
-	public void updatePasswordAndPasswordType()
+	public void updatePasswordEmailPasswordAndPasswordTypeWithPass()
 	{
 		assertEquals(0,customerAuthenticationDetailsRepository.count().intValue());
 		
@@ -67,12 +68,13 @@ public class AuthenticationDetailsRepositoryTest {
 		
 		assertEquals(CUST_PASSWORD_TYPE_DEFAULT, savedEntity.getPasswordType());
 		
-		assertEquals(1, customerAuthenticationDetailsRepository.updatePasswordAndPasswordTypeAndCounts(standardUpdatePasswordAndPasswordTypeDTO().getCustomerId(),
-				standardUpdatePasswordAndPasswordTypeDTO().getCustomerType(),
-				standardUpdatePasswordAndPasswordTypeDTO().getPassword(), standardUpdatePasswordAndPasswordTypeDTO().getPasswordType()).intValue());
+		assertEquals(1, customerAuthenticationDetailsRepository.updatePasswordEmailPasswordAndPasswordTypeAndCounts(standardUpdatePasswordEmailPasswordAndPasswordTypeDTO().getCustomerId(),
+				standardUpdatePasswordEmailPasswordAndPasswordTypeDTO().getCustomerType(),
+				standardUpdatePasswordEmailPasswordAndPasswordTypeDTO().getPassword(),null,
+				standardUpdatePasswordEmailPasswordAndPasswordTypeDTO().getPasswordType()).intValue());
 		
 		assertEquals(CUST_PASSWORD_CHANGED, customerAuthenticationDetailsRepository.getByCustomerIdType(standardAuthenticationDetailsKey().getCustomerId(),
-				standardUpdatePasswordAndPasswordTypeDTO().getCustomerType()).getPassword());
+				standardUpdatePasswordEmailPasswordAndPasswordTypeDTO().getCustomerType()).getPassword());
 		
 		assertEquals(CUST_PASSWORD_TYPE_CHANGED, customerAuthenticationDetailsRepository.getByCustomerIdType(savedEntity.getKey().getCustomerId(),
 				savedEntity.getKey().getCustomerType()).getPasswordType());
@@ -92,13 +94,16 @@ public class AuthenticationDetailsRepositoryTest {
 		
 		assertEquals(CUST_PASSWORD_TYPE_DEFAULT, savedEntity.getPasswordType());
 		
-		assertEquals(1, customerAuthenticationDetailsRepository.updateEmailPasswordAndPasswordTypeAndCounts(standardUpdateEmailPassword().getCustomerId(),
-				standardUpdateEmailPassword().getCustomerType(),standardUpdateEmailPassword().getEmailPassword()).intValue());
+
+		assertEquals(1, customerAuthenticationDetailsRepository.updatePasswordEmailPasswordAndPasswordTypeAndCounts(standardUpdatePasswordEmailPasswordAndPasswordTypeDTO().getCustomerId(),
+				standardUpdatePasswordEmailPasswordAndPasswordTypeDTO().getCustomerType(),
+				standardUpdatePasswordEmailPasswordAndPasswordTypeDTO().getPassword(),standardUpdatePasswordEmailPasswordAndPasswordTypeDTO().getEmailPassword(),
+				standardUpdatePasswordEmailPasswordAndPasswordTypeDTO().getPasswordType()).intValue());
 		
 		assertEquals(CUST_EMAILHASH_UPDATED, customerAuthenticationDetailsRepository.getByCustomerIdType(savedEntity.getKey().getCustomerId(),
 				savedEntity.getKey().getCustomerType()).getEmailPassword());
 		
-		assertEquals(CUST_PASSWORD_TYPE_DEFAULT, customerAuthenticationDetailsRepository.getByCustomerIdType(savedEntity.getKey().getCustomerId(),
+		assertEquals(CUST_PASSWORD_TYPE_CHANGED, customerAuthenticationDetailsRepository.getByCustomerIdType(savedEntity.getKey().getCustomerId(),
 				savedEntity.getKey().getCustomerType()).getPasswordType());
 		
 		

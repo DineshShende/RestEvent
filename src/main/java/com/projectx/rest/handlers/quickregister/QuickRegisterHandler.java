@@ -18,6 +18,7 @@ import com.projectx.rest.domain.quickregister.EmailVerificationDetails;
 import com.projectx.rest.domain.quickregister.MobileVerificationDetails;
 import com.projectx.rest.domain.quickregister.QuickRegisterEntity;
 import com.projectx.rest.repository.completeregister.DocumentDetailsRepository;
+import com.projectx.rest.repository.completeregister.TransactionalUpdatesRepository;
 import com.projectx.rest.repository.quickregister.QuickRegisterRepository;
 import com.projectx.rest.services.quickregister.EmailVerificationService;
 import com.projectx.rest.services.quickregister.MobileVerificationService;
@@ -46,6 +47,9 @@ public class QuickRegisterHandler implements
 	
 	@Autowired
 	DocumentDetailsRepository customerDocumentRepository;
+
+	@Autowired
+	TransactionalUpdatesRepository transactionalUpdatesRepository;
 	
 	@Autowired 
 	HandleCustomerVerification handleCustomerVerification;
@@ -177,46 +181,12 @@ public class QuickRegisterHandler implements
 		return customer;
 	}
 	
-	
-	@Override
-	public QuickRegisterEntity saveCustomerQuickRegisterEntity(
-			QuickRegisterEntity customerQuickRegisterEntity) {
-		
-		QuickRegisterEntity quickRegisterEntity=customerQuickRegisterRepository.save(customerQuickRegisterEntity);
-		
-		return quickRegisterEntity;
-	}
-
-	
-	
-	@Override
-	public QuickRegisterEntity getByEntityId(
-			Long customerId) {
-		
-		return customerQuickRegisterRepository.findByCustomerId(customerId);
-	}
-
-	
-	@Override
-	public QuickRegisterEntity getByEmail(
-			String email) {
-		
-		return customerQuickRegisterRepository.findByEmail(email);
-	}
-
-	@Override
-	public QuickRegisterEntity getByMobile(
-			Long mobile) {
-		
-		return customerQuickRegisterRepository.findByMobile(mobile);
-	}
-
-	
 	@Override
 	public CustomerQuickRegisterEmailMobileVerificationEntity saveNewCustomerQuickRegisterEntity(
 			QuickRegisterEntity customer) throws Exception {
 				
-		System.out.println(customer);
+		//System.out.println(customer);
+		/*
 		QuickRegisterEntity savedCustomerQuickRegisterEntity= customerQuickRegisterRepository.save(customer);
 		EmailVerificationDetails savedCustomerEmailVerificationDetails=new EmailVerificationDetails();
 		MobileVerificationDetails savedCustomerMobileVerificationDetails=new MobileVerificationDetails();
@@ -242,8 +212,22 @@ public class QuickRegisterHandler implements
 		
 		AuthenticationDetails customerAuthenticationDetails=authenticationHandler.createCustomerAuthenticationDetails(savedCustomerQuickRegisterEntity);
 		authenticationHandler.saveCustomerAuthenticationDetails(customerAuthenticationDetails);
-				
-		return new CustomerQuickRegisterEmailMobileVerificationEntity(savedCustomerQuickRegisterEntity, savedCustomerEmailVerificationDetails, savedCustomerMobileVerificationDetails);
+		*/
+		
+		CustomerQuickRegisterEmailMobileVerificationEntity resultEntity=transactionalUpdatesRepository.saveNewQuickRegisterEntity(customer);
+		
+		
+		if(resultEntity.getCustomerEmailVerificationDetails().getKey()!=null&&resultEntity.getCustomerEmailVerificationDetails().getEmailHash()==null)
+			emailVerificationService.updateEmailHash(resultEntity.getCustomerEmailVerificationDetails().getKey().getCustomerId(),
+					resultEntity.getCustomerEmailVerificationDetails().getKey().getCustomerType(),resultEntity.getCustomerEmailVerificationDetails().getKey().getEmailType());
+			
+			
+		if(resultEntity.getCustomerMobileVerificationDetails().getKey()!=null && resultEntity.getCustomerMobileVerificationDetails().getMobilePin()==null)	
+			mobileVerificationService.updateMobilePin(resultEntity.getCustomerMobileVerificationDetails().getKey().getCustomerId(),
+					resultEntity.getCustomerMobileVerificationDetails().getKey().getCustomerType(), resultEntity.getCustomerMobileVerificationDetails().getKey().getMobileType());
+			
+		
+		return resultEntity;
 	}
 
 
@@ -316,6 +300,41 @@ public class QuickRegisterHandler implements
 		return updatedStatus;
 	}
 
+	@Override
+	public QuickRegisterEntity saveCustomerQuickRegisterEntity(
+			QuickRegisterEntity customerQuickRegisterEntity) {
+		
+		QuickRegisterEntity quickRegisterEntity=customerQuickRegisterRepository.save(customerQuickRegisterEntity);
+		
+		return quickRegisterEntity;
+	}
+
+	
+	
+	@Override
+	public QuickRegisterEntity getByEntityId(
+			Long customerId) {
+		
+		return customerQuickRegisterRepository.findByCustomerId(customerId);
+	}
+
+	
+	@Override
+	public QuickRegisterEntity getByEmail(
+			String email) {
+		
+		return customerQuickRegisterRepository.findByEmail(email);
+	}
+
+	@Override
+	public QuickRegisterEntity getByMobile(
+			Long mobile) {
+		
+		return customerQuickRegisterRepository.findByMobile(mobile);
+	}
+
+
+	
 	@Override
 	public void clearDataForTesting() {
 		customerQuickRegisterRepository.clearCustomerQuickRegister();

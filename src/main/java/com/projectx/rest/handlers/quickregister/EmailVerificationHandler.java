@@ -105,22 +105,9 @@ public class EmailVerificationHandler implements EmailVerificationService {
 	public Boolean verifyEmailHashUpdateStatusAndSendPassword(Long customerId,Integer customerType,Integer emailType, String emailHash) {
 		
 		QuickRegisterEntity fetchedEntity=customerQuickRegisterService.getByEntityId(customerId);
-		EmailVerificationDetails emailVerificationDetails=
-				getByEntityIdTypeAndEmailType(customerId, customerType,emailType);
-			
-		if(fetchedEntity.getCustomerId()==null||emailVerificationDetails.getKey()==null)
-			return false;
+		
 	
-		Date emailHashSentTime=emailVerificationDetails.getEmailHashSentTime();
-		
-		Date verificationTime=new Date();
-		
-		long dateDiffernce=verificationTime.getTime()-emailHashSentTime.getTime();
-		
-		long diffHours = dateDiffernce / (60 * 60 * 1000);
-		
-		
-		if(emailVerificationDetails.getEmailHash().equals(emailHash) && diffHours<EMAIL_VALIDITY_TIME_IN_HRS)
+		if(verifyEmailHash(customerId, customerType, emailType, emailHash))
 		{
 							
 			fetchedEntity.setIsEmailVerified(true);
@@ -176,12 +163,21 @@ public class EmailVerificationHandler implements EmailVerificationService {
 	}
 
 	@Override
-	public Boolean reSetEmailHash(Long customerId,Integer customerType,Integer emailType) {
+	public Boolean sendOrResendOrResetEmailHash(Long customerId,Integer customerType,Integer emailType,Boolean resetFlag,Boolean resendFlag) {
 		
-		Integer updateStatus=new Integer(0);
-			
-		updateStatus= updateEmailHash(customerId,customerType, emailType);
+		Integer updateStatus=new Integer(1);
+		Boolean sentStatus=false;
 		
+		Integer emailHashUpdateStatus=UPDATE_SUCESS;
+		
+		EmailVerificationDetails emailVerificationDetails=customerEmailVericationDetailsRepository
+				.getByEntityIdTypeAndEmailType(customerId, customerType, emailType);
+		
+		if(resetFlag || emailVerificationDetails.getEmailHash()==null)
+		{	
+			emailHashUpdateStatus= updateEmailHash(customerId,customerType, emailType);
+			resetFlag=true;
+		}
 		
 		String firstName=null;
 		String lastName = null;
@@ -218,79 +214,56 @@ public class EmailVerificationHandler implements EmailVerificationService {
 			}
 		}		
 		
-		EmailVerificationDetails emailVerificationDetails=customerEmailVericationDetailsRepository
+		if(resetFlag)
+		emailVerificationDetails=customerEmailVericationDetailsRepository
 				.getByEntityIdTypeAndEmailType(customerId,customerType, emailType);
 		
-		Boolean sentStatus=messagerSender
-				.sendHashEmail(customerId, firstName, lastName,
+		if(resendFlag)
+			updateStatus=customerEmailVericationDetailsRepository.incrementResendCountByCustomerIdAndEmail(customerId, customerType, emailType);
+
+		
+		if(updateStatus.equals(UPDATE_SUCESS) && emailHashUpdateStatus.equals(UPDATE_SUCESS))
+			sentStatus=messagerSender.sendHashEmail(customerId, firstName, lastName,
 						emailVerificationDetails.getEmail(), emailVerificationDetails.getEmailHash());
 		
-		if(updateStatus.equals(UPDATE_SUCESS) && sentStatus)
+		if(updateStatus.equals(UPDATE_SUCESS) && sentStatus && emailHashUpdateStatus.equals(UPDATE_SUCESS))
 			return true;
 		else
 			return false;
 	}
 
 	@Override
-	public Boolean reSendEmailHash(Long customerId,Integer customerType,Integer emailType) {
-
-		Integer updateStatus=new Integer(0);
-		Boolean sentStatus=false;
+	public Boolean sendEmailHash(Long customerId, Integer customerType,
+			Integer emailType) {
+	
+		Boolean result=sendOrResendOrResetEmailHash(customerId, customerType, emailType, false, false);
 		
-
-		String firstName=null;
-		String lastName = null;
-		
-		QuickRegisterEntity quickRegisterEntity=customerQuickRegisterService.getByEntityId(customerId);
-		
-		if(customerType.equals(ENTITY_TYPE_CUSTOMER))
-		{
-			if(quickRegisterEntity.getCustomerId()!=null)
-			{
-				firstName=quickRegisterEntity.getFirstName();
-				lastName=quickRegisterEntity.getLastName();
-			}
-			else
-			{	
-				CustomerDetails customerDetails=customerDetailsService.findById(customerId);
-				firstName=customerDetails.getFirstName();
-				lastName=customerDetails.getLastName();
-			}
-			
-		}
-		else if(customerType.equals(ENTITY_TYPE_VENDOR))
-		{
-			if(quickRegisterEntity.getCustomerId()!=null)
-			{
-				firstName=quickRegisterEntity.getFirstName();
-				lastName=quickRegisterEntity.getLastName();
-			}
-			else
-			{
-				VendorDetails vendorDetails=vendorDetailsService.findById(customerId);
-				firstName=vendorDetails.getFirstName();
-				lastName=vendorDetails.getLastName();
-			}
-		}
-		
-		EmailVerificationDetails emailVerificationDetails=customerEmailVericationDetailsRepository
-				.getByEntityIdTypeAndEmailType(customerId,customerType, emailType);
-		
-		
-		updateStatus=customerEmailVericationDetailsRepository.incrementResendCountByCustomerIdAndEmail(customerId,customerType, emailType);
-		
-		if(updateStatus.equals(UPDATE_SUCESS))
-			sentStatus=messagerSender
-				.sendHashEmail(customerId, firstName,lastName,
-						emailVerificationDetails.getEmail(), emailVerificationDetails.getEmailHash());
-				
-		if(updateStatus.equals(UPDATE_SUCESS) && sentStatus)
-			return true;
-		else
-			return false;
+		return result;
 		
 	}
 
+	@Override
+	public Boolean reSendEmailHash(Long customerId, Integer customerType,
+			Integer emailType) {
+
+		Boolean result=sendOrResendOrResetEmailHash(customerId, customerType, emailType, false, true);
+		
+		return result;
+		
+	}
+	
+	@Override
+	public Boolean reSetEmailHash(Long customerId, Integer customerType,
+			Integer emailType) {
+
+		Boolean result=sendOrResendOrResetEmailHash(customerId, customerType, emailType, true, false);
+		
+		return result;
+		
+	}
+
+
+	
 	@Override
 	public Integer updateEmailHash(Long customerId,Integer customerType,Integer emailType) {
 		
@@ -330,6 +303,11 @@ public class EmailVerificationHandler implements EmailVerificationService {
 
 	}
 
+	
+
+
+	
+	/*
 	@Override
 	public String checkIfEmailAlreadyExist(Long customerId,Integer customerType,Integer emailType,String email) {
 		
@@ -343,7 +321,6 @@ public class EmailVerificationHandler implements EmailVerificationService {
 		else
 			return "NOTEXIST";
 	}
-
-	
+*/
 	
 }

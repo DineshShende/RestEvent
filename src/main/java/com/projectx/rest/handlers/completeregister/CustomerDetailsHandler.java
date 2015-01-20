@@ -52,14 +52,9 @@ public class CustomerDetailsHandler implements CustomerDetailsService {
 			QuickRegisterEntity quickRegisterEntity) {
 	
 		
-		CustomerDetails newEntity=new CustomerDetails(quickRegisterEntity.getCustomerId(), quickRegisterEntity.getFirstName(), 
-				quickRegisterEntity.getLastName(), null, null, quickRegisterEntity.getMobile(),quickRegisterEntity.getIsMobileVerified(),
-				quickRegisterEntity.getEmail(), quickRegisterEntity.getIsEmailVerified(), null, null, null, null, null, 
-				false, null, new Date(), new Date(), "CUST_ONLINE");
+		CustomerDetails newEntity=transactionalUpdatesService.deleteQuickRegisterEntityCreateDetails(quickRegisterEntity).getCustomerDetails();
 		
-		CustomerDetails createdEntity=customerDetailsRepository.save(newEntity);
-		
-		return createdEntity;
+		return newEntity;
 			
 	}
 
@@ -118,21 +113,7 @@ public class CustomerDetailsHandler implements CustomerDetailsService {
 	public Boolean sendMobileVerificationDetails(Long customerId,
 			Integer customerType, Integer mobileType) {
 
-		MobileVerificationDetails fetchedEntity=mobileVerificationService
-				.getByEntityIdTypeAndMobileType(customerId, customerType, mobileType);
-		
-		if(fetchedEntity.getMobilePin()==null)
-		{
-			mobileVerificationService.reSetMobilePin(customerId, customerType, mobileType);
-			
-			fetchedEntity=mobileVerificationService
-					.getByEntityIdTypeAndMobileType(customerId, customerType, mobileType);
-		}
-		
-		CustomerDetails customerDetails=customerDetailsRepository.findOne(customerId);
-		
-		Boolean sendStatus=messagerSender.sendPinSMS(customerDetails.getFirstName(), customerDetails.getLastName(), 
-				fetchedEntity.getMobile(), fetchedEntity.getMobilePin());
+		Boolean sendStatus=mobileVerificationService.sendMobilePin(customerId, customerType, mobileType);
 		
 		return sendStatus;
 	}
@@ -141,21 +122,7 @@ public class CustomerDetailsHandler implements CustomerDetailsService {
 	public Boolean sendEmailVerificationDetails(Long customerId,
 			Integer customerType, Integer emailType) {
 
-		EmailVerificationDetails emailVerificationDetails=
-				emailVerificationService.getByEntityIdTypeAndEmailType(customerId, customerType, emailType);
-		
-		if(emailVerificationDetails.getEmailHash()==null)
-		{
-			emailVerificationService.reSetEmailHash(customerId, customerType, emailType);
-			
-			emailVerificationDetails=
-					emailVerificationService.getByEntityIdTypeAndEmailType(customerId, customerType, emailType);
-		}
-		
-		CustomerDetails customerDetails=customerDetailsRepository.findOne(customerId);
-		
-		Boolean sendStatus=messagerSender.sendHashEmail(customerDetails.getCustomerId(), customerDetails.getFirstName(),
-				customerDetails.getLastName(), emailVerificationDetails.getEmail(), emailVerificationDetails.getEmailHash());
+		Boolean sendStatus=emailVerificationService.sendEmailHash(customerId, customerType, emailType);
 		
 		return sendStatus;
 	}

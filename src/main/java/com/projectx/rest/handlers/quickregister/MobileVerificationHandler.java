@@ -10,7 +10,6 @@ import org.springframework.stereotype.Component;
 
 import com.projectx.rest.domain.completeregister.CustomerDetails;
 import com.projectx.rest.domain.completeregister.VendorDetails;
-import com.projectx.rest.domain.quickregister.EmailVerificationDetails;
 import com.projectx.rest.domain.quickregister.MobileVerificationDetails;
 import com.projectx.rest.domain.quickregister.MobileVerificationDetailsKey;
 import com.projectx.rest.domain.quickregister.QuickRegisterEntity;
@@ -60,8 +59,6 @@ public class MobileVerificationHandler implements MobileVerificationService {
 	
 	private static final Integer ENTITY_TYPE_VENDOR=new Integer(2);
 	
-	private static final Integer ENTITY_TYPE_QUICK_CUST=new Integer(10);
-	private static final Integer ENTITY_TYPE_QUICK_VENDOR=new Integer(20);
 	
 	private static final Integer MAX_MOBILE_VERIFICATION_ATTEMPTS=3;
 	
@@ -90,26 +87,19 @@ public class MobileVerificationHandler implements MobileVerificationService {
 	public Boolean verifyMobilePinUpdateStatusAndSendPassword(Long customerId,Integer customerType,Integer mobileType, Integer mobilePin) {
 	
 		QuickRegisterEntity fetchedEntity=customerQuickRegisterService.getByEntityId(customerId);
-		MobileVerificationDetails mobileVerificationDetails=getByEntityIdTypeAndMobileType(customerId,customerType, mobileType);
-		
+				
 		Boolean verificationStatus=false;
-		
 		Boolean sendPasswordStatus=true;
 		
 		Integer customerQuickRegisterUpdateStatus=UPDATE_SUCESS;
 		Integer customerMobileVerificationDetailsStatus=UPDATE_SUCESS;
 		
-		if(fetchedEntity.getCustomerId()==null || mobileVerificationDetails.getKey()==null)
-			return false;
-		
-		
-		if(mobileVerificationDetails.getMobilePin().equals(mobilePin) && mobileVerificationDetails.getMobileVerificationAttempts()<MAX_MOBILE_VERIFICATION_ATTEMPTS)
+			
+		if(verifyMobilePin(customerId, customerType, mobileType, mobilePin))
 		{
 			fetchedEntity.setIsMobileVerified(true);
 			
 			verificationStatus=true;
-			
-			sendPasswordStatus=authenticationHandler.sendDefaultPassword(fetchedEntity, false);
 			
 			fetchedEntity.setUpdateTime(new Date());
 			fetchedEntity.setUpdatedBy("CUST_ONLINE");
@@ -117,19 +107,11 @@ public class MobileVerificationHandler implements MobileVerificationService {
 			customerQuickRegisterUpdateStatus=customerQuickRegisterService.updateMobileVerificationStatus(fetchedEntity.getCustomerId(), 
 					fetchedEntity.getIsMobileVerified(), fetchedEntity.getUpdateTime(), fetchedEntity.getUpdatedBy());
 			
+			if(customerQuickRegisterUpdateStatus.equals(UPDATE_SUCESS))
+				sendPasswordStatus=authenticationHandler.sendDefaultPassword(fetchedEntity, false);
 				
 		}
-		else
-		{
-			int currentAttemptCount=mobileVerificationDetails.getMobileVerificationAttempts();
-			mobileVerificationDetails.setMobileVerificationAttempts(currentAttemptCount+1);
-		
-			customerMobileVerificationDetailsStatus=customerMobileVerificationDetailsRepository.updateMobilePinAndMobileVerificationAttemptsAndResendCount(fetchedEntity.getCustomerId(), 
-					fetchedEntity.getCustomerType(),mobileVerificationDetails.getKey().getMobileType(),mobileVerificationDetails.getMobilePin(),
-					mobileVerificationDetails.getMobileVerificationAttempts(), mobileVerificationDetails.getResendCount());
-		
-		}
-		
+				
 		if(customerQuickRegisterUpdateStatus.equals(UPDATE_SUCESS)&&customerMobileVerificationDetailsStatus.equals(UPDATE_SUCESS) && verificationStatus && sendPasswordStatus)
 			return true;
 		else
@@ -165,16 +147,29 @@ public class MobileVerificationHandler implements MobileVerificationService {
 		
 	}
 
-	
+			
 	@Override
-	public Boolean reSetMobilePin(Long customerId,Integer customerType,Integer mobileType)  {
-	
-		Integer updateStatus=new Integer(0);
+	public Boolean sendOrResendOrResetMobilePin(Long customerId,Integer customerType, Integer mobileType,Boolean resetFlag,Boolean resendFlag) {
 		
-		updateStatus=updateMobilePin(customerId, customerType,mobileType);
+		Integer updateStatus=new Integer(1);
+		Boolean sentStatus=false;
+		
+		Integer mobilePinUpdateStatus=UPDATE_SUCESS;
 		
 		String firstName=null;
 		String lastName = null;
+		
+		
+		MobileVerificationDetails mobileVerificationDetails=customerMobileVerificationDetailsRepository
+				.geByEntityIdTypeAndMobileType(customerId, customerType,mobileType);
+		
+		
+		if(resetFlag || mobileVerificationDetails.getMobilePin()==null)
+		{	
+			mobilePinUpdateStatus=updateMobilePin(customerId, customerType,mobileType);
+			resetFlag=true;
+		}	
+		
 		
 		QuickRegisterEntity quickRegisterEntity=customerQuickRegisterService.getByEntityId(customerId);
 		
@@ -207,21 +202,57 @@ public class MobileVerificationHandler implements MobileVerificationService {
 				lastName=vendorDetails.getLastName();
 			}
 		}
+
+
+		if(resetFlag)
+			mobileVerificationDetails=customerMobileVerificationDetailsRepository.geByEntityIdTypeAndMobileType(customerId, customerType,mobileType);
 		
+		if(resendFlag)
+				updateStatus=customerMobileVerificationDetailsRepository.incrementResendCount(customerId,customerType, mobileType);
+	
 		
-		MobileVerificationDetails mobileVerificationDetails=customerMobileVerificationDetailsRepository
-				.geByEntityIdTypeAndMobileType(customerId,customerType, mobileType);
-		
-		Boolean sentStatus=messagerSender
+		if(updateStatus.equals(UPDATE_SUCESS) && mobilePinUpdateStatus.equals(UPDATE_SUCESS))
+			sentStatus=messagerSender
 				.sendPinSMS(firstName, lastName, mobileVerificationDetails.getMobile(), mobileVerificationDetails.getMobilePin());
 		
-		if(updateStatus.equals(UPDATE_SUCESS) && sentStatus)
+		if(updateStatus.equals(UPDATE_SUCESS) && sentStatus && mobilePinUpdateStatus.equals(UPDATE_SUCESS))
 			return true;
 		else
 			return false;
 	}
 
+	@Override
+	public Boolean sendMobilePin(Long entityId, Integer entityType,
+			Integer mobileType) {
+		
+		Boolean result=sendOrResendOrResetMobilePin(entityId, entityType, mobileType, false, false);
+		
+		return result;
+	}
 
+
+
+	@Override
+	public Boolean reSendMobilePin(Long customerId, Integer customerType,
+			Integer mobileType) {
+		
+		Boolean result=sendOrResendOrResetMobilePin(customerId, customerType, mobileType, false, true);
+		
+		return result;
+	}
+
+
+
+	@Override
+	public Boolean reSetMobilePin(Long customerId, Integer customerType,
+			Integer mobileType) {
+		
+		Boolean result=sendOrResendOrResetMobilePin(customerId, customerType, mobileType, true, false);
+		
+		return result;
+	}
+
+	
 	@Override
 	public Integer updateMobilePin(Long customerId,Integer customerType,Integer mobileType) {
 		
@@ -229,66 +260,7 @@ public class MobileVerificationHandler implements MobileVerificationService {
 
 		return customerMobileVerificationDetailsRepository.updateMobilePinAndMobileVerificationAttemptsAndResendCount(customerId,customerType, mobileType, mobilePin, 0, 0);
 	}
-	
-	@Override
-	public Boolean reSendMobilePin(Long customerId,Integer customerType, Integer mobileType) {
-		
-		Integer updateStatus=new Integer(0);
-		Boolean sentStatus=false;
-		
-		String firstName=null;
-		String lastName = null;
-		
-		
-QuickRegisterEntity quickRegisterEntity=customerQuickRegisterService.getByEntityId(customerId);
-		
-		if(customerType.equals(ENTITY_TYPE_CUSTOMER))
-		{
-			if(quickRegisterEntity.getCustomerId()!=null)
-			{
-				firstName=quickRegisterEntity.getFirstName();
-				lastName=quickRegisterEntity.getLastName();
-			}
-			else
-			{	
-				CustomerDetails customerDetails=customerDetailsService.findById(customerId);
-				firstName=customerDetails.getFirstName();
-				lastName=customerDetails.getLastName();
-			}
-			
-		}
-		else if(customerType.equals(ENTITY_TYPE_VENDOR))
-		{
-			if(quickRegisterEntity.getCustomerId()!=null)
-			{
-				firstName=quickRegisterEntity.getFirstName();
-				lastName=quickRegisterEntity.getLastName();
-			}
-			else
-			{
-				VendorDetails vendorDetails=vendorDetailsService.findById(customerId);
-				firstName=vendorDetails.getFirstName();
-				lastName=vendorDetails.getLastName();
-			}
-		}
 
-
-		MobileVerificationDetails mobileVerificationDetails=customerMobileVerificationDetailsRepository
-				.geByEntityIdTypeAndMobileType(customerId, customerType,mobileType);
-		
-		updateStatus=customerMobileVerificationDetailsRepository.incrementResendCount(customerId,customerType, mobileType);
-	
-		
-		if(updateStatus.equals(UPDATE_SUCESS))
-			sentStatus=messagerSender
-				.sendPinSMS(firstName, lastName, mobileVerificationDetails.getMobile(), mobileVerificationDetails.getMobilePin());
-		
-		if(updateStatus.equals(UPDATE_SUCESS) && sentStatus)
-			return true;
-		else
-			return false;
-	}
-	
 
 	@Override
 	public MobileVerificationDetails saveDetails(
@@ -308,25 +280,6 @@ QuickRegisterEntity quickRegisterEntity=customerQuickRegisterService.getByEntity
 		return fetchedMobileVerificationDetails;
 	}
 
-	@Override
-	public Boolean clearTestData() {
-
-		return customerMobileVerificationDetailsRepository.clearTestData();
-	}
-
-	@Override
-	public Boolean deleteByKey(MobileVerificationDetailsKey key) {
-
-		Boolean deletionStatus=customerMobileVerificationDetailsRepository.delete(key);
-		
-		return deletionStatus;
-	}
-
-	@Override
-	public Integer count() {
-		
-		return customerMobileVerificationDetailsRepository.count().intValue();
-	}
 
 	@Override
 	public MobileVerificationDetails getByMobile(
@@ -338,6 +291,31 @@ QuickRegisterEntity quickRegisterEntity=customerQuickRegisterService.getByEntity
 		
 	}
 
+	
+	@Override
+	public Boolean deleteByKey(MobileVerificationDetailsKey key) {
+
+		Boolean deletionStatus=customerMobileVerificationDetailsRepository.delete(key);
+		
+		return deletionStatus;
+	}
+
+
+
+	@Override
+	public Integer count() {
+		
+		return customerMobileVerificationDetailsRepository.count().intValue();
+	}
+
+	@Override
+	public Boolean clearTestData() {
+
+		return customerMobileVerificationDetailsRepository.clearTestData();
+	}
+
+/*
+ 
 	@Override
 	public String checkIfMobileAlreadyExist(Long customerId,Integer customerType,Integer mobileType,Long mobile) {
 
@@ -352,5 +330,10 @@ QuickRegisterEntity quickRegisterEntity=customerQuickRegisterService.getByEntity
 			return "NOTEXIST";
 		
 	}
+ 
+ */
 
+
+	
+	
 }

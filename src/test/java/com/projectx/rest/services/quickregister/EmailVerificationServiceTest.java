@@ -166,7 +166,7 @@ public class EmailVerificationServiceTest {
 		
 		
 	}
-	
+/*	
 	@Test
 	public void checkIfEmailExist() throws Exception
 	{
@@ -181,6 +181,6 @@ public class EmailVerificationServiceTest {
 		
 		assertEquals("EXISTWITHOTHERENTITY", emailVerificationService.checkIfEmailAlreadyExist(CUST_ID, ENTITY_TYPE_VENDOR,ENTITY_TYPE_CUSTOMER, CUST_EMAIL));
 	}
-	
+*/	
 	
 }

@@ -96,9 +96,11 @@ public class CustomerDetailsWACTest {
 	@Test
 	public void createCustomerDetailsFromQuickRegisterEntity() throws Exception
 	{
+		QuickRegisterEntity quickRegisterEntity=quickRegisterService.saveCustomerQuickRegisterEntity(standardEmailMobileCustomer());
+		
 		this.mockMvc.perform(
 				post("/customer/createFromQuickRegister")
-				.content(standardJsonQuickRegister())
+				.content(standardJsonQuickRegister(quickRegisterEntity))
 				.contentType(MediaType.APPLICATION_JSON)
 				.accept(MediaType.APPLICATION_JSON))
 	.andDo(print())

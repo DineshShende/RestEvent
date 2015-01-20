@@ -17,14 +17,6 @@ public interface VendorDetailsService {
 	
 	VendorDetails findById(Long vendorId);
 	
-	String checkIfMobileSaved(Long vendorId,Integer entityType,Integer mobileType,Long mobile);
-	
-	MobileVerificationDetails saveMobileVerificationDetails(MobileVerificationDetails mobileVerificationDetails);
-	
-	String checkIfEmailSaved(Long vendorId,Integer entityType,Integer emailType,String email);
-	
-	EmailVerificationDetails saveEmailVerificationDetails(EmailVerificationDetails emailVerificationDetails);
-	
 	Boolean verifyMobileDetails(Long vendorId,Integer entityType,Integer mobileType,Integer mobilePin);
 	
 	Boolean verifyEmailDetails(Long vendorId,Integer entityType,Integer emailType,String emailHash);
@@ -37,5 +29,8 @@ public interface VendorDetailsService {
 	
 	Integer count();
 	
+	//MobileVerificationDetails saveMobileVerificationDetails(MobileVerificationDetails mobileVerificationDetails);
+	
+	//EmailVerificationDetails saveEmailVerificationDetails(EmailVerificationDetails emailVerificationDetails);
 	
 }

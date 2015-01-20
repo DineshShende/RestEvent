@@ -7,10 +7,13 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
+import com.projectx.data.domain.completeregister.CustomerOrVendorDetailsDTO;
 import com.projectx.data.domain.quickregister.CustomerIdTypeEmailTypeDTO;
 import com.projectx.data.domain.quickregister.CustomerIdTypeMobileTypeDTO;
 import com.projectx.rest.domain.completeregister.CustomerDetails;
 import com.projectx.rest.domain.completeregister.VendorDetails;
+import com.projectx.rest.domain.quickregister.CustomerQuickRegisterEmailMobileVerificationEntity;
+import com.projectx.rest.domain.quickregister.QuickRegisterEntity;
 import com.projectx.rest.repository.completeregister.TransactionalUpdatesRepository;
 
 @Component
@@ -73,6 +76,30 @@ public class TransactionalDetailsRepositoryImpl implements
 				customerIdTypeEmailTypeDTO, Boolean.class);
 
 		return result;
+	}
+
+	@Override
+	public CustomerQuickRegisterEmailMobileVerificationEntity saveNewQuickRegisterEntity(
+			QuickRegisterEntity quickRegisterEntity) {
+		
+		CustomerQuickRegisterEmailMobileVerificationEntity result=restTemplate.postForObject(env.getProperty("data.url")+"/transactional/saveNewQuickRegisterEntity",
+				quickRegisterEntity, CustomerQuickRegisterEmailMobileVerificationEntity.class);
+
+		return result;
+
+		
+	}
+
+	@Override
+	public CustomerOrVendorDetailsDTO deleteQuickRegisterEntityCreateDetails(
+			QuickRegisterEntity quickRegisterEntity) {
+
+	
+		CustomerOrVendorDetailsDTO result=restTemplate.postForObject(env.getProperty("data.url")+"/transactional/deleteQuickRegisterEntityCreateDetails",
+				quickRegisterEntity, CustomerOrVendorDetailsDTO.class);
+
+		return result;
+
 	}
 
 

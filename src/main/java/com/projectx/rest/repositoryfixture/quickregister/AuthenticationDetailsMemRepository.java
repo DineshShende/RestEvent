@@ -83,8 +83,8 @@ public class AuthenticationDetailsMemRepository implements AuthenticationDetails
 
 
 	@Override
-	public Integer updatePasswordAndPasswordTypeAndCounts(Long customerId,Integer customerType,
-			String password, String passwordType) {
+	public Integer updatePasswordEmailPasswordAndPasswordTypeAndCounts(Long customerId,Integer customerType,
+			String password,String emailPassword, String passwordType) {
 		
 		AuthenticationDetailsKey key=new AuthenticationDetailsKey(customerId, customerType);
 		
@@ -95,6 +95,7 @@ public class AuthenticationDetailsMemRepository implements AuthenticationDetails
 			customerList.remove(customerId);
 		
 			oldRecord.setPassword(password);
+			oldRecord.setEmailPassword(emailPassword);			
 			oldRecord.setPasswordType(passwordType);
 			oldRecord.setLastUnsucessfullAttempts(0);;
 			oldRecord.setResendCount(0);
@@ -107,7 +108,7 @@ public class AuthenticationDetailsMemRepository implements AuthenticationDetails
 			return 0;
 	}
 
-
+/*
 	@Override
 	public Integer updateEmailPasswordAndPasswordTypeAndCounts(Long customerId,Integer customerType,
 			String emailPassword) {
@@ -132,7 +133,7 @@ public class AuthenticationDetailsMemRepository implements AuthenticationDetails
 		else
 			return 0;
 	}
-
+*/
 
 	@Override
 	public Integer incrementResendCount(Long customerId,Integer customerType) {
