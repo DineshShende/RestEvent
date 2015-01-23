@@ -80,7 +80,7 @@ public class MobileVerificationControllerStandAloneTest {
 	}
 	
 	
-	
+	/*
 	@Test
 	public void verifyMobilePinForMobileCustomer() throws Exception
 	{
@@ -95,7 +95,7 @@ public class MobileVerificationControllerStandAloneTest {
 	            .andExpect(status().isOk())
 	            .andExpect(content().string("true"));
 	}
-	
+	*/
 	
 	@Test
 	public void reSetMobilePin() throws Exception

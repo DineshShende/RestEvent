@@ -71,53 +71,25 @@ public class VendorDetailsHandler implements VendorDetailsService {
 	}
 
 	@Override
-	public Boolean verifyMobileDetails(Long vendorId, Integer entityType,
-			 Integer mobileType, Integer mobilePin) {
-
+	public Boolean verifyMobileDetails(Long customerId, Integer customerType,
+			 Integer mobileType,Integer mobilePin) {
+		
 		Boolean verificationStatus=mobileVerificationService
-				.verifyMobilePin(vendorId, entityType, mobileType, mobilePin);
+				.verifyMobilePinUpdateStatusAndSendPassword(customerId, customerType, mobileType, mobilePin);
 		
-		if(verificationStatus)
-		{
-			Boolean verificationStatusUpdate=transactionalUpdatesService
-						.updateMobileInDetailsEnityAndAuthenticationDetails(vendorId, entityType, mobileType);
-			
-			
-			if(verificationStatusUpdate)
-				return true;
-			else
-				return false;
-		}
-		else
-			return false;
-		
-		
-		
+		return verificationStatus;
 	}
 
+	
 	@Override
-	public Boolean verifyEmailDetails(Long vendorId, Integer entityType,
-			Integer emailType, String emailHash) {
-
-		Boolean verificationStatus=emailVerificationService.verifyEmailHash(vendorId, entityType, emailType, emailHash);
+	public Boolean verifyEmailDetails(Long customerId, Integer customerType,
+			Integer emailType,  String emailHash) {
 		
-		if(verificationStatus)
-		{
-			Boolean updateStatus=transactionalUpdatesService
-					.updateEmailInDetailsEnityAndAuthenticationDetails(vendorId, entityType, emailType);
-			
-			if(updateStatus)
-				return true;
-			else
-				return false;
-		}
-		else
-		{
-			return false;
-		}
-		
+		Boolean verificationStatus=emailVerificationService
+				.verifyEmailHashUpdateStatusAndSendPassword(customerId, customerType, emailType, emailHash);
+				
+		return verificationStatus;
 	}
-
 	@Override
 	public Boolean sendMobileVerificationDetails(Long vendorId,
 			Integer entityType, Integer mobileType) {

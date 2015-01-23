@@ -3,6 +3,7 @@ package com.projectx.rest.handlers.quickregister;
 
 
 import java.util.Date;
+import java.util.HashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
@@ -15,11 +16,14 @@ import com.projectx.rest.domain.quickregister.MobileVerificationDetailsKey;
 import com.projectx.rest.domain.quickregister.QuickRegisterEntity;
 import com.projectx.rest.repository.quickregister.MobileVerificationDetailsRepository;
 import com.projectx.rest.services.completeregister.CustomerDetailsService;
+import com.projectx.rest.services.completeregister.DriverDetailsService;
+import com.projectx.rest.services.completeregister.TransactionalUpdatesService;
 import com.projectx.rest.services.completeregister.VendorDetailsService;
 import com.projectx.rest.services.quickregister.AuthenticationService;
 import com.projectx.rest.services.quickregister.QuickRegisterService;
 import com.projectx.rest.services.quickregister.MobileVerificationService;
 import com.projectx.rest.utils.HandleCustomerVerification;
+import com.projectx.rest.utils.InformationMapper;
 import com.projectx.rest.utils.MessageBuilder;
 import com.projectx.rest.utils.MessagerSender;
 
@@ -46,6 +50,12 @@ public class MobileVerificationHandler implements MobileVerificationService {
 	@Autowired
 	MobileVerificationDetailsRepository customerMobileVerificationDetailsRepository;
 	
+	@Autowired
+	TransactionalUpdatesService transactionalUpdatesService;
+	
+	@Autowired
+	DriverDetailsService driverDetailsService;
+	
 	
 	@Autowired
 	MessageBuilder messageBuilder;
@@ -53,11 +63,16 @@ public class MobileVerificationHandler implements MobileVerificationService {
 	@Autowired
 	MessagerSender messagerSender;
 	
+	@Autowired
+	InformationMapper informationMapper;
+	
 	private static final Integer UPDATE_SUCESS=new Integer(1);
 	
-	private static final Integer ENTITY_TYPE_CUSTOMER=new Integer(1);
+	private static final Integer ENTITY_TYPE_CUSTOMER=1;
 	
-	private static final Integer ENTITY_TYPE_VENDOR=new Integer(2);
+	private static final Integer ENTITY_TYPE_VENDOR=2;
+	
+	private static final Integer ENTITY_TYPE_DRIVER=3;
 	
 	
 	private static final Integer MAX_MOBILE_VERIFICATION_ATTEMPTS=3;
@@ -86,33 +101,57 @@ public class MobileVerificationHandler implements MobileVerificationService {
 	@Override
 	public Boolean verifyMobilePinUpdateStatusAndSendPassword(Long customerId,Integer customerType,Integer mobileType, Integer mobilePin) {
 	
-		QuickRegisterEntity fetchedEntity=customerQuickRegisterService.getByEntityId(customerId);
 				
 		Boolean verificationStatus=false;
 		Boolean sendPasswordStatus=true;
 		
-		Integer customerQuickRegisterUpdateStatus=UPDATE_SUCESS;
-		Integer customerMobileVerificationDetailsStatus=UPDATE_SUCESS;
+		Integer UpdateStatus=UPDATE_SUCESS;
+		Boolean updateDetails=true;
 		
 			
 		if(verifyMobilePin(customerId, customerType, mobileType, mobilePin))
 		{
-			fetchedEntity.setIsMobileVerified(true);
+			QuickRegisterEntity fetchedEntity=customerQuickRegisterService.getByEntityId(customerId);
 			
 			verificationStatus=true;
 			
-			fetchedEntity.setUpdateTime(new Date());
-			fetchedEntity.setUpdatedBy("CUST_ONLINE");
+			if(fetchedEntity.getCustomerId()!=null)
+			{
+				fetchedEntity.setIsMobileVerified(true);
+				
+				fetchedEntity.setUpdateTime(new Date());
+				fetchedEntity.setUpdatedBy("CUST_ONLINE");
+				
+				UpdateStatus=customerQuickRegisterService.updateMobileVerificationStatus(fetchedEntity.getCustomerId(), 
+						fetchedEntity.getIsMobileVerified(), fetchedEntity.getUpdateTime(), fetchedEntity.getUpdatedBy());
+				
+				if(UpdateStatus.equals(UPDATE_SUCESS))
+					sendPasswordStatus=authenticationHandler.sendDefaultPassword(fetchedEntity, false);
 			
-			customerQuickRegisterUpdateStatus=customerQuickRegisterService.updateMobileVerificationStatus(fetchedEntity.getCustomerId(), 
-					fetchedEntity.getIsMobileVerified(), fetchedEntity.getUpdateTime(), fetchedEntity.getUpdatedBy());
-			
-			if(customerQuickRegisterUpdateStatus.equals(UPDATE_SUCESS))
-				sendPasswordStatus=authenticationHandler.sendDefaultPassword(fetchedEntity, false);
+			}
+			else
+			{
+				if(customerType.equals(ENTITY_TYPE_DRIVER))
+				{
+					MobileVerificationDetails mobile=getByEntityIdTypeAndMobileType(customerId, customerType, mobileType);
+					
+					Integer updationStatus=driverDetailsService.updateMobileAndVerificationStatus(customerId, mobile.getMobile(), true);
+					
+					if(updationStatus.equals(UPDATE_SUCESS))
+						updateDetails=true;
+					else
+						updateDetails=false;
+				}
+				else
+				{	
+				updateDetails=transactionalUpdatesService
+						.updateMobileInDetailsEnityAndAuthenticationDetails(customerId, customerType, mobileType);
+				}
+			}
 				
 		}
 				
-		if(customerQuickRegisterUpdateStatus.equals(UPDATE_SUCESS)&&customerMobileVerificationDetailsStatus.equals(UPDATE_SUCESS) && verificationStatus && sendPasswordStatus)
+		if(UpdateStatus.equals(UPDATE_SUCESS)&& verificationStatus && sendPasswordStatus && updateDetails )
 			return true;
 		else
 			return false;
@@ -155,10 +194,7 @@ public class MobileVerificationHandler implements MobileVerificationService {
 		Boolean sentStatus=false;
 		
 		Integer mobilePinUpdateStatus=UPDATE_SUCESS;
-		
-		String firstName=null;
-		String lastName = null;
-		
+
 		
 		MobileVerificationDetails mobileVerificationDetails=customerMobileVerificationDetailsRepository
 				.geByEntityIdTypeAndMobileType(customerId, customerType,mobileType);
@@ -171,37 +207,10 @@ public class MobileVerificationHandler implements MobileVerificationService {
 		}	
 		
 		
-		QuickRegisterEntity quickRegisterEntity=customerQuickRegisterService.getByEntityId(customerId);
+		HashMap<String ,Object> basicInfo=informationMapper.getBasicInfoByEntityIdType(customerId, customerType);
 		
-		if(customerType.equals(ENTITY_TYPE_CUSTOMER))
-		{
-			if(quickRegisterEntity.getCustomerId()!=null)
-			{
-				firstName=quickRegisterEntity.getFirstName();
-				lastName=quickRegisterEntity.getLastName();
-			}
-			else
-			{	
-				CustomerDetails customerDetails=customerDetailsService.findById(customerId);
-				firstName=customerDetails.getFirstName();
-				lastName=customerDetails.getLastName();
-			}
-			
-		}
-		else if(customerType.equals(ENTITY_TYPE_VENDOR))
-		{
-			if(quickRegisterEntity.getCustomerId()!=null)
-			{
-				firstName=quickRegisterEntity.getFirstName();
-				lastName=quickRegisterEntity.getLastName();
-			}
-			else
-			{
-				VendorDetails vendorDetails=vendorDetailsService.findById(customerId);
-				firstName=vendorDetails.getFirstName();
-				lastName=vendorDetails.getLastName();
-			}
-		}
+		String firstName=(String)basicInfo.get("firstName");
+		String lastName =(String)basicInfo.get("lastName");
 
 
 		if(resetFlag)

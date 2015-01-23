@@ -33,7 +33,7 @@ import static com.projectx.rest.fixtures.quickregister.CustomerQuickRegisterData
 
 @RestController
 @RequestMapping(value="/customer/quickregister")
-public class CustomerQuickRegisterController {
+public class QuickRegisterController {
 	
 	@Autowired
 	QuickRegisterService customerQuickRegisterService;

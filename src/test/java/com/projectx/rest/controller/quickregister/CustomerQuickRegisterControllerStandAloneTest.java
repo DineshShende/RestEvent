@@ -29,7 +29,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.annotation.JsonFormat.Value;
 import com.projectx.mvc.domain.quickregister.LoginVerificationDTO;
-import com.projectx.rest.controller.quickregister.CustomerQuickRegisterController;
+import com.projectx.rest.controller.quickregister.QuickRegisterController;
 import com.projectx.rest.repositoryImpl.quickregister.QuickRegisterRepositoryImpl;
 import com.projectx.rest.services.quickregister.QuickRegisterService;
 
@@ -37,7 +37,7 @@ import com.projectx.rest.services.quickregister.QuickRegisterService;
 public class CustomerQuickRegisterControllerStandAloneTest {
 
 	@InjectMocks
-	CustomerQuickRegisterController customerQuickRegisterController;
+	QuickRegisterController customerQuickRegisterController;
 	
 	@Mock
 	QuickRegisterService customerQuickRegisterService; 

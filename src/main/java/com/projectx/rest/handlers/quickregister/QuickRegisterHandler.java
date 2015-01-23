@@ -60,8 +60,11 @@ public class QuickRegisterHandler implements
 	@Autowired
 	MessagerSender messagerSender;
 	
-	private static final Integer CUST_TYPE_CUSTOMER=new Integer(1);
+	private  Integer ENTITY_TYPE_CUSTOMER=1;
+	private  Integer ENTITY_TYPE_VENDOR=2;
 	
+	private  Integer ENTITY_TYPE_PRIMARY=1;
+	private  Integer ENTITY_TYPE_SECONDARY=2;
 	
 	@Override
 	public CustomerQuickRegisterStringStatusEntity checkIfAlreadyRegistered(
@@ -185,34 +188,6 @@ public class QuickRegisterHandler implements
 	public CustomerQuickRegisterEmailMobileVerificationEntity saveNewCustomerQuickRegisterEntity(
 			QuickRegisterEntity customer) throws Exception {
 				
-		//System.out.println(customer);
-		/*
-		QuickRegisterEntity savedCustomerQuickRegisterEntity= customerQuickRegisterRepository.save(customer);
-		EmailVerificationDetails savedCustomerEmailVerificationDetails=new EmailVerificationDetails();
-		MobileVerificationDetails savedCustomerMobileVerificationDetails=new MobileVerificationDetails();
-		
-		if(savedCustomerQuickRegisterEntity.getEmail()!=null)
-		{
-			EmailVerificationDetails newCustomerEmailVerificationDetails=emailVerificationService
-					.createEntity(savedCustomerQuickRegisterEntity.getCustomerId(),savedCustomerQuickRegisterEntity.getCustomerType(),
-							savedCustomerQuickRegisterEntity.getEmail(),CUST_EMAIL_TYPE_PRIMARY,savedCustomerQuickRegisterEntity.getUpdatedBy());
-			savedCustomerEmailVerificationDetails=emailVerificationService.saveDetails(newCustomerEmailVerificationDetails);
-		}
-		
-		if(savedCustomerQuickRegisterEntity.getMobile()!=null)
-		{
-			MobileVerificationDetails newCustomerMobileVerificationDetails=mobileVerificationService
-					.createEntity(savedCustomerQuickRegisterEntity.getCustomerId(),savedCustomerQuickRegisterEntity.getCustomerType(),
-							savedCustomerQuickRegisterEntity.getMobile(),CUST_MOBILE_TYPE_PRIMARY,savedCustomerQuickRegisterEntity.getUpdatedBy());
-			savedCustomerMobileVerificationDetails=mobileVerificationService.saveDetails(newCustomerMobileVerificationDetails);
-
-			//TODO
-			//If exception occurs here
-		}
-		
-		AuthenticationDetails customerAuthenticationDetails=authenticationHandler.createCustomerAuthenticationDetails(savedCustomerQuickRegisterEntity);
-		authenticationHandler.saveCustomerAuthenticationDetails(customerAuthenticationDetails);
-		*/
 		
 		CustomerQuickRegisterEmailMobileVerificationEntity resultEntity=transactionalUpdatesRepository.saveNewQuickRegisterEntity(customer);
 		
@@ -256,10 +231,18 @@ public class QuickRegisterHandler implements
 		
 		Boolean finalStatus=false;
 		
+		if(emailVerificationDetails.getEmailHash()==null)
+			emailVerificationDetails=emailVerificationService.getByEntityIdTypeAndEmailType(customer.getCustomerId(), customer.getCustomerType(),
+					ENTITY_TYPE_PRIMARY);
+		
+		if(mobileVerificationDetails.getMobilePin()==null)
+			mobileVerificationDetails=mobileVerificationService.getByEntityIdTypeAndMobileType(customer.getCustomerId(), customer.getCustomerType(),
+					ENTITY_TYPE_PRIMARY);
+		
 		if(customer.getEmail()!=null&&!customer.getIsEmailVerified())
 		{
 			emailSentStatus=messagerSender
-					.sendHashEmail(customer.getCustomerId(), customer.getFirstName(), customer.getEmail(), 
+					.sendHashEmail(customer.getCustomerId(),ENTITY_TYPE_CUSTOMER,ENTITY_TYPE_PRIMARY, customer.getFirstName(), customer.getLastName(), 
 							customer.getEmail(), emailVerificationDetails.getEmailHash());
 		}
 		

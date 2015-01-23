@@ -197,7 +197,7 @@ public class AuthenticationHandler implements AuthenticationService {
 									
 		if(email!=null && isEmailVerified)
 		{
-			messagerSender.sendPasswordEmail(entityId, firstName, lastName,
+			messagerSender.sendPasswordEmail(entityId,entityType, firstName, lastName,
 					email, customerAuthenticationDetails.getEmailPassword());
 		}	
 		

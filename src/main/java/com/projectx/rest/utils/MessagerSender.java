@@ -22,9 +22,9 @@ public class MessagerSender {
 	HandleCustomerVerification handleCustomerVerification;
 	
 	
-	public Boolean sendHashEmail(Long customerId,String firstName,String lastName,String email,String emailHash) {
+	public Boolean sendHashEmail(Long customerId,Integer customerType,Integer entityType,String firstName,String lastName,String email,String emailHash) {
 		
-		String message=messageBuilder.composeEmailWithEmailHash(customerId, firstName, lastName, email, emailHash);		
+		String message=messageBuilder.composeEmailWithEmailHash(customerId,customerType,entityType, firstName, lastName,  emailHash);		
 		
 		return handleCustomerVerification.sendEmail(email, message);
 	}
@@ -49,9 +49,9 @@ public class MessagerSender {
 	
 	
 	
-	public Boolean sendPasswordEmail(Long customerId,String firstName,String lastName,String email,String emailPassword)
+	public Boolean sendPasswordEmail(Long customerId,Integer customerType,String firstName,String lastName,String email,String emailPassword)
 	{
-		String message=messageBuilder.composeEmailWithPassword(customerId, firstName, lastName, emailPassword);
+		String message=messageBuilder.composeEmailWithPassword(customerId,customerType, firstName, lastName, emailPassword);
 		
 		return handleCustomerVerification.sendEmail(email, message);
 	}

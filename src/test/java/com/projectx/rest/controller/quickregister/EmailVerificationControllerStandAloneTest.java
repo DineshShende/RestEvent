@@ -52,7 +52,7 @@ public class EmailVerificationControllerStandAloneTest {
 		
 	}
 	
-
+/*
 	@Test
 	public void verifyEmailHashForEmailCustomer() throws Exception
 	{
@@ -69,7 +69,7 @@ public class EmailVerificationControllerStandAloneTest {
 	            .andExpect(status().isOk());
 		
 	}
-	
+*/	
 	/*
 	@Test
 	public void reSetEmailHash() throws Exception

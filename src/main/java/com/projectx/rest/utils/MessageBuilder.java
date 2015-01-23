@@ -30,14 +30,14 @@ public class MessageBuilder {
 		return messageBuilder.toString();
 	}
 	
-	public String composeEmailWithPassword(Long customerId,String firstName,String lastName,String emailPassword)
+	public String composeEmailWithPassword(Long customerId,Integer customerType,String firstName,String lastName,String emailPassword)
 	{
 		
 		StringBuilder messageBuilder=new StringBuilder();
 		
 		messageBuilder.append("Hi "+firstName+" "+lastName+"\n");
 		messageBuilder.append("As per your new password Request!!\n Click here to login with new password\n");
-		messageBuilder.append(env.getProperty("mvc.url")+"/customer/quickregister/emailPasswordVerification/"+customerId+"/"+emailPassword);
+		messageBuilder.append(env.getProperty("mvc.url")+"/quickregister/emailPasswordVerification/"+customerId+"/"+customerType+"/"+emailPassword);
 		
 		//System.out.println(messageBuilder.toString());
 		
@@ -59,13 +59,13 @@ public class MessageBuilder {
 	}
 	
 	
-	public String composeEmailWithEmailHash(Long customerId,String firstName,String lastName,String email,String emailHash)
+	public String composeEmailWithEmailHash(Long customerId,Integer customerType,Integer entityType,String firstName,String lastName,String emailHash)
 	{
 		StringBuilder messageBuilder=new StringBuilder();
 		
 		messageBuilder.append("Hi "+firstName+" "+lastName+"\n");
 		messageBuilder.append("Thanks for connecting with us!!\n Please Click Below link to activate your account\n");
-		messageBuilder.append(env.getProperty("mvc.url")+"/customer/quickregister/verifyEmailHash/"+customerId+"/"+email+"/"+emailHash);
+		messageBuilder.append(env.getProperty("mvc.url")+"/quickregister/verifyEmailHash/"+customerId+"/"+customerType+"/"+entityType+"/"+emailHash);
 		
 		//System.out.println(messageBuilder.toString());
 		

@@ -74,6 +74,7 @@ public class VendorDetailsServiceTest {
 		
 	}
 
+	
 	@Test
 	public void createCustomerDetailsFromQuickRegisterEntity()
 	{
@@ -232,6 +233,7 @@ public class VendorDetailsServiceTest {
 		
 		assertEquals(0, vendorDetailsService.count().intValue());
 	}
+	
 	
 	/*
 	@Test

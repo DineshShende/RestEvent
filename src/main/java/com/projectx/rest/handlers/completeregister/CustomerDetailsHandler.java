@@ -75,16 +75,9 @@ public class CustomerDetailsHandler implements CustomerDetailsService {
 			 Integer mobileType,Integer mobilePin) {
 		
 		Boolean verificationStatus=mobileVerificationService
-				.verifyMobilePin(customerId, customerType, mobileType, mobilePin);
+				.verifyMobilePinUpdateStatusAndSendPassword(customerId, customerType, mobileType, mobilePin);
 		
-		if(verificationStatus)
-		{
-			Boolean result=transactionalUpdatesService.updateMobileInDetailsEnityAndAuthenticationDetails(customerId, customerType, mobileType);
-			
-			return result;
-		}
-		else
-			return false;
+		return verificationStatus;
 	}
 
 	
@@ -92,20 +85,10 @@ public class CustomerDetailsHandler implements CustomerDetailsService {
 	public Boolean verifyEmailDetails(Long customerId, Integer customerType,
 			Integer emailType,  String emailHash) {
 		
-		Boolean verificationStatus=emailVerificationService.verifyEmailHash(customerId, customerType,emailType, emailHash);
-		
-		if(verificationStatus)
-		{
-			Boolean result=transactionalUpdatesService
-					.updateEmailInDetailsEnityAndAuthenticationDetails(customerId, customerType, emailType);
-			
-			return result;
-		}
-		else
-		{
-			return false;
-		}
-			
+		Boolean verificationStatus=emailVerificationService
+				.verifyEmailHashUpdateStatusAndSendPassword(customerId, customerType, emailType, emailHash);
+				
+		return verificationStatus;
 	}
 	
 

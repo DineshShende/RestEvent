@@ -3,6 +3,7 @@ package com.projectx.rest.handlers.quickregister;
 import static com.projectx.rest.fixtures.quickregister.CustomerQuickRegisterDataFixture.*;
 
 import java.util.Date;
+import java.util.HashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
@@ -15,11 +16,13 @@ import com.projectx.rest.domain.quickregister.EmailVerificationDetailsKey;
 import com.projectx.rest.domain.quickregister.QuickRegisterEntity;
 import com.projectx.rest.repository.quickregister.EmailVericationDetailsRepository;
 import com.projectx.rest.services.completeregister.CustomerDetailsService;
+import com.projectx.rest.services.completeregister.TransactionalUpdatesService;
 import com.projectx.rest.services.completeregister.VendorDetailsService;
 import com.projectx.rest.services.quickregister.AuthenticationService;
 import com.projectx.rest.services.quickregister.QuickRegisterService;
 import com.projectx.rest.services.quickregister.EmailVerificationService;
 import com.projectx.rest.utils.HandleCustomerVerification;
+import com.projectx.rest.utils.InformationMapper;
 import com.projectx.rest.utils.MessageBuilder;
 import com.projectx.rest.utils.MessagerSender;
 
@@ -46,12 +49,17 @@ public class EmailVerificationHandler implements EmailVerificationService {
 	@Autowired
 	EmailVericationDetailsRepository customerEmailVericationDetailsRepository;
 	
+	@Autowired
+	TransactionalUpdatesService transactionalUpdatesService;
 	
 	@Autowired
 	MessageBuilder messageBuilder;
 	
 	@Autowired
 	MessagerSender messagerSender;
+	
+	@Autowired
+	InformationMapper informationMapper;
 	
 	private static final Integer UPDATE_SUCESS=new Integer(1);
 	
@@ -104,24 +112,36 @@ public class EmailVerificationHandler implements EmailVerificationService {
 	@Override
 	public Boolean verifyEmailHashUpdateStatusAndSendPassword(Long customerId,Integer customerType,Integer emailType, String emailHash) {
 		
-		QuickRegisterEntity fetchedEntity=customerQuickRegisterService.getByEntityId(customerId);
+		Integer updateStatus=UPDATE_SUCESS;
+		Boolean sendPasswordStatus=true;
+		Boolean updatedStatusDetails=true;
 		
-	
+		
 		if(verifyEmailHash(customerId, customerType, emailType, emailHash))
 		{
-							
-			fetchedEntity.setIsEmailVerified(true);
+		
+			QuickRegisterEntity fetchedEntity=customerQuickRegisterService.getByEntityId(customerId);
 			
-			fetchedEntity.setUpdateTime(new Date());
-			fetchedEntity.setUpdatedBy("ONLINE_CUST");
+			if(fetchedEntity.getCustomerId()!=null)
+			{	
+				fetchedEntity.setIsEmailVerified(true);
 			
-			Integer updatedStatus=customerQuickRegisterService.updateEmailVerificationStatus(fetchedEntity.getCustomerId(), fetchedEntity.getIsEmailVerified(),
+				fetchedEntity.setUpdateTime(new Date());
+				fetchedEntity.setUpdatedBy("ONLINE_CUST");
+			
+				updateStatus=customerQuickRegisterService.updateEmailVerificationStatus(fetchedEntity.getCustomerId(), fetchedEntity.getIsEmailVerified(),
 					fetchedEntity.getUpdateTime(), fetchedEntity.getUpdatedBy());										
 			
-			Boolean sendPasswordStatus=authenticationHandler.sendDefaultPassword(fetchedEntity, false);
+				sendPasswordStatus=authenticationHandler.sendDefaultPassword(fetchedEntity, false);
+			}	
+			else
+			{
+				 updatedStatusDetails=transactionalUpdatesService
+						.updateEmailInDetailsEnityAndAuthenticationDetails(customerId, customerType, emailType);
 			
-			
-			if(updatedStatus.equals(UPDATE_SUCESS) && sendPasswordStatus)
+			}
+						
+			if(updateStatus.equals(UPDATE_SUCESS) && sendPasswordStatus && updatedStatusDetails)
 				return true;
 			else
 				return false;
@@ -130,6 +150,8 @@ public class EmailVerificationHandler implements EmailVerificationService {
 		{
 			return false;
 		}
+		
+		
 		
 	}
 	
@@ -179,40 +201,11 @@ public class EmailVerificationHandler implements EmailVerificationService {
 			resetFlag=true;
 		}
 		
-		String firstName=null;
-		String lastName = null;
+		HashMap<String ,Object> basicInfo=informationMapper.getBasicInfoByEntityIdType(customerId, customerType);
 		
-		QuickRegisterEntity quickRegisterEntity=customerQuickRegisterService.getByEntityId(customerId);
+		String firstName=(String)basicInfo.get("firstName");
+		String lastName =(String)basicInfo.get("lastName");
 		
-		if(customerType.equals(ENTITY_TYPE_CUSTOMER))
-		{
-			if(quickRegisterEntity.getCustomerId()!=null)
-			{
-				firstName=quickRegisterEntity.getFirstName();
-				lastName=quickRegisterEntity.getLastName();
-			}
-			else
-			{	
-				CustomerDetails customerDetails=customerDetailsService.findById(customerId);
-				firstName=customerDetails.getFirstName();
-				lastName=customerDetails.getLastName();
-			}
-			
-		}
-		else if(customerType.equals(ENTITY_TYPE_VENDOR))
-		{
-			if(quickRegisterEntity.getCustomerId()!=null)
-			{
-				firstName=quickRegisterEntity.getFirstName();
-				lastName=quickRegisterEntity.getLastName();
-			}
-			else
-			{
-				VendorDetails vendorDetails=vendorDetailsService.findById(customerId);
-				firstName=vendorDetails.getFirstName();
-				lastName=vendorDetails.getLastName();
-			}
-		}		
 		
 		if(resetFlag)
 		emailVerificationDetails=customerEmailVericationDetailsRepository
@@ -223,7 +216,7 @@ public class EmailVerificationHandler implements EmailVerificationService {
 
 		
 		if(updateStatus.equals(UPDATE_SUCESS) && emailHashUpdateStatus.equals(UPDATE_SUCESS))
-			sentStatus=messagerSender.sendHashEmail(customerId, firstName, lastName,
+			sentStatus=messagerSender.sendHashEmail(customerId,customerType, emailType, firstName, lastName,
 						emailVerificationDetails.getEmail(), emailVerificationDetails.getEmailHash());
 		
 		if(updateStatus.equals(UPDATE_SUCESS) && sentStatus && emailHashUpdateStatus.equals(UPDATE_SUCESS))
