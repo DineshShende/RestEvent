@@ -1,12 +1,12 @@
 package com.projectx.data.domain.completeregister;
-
+ 
 import com.projectx.rest.domain.completeregister.CustomerDetails;
 import com.projectx.rest.domain.completeregister.VendorDetails;
 
 
 public class CustomerOrVendorDetailsDTO {
 	
-	private CustomerDetails customerDetails;
+	private CustomerDetails  customerDetails;
 	
 	private VendorDetails vendorDetails;
 
