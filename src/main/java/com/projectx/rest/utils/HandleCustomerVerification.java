@@ -125,7 +125,7 @@ public class HandleCustomerVerification {
 		
 		System.out.println("Sending Email");
 		
-		mailSender.send(mailMessage);
+		//mailSender.send(mailMessage);
 		
 		System.out.println("EmailSent");
 		/*
@@ -184,9 +184,9 @@ public class HandleCustomerVerification {
 		
 		//System.out.println(requestBuilder.toString());
 						
-		String result=restTemplate.getForObject(requestBuilder.toString(), String.class);	
+		//String result=restTemplate.getForObject(requestBuilder.toString(), String.class);	
 			
-		System.out.println(result);
+		//System.out.println(result);
 		
 		
 		//SendSMSThread sendSMSThread=new SendSMSThread(mobile, message);
