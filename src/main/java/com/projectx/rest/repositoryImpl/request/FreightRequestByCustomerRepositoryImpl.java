@@ -12,6 +12,7 @@ import org.springframework.web.client.RestTemplate;
 import com.projectx.data.domain.request.FreightRequestByCustomerList;
 import com.projectx.rest.domain.completeregister.CustomerDetails;
 import com.projectx.rest.domain.request.FreightRequestByCustomer;
+import com.projectx.rest.domain.request.FreightRequestByVendor;
 import com.projectx.rest.repository.request.FreightRequestByCustomerRepository;
 
 @Component
@@ -99,6 +100,17 @@ public class FreightRequestByCustomerRepositoryImpl implements
 		return result.getRequestList();
 
 		
+	}
+
+	@Override
+	public List<FreightRequestByCustomer> getMatchingCustReqForVendorReq(
+			FreightRequestByVendor freightRequestByVendor) {
+
+		FreightRequestByCustomerList result=restTemplate.postForObject(env.getProperty("data.url")+"/request/freightByRequestCustomer/getMatchingCustReqForVendorReq",
+				freightRequestByVendor, FreightRequestByCustomerList.class);
+				
+				
+		return result.getRequestList();
 	}
 
 }

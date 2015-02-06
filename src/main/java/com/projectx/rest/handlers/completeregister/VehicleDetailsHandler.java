@@ -66,4 +66,17 @@ public class VehicleDetailsHandler implements VehicleDetailsService {
 		return vehicleDetailsRepository.clearTestData();
 	}
 
+
+	@Override
+	public VehicleDetailsDTO getVehicleByRegistartionNumber(
+			String registartionNumber) {
+		
+		VehicleDetailsDTO fetchedVehicle=vehicleDetailsRepository.findByRegistrationNumber(registartionNumber);
+		
+		return fetchedVehicle;
+	
+
+		
+	}
+
 }

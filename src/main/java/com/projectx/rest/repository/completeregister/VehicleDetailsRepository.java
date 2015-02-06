@@ -18,6 +18,8 @@ public interface VehicleDetailsRepository {
 	
 	VehicleDetailsDTO findOne( Long vehicleId);
 	
+	VehicleDetailsDTO findByRegistrationNumber(String registrationNumber);
+	
 	Integer count();
 	
 	Boolean clearTestData();

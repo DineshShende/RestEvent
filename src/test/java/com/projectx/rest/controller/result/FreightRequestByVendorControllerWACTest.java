@@ -1,6 +1,6 @@
 package com.projectx.rest.controller.result;
 
-import static com.projectx.rest.fixture.request.FreightRequestByCustomerDataFixture.standardFreightRequestByCustomerFullTruckLoad;
+import static com.projectx.rest.fixture.request.FreightRequestByCustomerDataFixture.*;
 import static com.projectx.rest.fixture.request.FreightRequestByVendorDataFixture.*;
 import static org.junit.Assert.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -15,6 +15,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 
 
+
+
+
+
+
+
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,9 +36,14 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import com.projectx.rest.config.Application;
+import com.projectx.rest.domain.request.FreightRequestByCustomer;
 import com.projectx.rest.domain.request.FreightRequestByVendor;
+import com.projectx.rest.repository.completeregister.VehicleDetailsRepository;
+import com.projectx.rest.services.completeregister.VehicleDetailsService;
+import com.projectx.rest.services.request.FreightRequestByCustomerService;
 import com.projectx.rest.services.request.FreightRequestByVendorService;
 
+import static com.projectx.rest.fixture.completeregister.VehicleDetailsDataFixtures.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
@@ -48,12 +60,26 @@ public class FreightRequestByVendorControllerWACTest {
 	@Autowired
 	FreightRequestByVendorService freightRequestByVendorService;
 	
+	@Autowired
+	VehicleDetailsService vehicleDetailsService;
+	
+	@Autowired
+	FreightRequestByCustomerService freightRequestByCustomerService;
+	
 	@Before
 	public void setUp() throws Exception
 	{
 		this.mockMvc=MockMvcBuilders.webAppContextSetup(wac).build();
-		freightRequestByVendorService.clearTestData();
+		
 	
+	}
+
+	@Before
+	@After
+	public void cleanUp()
+	{
+		freightRequestByVendorService.clearTestData();
+		vehicleDetailsService.clearTestData();
 	}
 	
 	@Test
@@ -65,9 +91,12 @@ public class FreightRequestByVendorControllerWACTest {
 	@Test
 	public void save() throws Exception
 	{
+	
+		vehicleDetailsService.addVehicle(standardVehicleDetails());
+		
 		this.mockMvc.perform(
 	            post("/request/freightRequestByVendor")
-	                    .content(stanardJsonFreightRequestByVendor(standardFreightRequestByVendor()))
+	                    .content(stanardJsonFreightRequestByVendorDTO(standardFreightRequestByVendorDTO()))
 	                    .contentType(MediaType.APPLICATION_JSON)
 	                    .accept(MediaType.APPLICATION_JSON))
 	            .andDo(print())
@@ -83,7 +112,7 @@ public class FreightRequestByVendorControllerWACTest {
 	            .andExpect(jsonPath("$.insertTime").exists())
 	            .andExpect(jsonPath("$.updateTime").exists())
 	            ;
-
+				
 		
 		 		
 	
@@ -93,6 +122,8 @@ public class FreightRequestByVendorControllerWACTest {
 	@Test
 	public void getById() throws Exception
 	{
+		vehicleDetailsService.addVehicle(standardVehicleDetails());
+		
 		FreightRequestByVendor customer=freightRequestByVendorService.newRequest(standardFreightRequestByVendor());
 		
 		this.mockMvc.perform(
@@ -119,6 +150,8 @@ public class FreightRequestByVendorControllerWACTest {
 	@Test
 	public void deleteById() throws Exception
 	{
+		vehicleDetailsService.addVehicle(standardVehicleDetails());
+		
 		FreightRequestByVendor customer=freightRequestByVendorService.newRequest(standardFreightRequestByVendor());
 		
 		this.mockMvc.perform(
@@ -158,6 +191,8 @@ public class FreightRequestByVendorControllerWACTest {
 	@Test
 	public void findByVendor() throws Exception
 	{
+		vehicleDetailsService.addVehicle(standardVehicleDetails());
+		
 		FreightRequestByVendor customer=freightRequestByVendorService.newRequest(standardFreightRequestByVendor());
 		
 		this.mockMvc.perform(
@@ -177,5 +212,41 @@ public class FreightRequestByVendorControllerWACTest {
 	            .andExpect(jsonPath("$.[0].updateTime").exists());
 	           
 	    
+	}
+	
+	@Test
+	public void getMatchingVendorReqForCustomerReq() throws Exception
+	{
+		vehicleDetailsService.addVehicle(standardVehicleDetails());
+		
+		FreightRequestByVendor savedEntity=freightRequestByVendorService.newRequest(standardFreightRequestByVendor());
+		
+		vehicleDetailsService.addVehicle(standardVehicleDetailsOpen307());
+		
+		freightRequestByVendorService.newRequest(standardFreightRequestByVendorOpen307());
+		
+		vehicleDetailsService.addVehicle(standardVehicleDetailsClosed());
+		
+		freightRequestByVendorService.newRequest(standardFreightRequestByVendorClosed());
+		
+		vehicleDetailsService.addVehicle(standardVehicleDetailsFlexible());
+		
+		freightRequestByVendorService.newRequest(standardFreightRequestByVendorFlexible());
+		
+		FreightRequestByCustomer freightRequestByCustomer=freightRequestByCustomerService.newRequest(standardFreightRequestByCustomerFullTruckLoad());
+
+		
+		this.mockMvc.perform(
+	            post("/request/freightRequestByVendor/getMatchingVendorReqForCustomerReq")
+	                    .content(standardJsonFreightRequestByCustomer(freightRequestByCustomer))
+	                    .contentType(MediaType.APPLICATION_JSON)
+	                    .accept(MediaType.APPLICATION_JSON))
+	            .andDo(print())
+	            .andExpect(status().isOk())
+	            .andExpect(jsonPath("$.[0].vehicleRegistrationNumber").value(standardFreightRequestByVendor().getVehicleRegistrationNumber()))
+	            .andExpect(jsonPath("$.[0].source").value(standardFreightRequestByVendor().getSource()))
+	            .andExpect(jsonPath("$.[0].destination").value(standardFreightRequestByVendor().getDestination()));
+	
+		
 	}
 }

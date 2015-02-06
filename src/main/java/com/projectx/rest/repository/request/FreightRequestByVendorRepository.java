@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Repository;
 
+import com.projectx.rest.domain.request.FreightRequestByCustomer;
 import com.projectx.rest.domain.request.FreightRequestByVendor;
 
 
@@ -22,4 +23,6 @@ public interface FreightRequestByVendorRepository {
 	Integer count();
 	
 	List<FreightRequestByVendor> findByVendor(Long vendorId);
+	
+	List<FreightRequestByVendor> getMatchingVendorReqFromCustomerReq(FreightRequestByCustomer freightRequestByCustomer); 
 }

@@ -565,11 +565,11 @@ public class VehicleDetailsDTO {
 				return false;
 		} else if (!vehicleBrandId.equals(other.vehicleBrandId))
 			return false;
-		if (vehicleId == null) {
+		/*if (vehicleId == null) {
 			if (other.vehicleId != null)
 				return false;
 		} else if (!vehicleId.equals(other.vehicleId))
-			return false;
+			return false;*/
 		if (vehicleTypeId == null) {
 			if (other.vehicleTypeId != null)
 				return false;

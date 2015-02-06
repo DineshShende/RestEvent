@@ -50,6 +50,19 @@ public class VehicleDetailsRepositoryTest {
 	}
 	
 	@Test
+	public void findByRegistrationNumber()
+	{
+		assertEquals(0, vehicleDetailsRepository.count().intValue());
+		
+		VehicleDetailsDTO savedEntity=vehicleDetailsRepository.save(standardVehicleDetails());
+		
+		assertEquals(1, vehicleDetailsRepository.count().intValue());
+		
+		assertEquals(savedEntity, vehicleDetailsRepository.findByRegistrationNumber(savedEntity.getRegistrationNumber()));
+		
+	}
+	
+	@Test
 	public void update()
 	{
 		assertEquals(0, vehicleDetailsRepository.count().intValue());

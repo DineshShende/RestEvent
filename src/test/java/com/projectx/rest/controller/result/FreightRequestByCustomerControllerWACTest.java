@@ -1,6 +1,8 @@
 package com.projectx.rest.controller.result;
 
+import static com.projectx.rest.fixture.completeregister.VehicleDetailsDataFixtures.standardVehicleDetails;
 import static com.projectx.rest.fixture.request.FreightRequestByCustomerDataFixture.*;
+import static com.projectx.rest.fixture.request.FreightRequestByVendorDataFixture.*;
 import static org.junit.Assert.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -8,6 +10,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+
+
+
 
 
 
@@ -29,7 +35,10 @@ import org.springframework.web.context.WebApplicationContext;
 
 import com.projectx.rest.config.Application;
 import com.projectx.rest.domain.request.FreightRequestByCustomer;
+import com.projectx.rest.domain.request.FreightRequestByVendor;
+import com.projectx.rest.services.completeregister.VehicleDetailsService;
 import com.projectx.rest.services.request.FreightRequestByCustomerService;
+import com.projectx.rest.services.request.FreightRequestByVendorService;
 
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -47,13 +56,27 @@ public class FreightRequestByCustomerControllerWACTest {
 	@Autowired
 	FreightRequestByCustomerService freightRequestByCustomerService;
 	
+	@Autowired
+	FreightRequestByVendorService freightRequestByVendorService;
+	
+	@Autowired
+	VehicleDetailsService vehicleDetailsService; 
+	
 	@Before
 	public void setUp() throws Exception
 	{
 		this.mockMvc=MockMvcBuilders.webAppContextSetup(wac).build();
 		
-		freightRequestByCustomerService.clearTestData();
+		
 	
+	}
+	
+	@Before
+	public void cleanUp()
+	{
+		freightRequestByCustomerService.clearTestData();
+		freightRequestByVendorService.clearTestData();
+		vehicleDetailsService.clearTestData();		
 	}
 	
 	@Test
@@ -199,6 +222,55 @@ public class FreightRequestByCustomerControllerWACTest {
 	            .andExpect(jsonPath("$.[0].updateTime").exists());
 	            
 	    
+	}
+	
+	@Test
+	public void getMatchingCustomerReqForVendorReq() throws Exception
+	{
+		
+		
+		freightRequestByCustomerService.clearTestData();
+		
+		FreightRequestByCustomer savedEntity=freightRequestByCustomerService.newRequest(standardFreightRequestByCustomerFullTruckLoad110());
+		
+		savedEntity=freightRequestByCustomerService.newRequest(standardFreightRequestByCustomerFullTruckLoadClosedAcerReq());
+		
+		savedEntity=freightRequestByCustomerService.newRequest(standardFreightRequestByCustomerFullTruckLoadOpenTataReq());
+		
+		savedEntity=freightRequestByCustomerService.newRequest(standardFreightRequestByCustomerLessThanTruckLoad15());
+		
+		savedEntity=freightRequestByCustomerService.newRequest(standardFreightRequestByCustomerLessThanTruckLoadOpenAcer());
+		
+		savedEntity=freightRequestByCustomerService.newRequest(standardFreightRequestByCustomerLessThanTruckLoadOpenTata());
+		
+		savedEntity=freightRequestByCustomerService.newRequest(standardFreightRequestByCustomerLessThanTruckLoadOpenNoBrand());
+		
+		savedEntity=freightRequestByCustomerService.newRequest(standardFreightRequestByCustomerLessThanTruckLoadOpenNoBrandAndNoModel());
+		
+		savedEntity=freightRequestByCustomerService.newRequest(standardFreightRequestByCustomerLessThanTruckLoadOpenNoModel());
+		
+		//FreightRequestByVendor vendorRequest=freightRequestByVendorRepository.save(standardFreightRequestByVendor());
+		
+		
+		vehicleDetailsService.addVehicle(standardVehicleDetails());
+		
+		FreightRequestByVendor testRequest=freightRequestByVendorService.newRequest(standardFreightRequestByVendor());
+
+		
+		this.mockMvc.perform(
+	            post("/request/freightRequestByCustomer/getMatchingCustomerReqForVendorReq")
+	                    .content(stanardJsonFreightRequestByVendor(testRequest))
+	                    .contentType(MediaType.APPLICATION_JSON)
+	                    .accept(MediaType.APPLICATION_JSON))
+	            .andDo(print())
+	            .andExpect(status().isOk());/*
+	            .andExpect(jsonPath("$.[0].source").value(standardFreightRequestByCustomerFullTruckLoad().getSource()))
+	            .andExpect(jsonPath("$.[0].destination").value(standardFreightRequestByCustomerFullTruckLoad().getDestination()))
+	            .andExpect(jsonPath("$.[0].noOfVehicles").value(standardFreightRequestByCustomerFullTruckLoad().getNoOfVehicles()));
+				*/
+	    
+		
+		
 	}
 	
 }

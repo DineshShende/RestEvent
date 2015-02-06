@@ -17,6 +17,8 @@ public interface VehicleDetailsService {
 	
 	VehicleDetailsDTO getVehicleById(Long vehicleId);
 	
+	VehicleDetailsDTO getVehicleByRegistartionNumber(String registartionNumber);
+	
 	List<VehicleDetailsDTO> vehiclesByVendorId(Long vendorId);
 	
 	Integer count();

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.projectx.rest.domain.request.FreightRequestByCustomer;
+import com.projectx.rest.domain.request.FreightRequestByVendor;
 import com.projectx.rest.services.request.FreightRequestByCustomerService;
 
 @RestController
@@ -40,6 +41,15 @@ public class FreightRequestByCustomerController {
 	public List<FreightRequestByCustomer> getAllRequestForCustomer(@PathVariable Long customerId)
 	{
 		List<FreightRequestByCustomer> savedEntity=freightRequestByCustomerService.getAllRequestForCustomer(customerId);
+		
+		return savedEntity;
+		
+	}
+	
+	@RequestMapping(value="/getMatchingCustomerReqForVendorReq",method=RequestMethod.POST)
+	public List<FreightRequestByCustomer> getMatchingCustomerReqForVendorReq(@RequestBody FreightRequestByVendor freightRequestByVendor)
+	{
+		List<FreightRequestByCustomer> savedEntity=freightRequestByCustomerService.getMatchingCustReqForVendorReq(freightRequestByVendor);
 		
 		return savedEntity;
 		

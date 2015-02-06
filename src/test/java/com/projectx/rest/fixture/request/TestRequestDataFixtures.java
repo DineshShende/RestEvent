@@ -1,6 +1,7 @@
 package com.projectx.rest.fixture.request;
 
-import static com.projectx.rest.fixture.completeregister.VehicleDetailsDataFixtures.standardVehicleDetails;
+
+import static com.projectx.rest.fixture.completeregister.VehicleDetailsDataFixtures.*;
 
 import java.util.Date;
 
@@ -57,6 +58,43 @@ public static VehicleDetailsDTO REQ_VEHICLE=standardVehicleDetails();
 				REQ_PICK_UP_RANGE_UPDATED,REQ_VENDOR_ID,REQ_STATUS, REQ_DATE, REQ_DATE, REQ_UPDATED_BY);
 		
 	}
+	
+	public static TestRequest standardTestRequestOpen()
+	{
+		
+		
+		return new TestRequest(100L,standardVehicleDetailsOpen(), REQ_SOURCE, REQ_DESTINATION, REQ_DRIVER, REQ_AVAIL_DATE, REQ_AVAIL_TIME,
+				REQ_PICK_UP_RANGE,REQ_VENDOR_ID,REQ_STATUS, REQ_DATE, REQ_DATE, REQ_UPDATED_BY);
+		
+	}
+	
+	public static TestRequest standardTestRequestOpen307()
+	{
+		
+		
+		return new TestRequest(100L,standardVehicleDetailsOpen307(), REQ_SOURCE, REQ_DESTINATION, REQ_DRIVER, REQ_AVAIL_DATE, REQ_AVAIL_TIME,
+				REQ_PICK_UP_RANGE,REQ_VENDOR_ID,REQ_STATUS, REQ_DATE, REQ_DATE, REQ_UPDATED_BY);
+		
+	}
+	
+	public static TestRequest standardTestRequestClosed()
+	{
+		
+		
+		return new TestRequest(120L,standardVehicleDetailsClosed(), REQ_SOURCE, REQ_DESTINATION, REQ_DRIVER, REQ_AVAIL_DATE, REQ_AVAIL_TIME,
+				REQ_PICK_UP_RANGE,REQ_VENDOR_ID,REQ_STATUS, REQ_DATE, REQ_DATE, REQ_UPDATED_BY);
+		
+	}
+	
+	public static TestRequest standardTestRequestFlexible()
+	{
+		
+		
+		return new TestRequest(110L,standardVehicleDetailsFlexible(), REQ_SOURCE, REQ_DESTINATION, REQ_DRIVER, REQ_AVAIL_DATE, REQ_AVAIL_TIME,
+				REQ_PICK_UP_RANGE,REQ_VENDOR_ID,REQ_STATUS, REQ_DATE, REQ_DATE, REQ_UPDATED_BY);
+		
+	}
+
 	
 	public static String stanardJsonTestRequest(TestRequest freightRequestByVendor)
 	{

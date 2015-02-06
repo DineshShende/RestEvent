@@ -93,6 +93,17 @@ public class VehicleDetailsRepositoryImpl implements VehicleDetailsRepository {
 		
 	}
 
+	@Override
+	public VehicleDetailsDTO findByRegistrationNumber(String registrationNumber) {
+
+		VehicleDetailsDTO result=restTemplate.getForObject(env.getProperty("data.url")+"/vehicle/getByRegistrationNumber/"+registrationNumber,
+				VehicleDetailsDTO.class);
+		
+		return result;
+
+
+	}
+
 	
 
 }

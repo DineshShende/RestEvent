@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import com.projectx.rest.domain.request.FreightRequestByCustomer;
+import com.projectx.rest.domain.request.FreightRequestByVendor;
 import com.projectx.rest.repository.request.FreightRequestByCustomerRepository;
 import com.projectx.rest.services.request.FreightRequestByCustomerService;
 
@@ -54,6 +55,13 @@ public class FreightRequestByCustomerHandler implements
 	public Integer count() {
 
 		return freightRequestByCustomerRepository.count();
+	}
+
+	@Override
+	public List<FreightRequestByCustomer> getMatchingCustReqForVendorReq(
+			FreightRequestByVendor freightRequestByVendor) {
+		
+		return freightRequestByCustomerRepository.getMatchingCustReqForVendorReq(freightRequestByVendor);
 	}
 
 }

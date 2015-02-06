@@ -1,18 +1,19 @@
-package com.projectx.rest.domain.request;
+package com.projectx.mvc.domain.request;
 
 import java.util.Date;
 
+
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.projectx.rest.domain.completeregister.VehicleDetailsDTO;
 import com.projectx.rest.util.serializer.JsonDateDeSerializer;
 import com.projectx.rest.util.serializer.JsonDateSerializer;
 
-public class TestRequest {
+
+public class FreightRequestByVendorDTO {
 
 	private Long requestId;
 	
-	private VehicleDetailsDTO vehicleDetailsId;
+	private String vehicleRegistrationNumber;
 	
 	private Integer source;
 	
@@ -25,44 +26,45 @@ public class TestRequest {
 	private String availableTime;
 	
 	private Integer pickupRangeInKm;
-
+	
 	private Long vendorId;
 
+
 	private String status;
-	
+
+
 	private Date insertTime;
 	
 	private Date updateTime;
 	
 	private String updatedBy;
+	
 
-	public TestRequest() {
+	
+	public FreightRequestByVendorDTO() {
 
 	}
 
-	public TestRequest(Long requestId, VehicleDetailsDTO vehicleDetailsId,
-			Integer source, Integer destination, Long driverId,
-			Date availableDate, String availableTime, Integer pickupRangeInKm,
-			Long vendorId, String status, Date insertTime, Date updateTime,
-			String updatedBy) {
-
-		this.requestId = requestId;
-		this.vehicleDetailsId = vehicleDetailsId;
+	public FreightRequestByVendorDTO(String vehicleRegistrationNumber, Integer source,
+			Integer destination, Long driverId, Date availableDate,
+			String availableTime, Integer pickupRangeInKm,Long vendorId,String status, Date insertTime,
+			Date updateTime, String updatedBy) {
+		super();
+		this.vehicleRegistrationNumber = vehicleRegistrationNumber;
 		this.source = source;
 		this.destination = destination;
 		this.driverId = driverId;
 		this.availableDate = availableDate;
 		this.availableTime = availableTime;
 		this.pickupRangeInKm = pickupRangeInKm;
-		this.vendorId = vendorId;
-		this.status = status;
+		this.vendorId=vendorId;
+		this.status=status;
 		this.insertTime = insertTime;
 		this.updateTime = updateTime;
 		this.updatedBy = updatedBy;
 	}
 
-	
-	
+
 	public Long getRequestId() {
 		return requestId;
 	}
@@ -71,12 +73,12 @@ public class TestRequest {
 		this.requestId = requestId;
 	}
 
-	public VehicleDetailsDTO getVehicleDetailsId() {
-		return vehicleDetailsId;
+	public String getVehicleRegistrationNumber() {
+		return vehicleRegistrationNumber;
 	}
 
-	public void setVehicleDetailsId(VehicleDetailsDTO vehicleDetailsId) {
-		this.vehicleDetailsId = vehicleDetailsId;
+	public void setVehicleRegistrationNumber(String vehicleRegistrationNumber) {
+		this.vehicleRegistrationNumber = vehicleRegistrationNumber;
 	}
 
 	public Integer getSource() {
@@ -102,7 +104,7 @@ public class TestRequest {
 	public void setDriverId(Long driverId) {
 		this.driverId = driverId;
 	}
-
+	
 	@JsonSerialize(using=JsonDateSerializer.class)
 	public Date getAvailableDate() {
 		return availableDate;
@@ -129,23 +131,8 @@ public class TestRequest {
 		this.pickupRangeInKm = pickupRangeInKm;
 	}
 
-	public Long getVendorId() {
-		return vendorId;
-	}
-
-	public void setVendorId(Long vendorId) {
-		this.vendorId = vendorId;
-	}
-
-	public String getStatus() {
-		return status;
-	}
-
-	public void setStatus(String status) {
-		this.status = status;
-	}
-
-	@JsonSerialize(using=JsonDateSerializer.class)
+	
+	@JsonSerialize(using=JsonDateSerializer.class)	
 	public Date getInsertTime() {
 		return insertTime;
 	}
@@ -173,16 +160,34 @@ public class TestRequest {
 		this.updatedBy = updatedBy;
 	}
 
+	
+	
+	public Long getVendorId() {
+		return vendorId;
+	}
+
+	public void setVendorId(Long vendorId) {
+		this.vendorId = vendorId;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
 	@Override
 	public String toString() {
-		return "TestRequest [requestId=" + requestId + ", vehicleDetailsId="
-				+ vehicleDetailsId + ", source=" + source + ", destination="
-				+ destination + ", driverId=" + driverId + ", availableDate="
-				+ availableDate + ", availableTime=" + availableTime
-				+ ", pickupRangeInKm=" + pickupRangeInKm + ", vendorId="
-				+ vendorId + ", status=" + status + ", insertTime="
-				+ insertTime + ", updateTime=" + updateTime + ", updatedBy="
-				+ updatedBy + "]";
+		return "FreightRequestByVendor [requestId=" + requestId
+				+ ", vehicleRegistrationNumber=" + vehicleRegistrationNumber
+				+ ", source=" + source + ", destination=" + destination
+				+ ", driverId=" + driverId + ", availableDate=" + availableDate
+				+ ", availableTime=" + availableTime + ", pickupRangeInKm="
+				+ pickupRangeInKm + ", vendorId=" + vendorId + ", status="
+				+ status + ", insertTime=" + insertTime + ", updateTime="
+				+ updateTime + ", updatedBy=" + updatedBy + "]";
 	}
 
 	@Override
@@ -211,7 +216,8 @@ public class TestRequest {
 				+ ((updatedBy == null) ? 0 : updatedBy.hashCode());
 		result = prime
 				* result
-				+ ((vehicleDetailsId == null) ? 0 : vehicleDetailsId.hashCode());
+				+ ((vehicleRegistrationNumber == null) ? 0
+						: vehicleRegistrationNumber.hashCode());
 		result = prime * result
 				+ ((vendorId == null) ? 0 : vendorId.hashCode());
 		return result;
@@ -225,11 +231,11 @@ public class TestRequest {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		TestRequest other = (TestRequest) obj;
+		FreightRequestByVendorDTO other = (FreightRequestByVendorDTO) obj;
 		if (availableDate == null) {
 			if (other.availableDate != null)
 				return false;
-		} else if (Math.abs(availableDate.getTime()-other.availableDate.getTime())>1000000)
+		} else if (!availableDate.equals(other.availableDate))
 			return false;
 		if (availableTime == null) {
 			if (other.availableTime != null)
@@ -249,18 +255,18 @@ public class TestRequest {
 		if (insertTime == null) {
 			if (other.insertTime != null)
 				return false;
-		 } else if (Math.abs(insertTime.getTime()-other.insertTime.getTime())>1000000)
+		} else if (!insertTime.equals(other.insertTime))
 			return false;
 		if (pickupRangeInKm == null) {
 			if (other.pickupRangeInKm != null)
 				return false;
 		} else if (!pickupRangeInKm.equals(other.pickupRangeInKm))
 			return false;
-		/*if (requestId == null) {
+		if (requestId == null) {
 			if (other.requestId != null)
 				return false;
 		} else if (!requestId.equals(other.requestId))
-			return false;*/
+			return false;
 		if (source == null) {
 			if (other.source != null)
 				return false;
@@ -274,17 +280,18 @@ public class TestRequest {
 		if (updateTime == null) {
 			if (other.updateTime != null)
 				return false;
-		} else if (Math.abs(updateTime.getTime()-other.updateTime.getTime())>1000000)
+		} else if (!updateTime.equals(other.updateTime))
 			return false;
 		if (updatedBy == null) {
 			if (other.updatedBy != null)
 				return false;
 		} else if (!updatedBy.equals(other.updatedBy))
 			return false;
-		if (vehicleDetailsId == null) {
-			if (other.vehicleDetailsId != null)
+		if (vehicleRegistrationNumber == null) {
+			if (other.vehicleRegistrationNumber != null)
 				return false;
-		} else if (!vehicleDetailsId.equals(other.vehicleDetailsId))
+		} else if (!vehicleRegistrationNumber
+				.equals(other.vehicleRegistrationNumber))
 			return false;
 		if (vendorId == null) {
 			if (other.vendorId != null)
@@ -294,6 +301,6 @@ public class TestRequest {
 		return true;
 	}
 
-	
 		
+	
 }

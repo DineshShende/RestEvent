@@ -33,7 +33,7 @@ public class FreightRequestByVendorRepositoryImpl implements
 	public FreightRequestByVendor save(
 			FreightRequestByVendor freightRequestByVendor) {
 
-		FreightRequestByVendor savedEntity=restTemplate.postForObject(env.getProperty("data.url")+"/request/freightByVendor",
+		FreightRequestByVendor savedEntity=restTemplate.postForObject(env.getProperty("data.url")+"/request/testrequest",
 				freightRequestByVendor, FreightRequestByVendor.class);
 
 		return savedEntity;
@@ -46,7 +46,7 @@ public class FreightRequestByVendorRepositoryImpl implements
 	public FreightRequestByVendor getById(Long requestId) {
 		
 
-		FreightRequestByVendor result=restTemplate.getForObject(env.getProperty("data.url")+"/request/freightByVendor/getById/"+requestId,
+		FreightRequestByVendor result=restTemplate.getForObject(env.getProperty("data.url")+"/request/testrequest/getById/"+requestId,
 				FreightRequestByVendor.class);
 		
 		return result;
@@ -56,7 +56,7 @@ public class FreightRequestByVendorRepositoryImpl implements
 	@Override
 	public Boolean deleteById(Long requestId) {
 		
-		Boolean result=restTemplate.getForObject(env.getProperty("data.url")+"/request/freightByVendor/deleteById/"+requestId,
+		Boolean result=restTemplate.getForObject(env.getProperty("data.url")+"/request/testrequest/deleteById/"+requestId,
 				Boolean.class);
 		
 		return result;
@@ -67,7 +67,7 @@ public class FreightRequestByVendorRepositoryImpl implements
 	public Boolean clearTestData() {
 		
 
-		Boolean result=restTemplate.getForObject(env.getProperty("data.url")+"/request/freightByVendor/clearTestData",
+		Boolean result=restTemplate.getForObject(env.getProperty("data.url")+"/request/testrequest/clearTestData",
 				Boolean.class);
 		
 		return result;
@@ -77,7 +77,7 @@ public class FreightRequestByVendorRepositoryImpl implements
 	@Override
 	public Integer count() {
 		
-		Integer result=restTemplate.getForObject(env.getProperty("data.url")+"/request/freightByVendor/count",
+		Integer result=restTemplate.getForObject(env.getProperty("data.url")+"/request/testrequest/count",
 				Integer.class);
 		
 		return result;
@@ -88,12 +88,26 @@ public class FreightRequestByVendorRepositoryImpl implements
 	@Override
 	public List<FreightRequestByVendor> findByVendor(Long vendorId) {
 
-		FreightRequestByVendorList result=restTemplate.getForObject(env.getProperty("data.url")+"/request/freightByVendor/findByVendorId/"+vendorId,
+		FreightRequestByVendorList result=restTemplate.getForObject(env.getProperty("data.url")+"/request/testrequest/findByVendorId/"+vendorId,
 				FreightRequestByVendorList.class);
 		
 		return result.getRequestList();
 
 
+		
+	}
+
+	@Override
+	public List<FreightRequestByVendor> getMatchingVendorReqFromCustomerReq(
+			FreightRequestByCustomer freightRequestByCustomer) {
+		
+		FreightRequestByVendorList result=restTemplate.postForObject(env.getProperty("data.url")+"/request/testrequest/getMatchingVendorReqFromCustomerReq",
+				freightRequestByCustomer, FreightRequestByVendorList.class);
+		
+		return result.getRequestList();
+
+
+		
 		
 	}
 
