@@ -2,7 +2,12 @@ package com.projectx.rest.controller.request;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,6 +17,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.projectx.mvc.domain.request.FreightRequestByVendorDTO;
 import com.projectx.rest.domain.request.FreightRequestByCustomer;
 import com.projectx.rest.domain.request.FreightRequestByVendor;
+import com.projectx.rest.exception.repository.completeregister.ValidationFailedException;
+import com.projectx.rest.exception.repository.quickregister.ResourceAlreadyPresentException;
+import com.projectx.rest.exception.repository.quickregister.ResourceNotFoundException;
 import com.projectx.rest.services.request.FreightRequestByVendorService;
 
 @RestController
@@ -22,29 +30,44 @@ public class FreightRequestByVendorController {
 	FreightRequestByVendorService freightRequestByVendorService;
 
 	@RequestMapping(method = RequestMethod.POST)
-	public FreightRequestByVendor newRequest(
-			@RequestBody FreightRequestByVendor freightRequestByVendor) {
+	public ResponseEntity<FreightRequestByVendor> newRequest(
+			@Valid @RequestBody FreightRequestByVendor freightRequestByVendor,BindingResult bindingResult) {
 
-		FreightRequestByVendor savedEntity=null;
+		if(bindingResult.hasErrors())
+			return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+		
+		ResponseEntity<FreightRequestByVendor> result=null;
 		
 		try{
-		savedEntity = freightRequestByVendorService
+			FreightRequestByVendor savedEntity = freightRequestByVendorService
 				.newRequest(freightRequestByVendor);
+			
+			result=new ResponseEntity<FreightRequestByVendor>(savedEntity, HttpStatus.CREATED);
+			
 		}
-		catch(Exception e)
+		catch(ResourceAlreadyPresentException e)
 		{
-			e.printStackTrace();
+			result=new ResponseEntity<>(HttpStatus.ALREADY_REPORTED);
+		}catch (ValidationFailedException e) {
+			result=new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
 		}
 
-		return savedEntity;
+		return result;
 	}
 
 	@RequestMapping(value = "/getById/{requestId}")
-	public FreightRequestByVendor getRequestById(@PathVariable Long requestId) {
-		FreightRequestByVendor savedEntity = freightRequestByVendorService
-				.getRequestById(requestId);
-
-		return savedEntity;
+	public ResponseEntity<FreightRequestByVendor> getRequestById(@PathVariable Long requestId) {
+		
+		try{
+			
+			FreightRequestByVendor savedEntity = freightRequestByVendorService
+					.getRequestById(requestId);
+			
+			return new ResponseEntity<FreightRequestByVendor>(savedEntity, HttpStatus.FOUND);
+		}catch(ResourceNotFoundException e)
+		{
+		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+		}
 	}
 
 	@RequestMapping(value = "/findByVendorId/{vendorId}")

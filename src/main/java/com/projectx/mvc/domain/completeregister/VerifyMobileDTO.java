@@ -10,19 +10,23 @@ public class VerifyMobileDTO {
 	private Integer mobileType;
 	
 	private Integer mobilePin;
+	
+	private String requestBy;
 
 	public VerifyMobileDTO() {
 
 	}
 
 	public VerifyMobileDTO(Long entityId, Integer entityType,
-			Integer mobileType, Integer mobilePin) {
+			Integer mobileType, Integer mobilePin, String requestBy) {
 		super();
 		this.entityId = entityId;
 		this.entityType = entityType;
 		this.mobileType = mobileType;
 		this.mobilePin = mobilePin;
+		this.requestBy = requestBy;
 	}
+
 
 
 
@@ -58,12 +62,20 @@ public class VerifyMobileDTO {
 	public void setMobilePin(Integer mobilePin) {
 		this.mobilePin = mobilePin;
 	}
+	
+	public String getRequestBy() {
+		return requestBy;
+	}
+
+	public void setRequestBy(String requestBy) {
+		this.requestBy = requestBy;
+	}
 
 	@Override
 	public String toString() {
 		return "VerifyMobileDTO [entityId=" + entityId + ", entityType="
 				+ entityType + ", mobileType=" + mobileType + ", mobilePin="
-				+ mobilePin + "]";
+				+ mobilePin + ", requestBy=" + requestBy + "]";
 	}
 
 	@Override
@@ -78,6 +90,8 @@ public class VerifyMobileDTO {
 				+ ((mobilePin == null) ? 0 : mobilePin.hashCode());
 		result = prime * result
 				+ ((mobileType == null) ? 0 : mobileType.hashCode());
+		result = prime * result
+				+ ((requestBy == null) ? 0 : requestBy.hashCode());
 		return result;
 	}
 
@@ -110,9 +124,14 @@ public class VerifyMobileDTO {
 				return false;
 		} else if (!mobileType.equals(other.mobileType))
 			return false;
+		if (requestBy == null) {
+			if (other.requestBy != null)
+				return false;
+		} else if (!requestBy.equals(other.requestBy))
+			return false;
 		return true;
 	}
 
-	
+		
 
 }

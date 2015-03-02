@@ -11,7 +11,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 
 
-import com.projectx.data.domain.completeregister.UpdateMobileVerificationStatusDTO;
+
+
+
+
+import com.projectx.data.domain.completeregister.UpdateMobileVerificationStatusUpdatedByDTO;
 import com.projectx.mvc.domain.completeregister.CustomerDetailsAndUpdateStatusDTO;
 import com.projectx.rest.domain.completeregister.CustomerDetails;
 import com.projectx.rest.domain.quickregister.EmailVerificationDetails;
@@ -19,6 +23,10 @@ import com.projectx.rest.domain.quickregister.EmailVerificationDetailsKey;
 import com.projectx.rest.domain.quickregister.MobileVerificationDetails;
 import com.projectx.rest.domain.quickregister.MobileVerificationDetailsKey;
 import com.projectx.rest.domain.quickregister.QuickRegisterEntity;
+import com.projectx.rest.exception.repository.completeregister.CustomerDetailsNotFoundException;
+import com.projectx.rest.exception.repository.completeregister.CustomerDetailsTransactionalUpdateFailedException;
+import com.projectx.rest.exception.repository.completeregister.ValidationFailedException;
+import com.projectx.rest.exception.repository.quickregister.DeleteQuickCreateDetailsEntityFailedException;
 import com.projectx.rest.repository.completeregister.CustomerDetailsRepository;
 import com.projectx.rest.services.completeregister.CustomerDetailsService;
 import com.projectx.rest.services.completeregister.TransactionalUpdatesService;
@@ -27,7 +35,6 @@ import com.projectx.rest.services.quickregister.MobileVerificationService;
 import com.projectx.rest.utils.MessagerSender;
 
 @Component
-@Profile(value={"Dev","Test"})
 public class CustomerDetailsHandler implements CustomerDetailsService {
 
 	
@@ -49,7 +56,7 @@ public class CustomerDetailsHandler implements CustomerDetailsService {
 		
 	@Override
 	public CustomerDetails createCustomerDetailsFromQuickRegisterEntity(
-			QuickRegisterEntity quickRegisterEntity) {
+			QuickRegisterEntity quickRegisterEntity) throws DeleteQuickCreateDetailsEntityFailedException,ValidationFailedException{
 	
 		
 		CustomerDetails newEntity=transactionalUpdatesService.deleteQuickRegisterEntityCreateDetails(quickRegisterEntity).getCustomerDetails();
@@ -61,7 +68,9 @@ public class CustomerDetailsHandler implements CustomerDetailsService {
 	
 	
 	@Override
-	public CustomerDetails mergeCustomerDetails(CustomerDetails customerDetails) {
+	public CustomerDetails mergeCustomerDetails(CustomerDetails customerDetails) 
+			throws CustomerDetailsTransactionalUpdateFailedException,ValidationFailedException
+	{
 		
 		CustomerDetails resultEntity=transactionalUpdatesService.updateCustomerDetails(customerDetails);
 				
@@ -72,10 +81,10 @@ public class CustomerDetailsHandler implements CustomerDetailsService {
 
 	@Override
 	public Boolean verifyMobileDetails(Long customerId, Integer customerType,
-			 Integer mobileType,Integer mobilePin) {
+			 Integer mobileType,Integer mobilePin,String updatedBy) {
 		
 		Boolean verificationStatus=mobileVerificationService
-				.verifyMobilePinUpdateStatusAndSendPassword(customerId, customerType, mobileType, mobilePin);
+				.verifyMobilePinUpdateStatusAndSendPassword(customerId, customerType, mobileType, mobilePin,updatedBy);
 		
 		return verificationStatus;
 	}
@@ -83,10 +92,10 @@ public class CustomerDetailsHandler implements CustomerDetailsService {
 	
 	@Override
 	public Boolean verifyEmailDetails(Long customerId, Integer customerType,
-			Integer emailType,  String emailHash) {
+			Integer emailType,  String emailHash,String requestedBy) {
 		
 		Boolean verificationStatus=emailVerificationService
-				.verifyEmailHashUpdateStatusAndSendPassword(customerId, customerType, emailType, emailHash);
+				.verifyEmailHashUpdateStatusAndSendPassword(customerId, customerType, emailType, emailHash,requestedBy);
 				
 		return verificationStatus;
 	}
@@ -94,9 +103,9 @@ public class CustomerDetailsHandler implements CustomerDetailsService {
 
 	@Override
 	public Boolean sendMobileVerificationDetails(Long customerId,
-			Integer customerType, Integer mobileType) {
+			Integer customerType, Integer mobileType,String updatedBy) {
 
-		Boolean sendStatus=mobileVerificationService.sendMobilePin(customerId, customerType, mobileType);
+		Boolean sendStatus=mobileVerificationService.sendMobilePin(customerId, customerType, mobileType,updatedBy);
 		
 		return sendStatus;
 	}
@@ -127,7 +136,7 @@ public class CustomerDetailsHandler implements CustomerDetailsService {
 
 
 	@Override
-	public CustomerDetails findById(Long customerId) {
+	public CustomerDetails findById(Long customerId) throws CustomerDetailsNotFoundException{
 		
 		CustomerDetails fetchedEntity=customerDetailsRepository.findOne(customerId);
 		

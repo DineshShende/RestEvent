@@ -1,6 +1,8 @@
 package com.projectx.rest.controller.completeregister;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -9,10 +11,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.projectx.data.domain.quickregister.CustomerIdTypeEmailTypeDTO;
 import com.projectx.data.domain.quickregister.CustomerIdTypeMobileTypeDTO;
+import com.projectx.data.domain.quickregister.CustomerIdTypeMobileTypeUpdatedByDTO;
 import com.projectx.mvc.domain.completeregister.VerifyEmailDTO;
 import com.projectx.mvc.domain.completeregister.VerifyMobileDTO;
 import com.projectx.rest.domain.completeregister.VendorDetails;
 import com.projectx.rest.domain.quickregister.QuickRegisterEntity;
+import com.projectx.rest.exception.repository.completeregister.VendorDetailsNotFoundException;
+import com.projectx.rest.exception.repository.completeregister.VendorDetailsTransactionalUpdateFailedException;
+import com.projectx.rest.exception.repository.quickregister.DeleteQuickCreateDetailsEntityFailedException;
 import com.projectx.rest.services.completeregister.VendorDetailsService;
 
 
@@ -24,32 +30,51 @@ public class VendorDetailsController {
 	VendorDetailsService vendorDetailsService;
 	
 	@RequestMapping(value="/createFromQuickRegister",method=RequestMethod.POST)
-	public VendorDetails createCustomerDetailsFromQuickRegisterEntity(@RequestBody QuickRegisterEntity quickRegisterEntity)
+	public ResponseEntity<VendorDetails> createCustomerDetailsFromQuickRegisterEntity(@RequestBody QuickRegisterEntity quickRegisterEntity)
 	{
-		VendorDetails savedEntity=vendorDetailsService.createCustomerDetailsFromQuickRegisterEntity(quickRegisterEntity);
-		
-		return savedEntity;
+		ResponseEntity<VendorDetails> result=null;
+		try{
+			VendorDetails savedEntity=vendorDetailsService.createCustomerDetailsFromQuickRegisterEntity(quickRegisterEntity);
+			result=new ResponseEntity<VendorDetails>(savedEntity, HttpStatus.OK);
+		}catch(DeleteQuickCreateDetailsEntityFailedException e)
+		{
+			result=new ResponseEntity<>(HttpStatus.ALREADY_REPORTED);
+		}
+				
+		return result;
 	}
 	
 	@RequestMapping(value="/update",method=RequestMethod.POST)
-	public VendorDetails update(@RequestBody VendorDetails vendorDetails)
+	public ResponseEntity<VendorDetails> update(@RequestBody VendorDetails vendorDetails)
 	{
-		VendorDetails savedEntity=vendorDetailsService.updateVendorDetails(vendorDetails);
+		ResponseEntity<VendorDetails> result=null;
 		
-		//System.out.println(savedEntity);
+		try{
+			VendorDetails savedEntity=vendorDetailsService.updateVendorDetails(vendorDetails);
+			result=new ResponseEntity<VendorDetails>(savedEntity, HttpStatus.OK);
+		}catch(VendorDetailsTransactionalUpdateFailedException e)
+		{
+			result=new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
+		}
 		
-		return savedEntity;
+		return result;
 	}
 	
 	@RequestMapping(value="/getVendorDetailsById/{vendorId}",method=RequestMethod.GET)
-	public VendorDetails getCustomerDetailsById(@PathVariable Long vendorId)
+	public ResponseEntity<VendorDetails> getCustomerDetailsById(@PathVariable Long vendorId)
 	{
-		VendorDetails fetchedEntity=vendorDetailsService.findById(vendorId);
+		ResponseEntity<VendorDetails> result=null;
 		
-		if(fetchedEntity!=null)
-			return fetchedEntity;
-		else
-			return new VendorDetails();
+		try{
+			VendorDetails fetchedEntity=vendorDetailsService.findById(vendorId);
+			result=new ResponseEntity<VendorDetails>(fetchedEntity, HttpStatus.FOUND);
+		}catch(VendorDetailsNotFoundException e)
+		{
+			result=new ResponseEntity<>(HttpStatus.NO_CONTENT);
+		}
+		
+		return result;
+		
 	}
 	
 	@RequestMapping(value="/verifyMobileDetails",method=RequestMethod.POST)
@@ -57,7 +82,7 @@ public class VendorDetailsController {
 	{
 		Boolean result=vendorDetailsService
 				.verifyMobileDetails(verifyMobileDTO.getEntityId(), verifyMobileDTO.getEntityType(), 
-						verifyMobileDTO.getMobileType(), verifyMobileDTO.getMobilePin());
+						verifyMobileDTO.getMobileType(), verifyMobileDTO.getMobilePin(),verifyMobileDTO.getRequestBy());
 		
 		return result;
 	}
@@ -66,16 +91,17 @@ public class VendorDetailsController {
 	public Boolean verifyEmailDetails(@RequestBody VerifyEmailDTO verifyEmailDTO)
 	{
 		Boolean result=vendorDetailsService
-						.verifyEmailDetails(verifyEmailDTO.getEntityId(), verifyEmailDTO.getEntityType(),
-								verifyEmailDTO.getEmailType(),  verifyEmailDTO.getEmailHash());
+						.verifyEmailDetails(verifyEmailDTO.getCustomerId(), verifyEmailDTO.getCustomerType(),
+								verifyEmailDTO.getEmailType(),  verifyEmailDTO.getEmailHash(),verifyEmailDTO.getUpdatedBy());
 		return result;
 	}
 	
 	@RequestMapping(value="/sendMobileVerificationDetails",method=RequestMethod.POST)
-	public Boolean sendMobileVerificationDetails(@RequestBody CustomerIdTypeMobileTypeDTO customerIdTypeMobileDTO)
+	public Boolean sendMobileVerificationDetails(@RequestBody CustomerIdTypeMobileTypeUpdatedByDTO customerIdTypeMobileDTO)
 	{
 		Boolean result=vendorDetailsService
-				.sendMobileVerificationDetails(customerIdTypeMobileDTO.getCustomerId(), customerIdTypeMobileDTO.getCustomerType(), customerIdTypeMobileDTO.getMobileType());
+				.sendMobileVerificationDetails(customerIdTypeMobileDTO.getCustomerId(), customerIdTypeMobileDTO.getCustomerType(),
+						customerIdTypeMobileDTO.getMobileType(),customerIdTypeMobileDTO.getUpdatedBy());
 		
 		return result;
 				

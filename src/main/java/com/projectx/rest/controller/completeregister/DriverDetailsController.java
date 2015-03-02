@@ -3,6 +3,8 @@ package com.projectx.rest.controller.completeregister;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -10,6 +12,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.projectx.rest.domain.completeregister.DriverDetails;
+import com.projectx.rest.exception.repository.completeregister.DriverDetailsAlreadyPresentException;
+import com.projectx.rest.exception.repository.completeregister.DriverDetailsNotFoundException;
+import com.projectx.rest.exception.repository.completeregister.DriverDetailsUpdateFailedException;
 import com.projectx.rest.services.completeregister.DriverDetailsService;
 
 @RestController
@@ -20,29 +25,51 @@ public class DriverDetailsController {
 	DriverDetailsService driverDetailsService;
 	
 	@RequestMapping(method=RequestMethod.POST)
-	public DriverDetails addDriver(@RequestBody DriverDetails driverDetails)
+	public ResponseEntity<DriverDetails> addDriver(@RequestBody DriverDetails driverDetails)
 	{
-		DriverDetails savedDriver=driverDetailsService.addDriver(driverDetails);
+		ResponseEntity<DriverDetails> result=null;
 		
-		return savedDriver;
+		try{
+			DriverDetails savedDriver=driverDetailsService.addDriver(driverDetails);
+			result=new ResponseEntity<DriverDetails>(savedDriver, HttpStatus.CREATED);
+		}catch(DriverDetailsAlreadyPresentException e)
+		{
+			result=new ResponseEntity<>(HttpStatus.ALREADY_REPORTED);
+		}
+		
+		return result;
 		
 	}
 	
 	@RequestMapping(value="/update",method=RequestMethod.POST)
-	public DriverDetails updateDriver(@RequestBody DriverDetails driverDetails)
+	public ResponseEntity<DriverDetails> updateDriver(@RequestBody DriverDetails driverDetails)
 	{
-		DriverDetails savedDriver=driverDetailsService.updateDriver(driverDetails);
+		ResponseEntity<DriverDetails> result=null;
 		
-		return savedDriver;
+		try{
+			DriverDetails savedDriver=driverDetailsService.updateDriver(driverDetails);
+			result=new ResponseEntity<DriverDetails>(savedDriver, HttpStatus.OK);
+		}catch(DriverDetailsUpdateFailedException e)
+		{
+			result=new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
+		}
+		return result;
 		
 	}
 	
 	@RequestMapping(value="/getByDriverId/{driverId}")
-	public DriverDetails getByDriverId(@PathVariable Long driverId)
+	public ResponseEntity<DriverDetails> getByDriverId(@PathVariable Long driverId)
 	{
-		DriverDetails savedDriver=driverDetailsService.getDriverById(driverId);
+		ResponseEntity<DriverDetails> result=null;
+		try{
+			DriverDetails savedDriver=driverDetailsService.getDriverById(driverId);
+			result=new ResponseEntity<DriverDetails>(savedDriver, HttpStatus.FOUND);
+		}catch(DriverDetailsNotFoundException e)
+		{
+			result=new ResponseEntity<>(HttpStatus.NO_CONTENT);
+		}
 		
-		return savedDriver;
+		return result;
 		
 	}
 	

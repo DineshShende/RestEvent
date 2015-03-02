@@ -10,6 +10,7 @@ import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import static com.projectx.rest.config.Constants.SPRING_PROFILE_ACTIVE;
 import static com.projectx.rest.fixture.completeregister.DocumentDetailsDataFixture.*;
 
 import com.projectx.rest.config.Application;
@@ -17,7 +18,7 @@ import com.projectx.rest.domain.completeregister.DocumentDetails;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
-@ActiveProfiles(value="Dev")
+@ActiveProfiles(SPRING_PROFILE_ACTIVE)
 //@Transactional
 public class DocumentDetailsServiceTest {
 

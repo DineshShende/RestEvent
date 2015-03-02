@@ -6,6 +6,9 @@ import java.util.Date;
 
 
 
+
+import javax.validation.constraints.NotNull;
+
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.projectx.rest.util.serializer.JsonDateDeSerializer;
@@ -16,20 +19,25 @@ public class FreightRequestByVendor {
 
 	private Long requestId;
 	
+	@NotNull
 	private String vehicleRegistrationNumber;
 	
+	@NotNull
 	private Integer source;
 	
+	@NotNull
 	private Integer destination;
 	
 	private Long driverId;
 	
+	@NotNull
 	private Date availableDate;
 	
 	private String availableTime;
 	
 	private Integer pickupRangeInKm;
 	
+	@NotNull
 	private Long vendorId;
 
 

@@ -4,22 +4,22 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.projectx.rest.domain.completeregister.VehicleDetailsDTO;
+import com.projectx.rest.domain.completeregister.VehicleDetails;
 
 @Service
 
 public interface VehicleDetailsService {
 	
-	VehicleDetailsDTO addVehicle(VehicleDetailsDTO vehicleDetails);
+	VehicleDetails addVehicle(VehicleDetails vehicleDetails);
 	
 	
 	Boolean deleteVehicle(Long vehicleId);
 	
-	VehicleDetailsDTO getVehicleById(Long vehicleId);
+	VehicleDetails getVehicleById(Long vehicleId);
 	
-	VehicleDetailsDTO getVehicleByRegistartionNumber(String registartionNumber);
+	VehicleDetails getVehicleByRegistartionNumber(String registartionNumber);
 	
-	List<VehicleDetailsDTO> vehiclesByVendorId(Long vendorId);
+	List<VehicleDetails> vehiclesByVendorId(Long vendorId);
 	
 	Integer count();
 	

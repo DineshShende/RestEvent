@@ -3,6 +3,8 @@ package com.projectx.rest.controller.completeregister;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,10 +13,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.projectx.data.domain.quickregister.CustomerIdTypeEmailTypeDTO;
 import com.projectx.data.domain.quickregister.CustomerIdTypeMobileTypeDTO;
+import com.projectx.data.domain.quickregister.CustomerIdTypeMobileTypeUpdatedByDTO;
 import com.projectx.mvc.domain.completeregister.VerifyEmailDTO;
 import com.projectx.mvc.domain.completeregister.VerifyMobileDTO;
 import com.projectx.rest.domain.completeregister.CustomerDetails;
 import com.projectx.rest.domain.quickregister.QuickRegisterEntity;
+import com.projectx.rest.exception.repository.completeregister.CustomerDetailsNotFoundException;
+import com.projectx.rest.exception.repository.completeregister.CustomerDetailsTransactionalUpdateFailedException;
+import com.projectx.rest.exception.repository.quickregister.DeleteQuickCreateDetailsEntityFailedException;
 import com.projectx.rest.services.completeregister.CustomerDetailsService;
 
 @RestController
@@ -25,32 +31,50 @@ public class CustomerDetailsController {
 	CustomerDetailsService customerDetailsService;
 	
 	@RequestMapping(value="/createFromQuickRegister",method=RequestMethod.POST)
-	public CustomerDetails createCustomerDetailsFromQuickRegisterEntity(@RequestBody QuickRegisterEntity quickRegisterEntity)
+	public ResponseEntity<CustomerDetails> createCustomerDetailsFromQuickRegisterEntity(@RequestBody QuickRegisterEntity quickRegisterEntity)
 	{
-		CustomerDetails savedEntity=customerDetailsService.createCustomerDetailsFromQuickRegisterEntity(quickRegisterEntity);
+		ResponseEntity<CustomerDetails> result=null;
 		
-		return savedEntity;
+		try{
+			CustomerDetails savedEntity=customerDetailsService.createCustomerDetailsFromQuickRegisterEntity(quickRegisterEntity);
+			result=new ResponseEntity<CustomerDetails>(savedEntity, HttpStatus.OK);
+		}catch(DeleteQuickCreateDetailsEntityFailedException e)
+		{
+			result=new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
+		}
+		return result;
 	}
 	
 	@RequestMapping(method=RequestMethod.POST)
-	public CustomerDetails merge(@RequestBody CustomerDetails customerDetails)
+	public ResponseEntity<CustomerDetails> merge(@RequestBody CustomerDetails customerDetails)
 	{
-		CustomerDetails savedEntity=customerDetailsService.mergeCustomerDetails(customerDetails);
+		ResponseEntity<CustomerDetails> result=null;
 		
-		System.out.println(savedEntity);
+		try{
+			CustomerDetails savedEntity=customerDetailsService.mergeCustomerDetails(customerDetails);
+			result=new ResponseEntity<CustomerDetails>(savedEntity, HttpStatus.OK);
+		}catch(CustomerDetailsTransactionalUpdateFailedException e)
+		{
+			result=new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
+		}
 		
-		return savedEntity;
+		return result;
 	}
 	
 	@RequestMapping(value="/getCustomerDetailsById/{customerId}",method=RequestMethod.GET)
-	public CustomerDetails getCustomerDetailsById(@PathVariable Long customerId)
+	public ResponseEntity<CustomerDetails> getCustomerDetailsById(@PathVariable Long customerId)
 	{
-		CustomerDetails fetchedEntity=customerDetailsService.findById(customerId);
+		ResponseEntity<CustomerDetails> result=null;
 		
-		if(fetchedEntity!=null)
-			return fetchedEntity;
-		else
-			return new CustomerDetails();
+		try{
+			CustomerDetails fetchedEntity=customerDetailsService.findById(customerId);
+			result=new ResponseEntity<CustomerDetails>(fetchedEntity, HttpStatus.FOUND);
+		}catch(CustomerDetailsNotFoundException e)
+		{
+			result=new ResponseEntity<>(HttpStatus.NO_CONTENT);
+		}
+		
+		return result;
 	}
 	
 	@RequestMapping(value="/verifyMobileDetails",method=RequestMethod.POST)
@@ -58,7 +82,7 @@ public class CustomerDetailsController {
 	{
 		Boolean result=customerDetailsService
 				.verifyMobileDetails(verifyMobileDTO.getEntityId(), verifyMobileDTO.getEntityType(), 
-						verifyMobileDTO.getMobileType(), verifyMobileDTO.getMobilePin());
+						verifyMobileDTO.getMobileType(), verifyMobileDTO.getMobilePin(),verifyMobileDTO.getRequestBy());
 		
 		return result;
 	}
@@ -67,16 +91,17 @@ public class CustomerDetailsController {
 	public Boolean verifyEmailDetails(@RequestBody VerifyEmailDTO verifyEmailDTO)
 	{
 		Boolean result=customerDetailsService
-						.verifyEmailDetails(verifyEmailDTO.getEntityId(), verifyEmailDTO.getEntityType(),
-								verifyEmailDTO.getEmailType(),  verifyEmailDTO.getEmailHash());
+						.verifyEmailDetails(verifyEmailDTO.getCustomerId(), verifyEmailDTO.getCustomerType(),
+								verifyEmailDTO.getEmailType(),  verifyEmailDTO.getEmailHash(),verifyEmailDTO.getUpdatedBy());
 		return result;
 	}
 	
 	@RequestMapping(value="/sendMobileVerificationDetails",method=RequestMethod.POST)
-	public Boolean sendMobileVerificationDetails(@RequestBody CustomerIdTypeMobileTypeDTO customerIdTypeMobileDTO)
+	public Boolean sendMobileVerificationDetails(@RequestBody CustomerIdTypeMobileTypeUpdatedByDTO customerIdTypeMobileDTO)
 	{
 		Boolean result=customerDetailsService
-				.sendMobileVerificationDetails(customerIdTypeMobileDTO.getCustomerId(), customerIdTypeMobileDTO.getCustomerType(), customerIdTypeMobileDTO.getMobileType());
+				.sendMobileVerificationDetails(customerIdTypeMobileDTO.getCustomerId(), customerIdTypeMobileDTO.getCustomerType(), 
+						customerIdTypeMobileDTO.getMobileType(),customerIdTypeMobileDTO.getUpdatedBy());
 		
 		return result;
 				
@@ -106,11 +131,12 @@ public class CustomerDetailsController {
 		return true;
 	}
 	
+	/*
 	@RequestMapping(value="/test",method=RequestMethod.GET)
 	public QuickRegisterEntity quickRegisterEntity()
 	{
 		return new QuickRegisterEntity(1L, "ABC", "ABC", "ABC", 1111L, 1111, false, false, 1, new Date(), new Date(), "CUST");
 		
 	}
-	
+	*/
 }

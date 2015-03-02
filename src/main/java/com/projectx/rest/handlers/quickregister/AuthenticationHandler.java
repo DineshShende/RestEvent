@@ -8,6 +8,8 @@ import java.text.ParsePosition;
 import java.util.Date;
 import java.util.HashMap;
 
+import javax.mail.AuthenticationFailedException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
@@ -22,6 +24,13 @@ import com.projectx.rest.domain.completeregister.VendorDetails;
 import com.projectx.rest.domain.quickregister.AuthenticationDetails;
 import com.projectx.rest.domain.quickregister.AuthenticationDetailsKey;
 import com.projectx.rest.domain.quickregister.QuickRegisterEntity;
+import com.projectx.rest.exception.AuthenticationService.LoginVerificationFailedException;
+import com.projectx.rest.exception.repository.completeregister.CustomerDetailsNotFoundException;
+import com.projectx.rest.exception.repository.completeregister.ValidationFailedException;
+import com.projectx.rest.exception.repository.completeregister.VendorDetailsNotFoundException;
+import com.projectx.rest.exception.repository.quickregister.AuthenticationDetailsNotFoundException;
+import com.projectx.rest.exception.repository.quickregister.QuickRegisterEntityNotFoundException;
+import com.projectx.rest.exception.repository.quickregister.ResourceAlreadyPresentException;
 import com.projectx.rest.repository.quickregister.AuthenticationDetailsRepository;
 import com.projectx.rest.services.completeregister.CustomerDetailsService;
 import com.projectx.rest.services.completeregister.VendorDetailsService;
@@ -34,7 +43,6 @@ import com.projectx.rest.utils.MessagerSender;
 
 
 @Component
-@Profile(value={"Dev","Test"})
 public class AuthenticationHandler implements AuthenticationService {
 
 	@Autowired
@@ -89,13 +97,14 @@ public class AuthenticationHandler implements AuthenticationService {
 	
 	@Override
 	public AuthenticationDetails verifyLoginDetails(
-			LoginVerificationDTO loginVerificationDTO) {
+			LoginVerificationDTO loginVerificationDTO)throws AuthenticationDetailsNotFoundException,LoginVerificationFailedException {
 		
 		AuthenticationDetails customerAuthenticationDetails=new AuthenticationDetails();
 		
 		if(isMobileNumber(loginVerificationDTO.getLoginEntity()))
 		{
 			customerAuthenticationDetails=customerAuthenticationDetailsRepository.getByMobile(Long.parseLong(loginVerificationDTO.getLoginEntity()));
+						
 		}
 		else
 		{
@@ -107,7 +116,7 @@ public class AuthenticationHandler implements AuthenticationService {
 			customerAuthenticationDetailsRepository.incrementLastUnsucessfullAttempts(customerAuthenticationDetails.getKey().getCustomerId(),
 					customerAuthenticationDetails.getKey().getCustomerType());
 			
-			customerAuthenticationDetails=new AuthenticationDetails();	
+			throw new LoginVerificationFailedException(); 	
 			
 		}
 		
@@ -117,12 +126,12 @@ public class AuthenticationHandler implements AuthenticationService {
 	
 	
 	@Override
-	public AuthenticationDetails verifyDefaultEmailLoginDetails(
-			LoginVerificationWithDefaultEmailPasswordDTO emailPasswordDTO) {
+	public AuthenticationDetails verifyDefaultEmailLoginDetails(LoginVerificationWithDefaultEmailPasswordDTO emailPasswordDTO)
+					throws AuthenticationDetailsNotFoundException,LoginVerificationFailedException {
 
 		AuthenticationDetails customerAuthenticationDetails=new AuthenticationDetails(); 
 		
-		customerAuthenticationDetails=customerAuthenticationDetailsRepository.getByCustomerIdType(
+			customerAuthenticationDetails=customerAuthenticationDetailsRepository.getByCustomerIdType(
 				emailPasswordDTO.getCustomerId(),emailPasswordDTO.getCustomerType());
 		
 		if(customerAuthenticationDetails.getKey()!=null &&
@@ -132,8 +141,7 @@ public class AuthenticationHandler implements AuthenticationService {
 		}
 		else
 		{
-			customerAuthenticationDetails=new AuthenticationDetails();
-			return customerAuthenticationDetails;
+			throw new LoginVerificationFailedException();
 		}
 		
 		
@@ -142,7 +150,8 @@ public class AuthenticationHandler implements AuthenticationService {
 	
 	@Override
 	public Boolean sendOrResendOrResetDefaultPassword(Long entityId,
-			Integer entityType, Boolean resetFlag, Boolean resendFlag) {
+			Integer entityType, Boolean resetFlag, Boolean resendFlag)throws AuthenticationDetailsNotFoundException,
+			QuickRegisterEntityNotFoundException,CustomerDetailsNotFoundException,VendorDetailsNotFoundException {
 		
 		
 		HashMap<String,Object> infoMap=informationMapper.getBasicInfoByEntityIdType(entityId, entityType);
@@ -222,7 +231,8 @@ public class AuthenticationHandler implements AuthenticationService {
 	
 
 	@Override
-	public Boolean sendDefaultPassword(QuickRegisterEntity customer,Boolean resetFlag) 
+	public Boolean sendDefaultPassword(QuickRegisterEntity customer,Boolean resetFlag) throws AuthenticationDetailsNotFoundException,
+		QuickRegisterEntityNotFoundException,CustomerDetailsNotFoundException,VendorDetailsNotFoundException
 	{
 		Boolean status=sendOrResendOrResetDefaultPassword(customer.getCustomerId(), customer.getCustomerType(), resetFlag, false);
 		
@@ -233,7 +243,8 @@ public class AuthenticationHandler implements AuthenticationService {
 	
 	@Override
 	public Boolean resendDefaultPassword(
-			QuickRegisterEntity customer) {
+			QuickRegisterEntity customer) throws AuthenticationDetailsNotFoundException,
+				QuickRegisterEntityNotFoundException,CustomerDetailsNotFoundException,VendorDetailsNotFoundException{
 
 		Boolean status=sendOrResendOrResetDefaultPassword(customer.getCustomerId(), customer.getCustomerType(), false, true);
 		
@@ -241,7 +252,8 @@ public class AuthenticationHandler implements AuthenticationService {
 	}
 
 	@Override
-	public Boolean resetPassword(CustomerIdTypeDTO customerIdDTO) 
+	public Boolean resetPassword(CustomerIdTypeDTO customerIdDTO) throws AuthenticationDetailsNotFoundException,
+	QuickRegisterEntityNotFoundException,CustomerDetailsNotFoundException,VendorDetailsNotFoundException 
 	{
 		QuickRegisterEntity customer=customerQuickRegisterService
 				.getByEntityId(customerIdDTO.getCustomerId());
@@ -250,7 +262,8 @@ public class AuthenticationHandler implements AuthenticationService {
 	}
 	
 	@Override
-	public Boolean resendPassword(CustomerIdTypeDTO customerIdDTO) {
+	public Boolean resendPassword(CustomerIdTypeDTO customerIdDTO) throws AuthenticationDetailsNotFoundException,
+		QuickRegisterEntityNotFoundException,CustomerDetailsNotFoundException,VendorDetailsNotFoundException{
 
 		QuickRegisterEntity customer=customerQuickRegisterService
 				.getByEntityId(customerIdDTO.getCustomerId());
@@ -272,14 +285,14 @@ public class AuthenticationHandler implements AuthenticationService {
 	}
 
 	@Override
-	public AuthenticationDetails getByEntityIdType(Long customerId,Integer customerType)
+	public AuthenticationDetails getByEntityIdType(Long customerId,Integer customerType) throws AuthenticationDetailsNotFoundException
 	{
 		return customerAuthenticationDetailsRepository.getByCustomerIdType(customerId,customerType);
 	}
 	
 	@Override
 	public AuthenticationDetails saveCustomerAuthenticationDetails(
-			AuthenticationDetails entity) {
+			AuthenticationDetails entity) throws ResourceAlreadyPresentException,ValidationFailedException{
 		
 		AuthenticationDetails customerAuthenticationDetails=customerAuthenticationDetailsRepository.save(entity);
 		
@@ -290,7 +303,7 @@ public class AuthenticationHandler implements AuthenticationService {
 	
 	
 	@Override
-	public QuickRegisterEntity resetPasswordByEmailOrMobileRedirect(String entity) {
+	public QuickRegisterEntity resetPasswordByEmailOrMobileRedirect(String entity) throws QuickRegisterEntityNotFoundException {
 		
 		//TODO
 		

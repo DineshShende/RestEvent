@@ -8,6 +8,7 @@ import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import static com.projectx.rest.config.Constants.SPRING_PROFILE_ACTIVE;
 import static com.projectx.rest.fixture.quickregister.EmailVerificationDetailsFixtures.standardCustomerEmailVerificationDetails;
 import static com.projectx.rest.fixture.quickregister.MobileVericationDetailsFixtures.standardCustomerMobileVerificationDetails;
 import static com.projectx.rest.fixture.quickregister.QuickRegisterDataFixture.*;
@@ -20,10 +21,12 @@ import com.projectx.rest.domain.quickregister.CustomerQuickRegisterStatusEntity;
 import com.projectx.rest.domain.quickregister.EmailVerificationDetails;
 import com.projectx.rest.domain.quickregister.MobileVerificationDetails;
 import com.projectx.rest.domain.quickregister.QuickRegisterEntity;
+import com.projectx.rest.exception.repository.quickregister.QuickRegisterEntityNotFoundException;
+import com.projectx.rest.exception.repository.quickregister.ResourceNotFoundException;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
-@ActiveProfiles(value="Dev")
+@ActiveProfiles(SPRING_PROFILE_ACTIVE)
 public class QuickRegisterServiceTest {
 
 	@Autowired
@@ -72,7 +75,7 @@ public class QuickRegisterServiceTest {
 
 		
 		assertTrue(emailVerificationService.verifyEmailHashUpdateStatusAndSendPassword(fetchedEntity.getCustomerId(),
-				fetchedEntity.getCustomerType(),1, emailVerificationDetails.getEmailHash()));
+				fetchedEntity.getCustomerType(),1, emailVerificationDetails.getEmailHash(),emailVerificationDetails.getUpdatedBy()));
 
 
 		assertEquals(REGISTER_EMAIL_ALREADY_REGISTERED_VERIFIED,quickRegisterService
@@ -137,7 +140,8 @@ public class QuickRegisterServiceTest {
 
 		
 		assertTrue(emailVerificationService
-				.verifyEmailHashUpdateStatusAndSendPassword(fetchedEntity.getCustomerId(),fetchedEntity.getCustomerType(),EMAIL_TYPE_PRIMARY,emailVerificationDetails.getEmailHash()));
+				.verifyEmailHashUpdateStatusAndSendPassword(fetchedEntity.getCustomerId(),fetchedEntity.getCustomerType(),EMAIL_TYPE_PRIMARY,emailVerificationDetails.getEmailHash(),
+						fetchedEntity.getUpdatedBy()));
 		
 		assertEquals(REGISTER_EMAIL_MOBILE_ALREADY_REGISTERED_EMAIL_VERIFIED ,quickRegisterService
 				.checkIfAlreadyRegistered(standardEmailMobileCustomerDTO()).getStatus());
@@ -148,7 +152,7 @@ public class QuickRegisterServiceTest {
 		
 		
 		assertTrue(mobileVerificationService.verifyMobilePinUpdateStatusAndSendPassword(fetchedEntity.getCustomerId(),
-				fetchedEntity.getCustomerType(),MOB_TYPE_PRIMARY ,mobileVerificationDetails.getMobilePin()));
+				fetchedEntity.getCustomerType(),MOB_TYPE_PRIMARY ,mobileVerificationDetails.getMobilePin(),mobileVerificationDetails.getUpdatedBy()));
 		
 		assertEquals(REGISTER_EMAIL_MOBILE_ALREADY_REGISTERED_EMAIL_MOBILE_VERIFIED,quickRegisterService
 				.checkIfAlreadyRegistered(standardEmailMobileCustomerDTO()).getStatus());
@@ -188,7 +192,7 @@ public class QuickRegisterServiceTest {
 				(fetchedEntity.getCustomerId(),fetchedEntity.getCustomerType(), MOB_TYPE_PRIMARY);
 				
 		assertTrue(mobileVerificationService.verifyMobilePinUpdateStatusAndSendPassword(fetchedEntity.getCustomerId(),
-				fetchedEntity.getCustomerType(),MOB_TYPE_PRIMARY ,mobileVerificationDetails.getMobilePin()));
+				fetchedEntity.getCustomerType(),MOB_TYPE_PRIMARY ,mobileVerificationDetails.getMobilePin(),mobileVerificationDetails.getUpdatedBy()));
 		
 		assertEquals(REGISTER_EMAIL_MOBILE_ALREADY_REGISTERED_MOBILE_VERIFIED ,quickRegisterService
 				.checkIfAlreadyRegistered(standardEmailMobileCustomerDTO()).getStatus());
@@ -200,7 +204,7 @@ public class QuickRegisterServiceTest {
 		
 		
 		assertTrue(emailVerificationService.verifyEmailHashUpdateStatusAndSendPassword(fetchedEntity.getCustomerId(), 
-				fetchedEntity.getCustomerType(),EMAIL_TYPE_PRIMARY,emailVerificationDetails.getEmailHash()));
+				fetchedEntity.getCustomerType(),EMAIL_TYPE_PRIMARY,emailVerificationDetails.getEmailHash(),emailVerificationDetails.getUpdatedBy()));
 		
 		assertEquals(REGISTER_EMAIL_MOBILE_ALREADY_REGISTERED_EMAIL_MOBILE_VERIFIED,quickRegisterService
 				.checkIfAlreadyRegistered(standardEmailMobileCustomerDTO()).getStatus());
@@ -293,8 +297,8 @@ public class QuickRegisterServiceTest {
 		assertEquals(standardMobileCustomerAfterInitialization().getPincode(), initializedCustomer.getPincode());
 		assertEquals(standardMobileCustomerAfterInitialization().getIsEmailVerified(), initializedCustomer.getIsEmailVerified());
 		assertEquals(standardMobileCustomerAfterInitialization().getIsMobileVerified(), initializedCustomer.getIsMobileVerified());
-		assertTrue(Math.abs(standardMobileCustomerAfterInitialization().getInsertTime().getTime()- initializedCustomer.getInsertTime().getTime())<60*1000);
-		assertTrue(Math.abs(standardMobileCustomerAfterInitialization().getUpdateTime().getTime()- initializedCustomer.getUpdateTime().getTime())<60*1000);
+		assertTrue(Math.abs(standardMobileCustomerAfterInitialization().getInsertTime().getTime()- initializedCustomer.getInsertTime().getTime())<5*60*1000);
+		assertTrue(Math.abs(standardMobileCustomerAfterInitialization().getUpdateTime().getTime()- initializedCustomer.getUpdateTime().getTime())<5*60*1000);
 		assertEquals(standardMobileCustomerAfterInitialization().getUpdatedBy(), initializedCustomer.getUpdatedBy());
 		
 				
@@ -317,8 +321,8 @@ public class QuickRegisterServiceTest {
 		assertEquals(standardEmailMobileCustomerAfterInitialization().getPincode(), initializedCustomer.getPincode());
 		assertEquals(standardEmailMobileCustomerAfterInitialization().getIsEmailVerified(), initializedCustomer.getIsEmailVerified());
 		assertEquals(standardEmailMobileCustomerAfterInitialization().getIsMobileVerified(), initializedCustomer.getIsMobileVerified());
-		assertTrue(Math.abs(standardEmailMobileCustomerAfterInitialization().getInsertTime().getTime()- initializedCustomer.getInsertTime().getTime())<60*1000);
-		assertTrue(Math.abs(standardEmailMobileCustomerAfterInitialization().getUpdateTime().getTime()- initializedCustomer.getUpdateTime().getTime())<60*1000);
+		assertTrue(Math.abs(standardEmailMobileCustomerAfterInitialization().getInsertTime().getTime()- initializedCustomer.getInsertTime().getTime())<5*60*1000);
+		assertTrue(Math.abs(standardEmailMobileCustomerAfterInitialization().getUpdateTime().getTime()- initializedCustomer.getUpdateTime().getTime())<5*60*1000);
 		assertEquals(standardEmailMobileCustomerAfterInitialization().getUpdatedBy(), initializedCustomer.getUpdatedBy());
 		
 		
@@ -340,8 +344,8 @@ public class QuickRegisterServiceTest {
 		assertEquals(standardEmailCustomerAfterInitialization().getPincode(), initializedCustomer.getPincode());
 		assertEquals(standardEmailCustomerAfterInitialization().getIsEmailVerified(), initializedCustomer.getIsEmailVerified());
 		assertEquals(standardEmailCustomerAfterInitialization().getIsMobileVerified(), initializedCustomer.getIsMobileVerified());
-		assertTrue(Math.abs(standardEmailCustomerAfterInitialization().getInsertTime().getTime()- initializedCustomer.getInsertTime().getTime())<60*1000);
-		assertTrue(Math.abs(standardEmailCustomerAfterInitialization().getUpdateTime().getTime()- initializedCustomer.getUpdateTime().getTime())<60*1000);
+		assertTrue(Math.abs(standardEmailCustomerAfterInitialization().getInsertTime().getTime()- initializedCustomer.getInsertTime().getTime())<5*60*1000);
+		assertTrue(Math.abs(standardEmailCustomerAfterInitialization().getUpdateTime().getTime()- initializedCustomer.getUpdateTime().getTime())<5*60*1000);
 		assertEquals(standardEmailCustomerAfterInitialization().getUpdatedBy(), initializedCustomer.getUpdatedBy());
 		
 		
@@ -496,10 +500,23 @@ public class QuickRegisterServiceTest {
 	@Test
 	public void getCustomerQuickRegisterEntityByEmailAndMobile() throws Exception
 	{
-		assertNull(quickRegisterService.getByEmail(CUST_EMAIL).getCustomerId());
+		QuickRegisterEntity quickRegisterEntityNull=null;
 		
-		assertNull(quickRegisterService.getByMobile(CUST_MOBILE).getCustomerId());
+		try{
+			quickRegisterEntityNull=quickRegisterService.getByEmail(CUST_EMAIL);
+		}catch(ResourceNotFoundException e)
+		{
+			assertNull(quickRegisterEntityNull);
+		}
 		
+		try{
+			quickRegisterEntityNull=quickRegisterService.getByMobile(CUST_MOBILE);
+		}catch(ResourceNotFoundException e)
+		{
+			assertNull(quickRegisterEntityNull);
+		}
+		
+			
 		CustomerQuickRegisterEmailMobileVerificationEntity saved=quickRegisterService.saveNewCustomerQuickRegisterEntity(standardEmailMobileCustomerAfterInitialization());
 		
 		

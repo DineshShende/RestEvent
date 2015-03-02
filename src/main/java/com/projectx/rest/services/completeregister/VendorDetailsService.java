@@ -17,11 +17,11 @@ public interface VendorDetailsService {
 	
 	VendorDetails findById(Long vendorId);
 	
-	Boolean verifyMobileDetails(Long vendorId,Integer entityType,Integer mobileType,Integer mobilePin);
+	Boolean verifyMobileDetails(Long vendorId,Integer entityType,Integer mobileType,Integer mobilePin,String updatedBy);
 	
-	Boolean verifyEmailDetails(Long vendorId,Integer entityType,Integer emailType,String emailHash);
+	Boolean verifyEmailDetails(Long vendorId,Integer entityType,Integer emailType,String emailHash,String requestedBy);
 	
-	Boolean sendMobileVerificationDetails(Long vendorId,Integer entityType,Integer mobileType);
+	Boolean sendMobileVerificationDetails(Long vendorId,Integer entityType,Integer mobileType,String updatedBy);
 	
 	Boolean sendEmailVerificationDetails(Long vendorId,Integer entityType,Integer emailType);
 	
@@ -29,8 +29,5 @@ public interface VendorDetailsService {
 	
 	Integer count();
 	
-	//MobileVerificationDetails saveMobileVerificationDetails(MobileVerificationDetails mobileVerificationDetails);
-	
-	//EmailVerificationDetails saveEmailVerificationDetails(EmailVerificationDetails emailVerificationDetails);
 	
 }

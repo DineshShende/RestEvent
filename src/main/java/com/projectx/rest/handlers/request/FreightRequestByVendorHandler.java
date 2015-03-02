@@ -8,16 +8,18 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import com.projectx.mvc.domain.request.FreightRequestByVendorDTO;
-import com.projectx.rest.domain.completeregister.VehicleDetailsDTO;
+import com.projectx.rest.domain.completeregister.VehicleDetails;
 import com.projectx.rest.domain.request.FreightRequestByCustomer;
 import com.projectx.rest.domain.request.FreightRequestByVendor;
+import com.projectx.rest.exception.repository.completeregister.ValidationFailedException;
+import com.projectx.rest.exception.repository.quickregister.ResourceAlreadyPresentException;
+import com.projectx.rest.exception.repository.quickregister.ResourceNotFoundException;
 import com.projectx.rest.repository.completeregister.VehicleDetailsRepository;
 import com.projectx.rest.repository.request.FreightRequestByVendorRepository;
 import com.projectx.rest.services.completeregister.VehicleDetailsService;
 import com.projectx.rest.services.request.FreightRequestByVendorService;
 
 @Component
-@Profile(value="Dev")
 public class FreightRequestByVendorHandler implements
 		FreightRequestByVendorService {
 
@@ -25,18 +27,18 @@ public class FreightRequestByVendorHandler implements
 	FreightRequestByVendorRepository freightRequestByVendorRepository;
 	
 	@Autowired
-	VehicleDetailsService 	vehicleDetailsService;
+	VehicleDetailsService vehicleDetailsService;
 	
 	
 	@Override
 	public FreightRequestByVendor newRequest(
-			FreightRequestByVendor freightRequestByCustomer) {
+			FreightRequestByVendor freightRequestByCustomer) throws ResourceAlreadyPresentException,ValidationFailedException{
 		
 		return freightRequestByVendorRepository.save(freightRequestByCustomer);
 	}
 
 	@Override
-	public FreightRequestByVendor getRequestById(Long requestId) {
+	public FreightRequestByVendor getRequestById(Long requestId) throws ResourceNotFoundException{
 		
 		return freightRequestByVendorRepository.getById(requestId);
 	}

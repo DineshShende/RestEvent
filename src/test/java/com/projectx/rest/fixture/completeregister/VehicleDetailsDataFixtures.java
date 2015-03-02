@@ -4,7 +4,7 @@ import java.util.Date;
 
 import com.google.gson.Gson;
 import com.projectx.rest.domain.completeregister.VehicleBrandDetails;
-import com.projectx.rest.domain.completeregister.VehicleDetailsDTO;
+import com.projectx.rest.domain.completeregister.VehicleDetails;
 import com.projectx.rest.domain.completeregister.VehicleTypeDetails;
 
 
@@ -98,40 +98,40 @@ public static String VEHICLE_TYPE_NAME="VehcileTypeName";
 		
 	}
 	
-	public static VehicleDetailsDTO standardVehicleDetails()
+	public static VehicleDetails standardVehicleDetails()
 	{
 		
-		return new VehicleDetailsDTO(VEHICLE_ID, VEHICLE_OWNER_FIRST_NAME, VEHICLE_OWNER_MIDDLE_NAME, VEHICLE_OWNER_LAST_NAME,
+		return new VehicleDetails(VEHICLE_ID, VEHICLE_OWNER_FIRST_NAME, VEHICLE_OWNER_MIDDLE_NAME, VEHICLE_OWNER_LAST_NAME,
 				standVehicleTypeDetails(), standardVehicleBrandDetails(), VEHICLE_BODY_TYPE_OPEN, VEHICLE_BOOLEAN_TRUE,
 				VEHICLE_REGISTRATION_NUMBER, VEHICLE_CHASIS_NUMBER,VEHICLE_LOAD_CAPACITY,VEHICLE_LENGTH,VEHICLE_WIDTH,VEHICLE_HEIGHT, VEHICLE_NOOF_WHEELS,
 				VEHICLE_PERMIT_TYPE_NATIONAL, VEHICLE_BOOLEAN_TRUE, VEHICLE_INSURANCE_NUMBER, VEHICLE_INSURANCE_COMPANY, VEHICLE_VENDOR_ID,
 				VEHCLE_DATE, VEHCLE_DATE, VEHICLE_UPDATED_BY);
 	}
 	
-	public static VehicleDetailsDTO standardVehicleDetailsOpen()
+	public static VehicleDetails standardVehicleDetailsOpen()
 	{
 		
-		return new VehicleDetailsDTO(VEHICLE_ID, VEHICLE_OWNER_FIRST_NAME, VEHICLE_OWNER_MIDDLE_NAME, VEHICLE_OWNER_LAST_NAME,
+		return new VehicleDetails(VEHICLE_ID, VEHICLE_OWNER_FIRST_NAME, VEHICLE_OWNER_MIDDLE_NAME, VEHICLE_OWNER_LAST_NAME,
 				standVehicleTypeDetails(), standardVehicleBrandDetails(), VEHICLE_BODY_TYPE_OPEN, false,
 				"VEHICLE_REGISTRATION_NUMBERO", "VEHICLE_CHASIS_NUMBERO",40,100,40,10, VEHICLE_NOOF_WHEELS,
 				VEHICLE_PERMIT_TYPE_NATIONAL, VEHICLE_BOOLEAN_TRUE, VEHICLE_INSURANCE_NUMBER, VEHICLE_INSURANCE_COMPANY, VEHICLE_VENDOR_ID,
 				VEHCLE_DATE, VEHCLE_DATE, VEHICLE_UPDATED_BY);
 	}
 	
-	public static VehicleDetailsDTO standardVehicleDetailsOpen307()
+	public static VehicleDetails standardVehicleDetailsOpen307()
 	{
 		
-		return new VehicleDetailsDTO(VEHICLE_ID, VEHICLE_OWNER_FIRST_NAME, VEHICLE_OWNER_MIDDLE_NAME, VEHICLE_OWNER_LAST_NAME,
+		return new VehicleDetails(VEHICLE_ID, VEHICLE_OWNER_FIRST_NAME, VEHICLE_OWNER_MIDDLE_NAME, VEHICLE_OWNER_LAST_NAME,
 				standVehicleTypeDetails(), standardVehicleBrandDetails307(), VEHICLE_BODY_TYPE_OPEN, false,
 				"VEHICLE_REGISTRATION_NUMBERO", "VEHICLE_CHASIS_NUMBERO",40,100,40,10, VEHICLE_NOOF_WHEELS,
 				VEHICLE_PERMIT_TYPE_NATIONAL, VEHICLE_BOOLEAN_TRUE, VEHICLE_INSURANCE_NUMBER, VEHICLE_INSURANCE_COMPANY, VEHICLE_VENDOR_ID,
 				VEHCLE_DATE, VEHCLE_DATE, VEHICLE_UPDATED_BY);
 	}
 	
-	public static VehicleDetailsDTO standardVehicleDetailsClosed()
+	public static VehicleDetails standardVehicleDetailsClosed()
 	{
 		
-		return new VehicleDetailsDTO(VEHICLE_ID, VEHICLE_OWNER_FIRST_NAME, VEHICLE_OWNER_MIDDLE_NAME, VEHICLE_OWNER_LAST_NAME,
+		return new VehicleDetails(VEHICLE_ID, VEHICLE_OWNER_FIRST_NAME, VEHICLE_OWNER_MIDDLE_NAME, VEHICLE_OWNER_LAST_NAME,
 				standVehicleTypeDetails(), standardVehicleBrandDetails(), VEHICLE_BODY_TYPE_CLOSED, false,
 				"VEHICLE_REGISTRATION_NUMBERC", "VEHICLE_CHASIS_NUMBERC",60,100,60,10, VEHICLE_NOOF_WHEELS,
 				VEHICLE_PERMIT_TYPE_NATIONAL, VEHICLE_BOOLEAN_TRUE, VEHICLE_INSURANCE_NUMBER, VEHICLE_INSURANCE_COMPANY, VEHICLE_VENDOR_ID,
@@ -139,26 +139,26 @@ public static String VEHICLE_TYPE_NAME="VehcileTypeName";
 	}
 	
 	
-	public static VehicleDetailsDTO standardVehicleDetailsFlexible()
+	public static VehicleDetails standardVehicleDetailsFlexible()
 	{
 		
-		return new VehicleDetailsDTO(VEHICLE_ID, VEHICLE_OWNER_FIRST_NAME, VEHICLE_OWNER_MIDDLE_NAME, VEHICLE_OWNER_LAST_NAME,
+		return new VehicleDetails(VEHICLE_ID, VEHICLE_OWNER_FIRST_NAME, VEHICLE_OWNER_MIDDLE_NAME, VEHICLE_OWNER_LAST_NAME,
 				standVehicleTypeDetails(), standardVehicleBrandDetailsAcer(), VEHICLE_BODY_TYPE_OPEN, VEHICLE_BOOLEAN_TRUE,
 				"VEHICLE_REGISTRATION_NUMBERF", "VEHICLE_CHASIS_NUMBERF",100,200,50,20, VEHICLE_NOOF_WHEELS,
 				VEHICLE_PERMIT_TYPE_NATIONAL, VEHICLE_BOOLEAN_TRUE, VEHICLE_INSURANCE_NUMBER, VEHICLE_INSURANCE_COMPANY, VEHICLE_VENDOR_ID,
 				VEHCLE_DATE, VEHCLE_DATE, VEHICLE_UPDATED_BY);
 	}
 	
-	public static VehicleDetailsDTO standardVehicleDetailsOther()
+	public static VehicleDetails standardVehicleDetailsOther()
 	{
-		return new VehicleDetailsDTO(VEHICLE_ID, VEHICLE_OWNER_FIRST_NAME_OTHER, VEHICLE_OWNER_MIDDLE_NAME_OTHER, VEHICLE_OWNER_LAST_NAME_OTHER,
+		return new VehicleDetails(270L, VEHICLE_OWNER_FIRST_NAME_OTHER, VEHICLE_OWNER_MIDDLE_NAME_OTHER, VEHICLE_OWNER_LAST_NAME_OTHER,
 				standVehicleTypeDetails(), standardVehicleBrandDetails(), VEHICLE_BODY_TYPE_OPEN, VEHICLE_BOOLEAN_TRUE,
 				VEHICLE_REGISTRATION_NUMBER_OTHER, VEHICLE_CHASIS_NUMBER_OTHER,VEHICLE_LOAD_CAPACITY,VEHICLE_LENGTH,VEHICLE_WIDTH,VEHICLE_HEIGHT, VEHICLE_NOOF_WHEELS,
 				VEHICLE_PERMIT_TYPE_NATIONAL, VEHICLE_BOOLEAN_TRUE, VEHICLE_INSURANCE_NUMBER, VEHICLE_INSURANCE_COMPANY, VEHICLE_VENDOR_ID,
 				VEHCLE_DATE, VEHCLE_DATE, VEHICLE_UPDATED_BY);
 	}
 	
-	public static String standardVehicleJson(VehicleDetailsDTO vehicleDetails)
+	public static String standardVehicleJson(VehicleDetails vehicleDetails)
 	{
 		return gson.toJson(vehicleDetails);
 	}

@@ -3,6 +3,7 @@ package com.projectx.rest.repository.quickregister;
 
 import static com.projectx.rest.fixture.quickregister.QuickRegisterDataFixture.*;
 import static org.junit.Assert.*;
+import static com.projectx.rest.config.Constants.*;
 
 import java.util.List;
 
@@ -11,29 +12,83 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.core.env.Environment;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import com.projectx.rest.config.Application;
 import com.projectx.rest.domain.quickregister.QuickRegisterEntity;
+import com.projectx.rest.exception.repository.completeregister.ValidationFailedException;
+import com.projectx.rest.exception.repository.quickregister.QuickRegisterDetailsAlreadyPresentException;
+import com.projectx.rest.exception.repository.quickregister.QuickRegisterEntityNotFoundException;
+import com.projectx.rest.exception.repository.quickregister.QuickRegisterEntityNotSavedException;
+import com.projectx.rest.exception.repository.quickregister.ResourceNotFoundException;
 import com.projectx.rest.repository.quickregister.QuickRegisterRepository;
 
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes=Application.class)
-@ActiveProfiles("Dev")
+@ActiveProfiles(SPRING_PROFILE_ACTIVE)
 public class QuickRegisterRepositoryTest {
 
 	@Autowired
 	QuickRegisterRepository customerQuickRegisterRepository;
 	
+	@Autowired
+	MobileVerificationDetailsRepository mobileVerificationDetailsRepository;
+	
+	@Autowired
+	EmailVericationDetailsRepository emailVericationDetailsRepository;
+	
+	@Autowired
+	AuthenticationDetailsRepository authenticationDetailsRepository;
+	
 	@Before
 	public void clearExistingRecords()
 	{
 		customerQuickRegisterRepository.clearCustomerQuickRegister();
+		mobileVerificationDetailsRepository.clearTestData();
+		emailVericationDetailsRepository.clearTestData();
+		authenticationDetailsRepository.clearLoginDetailsForTesting();
+	}
+
+	@Autowired
+	Environment env;
+	
+	@Test
+	public void saveWithErrors()
+	{
+		QuickRegisterEntity quickRegisterEntity=null;
+		
+		String activeProfile =System.getProperty("spring.profiles.active");
+		
+		System.out.println("Test Profile:"+activeProfile+":Pro:"+env.getActiveProfiles()[0]);
+		
+		try{
+			quickRegisterEntity=customerQuickRegisterRepository.save(standardEmailMobileCustomerWithError());
+		}catch(ValidationFailedException e)
+		{
+			assertNull(quickRegisterEntity);
+		}
+		
 	}
 	
+	@Test
+	public void saveWithAlreadySaved()
+	{
+		QuickRegisterEntity quickRegisterEntity=null;
+		
+		customerQuickRegisterRepository.save(standardEmailMobileCustomer());
+		
+		try{
+			quickRegisterEntity=customerQuickRegisterRepository.save(standardEmailMobileCustomer());
+		}catch(QuickRegisterDetailsAlreadyPresentException e)
+		{
+			assertNull(quickRegisterEntity);
+		}
+		
+	}
 	
 	@Test
 	public void findAllWithEmailMobileCustomer() {
@@ -67,9 +122,15 @@ public class QuickRegisterRepositoryTest {
 	
 	@Test
 	public void findByCustomerIdWithEmailMobileCustomer()  {
-		
 	
-		assertNull(customerQuickRegisterRepository.findByCustomerId(CUST_ID).getCustomerId());
+		QuickRegisterEntity quickRegisterEntity=null;
+	
+		try{
+			quickRegisterEntity=customerQuickRegisterRepository.findByCustomerId(CUST_ID);
+		}catch(ResourceNotFoundException e)
+		{		
+			assertNull(quickRegisterEntity);
+		}
 		
 		QuickRegisterEntity savedCustomer=customerQuickRegisterRepository.save(standardEmailMobileCustomer());
 
@@ -81,10 +142,25 @@ public class QuickRegisterRepositoryTest {
 	@Test
 	public void findByEmailAndMobileWithEmailMobileCustomer() throws Exception
 	{
-		assertNull(customerQuickRegisterRepository.findByEmail(CUST_EMAIL).getCustomerId());
+		QuickRegisterEntity quickRegisterEntity=null;
 		
-		assertNull(customerQuickRegisterRepository.findByMobile(CUST_MOBILE).getCustomerId());
+		try{
+			quickRegisterEntity=customerQuickRegisterRepository.findByEmail(CUST_EMAIL);
+		}catch(ResourceNotFoundException e)
+		{
+			assertNull(quickRegisterEntity);
+		}
 		
+		
+		
+		try{
+			quickRegisterEntity=customerQuickRegisterRepository.findByMobile(CUST_MOBILE);
+		}catch(ResourceNotFoundException e)
+		{
+			assertNull(quickRegisterEntity);
+		}
+		
+				
 		QuickRegisterEntity savedEntity=customerQuickRegisterRepository.save(standardEmailMobileCustomer());
 		
 		assertEquals(savedEntity,customerQuickRegisterRepository.findByEmail(CUST_EMAIL));

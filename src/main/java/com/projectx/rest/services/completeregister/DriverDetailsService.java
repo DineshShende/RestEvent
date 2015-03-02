@@ -17,7 +17,7 @@ public interface DriverDetailsService {
 	
 	Boolean deleteDriver(Long driverId);
 	
-	Integer updateMobileAndVerificationStatus(Long driverId,Long mobile,Boolean status);
+	Integer updateMobileAndVerificationStatus(Long driverId,Long mobile,Boolean status,String updatedBy);
 	
 	List<DriverDetails> driversByVendorId(Long vendorId);
 	

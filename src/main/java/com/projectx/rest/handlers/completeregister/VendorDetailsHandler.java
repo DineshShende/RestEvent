@@ -6,12 +6,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
-import com.projectx.data.domain.completeregister.UpdateMobileVerificationStatusDTO;
+import com.projectx.data.domain.completeregister.UpdateMobileVerificationStatusUpdatedByDTO;
 import com.projectx.rest.domain.completeregister.CustomerDetails;
 import com.projectx.rest.domain.completeregister.VendorDetails;
 import com.projectx.rest.domain.quickregister.EmailVerificationDetails;
 import com.projectx.rest.domain.quickregister.MobileVerificationDetails;
 import com.projectx.rest.domain.quickregister.QuickRegisterEntity;
+import com.projectx.rest.exception.repository.completeregister.VendorDetailsNotFoundException;
+import com.projectx.rest.exception.repository.completeregister.VendorDetailsTransactionalUpdateFailedException;
+import com.projectx.rest.exception.repository.quickregister.DeleteQuickCreateDetailsEntityFailedException;
 import com.projectx.rest.repository.completeregister.CustomerDetailsRepository;
 import com.projectx.rest.repository.completeregister.VendorDetailsRepository;
 import com.projectx.rest.services.completeregister.TransactionalUpdatesService;
@@ -21,7 +24,7 @@ import com.projectx.rest.services.quickregister.MobileVerificationService;
 import com.projectx.rest.utils.MessagerSender;
 
 @Component
-@Profile(value="Dev")
+
 public class VendorDetailsHandler implements VendorDetailsService {
 
 	
@@ -45,7 +48,7 @@ public class VendorDetailsHandler implements VendorDetailsService {
 	
 	@Override
 	public VendorDetails createCustomerDetailsFromQuickRegisterEntity(
-			QuickRegisterEntity quickRegisterEntity) {
+			QuickRegisterEntity quickRegisterEntity)throws DeleteQuickCreateDetailsEntityFailedException {
 
 		VendorDetails savedEntity=transactionalUpdatesService.deleteQuickRegisterEntityCreateDetails(quickRegisterEntity).getVendorDetails();
 		
@@ -54,7 +57,7 @@ public class VendorDetailsHandler implements VendorDetailsService {
 	}
 
 	@Override
-	public VendorDetails updateVendorDetails(VendorDetails vendorDetails) {
+	public VendorDetails updateVendorDetails(VendorDetails vendorDetails) throws VendorDetailsTransactionalUpdateFailedException{
 		
 		VendorDetails updatedEntity=transactionalUpdatesService.updateVendorDetails(vendorDetails);
 		
@@ -62,7 +65,7 @@ public class VendorDetailsHandler implements VendorDetailsService {
 	}
 
 	@Override
-	public VendorDetails findById(Long vendorId) {
+	public VendorDetails findById(Long vendorId) throws VendorDetailsNotFoundException{
 
 		VendorDetails fetchedEntity=vendorDetailsRepository.findOne(vendorId);
 		
@@ -72,10 +75,10 @@ public class VendorDetailsHandler implements VendorDetailsService {
 
 	@Override
 	public Boolean verifyMobileDetails(Long customerId, Integer customerType,
-			 Integer mobileType,Integer mobilePin) {
+			 Integer mobileType,Integer mobilePin,String updatedBy) {
 		
 		Boolean verificationStatus=mobileVerificationService
-				.verifyMobilePinUpdateStatusAndSendPassword(customerId, customerType, mobileType, mobilePin);
+				.verifyMobilePinUpdateStatusAndSendPassword(customerId, customerType, mobileType, mobilePin,updatedBy);
 		
 		return verificationStatus;
 	}
@@ -83,18 +86,18 @@ public class VendorDetailsHandler implements VendorDetailsService {
 	
 	@Override
 	public Boolean verifyEmailDetails(Long customerId, Integer customerType,
-			Integer emailType,  String emailHash) {
+			Integer emailType,  String emailHash,String requestedBy) {
 		
 		Boolean verificationStatus=emailVerificationService
-				.verifyEmailHashUpdateStatusAndSendPassword(customerId, customerType, emailType, emailHash);
+				.verifyEmailHashUpdateStatusAndSendPassword(customerId, customerType, emailType, emailHash,requestedBy);
 				
 		return verificationStatus;
 	}
 	@Override
 	public Boolean sendMobileVerificationDetails(Long vendorId,
-			Integer entityType, Integer mobileType) {
+			Integer entityType, Integer mobileType,String updatedBy) {
 
-		Boolean sendStatus=mobileVerificationService.sendMobilePin(vendorId, entityType, mobileType);
+		Boolean sendStatus=mobileVerificationService.sendMobilePin(vendorId, entityType, mobileType,updatedBy);
 		
 		return sendStatus;		
 	}

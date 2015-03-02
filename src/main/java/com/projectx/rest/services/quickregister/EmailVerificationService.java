@@ -3,30 +3,37 @@ package com.projectx.rest.services.quickregister;
 import com.projectx.rest.domain.quickregister.EmailVerificationDetails;
 import com.projectx.rest.domain.quickregister.EmailVerificationDetailsKey;
 import com.projectx.rest.domain.quickregister.QuickRegisterEntity;
+import com.projectx.rest.exception.repository.completeregister.ValidationFailedException;
+import com.projectx.rest.exception.repository.quickregister.ResourceAlreadyPresentException;
+import com.projectx.rest.exception.repository.quickregister.ResourceNotFoundException;
 
 public interface EmailVerificationService {
 
-    EmailVerificationDetails getByEntityIdTypeAndEmailType(Long customerId,Integer customerType,Integer emailType);
     
-    EmailVerificationDetails getByEmail(String email);
-    
-    Boolean sendOrResendOrResetEmailHash(Long customerId,Integer customerType,Integer emailType,Boolean resetFlag,Boolean resendFlag);
-    
-    Boolean sendEmailHash(Long customerId,Integer customerType,Integer emailType);
-    
-    Boolean reSendEmailHash(Long customerId,Integer customerType,Integer emailType);
+	EmailVerificationDetails saveDetails(EmailVerificationDetails emailVerificationDetails) 
+			throws ResourceAlreadyPresentException,ValidationFailedException;
 	
-	Boolean reSetEmailHash(Long customerId,Integer customerType,Integer emailType);
+	EmailVerificationDetails getByEntityIdTypeAndEmailType(Long customerId,Integer customerType,Integer emailType) throws ResourceNotFoundException;
+    
+    EmailVerificationDetails getByEmail(String email) throws ResourceNotFoundException;
+    
+    Boolean sendOrResendOrResetEmailHash(Long customerId,Integer customerType,Integer emailType,Boolean resetFlag,Boolean resendFlag)
+    						throws ResourceNotFoundException;
+    
+    Boolean sendEmailHash(Long customerId,Integer customerType,Integer emailType) throws ResourceNotFoundException;
+    
+    Boolean reSendEmailHash(Long customerId,Integer customerType,Integer emailType) throws ResourceNotFoundException;
+	
+	Boolean reSetEmailHash(Long customerId,Integer customerType,Integer emailType) throws ResourceNotFoundException;
 	
 	Boolean verifyEmailHash(Long customerId,Integer customerType,Integer emailType,String emailHash);
 	
-	Boolean verifyEmailHashUpdateStatusAndSendPassword(Long customerId,Integer customerType,Integer emailType, String emailHash);
+	Boolean verifyEmailHashUpdateStatusAndSendPassword(Long customerId,Integer customerType,Integer emailType, String emailHash,String requestBy) 
+															throws ResourceNotFoundException;
 	
 	Integer updateEmailHash(Long customerId,Integer customerType,Integer emailType);
 	
 	EmailVerificationDetails createEntity(Long customerId,Integer customerType,String email,Integer emailType,String updatedBy);
-	
-	EmailVerificationDetails saveDetails(EmailVerificationDetails emailVerificationDetails);
 	
 	Boolean deleteByKey(EmailVerificationDetailsKey key);
 	
@@ -34,5 +41,4 @@ public interface EmailVerificationService {
 	
 	Boolean clearTestData();
 	
-	//String checkIfEmailAlreadyExist(Long customerId,Integer customerType,Integer emailType,String email);
 }

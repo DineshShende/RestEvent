@@ -4,16 +4,16 @@ import java.util.Date;
 
 import com.google.gson.Gson;
 import com.projectx.mvc.domain.request.FreightRequestByVendorDTO;
-import com.projectx.rest.domain.completeregister.VehicleDetailsDTO;
+import com.projectx.rest.domain.completeregister.VehicleDetails;
 import com.projectx.rest.domain.request.FreightRequestByVendor;
-import com.projectx.rest.domain.request.TestRequest;
+
 
 import static com.projectx.rest.fixture.completeregister.VehicleDetailsDataFixtures.*;
 
 public class FreightRequestByVendorDataFixture {
 
 	
-	public static VehicleDetailsDTO REQ_VEHICLE=standardVehicleDetails();
+	public static VehicleDetails REQ_VEHICLE=standardVehicleDetails();
 	
 	public static Integer REQ_SOURCE=411045;
 	

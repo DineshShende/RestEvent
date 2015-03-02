@@ -41,7 +41,8 @@ public class DocumentDetailsDataFixture {
 	{
 		return "jhsdjheudhdfj".getBytes();
 	}
-	
+
+	/*
 	public static byte[] document()
 	{
 		File file = new File("/home/dinesh/10582917_673092789452549_6548939224392088956_o.jpg");
@@ -91,10 +92,10 @@ public class DocumentDetailsDataFixture {
 		
 		return bFile;
 	}
-	
+	*/
 	public static DocumentDetails standardDocumentDetails()
 	{
-		return new DocumentDetails(standardDocumentKey(), document(), DOCUMENT_CONTENT_TYPE, DOCUMENT_VERIFICATION_STATUS,
+		return new DocumentDetails(standardDocumentKey(), documentDummy(), DOCUMENT_CONTENT_TYPE, DOCUMENT_VERIFICATION_STATUS,
 				DOCUMENT_VERIFICATION_REMARKS, CUST_DATE, CUST_DATE, CUST_UPDATED_BY);
 	}
 	
@@ -118,13 +119,13 @@ public class DocumentDetailsDataFixture {
 	
 	public static DocumentDetails standardDocumentDetailsWithNewDocumentContentType()
 	{
-		return new DocumentDetails(standardDocumentKey(), documentNew(), DOCUMENT_CONTENT_TYPE_NEW, DOCUMENT_VERIFICATION_STATUS,
+		return new DocumentDetails(standardDocumentKey(), documentDummyNew(), DOCUMENT_CONTENT_TYPE_NEW, DOCUMENT_VERIFICATION_STATUS,
 				DOCUMENT_VERIFICATION_REMARKS, CUST_DATE, CUST_DATE, CUST_UPDATED_BY);
 	}
 	
 	public static DocumentDetails standardDocumentDetailsWithNewVerificationStatusAndRemark()
 	{
-		return new DocumentDetails(standardDocumentKey(), document(), DOCUMENT_CONTENT_TYPE, DOCUMENT_VERIFICATION_STATUS_FAILED,
+		return new DocumentDetails(standardDocumentKey(), documentDummy(), DOCUMENT_CONTENT_TYPE, DOCUMENT_VERIFICATION_STATUS_FAILED,
 				DOCUMENT_VERIFICATION_REMARKS_FAILED, CUST_DATE, CUST_DATE, CUST_UPDATED_BY);
 	}
 	

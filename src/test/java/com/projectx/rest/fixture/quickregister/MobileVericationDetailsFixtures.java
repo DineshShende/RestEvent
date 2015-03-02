@@ -23,7 +23,7 @@ public class MobileVericationDetailsFixtures {
 	public static Date CUST_DATE=new Date();
 	//public static Integer CUST_TYPE_CUSTOMER=1;
 	//public static Integer CUST_TYPE_VENDOR=2;
-	public static String CUST_UPDATED_BY="CUST_ONLINE";
+	
 				
 	public static MobileVerificationDetailsKey standardMobileVerificationDetailsKey()
 	{
@@ -60,6 +60,11 @@ public class MobileVericationDetailsFixtures {
 	public static String standardJsonUpdateMobilePinDTOMVC()
 	{
 		return "{\"customerId\":"+CUST_ID+",\"customerType\":"+ENTITY_TYPE_CUSTOMER+",\"mobileType\":"+CUST_MOBILE_TYPE_PRIMARY+"}";
+	}
+	
+	public static String standardJsonUpdateMobilePinUpdatedByDTOMVC()
+	{
+		return "{\"customerId\":"+CUST_ID+",\"customerType\":"+ENTITY_TYPE_CUSTOMER+",\"mobileType\":"+CUST_MOBILE_TYPE_PRIMARY+",\"updatedBy\":\""+CUST_UPDATED_BY+"\"}";
 	}
 	
 	

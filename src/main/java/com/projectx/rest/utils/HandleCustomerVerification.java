@@ -3,40 +3,78 @@ package com.projectx.rest.utils;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.util.Date;
+import java.util.UUID;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.Environment;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.mail.MailException;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
+import org.springframework.util.concurrent.ListenableFuture;
+import org.springframework.util.concurrent.ListenableFutureAdapter;
+import org.springframework.util.concurrent.ListenableFutureCallback;
+import org.springframework.web.client.AsyncRestTemplate;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.context.request.async.DeferredResult;
+
+import com.google.gson.Gson;
+import com.projectx.mvc.domain.completeregister.EmailMessageDTO;
+import com.projectx.mvc.domain.completeregister.MobileMessageDTO;
+import com.projectx.rest.domain.async.RetriggerDTO;
+import com.projectx.rest.domain.async.RetriggerDetails;
+import com.projectx.rest.domain.request.FreightRequestByCustomer;
+import com.projectx.rest.exception.repository.async.RetriggerDetailsRepository;
+import com.projectx.rest.services.async.RetriggerService;
 
 @Component
 @Profile(value={"Dev","Test"})
-/**
- * @
- * @author dinesh
- *
- */
+
+@PropertySource(value="classpath:/application.properties")
 public class HandleCustomerVerification {
 	
+	@Autowired
+	RestTemplate restTemplate;
+	
+	@Autowired
+	AsyncRestTemplate asyncRestTemplate;
+	
+	@Autowired
+	Environment env;
+
+	@Autowired
+	private RetriggerService retriggerService;
 	
 	@Autowired
 	private  MailSender mailSender;
 	
 	@Autowired
-	private RestTemplate restTemplate;
+	private SecureRandom secureRandom;
 	
 	@Autowired
-	private SecureRandom secureRandom;
+	Gson gson;
+	
+	@Autowired
+	private RetriggerDetailsRepository retriggerDetailsRepository;
+	
+
+	final Logger log1 = LoggerFactory.getLogger(this.getClass());
+	
 	
 	private final int PASSWORD_LENGTH=6;
 	
@@ -45,7 +83,7 @@ public class HandleCustomerVerification {
 		String allPossibleChar="01234567789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 		
 		StringBuilder sb=new StringBuilder();
-		//SecureRandom secureRandom=new SecureRandom();
+
 		
 		for(int i=0;i<10;i++)
 		{
@@ -82,7 +120,6 @@ public class HandleCustomerVerification {
 
 	public  Integer genarateMobilePin() {
 
-		//SecureRandom secureRandom=new SecureRandom();
 		int number=secureRandom.nextInt(9)+1;
 		
 		for(int i=0;i<5;i++)
@@ -96,7 +133,6 @@ public class HandleCustomerVerification {
 	public String generatePassword()
 	{
 		StringBuilder passwordBuilder=new StringBuilder();
-		//SecureRandom secureRandom=new SecureRandom();
 		
 		String allPossibleChar="01234567789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 		
@@ -105,73 +141,100 @@ public class HandleCustomerVerification {
 			passwordBuilder.append(allPossibleChar.charAt(secureRandom.nextInt(allPossibleChar.length())));
 		}
 			
-		//System.out.println(passwordBuilder.toString());
-	
 		return passwordBuilder.toString();
 	}
 	
 	
 	
-	@Async
-	public Boolean sendEmail(String email,String message) 
-	{
-		
-		
-		SimpleMailMessage mailMessage=new SimpleMailMessage();
-		
-		mailMessage.setTo(email);
-		mailMessage.setSubject("Greetings from transportdeal.in");
-		mailMessage.setText(message);
-		
-		System.out.println("Sending Email");
-		
-		//mailSender.send(mailMessage);
-		
-		System.out.println("EmailSent");
-		/*
-		SendEmailThread emailThread=new SendEmailThread(email, message);
-		
-		Thread t1=new Thread(emailThread);
-		
-		t1.start();
-		
-		//t1.join();
-		*/
-		return true;
-	}
-	
+	//@Async
 	public Boolean sendEmailAsynchronous(String email,String message) 
 	{
-		
-		
 		SimpleMailMessage mailMessage=new SimpleMailMessage();
-		
-		Boolean status=null;
 		
 		mailMessage.setTo(email);
 		mailMessage.setSubject("Greetings from transportdeal.in");
 		mailMessage.setText(message);
 		
-		//System.out.println("Sending Email");
+		Boolean status=false;
 		
 		try{
-		mailSender.send(mailMessage);
-		status=true;
-		//System.out.println("EmailSent");
-		}
-		catch(MailException e )
+			//mailSender.send(mailMessage);
+			Thread.sleep(800);
+			status=true;
+		}catch(MailException | InterruptedException e)
 		{
 			status=false;
 		}
-		finally
-		{
-			return status;
-		}
 		
-			
+		return status;
 	}
-	@Async
-	public Boolean sendSMS(Long mobile,String message)  
+	
+	public Boolean sendEmail(String email,String message) 
+	{
+		
+		EmailMessageDTO emailMessageDTO=new EmailMessageDTO(email, UUID.randomUUID(),message);
+		
+		HttpEntity<EmailMessageDTO> emailMessage=new HttpEntity<EmailMessageDTO>(emailMessageDTO);
+		
+		ListenableFuture<ResponseEntity<Integer>>		
+		 status=asyncRestTemplate.exchange(env.getProperty("async.url")+"/sendVerificationDetails/sendEmailAsync", HttpMethod.POST,
+				 emailMessage, Integer.class);
+		 
+		 																																																																																																																																																																																																													
+		BooleanStatus booleanStatus=new BooleanStatus(true);
+	
+		 
+		status.addCallback(new ListenableFutureCallback<ResponseEntity<Integer>>() {
+
+			@Override
+			public void onSuccess(ResponseEntity<Integer> result) {
+				
+				if(result.getBody().equals(new Integer(2)))
+				{
+	
+					booleanStatus.setStatus(true);
+					log1.debug("Sucess in sendMail method="+emailMessageDTO);
+					
+				}
+				else if(result.getBody().equals(new Integer(1)))
+				{
+	
+					booleanStatus.setStatus(false);
+					log1.debug("Unsucessful in sendMail method="+emailMessageDTO);
+					RetriggerDTO retriggerDTO=new RetriggerDTO("/sendVerificationDetails/sendEmailAsync", emailMessageDTO);
+					
+					retriggerService.requestRetry(retriggerDTO);
+				}
+				
+			}
+
+			@Override
+			public void onFailure(Throwable t) {
+
+				
+				booleanStatus.setStatus(false);
+			
+				log1.debug("exception in sendMail method="+emailMessageDTO);
+				RetriggerDTO retriggerDTO=new RetriggerDTO("/sendVerificationDetails/sendEmailAsync", emailMessageDTO);
+				
+				retriggerService.requestRetry(retriggerDTO);
+				
+				log1.error("Error"+t.toString());
+				
+			}
+
+
+		});
+		
+		
+		return booleanStatus.getStatus();
+		
+	}
+	
+	
+	
+	//@Async
+	public Boolean sendSMSAsynchronous(Long mobile,String message)  
 	{
 		StringBuilder requestBuilder=new StringBuilder();
 		
@@ -180,70 +243,88 @@ public class HandleCustomerVerification {
 		requestBuilder.append("&message=");
 		requestBuilder.append(message);
 		
-		System.out.println("Sending SMS");
+		Boolean status=false;
 		
-		//System.out.println(requestBuilder.toString());
-						
-		//String result=restTemplate.getForObject(requestBuilder.toString(), String.class);	
-			
-		//System.out.println(result);
+		try{
 		
-		
-		//SendSMSThread sendSMSThread=new SendSMSThread(mobile, message);
-		
-		//Thread t1=new Thread(sendSMSThread);
-		
-		
-		/*
-		Thread t1=new Thread(()->
-		{
-			System.out.println("Sending SMS");
-										
 			//String result=restTemplate.getForObject(requestBuilder.toString(), String.class);	
-		
-			//System.out.println(result);		
+			
+			//System.out.println(result);
+			
+			Thread.sleep(800);
+			
+			status=true;
+		}catch(Exception e)
+		{
+			status=false;
 		}
-		);
 		
-		t1.start();
-		*/
-		return true;
+		return status;
 		
 	}
 	
-	
-	public Boolean sendEmailNewWay(String email,String message) 
+	public Boolean sendSMS(Long mobile,String message)  
 	{
+		MobileMessageDTO mobileMessageDTO=new MobileMessageDTO(mobile, UUID.randomUUID(),message);
 		
-		SimpleMailMessage mailMessage=new SimpleMailMessage();
+		HttpEntity<MobileMessageDTO> mobileMessage=new HttpEntity<MobileMessageDTO>(mobileMessageDTO);
 		
-		mailMessage.setTo(email);
-		mailMessage.setSubject("Greetings from transportdeal.in");
-		mailMessage.setText(message);
+		ListenableFuture<ResponseEntity<Integer>>		
+		 status=asyncRestTemplate.exchange(env.getProperty("async.url")+"/sendVerificationDetails/sendSMSAsync", HttpMethod.POST,
+				 mobileMessage, Integer.class);
+		 
+		 																																																																																																																																																																																																													
+		BooleanStatus booleanStatus=new BooleanStatus(true);
+	
+		 
+		status.addCallback(new ListenableFutureCallback<ResponseEntity<Integer>>() {
+
+			@Override
+			public void onSuccess(ResponseEntity<Integer> result) {
+				
+				if(result.getBody().equals(new Integer(2)))
+				{
+	
+					booleanStatus.setStatus(true);
+					log1.debug("Sucess in sendSMS method="+mobileMessageDTO);
+					
+				}
+				else if(result.getBody().equals(new Integer(1)))
+				{
+	
+					booleanStatus.setStatus(false);
+					log1.debug("Unsucessful in sendSMS method="+mobileMessageDTO);
+					RetriggerDTO retriggerDTO=new RetriggerDTO("/sendVerificationDetails/sendSMSAsync", mobileMessageDTO);
+					
+					retriggerService.requestRetry(retriggerDTO);
+				}
+				
+			}
+
+			@Override
+			public void onFailure(Throwable t) {
+
+				
+				booleanStatus.setStatus(false);
+			
+				log1.debug("exception in sendSMS method="+mobileMessageDTO);
+				RetriggerDTO retriggerDTO=new RetriggerDTO("/sendVerificationDetails/sendSMSAsync", mobileMessageDTO);
+				
+				retriggerService.requestRetry(retriggerDTO);
+				
+				log1.error("Error"+t.toString());
+				
+			}
+
+
+		});
 		
-		//mailSender.send(mailMessage);
 		
+		return booleanStatus.getStatus();
+
 		
-	//	Thread t1=new Thread(()->{mailSender.send(mailMessage);});
-		
-		//SendEmailThread emailThread=new SendEmailThread(email, message);
-		
-		//Thread t1=new Thread(emailThread);
-		
-	//	t1.start();
-		
-		//t1.join();
-		
-		return true;
 	}
 	
-	public void simulate()
-	{
-		SimulationThread simulationThread=new SimulationThread();
 		
-		Thread t1=new Thread(simulationThread);
-		
-		t1.start();
-	}
-	
 }
+

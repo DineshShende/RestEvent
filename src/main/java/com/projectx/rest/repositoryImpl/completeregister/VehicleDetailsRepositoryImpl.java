@@ -6,12 +6,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import com.projectx.data.domain.completeregister.VehicleList;
 import com.projectx.rest.domain.completeregister.DriverDetails;
-import com.projectx.rest.domain.completeregister.VehicleDetailsDTO;
+import com.projectx.rest.domain.completeregister.VehicleDetails;
+import com.projectx.rest.exception.repository.completeregister.ValidationFailedException;
+import com.projectx.rest.exception.repository.completeregister.VehicleDetailsAlreadyPresentException;
+import com.projectx.rest.exception.repository.completeregister.VehicleDetailsNotFoundException;
 import com.projectx.rest.repository.completeregister.VehicleDetailsRepository;
 
 @Component
@@ -28,13 +36,27 @@ public class VehicleDetailsRepositoryImpl implements VehicleDetailsRepository {
 
 	
 	@Override
-	public VehicleDetailsDTO save(VehicleDetailsDTO vehicleDetails) {
+	public VehicleDetails save(VehicleDetails vehicleDetails) throws VehicleDetailsAlreadyPresentException,ValidationFailedException{
 		
 		
-		VehicleDetailsDTO savedEntity=restTemplate.postForObject(env.getProperty("data.url")+"/vehicle",
-				vehicleDetails, VehicleDetailsDTO.class);
+		HttpEntity<VehicleDetails> entity=new HttpEntity<VehicleDetails>(vehicleDetails);
+		
+		ResponseEntity<VehicleDetails> result=null;
+		
+		try{
+			result=restTemplate.exchange(env.getProperty("data.url")+"/vehicle",
+					HttpMethod.POST,entity, VehicleDetails.class);
 
-		return savedEntity;
+		}catch(RestClientException e)
+		{
+			throw new ValidationFailedException();
+		}
+		
+		if(result.getStatusCode()==HttpStatus.CREATED)
+			return result.getBody();
+		else
+			throw new VehicleDetailsAlreadyPresentException();
+		
 		
 	}
 
@@ -50,7 +72,7 @@ public class VehicleDetailsRepositoryImpl implements VehicleDetailsRepository {
 	}
 
 	@Override
-	public List<VehicleDetailsDTO> getVehiclesByVendorId(Long vendorId) {
+	public List<VehicleDetails> getVehiclesByVendorId(Long vendorId) {
 		
 		VehicleList result=restTemplate.getForObject(env.getProperty("data.url")+"/vehicle/getVehiclesByVendorId/"+vendorId,
 				VehicleList.class);
@@ -62,12 +84,15 @@ public class VehicleDetailsRepositoryImpl implements VehicleDetailsRepository {
 	}
 	
 	@Override
-	public VehicleDetailsDTO findOne(Long vehicleId) {
+	public VehicleDetails findOne(Long vehicleId) throws VehicleDetailsNotFoundException {
 
-		VehicleDetailsDTO result=restTemplate.getForObject(env.getProperty("data.url")+"/vehicle/getById/"+vehicleId,
-				VehicleDetailsDTO.class);
+		ResponseEntity<VehicleDetails> result=restTemplate.exchange(env.getProperty("data.url")+"/vehicle/getById/"+vehicleId, 
+				HttpMethod.GET, null, VehicleDetails.class);
 		
-		return result;
+		if(result.getStatusCode()==HttpStatus.FOUND)		
+			return result.getBody();
+		else
+			throw new VehicleDetailsNotFoundException();
 		
 	}
 
@@ -94,12 +119,16 @@ public class VehicleDetailsRepositoryImpl implements VehicleDetailsRepository {
 	}
 
 	@Override
-	public VehicleDetailsDTO findByRegistrationNumber(String registrationNumber) {
+	public VehicleDetails findByRegistrationNumber(String registrationNumber) throws VehicleDetailsNotFoundException{
 
-		VehicleDetailsDTO result=restTemplate.getForObject(env.getProperty("data.url")+"/vehicle/getByRegistrationNumber/"+registrationNumber,
-				VehicleDetailsDTO.class);
+				
+		ResponseEntity<VehicleDetails> result=restTemplate.exchange(env.getProperty("data.url")+"/vehicle/getByRegistrationNumber/"+registrationNumber, 
+				HttpMethod.GET, null, VehicleDetails.class);
 		
-		return result;
+		if(result.getStatusCode()==HttpStatus.FOUND)		
+			return result.getBody();
+		else
+			throw new VehicleDetailsNotFoundException();
 
 
 	}

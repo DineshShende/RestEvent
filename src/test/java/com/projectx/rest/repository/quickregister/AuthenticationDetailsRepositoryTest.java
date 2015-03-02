@@ -15,14 +15,16 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.projectx.rest.config.Application;
 import com.projectx.rest.domain.quickregister.AuthenticationDetails;
+import com.projectx.rest.exception.repository.quickregister.AuthenticationDetailsNotFoundException;
 import com.projectx.rest.repository.quickregister.AuthenticationDetailsRepository;
 
+import static com.projectx.rest.config.Constants.SPRING_PROFILE_ACTIVE;
 import static com.projectx.rest.fixture.quickregister.AuthenticationDetailsDataFixtures.*;
 import static com.projectx.rest.fixture.quickregister.QuickRegisterDataFixture.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes=Application.class)
-@ActiveProfiles("Dev")
+@ActiveProfiles(SPRING_PROFILE_ACTIVE)
 
 public class AuthenticationDetailsRepositoryTest {
 
@@ -56,6 +58,37 @@ public class AuthenticationDetailsRepositoryTest {
 		
 	}
 	
+	@Test
+	public void findWithFailure()
+	{
+		
+		AuthenticationDetails authenticationDetails=null;
+		
+		try{
+			authenticationDetails=customerAuthenticationDetailsRepository.getByCustomerIdType(CUST_ID, ENTITY_TYPE_CUSTOMER);
+		}catch(AuthenticationDetailsNotFoundException e)
+		{
+			assertNull(authenticationDetails);
+		}
+		
+		authenticationDetails=null;
+		
+		try{
+			authenticationDetails=customerAuthenticationDetailsRepository.getByEmail(CUST_EMAIL);
+		}catch(AuthenticationDetailsNotFoundException e)
+		{
+			assertNull(authenticationDetails);
+		}
+		
+		authenticationDetails=null;
+		
+		try{
+			authenticationDetails=customerAuthenticationDetailsRepository.getByMobile(CUST_MOBILE);
+		}catch(AuthenticationDetailsNotFoundException e)
+		{
+			assertNull(authenticationDetails);
+		}
+	}
 	
 	@Test
 	public void updatePasswordEmailPasswordAndPasswordTypeWithPass()
@@ -188,27 +221,5 @@ public class AuthenticationDetailsRepositoryTest {
 		
 	}
 
-	/*
-	@Test
-	public void loginVerificationWithEmailMobileCustomer()
-	{
-		assertEquals(0,customerAuthenticationDetailsRepository.count().intValue());
-		
-		CustomerAuthenticationDetails savedEntity=customerAuthenticationDetailsRepository.save(standardCustomerEmailMobileAuthenticationDetails());
-		
-		assertEquals(1,customerAuthenticationDetailsRepository.count().intValue());
-		
-		assertNotNull(customerAuthenticationDetailsRepository.loginVerification(standardVerifyLoginDetailsDataWithEmail().getEmail(),
-				standardVerifyLoginDetailsDataWithEmail().getMobile(), standardVerifyLoginDetailsDataWithEmail().getPassword()));
-		
-		assertNotNull(customerAuthenticationDetailsRepository.loginVerification(standardVerifyLoginDetailsDataWithMobile().getEmail(),
-				standardVerifyLoginDetailsDataWithMobile().getMobile(), standardVerifyLoginDetailsDataWithMobile().getPassword()));
-		
-		assertNull(customerAuthenticationDetailsRepository.loginVerification(standardVerifyLoginDetailsDataWithMobileNewPassword().getEmail(),
-				standardVerifyLoginDetailsDataWithMobileNewPassword().getMobile(), standardVerifyLoginDetailsDataWithMobileNewPassword().getPassword()).getCustomerId());
-		
-		assertNull(customerAuthenticationDetailsRepository.loginVerification(standardVerifyLoginDetailsDataWithEmailNewPassword().getEmail(),
-				standardVerifyLoginDetailsDataWithEmailNewPassword().getMobile(), standardVerifyLoginDetailsDataWithEmailNewPassword().getPassword()).getCustomerId());
-	}
-	*/
+	
 }

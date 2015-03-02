@@ -1,5 +1,6 @@
 package com.projectx.rest.repository.quickregister;
 
+import static com.projectx.rest.config.Constants.SPRING_PROFILE_ACTIVE;
 import static com.projectx.rest.fixture.quickregister.EmailVerificationDetailsFixtures.*;
 import static com.projectx.rest.fixture.quickregister.QuickRegisterDataFixture.*;
 import static org.junit.Assert.*;
@@ -14,12 +15,13 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.projectx.rest.config.Application;
 import com.projectx.rest.domain.quickregister.EmailVerificationDetails;
+import com.projectx.rest.exception.repository.quickregister.EmailVerificationDetailNotFoundException;
 import com.projectx.rest.repository.quickregister.EmailVericationDetailsRepository;
 
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes=Application.class)
-@ActiveProfiles("Dev")
+@ActiveProfiles(SPRING_PROFILE_ACTIVE)
 
 public class EmailVerificationDetailsRepositoryTest {
 
@@ -46,8 +48,18 @@ public class EmailVerificationDetailsRepositoryTest {
 	{
 		assertEquals(0, customerEmailVericationDetailsRepository.count().intValue());
 		
-		assertNull(customerEmailVericationDetailsRepository.getByEntityIdTypeAndEmailType(standardCustomerEmailVerificationDetails().getKey().getCustomerId(),
-				standardCustomerEmailVerificationDetails().getKey().getCustomerType(),EMAIL_TYPE_PRIMARY).getKey());
+		
+	EmailVerificationDetails emailVerificationDetails=null;
+	
+	try{
+		emailVerificationDetails=customerEmailVericationDetailsRepository.getByEntityIdTypeAndEmailType(standardCustomerEmailVerificationDetails().getKey().getCustomerId(),
+				standardCustomerEmailVerificationDetails().getKey().getCustomerType(),EMAIL_TYPE_PRIMARY);
+	}catch(EmailVerificationDetailNotFoundException e)
+	{
+		assertNull(emailVerificationDetails);
+	}
+		
+		
 		
 		EmailVerificationDetails savedEntity=customerEmailVericationDetailsRepository.save(standardCustomerEmailVerificationDetails());
 		
@@ -60,13 +72,41 @@ public class EmailVerificationDetailsRepositoryTest {
 				EMAIL_TYPE_PRIMARY));
 	}
 	
+	@Test
+	public void getWithOutFailure()
+	{
+		EmailVerificationDetails emailVerificationDetails=null;
+		
+		try{
+			emailVerificationDetails=customerEmailVericationDetailsRepository.getByEmail(CUST_EMAIL);
+		}catch(EmailVerificationDetailNotFoundException e)
+		{
+			assertNull(emailVerificationDetails);
+		}
+		
+		try{
+			emailVerificationDetails=customerEmailVericationDetailsRepository.getByEntityIdTypeAndEmailType(CUST_ID, ENTITY_TYPE_CUSTOMER, ENTITY_TYPE_CUSTOMER);
+		}catch(EmailVerificationDetailNotFoundException e)
+		{
+			assertNull(emailVerificationDetails);
+		}
+	
+	}
 	
 	@Test
 	public void saveAndGetByEmail()
 	{
 		assertEquals(0, customerEmailVericationDetailsRepository.count().intValue());
 		
-		assertNull(customerEmailVericationDetailsRepository.getByEmail(standardCustomerEmailVerificationDetails().getEmail()).getKey());
+		
+		EmailVerificationDetails emailVerificationDetails=null;
+		
+		try{
+			emailVerificationDetails=customerEmailVericationDetailsRepository.getByEmail(standardCustomerEmailVerificationDetails().getEmail());
+		}catch(EmailVerificationDetailNotFoundException e)
+		{
+			assertNull(emailVerificationDetails);
+		}
 		
 		EmailVerificationDetails savedEntity=customerEmailVericationDetailsRepository.save(standardCustomerEmailVerificationDetails());
 		

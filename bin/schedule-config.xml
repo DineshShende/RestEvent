@@ -10,7 +10,7 @@
     <context:component-scan base-package="com.projectx" />
  
     <task:scheduled-tasks scheduler="myScheduler" >
-        <task:scheduled ref="receiver" method="sayHi" fixed-rate="500" />
+        <task:scheduled ref="receiver" method="sayHi" fixed-rate="5000" />
         
     </task:scheduled-tasks>
  

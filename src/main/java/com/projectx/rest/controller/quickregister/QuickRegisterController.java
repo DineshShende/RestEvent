@@ -3,10 +3,13 @@ package com.projectx.rest.controller.quickregister;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestClientException;
 
 import com.projectx.data.domain.quickregister.CustomerIdTypeEmailTypeDTO;
 import com.projectx.data.domain.quickregister.CustomerIdTypeMobileTypeDTO;
@@ -27,6 +30,10 @@ import com.projectx.rest.domain.quickregister.EmailVerificationDetails;
 import com.projectx.rest.domain.quickregister.MobileVerificationDetails;
 import com.projectx.rest.domain.quickregister.QuickRegisterEntity;
 import com.projectx.rest.domain.quickregister.CustomerQuickRegisterStatusEntity;
+import com.projectx.rest.exception.repository.quickregister.QuickRegisterDetailsAlreadyPresentException;
+import com.projectx.rest.exception.repository.quickregister.QuickRegisterEntityNotFoundException;
+import com.projectx.rest.exception.repository.quickregister.ResourceAlreadyPresentException;
+import com.projectx.rest.exception.repository.quickregister.ResourceNotFoundException;
 import com.projectx.rest.services.quickregister.QuickRegisterService;
 
 import static com.projectx.rest.fixtures.quickregister.CustomerQuickRegisterDataFixture.*;
@@ -45,19 +52,41 @@ public class QuickRegisterController {
 	}
 	
 	@RequestMapping(method=RequestMethod.POST)
-	public CustomerQuickRegisterStatusEntity addNewCustomerQuickRegister(@RequestBody CustomerQuickRegisterEntityDTO newCustomer) throws Exception
+	public ResponseEntity<CustomerQuickRegisterStatusEntity> addNewCustomerQuickRegister(@RequestBody CustomerQuickRegisterEntityDTO newCustomer) throws Exception
 	{		
-		CustomerQuickRegisterStatusEntity newCustomerEntity=customerQuickRegisterService.handleNewCustomerQuickRegister(newCustomer);
+		ResponseEntity<CustomerQuickRegisterStatusEntity> result=null;
+		
+		try{
+			CustomerQuickRegisterStatusEntity newCustomerEntity=customerQuickRegisterService.handleNewCustomerQuickRegister(newCustomer);
+			result=new ResponseEntity<CustomerQuickRegisterStatusEntity>(newCustomerEntity, HttpStatus.CREATED);
+		}catch(RestClientException e)
+		{
+			result=new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+		}
+		catch(ResourceAlreadyPresentException e)
+		{
+			result=new ResponseEntity<>(HttpStatus.ALREADY_REPORTED);
+		}catch (ResourceNotFoundException e) {
+			result=new ResponseEntity<>(HttpStatus.NO_CONTENT);
+		}
 						
-		return newCustomerEntity;
+		return result;
 	}
 
 	@RequestMapping(value="/getByCustomerId",method=RequestMethod.POST)
-	public QuickRegisterEntity getCustomerByCustomerId(@RequestBody CustomerIdTypeDTO customerIdDTO)
+	public ResponseEntity<QuickRegisterEntity> getCustomerByCustomerId(@RequestBody CustomerIdTypeDTO customerIdDTO)
 	{
-		QuickRegisterEntity fetchedEntity=customerQuickRegisterService.getByEntityId(customerIdDTO.getCustomerId());
+		ResponseEntity<QuickRegisterEntity> result=null;
 		
-		return fetchedEntity;
+		try{
+			QuickRegisterEntity fetchedEntity=customerQuickRegisterService.getByEntityId(customerIdDTO.getCustomerId());
+			result=new ResponseEntity<QuickRegisterEntity>(fetchedEntity, HttpStatus.FOUND);
+		}catch(QuickRegisterEntityNotFoundException e)
+		{
+			result=new ResponseEntity<>(HttpStatus.NO_CONTENT);
+		}
+		
+		return result;
 	}
 
 	
@@ -70,6 +99,10 @@ public class QuickRegisterController {
 	//Document
 	
 	
+	
+	
+	/*
+	
 	@RequestMapping(value="/customer")
 	public QuickRegisterEntity show()
 	{
@@ -77,7 +110,6 @@ public class QuickRegisterController {
 				new Date(), new Date(), "CUST_ONLINE");
 	}
 	
-	/*
 	@RequestMapping(value="/customer")
 	public MobileVerificationDetails show()
 	{

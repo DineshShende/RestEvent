@@ -96,6 +96,13 @@ public class QuickRegisterDataFixture {
 		
 	}
 	
+	public static QuickRegisterEntity standardEmailMobileCustomerWithError()
+	{
+		return new QuickRegisterEntity(CUST_ID,CUST_FIRSTNAME,CUST_LASTNAME,null,null,CUST_PIN_CODE,CUST_IS_EMAIL_VERIFIED_FALSE,
+				CUST_IS_MOBILE_VERIFIED_FALSE,ENTITY_TYPE_CUSTOMER,CUST_INSERT_TIME,CUST_UPDATE_TIME,CUST_UPDATED_BY);
+		
+	}
+	
 	public static QuickRegisterEntity standardMobileCustomer()
 	{
 		return new QuickRegisterEntity(CUST_ID,CUST_FIRSTNAME,CUST_LASTNAME,null,CUST_MOBILE,CUST_PIN_CODE,CUST_IS_EMAIL_VERIFIED_FALSE,

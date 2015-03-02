@@ -1,5 +1,6 @@
 package com.projectx.rest.services.quickregister;
 
+import static com.projectx.rest.config.Constants.SPRING_PROFILE_ACTIVE;
 import static com.projectx.rest.fixture.quickregister.EmailVerificationDetailsFixtures.*;
 import static com.projectx.rest.fixture.quickregister.QuickRegisterDataFixture.*;
 import static org.junit.Assert.*;
@@ -18,11 +19,13 @@ import com.projectx.rest.domain.quickregister.CustomerQuickRegisterStatusEntity;
 import com.projectx.rest.domain.quickregister.EmailVerificationDetails;
 import com.projectx.rest.domain.quickregister.MobileVerificationDetails;
 import com.projectx.rest.domain.quickregister.QuickRegisterEntity;
+import com.projectx.rest.exception.repository.quickregister.QuickRegisterEntityNotFoundException;
+import com.projectx.rest.exception.repository.quickregister.ResourceNotFoundException;
 
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
-@ActiveProfiles(value="Dev")
+@ActiveProfiles(SPRING_PROFILE_ACTIVE)
 public class EmailVerificationServiceTest {
 
 	@Autowired
@@ -79,7 +82,15 @@ public class EmailVerificationServiceTest {
 	@Test 
 	public void verifyEmailHashMobilePinWithEmailMobileCustomer() throws Exception
 	{
-		assertNull(customerQuickRegisterHandler.getByEntityId(CUST_ID).getCustomerId());
+		QuickRegisterEntity quickRegisterEntity=null;
+		
+		try{
+			quickRegisterEntity=customerQuickRegisterHandler.getByEntityId(CUST_ID);
+		}catch(ResourceNotFoundException e)
+		{
+			assertNull(quickRegisterEntity);
+		}
+		
 	
 		CustomerQuickRegisterStatusEntity handledEntity=customerQuickRegisterHandler
 				.handleNewCustomerQuickRegister(standardEmailMobileCustomerDTO());
@@ -99,7 +110,7 @@ public class EmailVerificationServiceTest {
 		assertNull(authenticationDetails.getEmailPassword());
 		
 		assertTrue(emailVerificationService.verifyEmailHashUpdateStatusAndSendPassword(handledEntity.getCustomer().getCustomerId(),
-				handledEntity.getCustomer().getCustomerType(),1, emailVerificationDetails.getEmailHash()));
+				handledEntity.getCustomer().getCustomerType(),1, emailVerificationDetails.getEmailHash(),emailVerificationDetails.getUpdatedBy()));
 		
 		authenticationDetails=authenticationService.
 				getByEntityIdType(handledEntity.getCustomer().getCustomerId(),handledEntity.getCustomer().getCustomerType());
@@ -118,7 +129,7 @@ public class EmailVerificationServiceTest {
 		
 		assertTrue(mobileVerificationService
 				.verifyMobilePinUpdateStatusAndSendPassword(handledEntity.getCustomer().getCustomerId(),handledEntity.getCustomer().getCustomerType(),
-						1,mobileVerificationDetails.getMobilePin()));
+						1,mobileVerificationDetails.getMobilePin(),mobileVerificationDetails.getUpdatedBy()));
 		
 		authenticationDetails=authenticationService
 				.getByEntityIdType(handledEntity.getCustomer().getCustomerId(),handledEntity.getCustomer().getCustomerType());
@@ -137,7 +148,15 @@ public class EmailVerificationServiceTest {
 	@Test 
 	public void verifyEmailWithEmailCustomer() throws Exception
 	{
-		assertNull(customerQuickRegisterHandler.getByEntityId(CUST_ID).getCustomerId());
+		QuickRegisterEntity quickRegisterEntity=null;
+		
+		try{
+			quickRegisterEntity=customerQuickRegisterHandler.getByEntityId(CUST_ID);
+		}catch(ResourceNotFoundException e)
+		{
+			assertNull(quickRegisterEntity);
+		}
+		
 	
 		QuickRegisterEntity handledEntity=customerQuickRegisterHandler
 				.handleNewCustomerQuickRegister(standardEmailCustomerDTO()).getCustomer();
@@ -145,6 +164,8 @@ public class EmailVerificationServiceTest {
 		
 		EmailVerificationDetails emailVerificationDetail=emailVerificationService.getByEntityIdTypeAndEmailType
 													(handledEntity.getCustomerId(),handledEntity.getCustomerType(), 1); 
+		
+		
 		
 		AuthenticationDetails authenticationDetails=authenticationService
 				.getByEntityIdType(handledEntity.getCustomerId(),handledEntity.getCustomerType());
@@ -154,7 +175,7 @@ public class EmailVerificationServiceTest {
 	
 		
 		assertTrue(emailVerificationService.verifyEmailHashUpdateStatusAndSendPassword(handledEntity.getCustomerId(),
-				handledEntity.getCustomerType(),1 ,emailVerificationDetail.getEmailHash()));
+				handledEntity.getCustomerType(),1 ,emailVerificationDetail.getEmailHash(),emailVerificationDetail.getUpdatedBy()));
 		
 		authenticationDetails=authenticationService.getByEntityIdType(handledEntity.getCustomerId(),handledEntity.getCustomerType());
 		
@@ -166,21 +187,32 @@ public class EmailVerificationServiceTest {
 		
 		
 	}
-/*	
-	@Test
-	public void checkIfEmailExist() throws Exception
-	{
 	
-		assertEquals("NOTEXIST", emailVerificationService.checkIfEmailAlreadyExist(CUST_ID, ENTITY_TYPE_CUSTOMER,ENTITY_TYPE_CUSTOMER, CUST_EMAIL));
+	
+	@Test
+	public void resendEmailHash() throws Exception
+	{
+		QuickRegisterEntity quickRegisterEntity=null;
 		
-				
+		try{
+			quickRegisterEntity=customerQuickRegisterHandler.getByEntityId(CUST_ID);
+		}catch(ResourceNotFoundException e)
+		{
+			assertNull(quickRegisterEntity);
+		}
+		
+	
 		QuickRegisterEntity handledEntity=customerQuickRegisterHandler
 				.handleNewCustomerQuickRegister(standardEmailCustomerDTO()).getCustomer();
 		
-		assertEquals("EXIST", emailVerificationService.checkIfEmailAlreadyExist(handledEntity.getCustomerId(), ENTITY_TYPE_CUSTOMER,ENTITY_TYPE_CUSTOMER, CUST_EMAIL));
 		
-		assertEquals("EXISTWITHOTHERENTITY", emailVerificationService.checkIfEmailAlreadyExist(CUST_ID, ENTITY_TYPE_VENDOR,ENTITY_TYPE_CUSTOMER, CUST_EMAIL));
+		EmailVerificationDetails emailVerificationDetail=emailVerificationService.getByEntityIdTypeAndEmailType
+													(handledEntity.getCustomerId(),handledEntity.getCustomerType(), 1); 
+		
+		Boolean status=emailVerificationService.sendEmailHash(handledEntity.getCustomerId(), ENTITY_TYPE_CUSTOMER, ENTITY_TYPE_CUSTOMER);
+		
+		assertTrue(status);
+	
 	}
-*/	
 	
 }

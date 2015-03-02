@@ -2,7 +2,12 @@ package com.projectx.rest.controller.request;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,6 +16,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.projectx.rest.domain.request.FreightRequestByCustomer;
 import com.projectx.rest.domain.request.FreightRequestByVendor;
+import com.projectx.rest.exception.repository.completeregister.ValidationFailedException;
+import com.projectx.rest.exception.repository.quickregister.ResourceAlreadyPresentException;
+import com.projectx.rest.exception.repository.quickregister.ResourceNotFoundException;
 import com.projectx.rest.services.request.FreightRequestByCustomerService;
 
 @RestController
@@ -21,46 +29,66 @@ public class FreightRequestByCustomerController {
 	FreightRequestByCustomerService freightRequestByCustomerService;
 	
 	@RequestMapping(method=RequestMethod.POST)
-	public FreightRequestByCustomer newRequest(@RequestBody FreightRequestByCustomer freightRequestByCustomer)
+	public ResponseEntity<FreightRequestByCustomer> newRequest(@Valid @RequestBody FreightRequestByCustomer freightRequestByCustomer,
+			BindingResult bindingResult)
 	{
-		FreightRequestByCustomer savedEntity=freightRequestByCustomerService.newRequest(freightRequestByCustomer);
+		if(bindingResult.hasErrors())
+			return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
 		
-		return savedEntity;
+		ResponseEntity<FreightRequestByCustomer> result=null;
+		
+		try{
+			FreightRequestByCustomer savedEntity=freightRequestByCustomerService.newRequest(freightRequestByCustomer);
+			result=new ResponseEntity<FreightRequestByCustomer>(savedEntity, HttpStatus.CREATED);
+		}catch(ResourceAlreadyPresentException e)
+		{
+			result=new ResponseEntity<>(HttpStatus.ALREADY_REPORTED);
+		}catch(ValidationFailedException e)
+		{
+			result=new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+		}
+		
+		return result;
 	}
 	
 	@RequestMapping(value="/getById/{requestId}")
-	public FreightRequestByCustomer getRequestById(@PathVariable Long requestId){
+	public ResponseEntity<FreightRequestByCustomer> getRequestById(@PathVariable Long requestId){
 		
-		FreightRequestByCustomer savedEntity=freightRequestByCustomerService.getRequestById(requestId);
-		
-		return savedEntity;
+		try{
+			FreightRequestByCustomer savedEntity=freightRequestByCustomerService.getRequestById(requestId);
+			
+			return new ResponseEntity<FreightRequestByCustomer>(savedEntity, HttpStatus.FOUND);
+		}catch(ResourceNotFoundException e)
+		{
+			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+		}
 		
 	}
 	
 	@RequestMapping(value="/getByCustomerId/{customerId}")
-	public List<FreightRequestByCustomer> getAllRequestForCustomer(@PathVariable Long customerId)
+	public ResponseEntity<List<FreightRequestByCustomer>> getAllRequestForCustomer(@PathVariable Long customerId)
 	{
 		List<FreightRequestByCustomer> savedEntity=freightRequestByCustomerService.getAllRequestForCustomer(customerId);
 		
-		return savedEntity;
+		return new ResponseEntity<List<FreightRequestByCustomer>>(savedEntity, HttpStatus.OK);
 		
 	}
 	
 	@RequestMapping(value="/getMatchingCustomerReqForVendorReq",method=RequestMethod.POST)
-	public List<FreightRequestByCustomer> getMatchingCustomerReqForVendorReq(@RequestBody FreightRequestByVendor freightRequestByVendor)
+	public ResponseEntity<List<FreightRequestByCustomer>> getMatchingCustomerReqForVendorReq(@RequestBody FreightRequestByVendor freightRequestByVendor)
 	{
 		List<FreightRequestByCustomer> savedEntity=freightRequestByCustomerService.getMatchingCustReqForVendorReq(freightRequestByVendor);
 		
-		return savedEntity;
+		return new ResponseEntity<List<FreightRequestByCustomer>>(savedEntity, HttpStatus.OK);
 		
 	}
 	
 	@RequestMapping(value="/deleteById/{requestId}")
-	public Boolean deleteRequestById(@PathVariable Long requestId)
+	public ResponseEntity<Boolean> deleteRequestById(@PathVariable Long requestId)
 	{
 		Boolean result=freightRequestByCustomerService.deleteRequestById(requestId);
 		
-		return result;
+		return new ResponseEntity<Boolean>(result, HttpStatus.OK);
 	}
 	
 	@RequestMapping(value="/clearTestData")

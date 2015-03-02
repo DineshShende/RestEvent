@@ -12,23 +12,24 @@ import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.projectx.data.domain.completeregister.UpdateEmailVerificationStatusDTO;
-import com.projectx.data.domain.completeregister.UpdateMobileVerificationStatusDTO;
+import com.projectx.data.domain.completeregister.UpdateEmailVerificationStatusUpdatedByDTO;
+import com.projectx.data.domain.completeregister.UpdateMobileVerificationStatusUpdatedByDTO;
 import com.projectx.rest.config.Application;
 import com.projectx.rest.domain.completeregister.VendorDetails;
 import com.projectx.rest.domain.quickregister.MobileVerificationDetails;
 import com.projectx.rest.domain.quickregister.MobileVerificationDetailsKey;
+import com.projectx.rest.exception.repository.completeregister.VendorDetailsNotFoundException;
 import com.projectx.rest.services.quickregister.EmailVerificationService;
 import com.projectx.rest.services.quickregister.MobileVerificationService;
 
+import static com.projectx.rest.config.Constants.SPRING_PROFILE_ACTIVE;
 import static com.projectx.rest.fixture.completeregister.VendorDetailsDataFixture.*;
 import static com.projectx.rest.fixture.completeregister.AddressDataFixture.*;
 
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes={Application.class})
-@ActiveProfiles(value="Dev")
-
+@ActiveProfiles(SPRING_PROFILE_ACTIVE)
 public class VendorDetailsRepositoryTest {
 
 	@Autowired
@@ -66,6 +67,18 @@ public class VendorDetailsRepositoryTest {
 		
 	}
 	
+	@Test
+	public void findOneFailure()
+	{
+		VendorDetails savedEntity=null;
+		
+		try{
+			savedEntity=vendorDetailsRepository.findOne(VENDOR_ID);
+		}catch(VendorDetailsNotFoundException e)
+		{
+			assertNull(savedEntity);
+		}
+	}
 	
 	@Test
 	public void count()
@@ -100,7 +113,7 @@ public class VendorDetailsRepositoryTest {
 		assertEquals(1,vendorDetailsRepository.count().intValue());
 		
 		assertEquals(1,vendorDetailsRepository
-				.updateEmailVerificationStatus(new UpdateEmailVerificationStatusDTO(savedEntity.getVendorId(),standardVendor().getEmail(), true)).intValue());
+				.updateEmailVerificationStatus(new UpdateEmailVerificationStatusUpdatedByDTO(savedEntity.getVendorId(),standardVendor().getEmail(), true,savedEntity.getUpdatedBy())).intValue());
 	
 		assertEquals(1,vendorDetailsRepository.count().intValue());
 		
@@ -117,7 +130,7 @@ public class VendorDetailsRepositoryTest {
 		assertEquals(1,vendorDetailsRepository.count().intValue());
 		
 		assertEquals(1,vendorDetailsRepository
-				.updateMobileVerificationStatus(new UpdateMobileVerificationStatusDTO(savedEntity.getVendorId(),savedEntity.getMobile() ,true)).intValue());
+				.updateMobileVerificationStatus(new UpdateMobileVerificationStatusUpdatedByDTO(savedEntity.getVendorId(),savedEntity.getMobile() ,true,savedEntity.getUpdatedBy())).intValue());
 	
 		assertEquals(1,vendorDetailsRepository.count().intValue());
 		

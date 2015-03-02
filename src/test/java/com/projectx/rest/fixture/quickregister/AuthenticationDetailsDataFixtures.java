@@ -25,7 +25,7 @@ public class AuthenticationDetailsDataFixtures {
 	//public static Integer CUST_TYPE_VENDOR=2;
 	
 	public static Date CUST_DATE=new Date();
-	public static String CUST_UPDATED_BY="CUST_ONLINE";
+	
 	
 	
 	public static AuthenticationDetailsKey standardAuthenticationDetailsKey()

@@ -1,12 +1,7 @@
 package com.projectx.rest.controller.quickregister;
 
-import static com.projectx.rest.fixture.quickregister.MobileVericationDetailsFixtures.standardCustomerIdMobileDTO;
 import static com.projectx.rest.fixture.quickregister.MobileVericationDetailsFixtures.*;
-import static com.projectx.rest.fixture.quickregister.QuickRegisterDataFixture.CUST_ID;
-import static com.projectx.rest.fixture.quickregister.QuickRegisterDataFixture.CUST_MOBILE;
-import static com.projectx.rest.fixture.quickregister.QuickRegisterDataFixture.CUST_MOBILEPIN;
 import static com.projectx.rest.fixture.quickregister.QuickRegisterDataFixture.*;
-
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -66,7 +61,7 @@ public class MobileVerificationControllerStandAloneTest {
 				.contentType(MediaType.APPLICATION_JSON)
 				.accept(MediaType.APPLICATION_JSON))
 		.andDo(print())
-		.andExpect(status().isOk())
+		.andExpect(status().isFound())
 		//.andExpect(jsonPath("$.customerId").value(standardCustomerMobileVerificationDetails().getCustomerId()))
 	    .andExpect(jsonPath("$.key.mobileType").value(standardCustomerMobileVerificationDetails().getKey().getMobileType()))
 	    .andExpect(jsonPath("$.mobile").value(standardCustomerMobileVerificationDetails().getMobile()))
@@ -78,7 +73,6 @@ public class MobileVerificationControllerStandAloneTest {
 
 		
 	}
-	
 	
 	/*
 	@Test
@@ -100,11 +94,11 @@ public class MobileVerificationControllerStandAloneTest {
 	@Test
 	public void reSetMobilePin() throws Exception
 	{
-		when(mobileVerificationService.reSetMobilePin(CUST_ID,ENTITY_TYPE_CUSTOMER,MOB_TYPE_PRIMARY)).thenReturn(true);
+		when(mobileVerificationService.reSetMobilePin(CUST_ID,ENTITY_TYPE_CUSTOMER,MOB_TYPE_PRIMARY,CUST_UPDATED_BY)).thenReturn(true);
 		
 		this.mockMvc.perform(
 	            post("/customer/quickregister/resetMobilePin")
-	                    .content(standardJsonUpdateMobilePinDTOMVC())
+	                    .content(standardJsonUpdateMobilePinUpdatedByDTOMVC())
 	                    .contentType(MediaType.APPLICATION_JSON)
 	                    .accept(MediaType.APPLICATION_JSON))
 	            .andDo(print())
@@ -118,11 +112,11 @@ public class MobileVerificationControllerStandAloneTest {
 	@Test
 	public void reSendMobilePin() throws Exception
 	{
-		when(mobileVerificationService.reSendMobilePin(CUST_ID,ENTITY_TYPE_CUSTOMER,MOB_TYPE_PRIMARY)).thenReturn(true);
+		when(mobileVerificationService.reSendMobilePin(CUST_ID,ENTITY_TYPE_CUSTOMER,MOB_TYPE_PRIMARY,CUST_UPDATED_BY)).thenReturn(true);
 		
 		this.mockMvc.perform(
 	            post("/customer/quickregister/resendMobilePin")
-	                    .content(standardJsonUpdateMobilePinDTOMVC())
+	                    .content(standardJsonUpdateMobilePinUpdatedByDTOMVC())
 	                    .contentType(MediaType.APPLICATION_JSON)
 	                    .accept(MediaType.APPLICATION_JSON))
 	            .andDo(print())

@@ -7,17 +7,14 @@ import org.springframework.stereotype.Service;
 import com.projectx.mvc.domain.request.FreightRequestByVendorDTO;
 import com.projectx.rest.domain.request.FreightRequestByCustomer;
 import com.projectx.rest.domain.request.FreightRequestByVendor;
+import com.projectx.rest.exception.repository.quickregister.ResourceNotFoundException;
 
 @Service
 public interface FreightRequestByVendorService {
 
 	FreightRequestByVendor newRequest(FreightRequestByVendor freightRequestByCustomer);
 	
-	FreightRequestByVendor getRequestById(Long requestId);
-	
-	//FreightRequestByVendor toFreightRequestByVendor(FreightRequestByVendorDTO freightRequestByVendorDTO);
-	
-	//FreightRequestByVendorDTO toFreightRequestByVendorDTO(FreightRequestByVendor freightRequestByVendor);
+	FreightRequestByVendor getRequestById(Long requestId) throws ResourceNotFoundException;
 	
 	List<FreightRequestByVendor> getAllRequestForVendor(Long vendorId);
 	

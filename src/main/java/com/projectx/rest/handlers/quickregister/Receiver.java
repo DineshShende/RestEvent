@@ -41,16 +41,16 @@ public class Receiver  {
 		
 		latch.countDown();
 	}
-
+*/
 	//-------------------------------------------------------------------
 	
 	public void sayHi()
 	{
-		System.out.println("Hi");
+		System.out.println("Hi"+new Date());
 	}
 	
 	//--------------------------------------------------------------------
-
+/*
 	public CountDownLatch getLatch() {
 		return latch;
 	}

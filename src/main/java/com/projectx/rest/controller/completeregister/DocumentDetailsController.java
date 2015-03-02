@@ -1,6 +1,8 @@
 package com.projectx.rest.controller.completeregister;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -10,6 +12,7 @@ import com.projectx.mvc.domain.completeregister.UpdateDocumentDTO;
 import com.projectx.mvc.domain.completeregister.UpdateDocumentVerificationStatusAndRemarkDTO;
 import com.projectx.rest.domain.completeregister.DocumentDetails;
 import com.projectx.rest.domain.completeregister.DocumentKey;
+import com.projectx.rest.exception.repository.completeregister.DocumentDetailsNotFoundException;
 import com.projectx.rest.services.completeregister.DocumentDetailsService;
 
 
@@ -29,11 +32,17 @@ public class DocumentDetailsController {
 	}
 	
 	@RequestMapping(value="/getCustomerDocumentById",method=RequestMethod.POST)
-	public DocumentDetails getCustomerDocumentById(@RequestBody DocumentKey documentKey)
+	public ResponseEntity<DocumentDetails> getCustomerDocumentById(@RequestBody DocumentKey documentKey)
 	{
-		DocumentDetails fetchedEntity=documentDetailsService.getById(documentKey);
-		
-		return fetchedEntity;
+		ResponseEntity<DocumentDetails> result=null;
+		try{
+			DocumentDetails fetchedEntity=documentDetailsService.getById(documentKey);
+			result=new ResponseEntity<DocumentDetails>(fetchedEntity, HttpStatus.FOUND);
+		}catch(DocumentDetailsNotFoundException e)
+		{
+			result=new ResponseEntity<>(HttpStatus.NO_CONTENT);
+		}
+		return result;
 	}
 
 	@RequestMapping(value="/updateDocument",method=RequestMethod.POST)

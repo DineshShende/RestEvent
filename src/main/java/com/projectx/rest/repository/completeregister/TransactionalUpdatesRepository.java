@@ -2,27 +2,34 @@ package com.projectx.rest.repository.completeregister;
 
 import org.springframework.stereotype.Repository;
 
-
 import com.projectx.data.domain.completeregister.CustomerOrVendorDetailsDTO;
 import com.projectx.rest.domain.completeregister.CustomerDetails;
 import com.projectx.rest.domain.completeregister.VendorDetails;
 import com.projectx.rest.domain.quickregister.CustomerQuickRegisterEmailMobileVerificationEntity;
 import com.projectx.rest.domain.quickregister.QuickRegisterEntity;
+import com.projectx.rest.exception.repository.completeregister.CustomerDetailsTransactionalUpdateFailedException;
+import com.projectx.rest.exception.repository.completeregister.UpdateEmailInDetailsAndAuthenticationDetailsFailedException;
+import com.projectx.rest.exception.repository.completeregister.UpdateMobileInDetailsAndAuthentionDetailsFailedException;
+import com.projectx.rest.exception.repository.completeregister.ValidationFailedException;
+import com.projectx.rest.exception.repository.completeregister.VendorDetailsTransactionalUpdateFailedException;
+import com.projectx.rest.exception.repository.quickregister.DeleteQuickCreateDetailsEntityFailedException;
+import com.projectx.rest.exception.repository.quickregister.QuickRegisterDetailsAlreadyPresentException;
 
 @Repository
 
 public interface TransactionalUpdatesRepository {
 	
-	CustomerDetails updateCustomerDetails( CustomerDetails customerDetails);
+	CustomerDetails updateCustomerDetails( CustomerDetails customerDetails) throws CustomerDetailsTransactionalUpdateFailedException
+	,ValidationFailedException;
 	
-	VendorDetails updateVendorDetails( VendorDetails vendorDetails);
+	VendorDetails updateVendorDetails( VendorDetails vendorDetails) throws VendorDetailsTransactionalUpdateFailedException;
 	
-	Boolean updateMobileInDetailsEnityAndAuthenticationDetails(Long entityId,Integer entityType,Integer mobileType);
+	Boolean updateMobileInDetailsEnityAndAuthenticationDetails(Long entityId,Integer entityType,Integer mobileType,String updatedBy) throws UpdateMobileInDetailsAndAuthentionDetailsFailedException;
 
-	Boolean updateEmailInDetailsEnityAndAuthenticationDetails(Long entityId,Integer entityType,Integer emailType);
+	Boolean updateEmailInDetailsEnityAndAuthenticationDetails(Long entityId,Integer entityType,Integer emailType,String updatedBy) throws UpdateEmailInDetailsAndAuthenticationDetailsFailedException;
 	
-	CustomerQuickRegisterEmailMobileVerificationEntity saveNewQuickRegisterEntity( QuickRegisterEntity quickRegisterEntity);
+	CustomerQuickRegisterEmailMobileVerificationEntity saveNewQuickRegisterEntity( QuickRegisterEntity quickRegisterEntity) throws QuickRegisterDetailsAlreadyPresentException ;
 
-	CustomerOrVendorDetailsDTO deleteQuickRegisterEntityCreateDetails( QuickRegisterEntity quickRegisterEntity);
+	CustomerOrVendorDetailsDTO deleteQuickRegisterEntityCreateDetails( QuickRegisterEntity quickRegisterEntity) throws DeleteQuickCreateDetailsEntityFailedException;
 	
 }

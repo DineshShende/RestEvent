@@ -7,7 +7,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import com.projectx.data.domain.quickregister.CustomerIdDTO;
@@ -21,6 +26,11 @@ import com.projectx.data.domain.quickregister.UpdateEmailMobileVerificationStatu
 import com.projectx.data.domain.quickregister.UpdateMobilePinAndMobileVerificationAttemptsAndResetCountDTO;
 import com.projectx.data.domain.quickregister.UpdateMobilePinDTO;
 import com.projectx.rest.domain.quickregister.QuickRegisterEntity;
+import com.projectx.rest.exception.repository.completeregister.ValidationFailedException;
+import com.projectx.rest.exception.repository.quickregister.QuickRegisterDetailsAlreadyPresentException;
+import com.projectx.rest.exception.repository.quickregister.QuickRegisterEntityNotFoundException;
+import com.projectx.rest.exception.repository.quickregister.QuickRegisterEntityNotSavedException;
+import com.projectx.rest.exception.repository.quickregister.ResourceNotFoundException;
 import com.projectx.rest.repository.quickregister.QuickRegisterRepository;
 
 @Component
@@ -36,52 +46,89 @@ public class QuickRegisterRepositoryImpl implements
 	Environment env;
 
 	@Override
-	public QuickRegisterEntity save(QuickRegisterEntity customer) {
+	public QuickRegisterEntity save(QuickRegisterEntity customer) throws QuickRegisterDetailsAlreadyPresentException,ValidationFailedException{
 		
-		QuickRegisterEntity savedEntity=restTemplate.postForObject(env.getProperty("data.url")+"/customer/quickregister", customer, QuickRegisterEntity.class);
+		HttpEntity<QuickRegisterEntity> entity=new HttpEntity<QuickRegisterEntity>(customer);
+	
+		ResponseEntity<QuickRegisterEntity> result=null;
 		
-		return savedEntity;
+		try{
+			result=restTemplate.exchange(env.getProperty("data.url")+"/customer/quickregister",
+					HttpMethod.POST, entity, QuickRegisterEntity.class);
+	
+		}catch(RestClientException e)
+		{
+			throw new ValidationFailedException();
+		}
+		
+		if(result.getStatusCode()==HttpStatus.CREATED)
+			return result.getBody();
+		else
+			throw new QuickRegisterDetailsAlreadyPresentException();
+		
+				
 	}
 
 	@Override
 	public List<QuickRegisterEntity> findAll() {
 		
 		ResponseCustomerList response=restTemplate.getForObject(env.getProperty("data.url")+"/customer/quickregister/getAll", ResponseCustomerList.class);
+		
+		//restTemplate.
 
 		return response.getCustomerList();
 
 	}
 
 	@Override
-	public QuickRegisterEntity findByCustomerId(Long customerId) {
+	public QuickRegisterEntity findByCustomerId(Long customerId) throws ResourceNotFoundException{
 		
 		CustomerIdDTO customerIdDTO=new CustomerIdDTO(customerId);
 		
-		QuickRegisterEntity quickRegisterEntity=restTemplate.postForObject(env.getProperty("data.url")+"/customer/quickregister/getEntityByCustomerId", customerIdDTO, QuickRegisterEntity.class);
+		HttpEntity<CustomerIdDTO> entity=new HttpEntity<CustomerIdDTO>(customerIdDTO);
 		
-		return quickRegisterEntity;
+		ResponseEntity<QuickRegisterEntity> result=restTemplate.exchange(env.getProperty("data.url")+"/customer/quickregister/getEntityByCustomerId",
+				HttpMethod.POST, entity, QuickRegisterEntity.class);
+
+		if(result.getStatusCode()==HttpStatus.FOUND)
+			return result.getBody();
+		else
+			throw new ResourceNotFoundException();
+
 		
 	}
 	
 
 	@Override
-	public QuickRegisterEntity findByEmail(String email) {
+	public QuickRegisterEntity findByEmail(String email) throws ResourceNotFoundException {
 		
 		EmailDTO emailDTO=new EmailDTO(email);
 		
-		QuickRegisterEntity quickRegisterEntity=restTemplate.postForObject(env.getProperty("data.url")+"/customer/quickregister/getCustomerQuickRegisterEntityByEmail", emailDTO, QuickRegisterEntity.class);
+		HttpEntity<EmailDTO> entity=new HttpEntity<EmailDTO>(emailDTO);
 		
-		return quickRegisterEntity;
+		ResponseEntity<QuickRegisterEntity> result=restTemplate.exchange(env.getProperty("data.url")+"/customer/quickregister/getCustomerQuickRegisterEntityByEmail",
+				HttpMethod.POST, entity, QuickRegisterEntity.class);
+
+		if(result.getStatusCode()==HttpStatus.FOUND)
+			return result.getBody();
+		else
+			throw new ResourceNotFoundException();
 	}
 
 	@Override
-	public QuickRegisterEntity findByMobile(Long mobile) {
+	public QuickRegisterEntity findByMobile(Long mobile) throws ResourceNotFoundException{
 		
 		MobileDTO mobileDTO=new MobileDTO(mobile);
 		
-		QuickRegisterEntity quickRegisterEntity=restTemplate.postForObject(env.getProperty("data.url")+"/customer/quickregister/getCustomerQuickRegisterEntityByMobile", mobileDTO, QuickRegisterEntity.class);
+		HttpEntity<MobileDTO> entity=new HttpEntity<MobileDTO>(mobileDTO);
 		
-		return quickRegisterEntity;
+		ResponseEntity<QuickRegisterEntity> result=restTemplate.exchange(env.getProperty("data.url")+"/customer/quickregister/getCustomerQuickRegisterEntityByMobile",
+				HttpMethod.POST, entity, QuickRegisterEntity.class);
+
+		if(result.getStatusCode()==HttpStatus.FOUND)
+			return result.getBody();
+		else
+			throw new ResourceNotFoundException();
 	}
 
 	
@@ -91,10 +138,11 @@ public class QuickRegisterRepositoryImpl implements
 		
 		UpdateEmailMobileVerificationStatus mobileVerificationStatus=new UpdateEmailMobileVerificationStatus(customerId, status, updateTime, updatedBy);
 		
-		Integer updateStatus=restTemplate.postForObject(env.getProperty("data.url")+"/customer/quickregister/updateMobileVerificationStatus", mobileVerificationStatus, Integer.class);
+		ResponseEntity<Integer> updateStatus=restTemplate.exchange(env.getProperty("data.url")+"/customer/quickregister/updateMobileVerificationStatus",
+				HttpMethod.POST,new HttpEntity<UpdateEmailMobileVerificationStatus>(mobileVerificationStatus), Integer.class);
 		
 		
-		return updateStatus;
+		return updateStatus.getBody();
 	}
 
 	@Override
@@ -103,10 +151,11 @@ public class QuickRegisterRepositoryImpl implements
 		
 		UpdateEmailMobileVerificationStatus mobileVerificationStatus=new UpdateEmailMobileVerificationStatus(customerId, status, updateTime, updatedBy);
 		
-		Integer updateStatus=restTemplate.postForObject(env.getProperty("data.url")+"/customer/quickregister/updateEmailVerificationStatus", mobileVerificationStatus, Integer.class);
+		ResponseEntity<Integer> updateStatus=restTemplate.exchange(env.getProperty("data.url")+"/customer/quickregister/updateEmailVerificationStatus", 
+				HttpMethod.POST,new HttpEntity<UpdateEmailMobileVerificationStatus>(mobileVerificationStatus), Integer.class);
 		
 		
-		return updateStatus;
+		return updateStatus.getBody();
 		
 	}
 
@@ -118,126 +167,4 @@ public class QuickRegisterRepositoryImpl implements
 	}
 
 
-
-
-
-	
-	/*	
-	@Override
-	public CustomerQuickRegisterEntity save(CustomerQuickRegisterEntity customer)
-			throws Exception {
-		
-		CustomerQuickEntitySaveDTO customerToDTO=customer.toCustomerQuickRegisterDTO();
-		
-		CustomerQuickRegisterEntity savedEntity=restTemplate.postForObject(env.getProperty("data.url")+"/customer/quickregister", 
-				customerToDTO, CustomerQuickRegisterEntity.class);
-			
-		return savedEntity;
-	}
-
-	@Override
-	public List<CustomerQuickRegisterEntity> findAll() {
-		
-		ResponseCustomerList response=restTemplate.getForObject(env.getProperty("data.url")+"/customer/quickregister/getAll", ResponseCustomerList.class);
-
-		return response.getCustomerList();
-	}
-
-	@Override
-	public CustomerQuickRegisterEntity findByCustomerId(Long customerId) {
-		
-		CustomerIdDTO customerIdDTO=new CustomerIdDTO(customerId);
-		
-		CustomerQuickRegisterEntity fetchedEntity=restTemplate.postForObject(env.getProperty("data.url")+"/customer/quickregister/getEntityByCustomerId",
-																		customerIdDTO, CustomerQuickRegisterEntity.class);
-		return fetchedEntity;
-	}
-
-	@Override
-	public Integer countByEmail(String email) {
-		
-		EmailDTO emailDTO=new EmailDTO(email);
-		
-		Integer  emailCount=restTemplate.postForObject(env.getProperty("data.url")+"/customer/quickregister/getEmailCount", 
-				emailDTO, Integer.class);
-
-		return emailCount;
-	}
-
-	@Override
-	public Integer countByMobile(Long mobile) {
-
-		MobileDTO mobileDTO=new MobileDTO(mobile);
-		
-		Integer  mobileCount=restTemplate.postForObject(env.getProperty("data.url")+"/customer/quickregister/getMobileCount", 
-				mobileDTO, Integer.class);
-
-		return mobileCount;
-	}
-
-	@Override
-	public Integer updateStatusAndMobileVerificationAttemptsByCustomerId(
-			Long customerId, String status, Date lastStatusChaneTime,
-			Integer mobileVerificationAttempts) {
-		
-		UpdateMobilePinAndMobileVerificationAttemptsAndResetCountDTO updateStatusMobileVerification=
-				new UpdateMobilePinAndMobileVerificationAttemptsAndResetCountDTO(customerId,status,lastStatusChaneTime,mobileVerificationAttempts);
-		
-		Integer updateStatus=restTemplate.postForObject(env.getProperty("data.url")+"/customer/quickregister/updateStatusAndMobileVerificationAttempts", 
-															updateStatusMobileVerification, Integer.class);
-		
-		return updateStatus;
-	}
-
-	@Override
-	public Integer updateEmailHash(Long customerId, String emailHash,
-			Date updateTime) {
-		UpdateEmailHashDTO emailHashDTO=new UpdateEmailHashDTO(customerId, emailHash, updateTime);
-		
-		Integer updateStatus=restTemplate.postForObject(env.getProperty("data.url")+"/customer/quickregister/updateEmailHash", emailHashDTO, Integer.class);
-
-		return updateStatus;
-	}
-
-	@Override
-	public Integer updateMobilePin(Long customerId, Integer mobilePin,
-			Date updateTime) {
-		UpdateMobilePinDTO mobilePinDTO=new UpdateMobilePinDTO(customerId, mobilePin, updateTime);
-		
-		Integer updateStatus=restTemplate.postForObject(env.getProperty("data.url")+"/customer/quickregister/updateMobilePin", mobilePinDTO, Integer.class);
-
-		return updateStatus;
-	}
-/*
-	@Override
-	public Integer updatePassword(Long customerId, String password,
-			String passwordType) {
-		
-		UpdatePasswordDTO passwordDTO=new UpdatePasswordDTO(customerId, password, passwordType);
-		
-		Integer updateStatus=restTemplate.postForObject(env.getProperty("data.url")+"/customer/quickregister/updatePassword", passwordDTO, Integer.class);
-
-		return updateStatus;
-	}
-*//*
-	@Override
-	public Integer updateEmailHashAndMobilePinSentTime(Long customerId,
-			Date emailHashSentTime, Date mobilePinSentTime) {
-		UpdateEmailHashAndMobilePinSentTimeDTO emailHashAndMobilePinSentTimeDTO=
-				new UpdateEmailHashAndMobilePinSentTimeDTO(customerId, emailHashSentTime, mobilePinSentTime);
-		
-		Integer updateStatus=restTemplate.postForObject(env.getProperty("data.url")+"/customer/quickregister/updateEmailHashAndMobilePinSentTime", emailHashAndMobilePinSentTimeDTO, Integer.class);
-
-		return updateStatus;
-	}
-*/
-
-	
-//	@Override
-//	public Long deleteByCustomerId(Long customerId) {
-//		// TODO Auto-generated method stub
-//		return null;
-//	}
-
-	
 }

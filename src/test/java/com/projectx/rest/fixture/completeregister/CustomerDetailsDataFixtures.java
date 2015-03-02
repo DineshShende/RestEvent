@@ -8,14 +8,14 @@ import java.util.Date;
 
 import com.google.gson.Gson;
 import com.projectx.data.domain.completeregister.UpdateAddressDTO;
-import com.projectx.data.domain.completeregister.UpdateMobileVerificationStatusDTO;
+import com.projectx.data.domain.completeregister.UpdateMobileVerificationStatusUpdatedByDTO;
 import com.projectx.data.domain.quickregister.CustomerIdTypeEmailTypeDTO;
 import com.projectx.data.domain.quickregister.CustomerIdTypeMobileTypeDTO;
 import com.projectx.mvc.domain.completeregister.VerifyEmailDTO;
 import com.projectx.mvc.domain.completeregister.VerifyMobileDTO;
 import com.projectx.rest.domain.completeregister.Address;
 import com.projectx.rest.domain.completeregister.CustomerDetails;
-import com.sun.org.apache.bcel.internal.generic.GETSTATIC;
+
 
 
 public class CustomerDetailsDataFixtures {
@@ -60,6 +60,15 @@ public class CustomerDetailsDataFixtures {
 				null, CUST_DATE, CUST_DATE, CUST_UPDATED_BY);
 	}
 	
+	public static CustomerDetails standardCustomerFromQuickEntityDuplicate()
+	{
+		return new CustomerDetails(435L, standardEmailMobileCustomer().getFirstName(),
+				standardEmailMobileCustomer().getLastName(), null, null, standardEmailMobileCustomer().getMobile(), 
+				standardEmailMobileCustomer().getIsEmailVerified(),standardEmailMobileCustomer().getEmail(),
+				standardEmailMobileCustomer().getIsEmailVerified(), null, null, null, null, null, false,
+				null, CUST_DATE, CUST_DATE, CUST_UPDATED_BY);
+	}
+	
 	public static CustomerDetails standardCustomerFromQuickEntity(Long customerId)
 	{
 		return new CustomerDetails(customerId, standardEmailMobileCustomer().getFirstName(),
@@ -84,6 +93,25 @@ public class CustomerDetailsDataFixtures {
 		return new CustomerDetails(customerDetails.getCustomerId(), customerDetails.getFirstName(),
 				customerDetails.getLastName(), CUST_DATE, standardAddress(), customerDetails.getMobile(), 
 				customerDetails.getIsEmailVerified(),customerDetails.getEmail(),
+				customerDetails.getIsEmailVerified(), CUST_LANG, CUST_BUSINESS_DOMAIN, CUST_NAME_OF_FIRM, standardAddress(),
+				CUST_SEC_MOBILE, false,	CUST_SEC_EMAIL, CUST_DATE, CUST_DATE, CUST_UPDATED_BY);
+		
+	}
+	
+	public static CustomerDetails standardCustomerDetailsAlreadyPresent()
+	{
+		return new CustomerDetails(323L, CUST_FIRSTNAME,CUST_LASTNAME, CUST_DATE, standardAddress(),
+				CUST_MOBILE,CUST_IS_MOBILE_VERIFIED_FALSE,CUST_EMAIL,CUST_IS_EMAIL_VERIFIED_FALSE, CUST_LANG, CUST_BUSINESS_DOMAIN, CUST_NAME_OF_FIRM, standardAddress(),
+				CUST_SEC_MOBILE, false,	CUST_SEC_EMAIL, CUST_DATE, CUST_DATE, CUST_UPDATED_BY);
+		
+	}
+	
+	
+	public static CustomerDetails standardCustomerDetailsError(CustomerDetails customerDetails)
+	{
+		return new CustomerDetails(customerDetails.getCustomerId(), customerDetails.getFirstName(),
+				customerDetails.getLastName(), CUST_DATE, standardAddress(), null, 
+				customerDetails.getIsEmailVerified(),null,
 				customerDetails.getIsEmailVerified(), CUST_LANG, CUST_BUSINESS_DOMAIN, CUST_NAME_OF_FIRM, standardAddress(),
 				CUST_SEC_MOBILE, false,	CUST_SEC_EMAIL, CUST_DATE, CUST_DATE, CUST_UPDATED_BY);
 		
@@ -146,9 +174,9 @@ public class CustomerDetailsDataFixtures {
 				new Date(), new Date(), "CUST_ONLINE"));
 	}
 	
-	public static UpdateMobileVerificationStatusDTO standardMobileVerificationStatusDTO()
+	public static UpdateMobileVerificationStatusUpdatedByDTO standardMobileVerificationStatusDTO()
 	{
-		return new UpdateMobileVerificationStatusDTO(CUST_ID,CUST_MOBILE, true);
+		return new UpdateMobileVerificationStatusUpdatedByDTO(CUST_ID,CUST_MOBILE, true,CUST_UPDATED_BY);
 	}
 	
 	

@@ -6,22 +6,21 @@ public class VerifyEmailHashDTO {
 	private Integer customerType;
 	private Integer emailType;
 	private String emailHash;
+	private String updatedBy;
 	
 	public VerifyEmailHashDTO() {
 	
 	}
 
 	public VerifyEmailHashDTO(Long customerId, Integer customerType,
-			Integer emailType, String emailHash) {
+			Integer emailType, String emailHash, String updatedBy) {
 		super();
 		this.customerId = customerId;
 		this.customerType = customerType;
 		this.emailType = emailType;
 		this.emailHash = emailHash;
+		this.updatedBy = updatedBy;
 	}
-
-
-
 
 
 	public Long getCustomerId() {
@@ -61,11 +60,20 @@ public class VerifyEmailHashDTO {
 		this.customerType = customerType;
 	}
 
+	
+	public String getUpdatedBy() {
+		return updatedBy;
+	}
+
+	public void setUpdatedBy(String updatedBy) {
+		this.updatedBy = updatedBy;
+	}
+
 	@Override
 	public String toString() {
 		return "VerifyEmailHashDTO [customerId=" + customerId
 				+ ", customerType=" + customerType + ", emailType=" + emailType
-				+ ", emailHash=" + emailHash + "]";
+				+ ", emailHash=" + emailHash + ", updatedBy=" + updatedBy + "]";
 	}
 
 	@Override
@@ -80,6 +88,8 @@ public class VerifyEmailHashDTO {
 				+ ((emailHash == null) ? 0 : emailHash.hashCode());
 		result = prime * result
 				+ ((emailType == null) ? 0 : emailType.hashCode());
+		result = prime * result
+				+ ((updatedBy == null) ? 0 : updatedBy.hashCode());
 		return result;
 	}
 
@@ -112,12 +122,14 @@ public class VerifyEmailHashDTO {
 				return false;
 		} else if (!emailType.equals(other.emailType))
 			return false;
+		if (updatedBy == null) {
+			if (other.updatedBy != null)
+				return false;
+		} else if (!updatedBy.equals(other.updatedBy))
+			return false;
 		return true;
 	}
 
-
-
-
-
+	
 	
 }

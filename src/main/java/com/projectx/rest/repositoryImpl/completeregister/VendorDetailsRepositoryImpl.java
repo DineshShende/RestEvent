@@ -4,13 +4,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
-import com.projectx.data.domain.completeregister.UpdateEmailVerificationStatusDTO;
-import com.projectx.data.domain.completeregister.UpdateMobileVerificationStatusDTO;
+import com.projectx.data.domain.completeregister.UpdateEmailVerificationStatusUpdatedByDTO;
+import com.projectx.data.domain.completeregister.UpdateMobileVerificationStatusUpdatedByDTO;
 import com.projectx.rest.domain.completeregister.DocumentDetails;
 import com.projectx.rest.domain.completeregister.VendorDetails;
+import com.projectx.rest.exception.repository.completeregister.ValidationFailedException;
+import com.projectx.rest.exception.repository.completeregister.VendorDetailsAlreadyPresentException;
+import com.projectx.rest.exception.repository.completeregister.VendorDetailsNotFoundException;
 import com.projectx.rest.repository.completeregister.VendorDetailsRepository;
 
 @Component
@@ -26,12 +34,25 @@ public class VendorDetailsRepositoryImpl implements VendorDetailsRepository {
 
 	
 	@Override
-	public VendorDetails save(VendorDetails vendorDetails) {
+	public VendorDetails save(VendorDetails vendorDetails)throws VendorDetailsAlreadyPresentException,ValidationFailedException {
 	
-		VendorDetails savedEntity=restTemplate.postForObject(env.getProperty("data.url")+"/vendor/save",
-				vendorDetails, VendorDetails.class);
+		HttpEntity<VendorDetails> entity=new HttpEntity<VendorDetails>(vendorDetails);
 		
-		return savedEntity;
+		ResponseEntity<VendorDetails> result=null;
+		
+		try{
+			result=restTemplate.exchange(env.getProperty("data.url")+"/vendor/save",HttpMethod.POST,
+					entity, VendorDetails.class);
+			
+		}catch(RestClientException e)
+		{
+			throw new ValidationFailedException();
+		}
+		
+		if(result.getStatusCode()==HttpStatus.CREATED)
+			return result.getBody();
+		else
+			throw new VendorDetailsAlreadyPresentException();
 		
 	}
 
@@ -47,18 +68,21 @@ public class VendorDetailsRepositoryImpl implements VendorDetailsRepository {
 	}
 
 	@Override
-	public VendorDetails findOne(Long vendorId) {
+	public VendorDetails findOne(Long vendorId) throws VendorDetailsNotFoundException{
 	
-		VendorDetails fetchedEntity=restTemplate.getForObject(env.getProperty("data.url")+"/vendor/getById/"+vendorId,
-				VendorDetails.class);
-
-		return fetchedEntity;
+		ResponseEntity<VendorDetails> result=restTemplate
+				.exchange(env.getProperty("data.url")+"/vendor/getById/"+vendorId, HttpMethod.GET, null, VendorDetails.class);
+		
+		if(result.getStatusCode()==HttpStatus.FOUND)
+			return result.getBody();
+		else
+			throw new VendorDetailsNotFoundException();
 
 	}
 
 	@Override
 	public Integer updateEmailVerificationStatus(
-			UpdateEmailVerificationStatusDTO updateVerificationStatusDTO) {
+			UpdateEmailVerificationStatusUpdatedByDTO updateVerificationStatusDTO) {
 
 		Integer updateStatus=restTemplate.postForObject(env.getProperty("data.url")+"/vendor/updateEmailVerificationStatus",
 				updateVerificationStatusDTO, Integer.class);
@@ -69,7 +93,7 @@ public class VendorDetailsRepositoryImpl implements VendorDetailsRepository {
 
 	@Override
 	public Integer updateMobileVerificationStatus(
-			UpdateMobileVerificationStatusDTO updateVerificationStatusDTO) {
+			UpdateMobileVerificationStatusUpdatedByDTO updateVerificationStatusDTO) {
 
 		Integer updateStatus=restTemplate.postForObject(env.getProperty("data.url")+"/vendor/updateMobileVerificationStatus",
 				updateVerificationStatusDTO, Integer.class);

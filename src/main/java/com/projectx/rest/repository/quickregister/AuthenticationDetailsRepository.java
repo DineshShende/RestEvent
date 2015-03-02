@@ -1,9 +1,11 @@
 package com.projectx.rest.repository.quickregister;
 
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
 
 import com.projectx.rest.domain.quickregister.AuthenticationDetails;
+import com.projectx.rest.exception.repository.completeregister.ValidationFailedException;
+import com.projectx.rest.exception.repository.quickregister.AuthenticationDetailsNotFoundException;
+import com.projectx.rest.exception.repository.quickregister.ResourceAlreadyPresentException;
 
 
 
@@ -11,31 +13,26 @@ import com.projectx.rest.domain.quickregister.AuthenticationDetails;
 @Repository
 public interface AuthenticationDetailsRepository  {
 
+	AuthenticationDetails save(AuthenticationDetails authenticationDetails) throws ResourceAlreadyPresentException,ValidationFailedException;
 	
-	AuthenticationDetails save(AuthenticationDetails authenticationDetails);
+	AuthenticationDetails getByCustomerIdType(Long customerId,Integer customerType) throws AuthenticationDetailsNotFoundException;
 	
-	AuthenticationDetails getByCustomerIdType(Long customerId,Integer customerType);
+	AuthenticationDetails getByEmail(String email) throws AuthenticationDetailsNotFoundException;
 	
-	AuthenticationDetails getByEmail(String email);
-	
-	AuthenticationDetails getByMobile(Long mobile);
-	
+	AuthenticationDetails getByMobile(Long mobile) throws AuthenticationDetailsNotFoundException;
 	
 	Integer updatePasswordEmailPasswordAndPasswordTypeAndCounts(Long customerId,Integer customerType,String password,String emailPassword,String passwordType);
-	
-	//Integer updateEmailPasswordAndPasswordTypeAndCounts(Long customerId,Integer customerType,String emailPassword);
 	
 	Integer incrementResendCount(Long customerId,Integer customerType);
 	
 	Integer incrementLastUnsucessfullAttempts(Long customerId,Integer customerType);
 	
-	//CustomerAuthenticationDetails loginVerification(String email,Long mobile,String password);
-	
 	Integer count();
-	
 	
 	Boolean clearLoginDetailsForTesting();
 	
-	
+	//Integer updateEmailPasswordAndPasswordTypeAndCounts(Long customerId,Integer customerType,String emailPassword);
+
+	//CustomerAuthenticationDetails loginVerification(String email,Long mobile,String password);
 	
 }

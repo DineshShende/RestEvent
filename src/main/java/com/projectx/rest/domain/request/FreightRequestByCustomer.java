@@ -8,22 +8,31 @@ import java.util.Date;
 
 
 
+
+
+import javax.validation.constraints.NotNull;
+
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.projectx.rest.util.annotation.FreightRequestByCustomerValid;
 import com.projectx.rest.util.serializer.JsonDateDeSerializer;
 import com.projectx.rest.util.serializer.JsonDateSerializer;
 
-
+@FreightRequestByCustomerValid
 public class FreightRequestByCustomer {
 
 	private Long requestId;
 
+	@NotNull
 	private Integer source;
 	
+	@NotNull
 	private Integer destination;
 	
+	@NotNull
 	private Date pickupDate;
 	
+	@NotNull
 	private Integer noOfVehicles;
 	
 	private Boolean isFullTruckLoad;
@@ -50,6 +59,7 @@ public class FreightRequestByCustomer {
 	
 	private  String pickupTime;
 
+	@NotNull
 	private Long customerId;
 	
 	private String status;

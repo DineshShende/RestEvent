@@ -3,6 +3,8 @@ package com.projectx.rest.controller.completeregister;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -10,7 +12,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.projectx.rest.domain.completeregister.DriverDetails;
-import com.projectx.rest.domain.completeregister.VehicleDetailsDTO;
+import com.projectx.rest.domain.completeregister.VehicleDetails;
+import com.projectx.rest.exception.repository.completeregister.VehicleDetailsNotFoundException;
 import com.projectx.rest.services.completeregister.VehicleDetailsService;
 
 @RestController
@@ -21,20 +24,28 @@ public class VehicleDetailsController {
 	VehicleDetailsService vehicleDetailsService;
 	
 	@RequestMapping(method=RequestMethod.POST)
-	public VehicleDetailsDTO addVehicle(@RequestBody VehicleDetailsDTO vehicleDetails)
+	public VehicleDetails addVehicle(@RequestBody VehicleDetails vehicleDetails)
 	{
-		VehicleDetailsDTO savedVehicle=vehicleDetailsService.addVehicle(vehicleDetails);
+		VehicleDetails savedVehicle=vehicleDetailsService.addVehicle(vehicleDetails);
 		
 		return savedVehicle;
 		
 	}
 	
 	@RequestMapping(value="/getByVehicleId/{vehicleId}")
-	public VehicleDetailsDTO getByVehicleId(@PathVariable Long vehicleId)
+	public ResponseEntity<VehicleDetails> getByVehicleId(@PathVariable Long vehicleId)
 	{
-		VehicleDetailsDTO fetchedVehicle=vehicleDetailsService.getVehicleById(vehicleId);
+		ResponseEntity<VehicleDetails> result=null;
 		
-		return fetchedVehicle;
+		try{
+			VehicleDetails fetchedVehicle=vehicleDetailsService.getVehicleById(vehicleId);
+			result=new ResponseEntity<VehicleDetails>(fetchedVehicle, HttpStatus.FOUND);
+		}catch(VehicleDetailsNotFoundException e)
+		{
+			result=new ResponseEntity<>(HttpStatus.NO_CONTENT);
+		}
+		
+		return result;
 		
 	}
 	
@@ -48,9 +59,9 @@ public class VehicleDetailsController {
 	}
 	
 	@RequestMapping(value="/getVehicleByVendor/{vendorId}")
-	public List<VehicleDetailsDTO> getDriversByVendor(@PathVariable Long vendorId)
+	public List<VehicleDetails> getDriversByVendor(@PathVariable Long vendorId)
 	{
-		List<VehicleDetailsDTO> driverList=vehicleDetailsService.vehiclesByVendorId(vendorId);
+		List<VehicleDetails> driverList=vehicleDetailsService.vehiclesByVendorId(vendorId);
 		
 		return driverList;
 		

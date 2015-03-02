@@ -1,6 +1,8 @@
 package com.projectx.rest.utils;
 
+
 import static org.junit.Assert.*;
+import static com.projectx.rest.config.Constants.SPRING_PROFILE_ACTIVE;
 import static com.projectx.rest.fixture.quickregister.QuickRegisterDataFixture.*;
 
 import java.util.concurrent.ExecutionException;
@@ -17,29 +19,37 @@ import com.projectx.rest.domain.quickregister.QuickRegisterEntity;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
-@ActiveProfiles(value="Dev")
+@ActiveProfiles(SPRING_PROFILE_ACTIVE)
 public class HandleCustomerVerificationTest {
 
 	@Autowired
 	HandleCustomerVerification handleCustomerVerification;
 	
 	@Test
-	public void test() throws InterruptedException, ExecutionException  {
+	public void sendEmail() throws InterruptedException, ExecutionException  {
 		
-	//	handleCustomerVerification.simulate();
-		
-		handleCustomerVerification.sendSMS(9960821869L, "Hi How r u?");
 		
 	    handleCustomerVerification.sendEmail("dineshshe@gmail.com", "Hi How r u?");
-		
-		//handleCustomerVerification.sendEmailHash("dineshshe@gmail.com", "Hi There!!");
+	    
+	
 	}
-	/*
+	
 	@Test
-	public void sendMobilePin() throws UnirestException
+	public void sendSMSAsynch()
 	{
-		assertTrue(handleCustomerVerification.sendSMS(CUST_MOBILE, "Hi"));
+		Boolean status=handleCustomerVerification.sendSMSAsynchronous(9960821869L, "Hi");
+		
+		System.out.println(status);
+
 	}
-	*/
+
+	@Test
+	public void sendSMS()
+	{
+		Boolean status=handleCustomerVerification.sendSMS(9960821869L, "Hi");
+		
+		System.out.println(status);
+
+	}
 
 }

@@ -23,7 +23,7 @@ public class EmailVerificationDetailsFixtures {
 	//public static Integer CUST_TYPE_CUSTOMER=1;
 	//public static Integer CUST_TYPE_VENDOR=2;
 	public static Date CUST_DATE=new Date();
-	public static String CUST_UPDATED_BY="CUST_ONLINE";
+	
 	
 	private static Gson gson=new Gson();
 	
@@ -64,13 +64,18 @@ public class EmailVerificationDetailsFixtures {
 		return "{\"customerId\":"+CUST_ID+",\"customerType\":"+ENTITY_TYPE_CUSTOMER+",\"emailType\":\""+CUST_EMAIL_TYPE_PRIMARY+"\"}";
 	}
 	
-	
-	
-	
-	public static String standardJsonVerifyEmailHashDTO(Long customerId,Integer entityType,Integer emailType,String emailHash)
+	public static String standardJsonUpdateEmailHashDTOMVC(Long customerId)
 	{
 		
-		VerifyEmailHashDTO verifyEmailHashDTO=new VerifyEmailHashDTO(customerId, entityType, emailType, emailHash);
+		return "{\"customerId\":"+customerId+",\"customerType\":"+ENTITY_TYPE_CUSTOMER+",\"emailType\":\""+CUST_EMAIL_TYPE_PRIMARY+"\"}";
+	}
+	
+	
+	
+	public static String standardJsonVerifyEmailHashDTO(Long customerId,Integer entityType,Integer emailType,String emailHash,String requestedBy)
+	{
+		
+		VerifyEmailHashDTO verifyEmailHashDTO=new VerifyEmailHashDTO(customerId, entityType, emailType, emailHash,requestedBy);
 		
 		System.out.println(gson.toJson(verifyEmailHashDTO));
 		  

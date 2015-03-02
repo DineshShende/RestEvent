@@ -7,10 +7,11 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import com.projectx.data.domain.completeregister.UpdateAddressDTO;
-import com.projectx.data.domain.completeregister.UpdateEmailVerificationStatusDTO;
-import com.projectx.data.domain.completeregister.UpdateMobileVerificationStatusDTO;
+import com.projectx.data.domain.completeregister.UpdateEmailVerificationStatusUpdatedByDTO;
+import com.projectx.data.domain.completeregister.UpdateMobileVerificationStatusUpdatedByDTO;
 import com.projectx.rest.domain.completeregister.CustomerDetails;
 import com.projectx.rest.domain.quickregister.AuthenticationDetails;
+import com.projectx.rest.exception.repository.completeregister.CustomerDetailsAlreadyPresentException;
 import com.projectx.rest.repository.completeregister.CustomerDetailsRepository;
 
 
@@ -24,56 +25,25 @@ public class CustomerDetailsMemRepository implements CustomerDetailsRepository {
 	@Override
 	public CustomerDetails save(CustomerDetails customerDetails) {
 
-		CustomerDetails savedEntity=list.put(customerDetails.getCustomerId(), customerDetails);
+		for(Long key:list.keySet())
+		{
+			if(list.get(key).getMobile().equals(customerDetails.getMobile()) || list.get(key).getEmail().equals(customerDetails.getEmail()))
+			{
+				if(customerDetails.getCustomerId()!=key)
+					throw new CustomerDetailsAlreadyPresentException();
+			}
+		}
+		if(list.containsKey(customerDetails.getCustomerId()))
+			list.replace(customerDetails.getCustomerId(), customerDetails);
+		else
+			list.put(customerDetails.getCustomerId(), customerDetails);
 		
 		return customerDetails;
 	}
 
-	/*
-	@Override
-	public CustomerDetails updateFirmAddress(UpdateAddressDTO addressDTO) {
-
-		CustomerDetails oldRecord=list.get(addressDTO.getCustomerId());
-		
-		if(oldRecord!=null)
-		{	
-			list.remove(addressDTO.getCustomerId());
-		
-			oldRecord.setFirmAddressId(addressDTO.getAddress());
-
-			list.put(addressDTO.getCustomerId(), oldRecord);
-		
-			return oldRecord;
-		}
-		else
-			return new CustomerDetails();
-
-	}
-
-	@Override
-	public CustomerDetails updateHomeAddress(UpdateAddressDTO addressDTO) {
-
-		CustomerDetails oldRecord=list.get(addressDTO.getCustomerId());
-		
-		if(oldRecord!=null)
-		{	
-			list.remove(addressDTO.getCustomerId());
-		
-			oldRecord.setHomeAddressId(addressDTO.getAddress());
-
-			list.put(addressDTO.getCustomerId(), oldRecord);
-		
-			return oldRecord;
-		}
-		else
-			return new CustomerDetails();
-
-
-	}
-*/
 	@Override
 	public Integer updateMobileVerificationStatus(
-			UpdateMobileVerificationStatusDTO verificationStatusDTO) {
+			UpdateMobileVerificationStatusUpdatedByDTO verificationStatusDTO) {
 
 		CustomerDetails oldRecord=list.get(verificationStatusDTO.getCustomerId());
 		
@@ -96,7 +66,7 @@ public class CustomerDetailsMemRepository implements CustomerDetailsRepository {
 
 	@Override
 	public Integer updateSecondaryMobileVerificationStatus(
-			UpdateMobileVerificationStatusDTO verificationStatusDTO) {
+			UpdateMobileVerificationStatusUpdatedByDTO verificationStatusDTO) {
 
 		CustomerDetails oldRecord=list.get(verificationStatusDTO.getCustomerId());
 		
@@ -118,7 +88,7 @@ public class CustomerDetailsMemRepository implements CustomerDetailsRepository {
 
 	@Override
 	public Integer updateEmailVerificationStatus(
-			UpdateEmailVerificationStatusDTO verificationStatusDTO) {
+			UpdateEmailVerificationStatusUpdatedByDTO verificationStatusDTO) {
 		
 		CustomerDetails oldRecord=list.get(verificationStatusDTO.getCustomerId());
 		

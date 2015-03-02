@@ -2,50 +2,40 @@ package com.projectx.mvc.domain.completeregister;
 
 public class VerifyEmailDTO {
 
-	private Long entityId;
-	
-	private Integer entityType;
-	
+	private Long customerId;
+	private Integer customerType;
 	private Integer emailType;
-	
 	private String emailHash;
+	private String updatedBy;
 
 	public VerifyEmailDTO() {
 
 	}
 
-	public VerifyEmailDTO(Long entityId, Integer entityType, Integer emailType,
-			String emailHash) {
+	public VerifyEmailDTO(Long customerId, Integer customerType,
+			Integer emailType, String emailHash, String updatedBy) {
 		super();
-		this.entityId = entityId;
-		this.entityType = entityType;
+		this.customerId = customerId;
+		this.customerType = customerType;
 		this.emailType = emailType;
 		this.emailHash = emailHash;
+		this.updatedBy = updatedBy;
 	}
 
-
-
-
-	public Long getEntityId() {
-		return entityId;
+	public Long getCustomerId() {
+		return customerId;
 	}
 
-
-
-	public void setEntityId(Long entityId) {
-		this.entityId = entityId;
+	public void setCustomerId(Long customerId) {
+		this.customerId = customerId;
 	}
 
-
-
-	public Integer getEntityType() {
-		return entityType;
+	public Integer getCustomerType() {
+		return customerType;
 	}
 
-
-
-	public void setEntityType(Integer entityType) {
-		this.entityType = entityType;
+	public void setCustomerType(Integer customerType) {
+		this.customerType = customerType;
 	}
 
 	public Integer getEmailType() {
@@ -60,17 +50,23 @@ public class VerifyEmailDTO {
 		return emailHash;
 	}
 
-
-
 	public void setEmailHash(String emailHash) {
 		this.emailHash = emailHash;
 	}
 
+	public String getUpdatedBy() {
+		return updatedBy;
+	}
+
+	public void setUpdatedBy(String updatedBy) {
+		this.updatedBy = updatedBy;
+	}
+
 	@Override
 	public String toString() {
-		return "VerifyEmailDTO [entityId=" + entityId + ", entityType="
-				+ entityType + ", emailType=" + emailType + ", emailHash="
-				+ emailHash + "]";
+		return "VerifyEmailDTO [customerId=" + customerId + ", customerType="
+				+ customerType + ", emailType=" + emailType + ", emailHash="
+				+ emailHash + ", updatedBy=" + updatedBy + "]";
 	}
 
 	@Override
@@ -78,13 +74,15 @@ public class VerifyEmailDTO {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result
+				+ ((customerId == null) ? 0 : customerId.hashCode());
+		result = prime * result
+				+ ((customerType == null) ? 0 : customerType.hashCode());
+		result = prime * result
 				+ ((emailHash == null) ? 0 : emailHash.hashCode());
 		result = prime * result
 				+ ((emailType == null) ? 0 : emailType.hashCode());
 		result = prime * result
-				+ ((entityId == null) ? 0 : entityId.hashCode());
-		result = prime * result
-				+ ((entityType == null) ? 0 : entityType.hashCode());
+				+ ((updatedBy == null) ? 0 : updatedBy.hashCode());
 		return result;
 	}
 
@@ -97,6 +95,16 @@ public class VerifyEmailDTO {
 		if (getClass() != obj.getClass())
 			return false;
 		VerifyEmailDTO other = (VerifyEmailDTO) obj;
+		if (customerId == null) {
+			if (other.customerId != null)
+				return false;
+		} else if (!customerId.equals(other.customerId))
+			return false;
+		if (customerType == null) {
+			if (other.customerType != null)
+				return false;
+		} else if (!customerType.equals(other.customerType))
+			return false;
 		if (emailHash == null) {
 			if (other.emailHash != null)
 				return false;
@@ -107,19 +115,14 @@ public class VerifyEmailDTO {
 				return false;
 		} else if (!emailType.equals(other.emailType))
 			return false;
-		if (entityId == null) {
-			if (other.entityId != null)
+		if (updatedBy == null) {
+			if (other.updatedBy != null)
 				return false;
-		} else if (!entityId.equals(other.entityId))
-			return false;
-		if (entityType == null) {
-			if (other.entityType != null)
-				return false;
-		} else if (!entityType.equals(other.entityType))
+		} else if (!updatedBy.equals(other.updatedBy))
 			return false;
 		return true;
 	}
 
 
-	
+		
 }

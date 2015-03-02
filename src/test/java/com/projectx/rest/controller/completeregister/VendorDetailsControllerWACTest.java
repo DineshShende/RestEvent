@@ -1,5 +1,6 @@
 package com.projectx.rest.controller.completeregister;
 
+import static com.projectx.rest.config.Constants.SPRING_PROFILE_ACTIVE;
 import static com.projectx.rest.fixture.completeregister.AddressDataFixture.standardAddress;
 import static com.projectx.rest.fixture.completeregister.CustomerDetailsDataFixtures.*;
 import static com.projectx.rest.fixture.quickregister.QuickRegisterDataFixture.*;
@@ -46,7 +47,7 @@ import static com.projectx.rest.fixture.completeregister.VendorDetailsDataFixtur
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
 @WebAppConfiguration
-@ActiveProfiles("Dev")
+@ActiveProfiles(SPRING_PROFILE_ACTIVE)
 public class VendorDetailsControllerWACTest {
 	
 	@Autowired
@@ -168,7 +169,7 @@ public class VendorDetailsControllerWACTest {
 				get("/vendor/getVendorDetailsById/"+quickRegisterEntity.getCustomerId())
 																			)
 		.andDo(print())
-		.andExpect(status().isOk())
+		.andExpect(status().isFound())
 		.andExpect(jsonPath("$.firstName").value(standardVendor().getFirstName()))
 	    .andExpect(jsonPath("$.lastName").value(standardVendor().getLastName()))
 	    .andExpect(jsonPath("$.firmAddress.customerType").value(standardAddress().getCustomerType()))
@@ -207,7 +208,7 @@ public class VendorDetailsControllerWACTest {
 				.getByEntityIdTypeAndMobileType(vendorDetails.getVendorId(), ENTITY_TYPE_VENDOR, MOB_TYPE_PRIMARY);
 		
 		VerifyMobileDTO verifyMobileDTO=new VerifyMobileDTO(vendorDetails.getVendorId(), ENTITY_TYPE_VENDOR,
-				mobileVerificationDetails.getKey().getMobileType(), mobileVerificationDetails.getMobilePin());
+				mobileVerificationDetails.getKey().getMobileType(), mobileVerificationDetails.getMobilePin(),CUST_UPDATED_BY);
 		
 		this.mockMvc.perform(
 				post("/vendor/verifyMobileDetails")
@@ -236,7 +237,8 @@ public class VendorDetailsControllerWACTest {
 				emailVerificationService
 				.getByEntityIdTypeAndEmailType(vendorDetails.getVendorId(), ENTITY_TYPE_VENDOR, EMAIL_TYPE_PRIMARY);
 		
-		VerifyEmailDTO verifyEmailDTO=new VerifyEmailDTO(vendorDetails.getVendorId(), ENTITY_TYPE_VENDOR, EMAIL_TYPE_PRIMARY,emailVerificationDetails.getEmailHash());
+		VerifyEmailDTO verifyEmailDTO=new VerifyEmailDTO(vendorDetails.getVendorId(), ENTITY_TYPE_VENDOR, EMAIL_TYPE_PRIMARY,
+				emailVerificationDetails.getEmailHash(),CUST_UPDATED_BY);
 		
 		this.mockMvc.perform(
 				post("/vendor/verifyEmailDetails")

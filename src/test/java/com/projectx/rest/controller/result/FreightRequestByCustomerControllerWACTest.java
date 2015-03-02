@@ -1,5 +1,6 @@
 package com.projectx.rest.controller.result;
 
+import static com.projectx.rest.config.Constants.SPRING_PROFILE_ACTIVE;
 import static com.projectx.rest.fixture.completeregister.VehicleDetailsDataFixtures.standardVehicleDetails;
 import static com.projectx.rest.fixture.request.FreightRequestByCustomerDataFixture.*;
 import static com.projectx.rest.fixture.request.FreightRequestByVendorDataFixture.*;
@@ -10,6 +11,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 
 
 
@@ -44,8 +46,7 @@ import com.projectx.rest.services.request.FreightRequestByVendorService;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
 @WebAppConfiguration
-
-@ActiveProfiles(value="Prod")
+@ActiveProfiles(SPRING_PROFILE_ACTIVE)
 public class FreightRequestByCustomerControllerWACTest {
 
 	@Autowired

@@ -1,6 +1,7 @@
 package com.projectx.rest.controller.completeregister;
 
 
+import static com.projectx.rest.config.Constants.SPRING_PROFILE_ACTIVE;
 import static com.projectx.rest.fixture.completeregister.VehicleDetailsDataFixtures.*;
 import static org.junit.Assert.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -24,13 +25,13 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import com.projectx.rest.config.Application;
-import com.projectx.rest.domain.completeregister.VehicleDetailsDTO;
+import com.projectx.rest.domain.completeregister.VehicleDetails;
 import com.projectx.rest.services.completeregister.VehicleDetailsService;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
 @WebAppConfiguration
-@ActiveProfiles("Dev")
+@ActiveProfiles(SPRING_PROFILE_ACTIVE)
 
 public class VehicleDetailsControllerWACTest {
 
@@ -96,13 +97,13 @@ public class VehicleDetailsControllerWACTest {
 	public void getByVehicleId() throws Exception
 	{
 		
-		VehicleDetailsDTO vehicleDetails=vehicleDetailsService.addVehicle(standardVehicleDetails());
+		VehicleDetails vehicleDetails=vehicleDetailsService.addVehicle(standardVehicleDetails());
 		
 		this.mockMvc.perform(
 	            get("/vendor/vehicle/getByVehicleId/"+vehicleDetails.getVehicleId())
 	                )
 	            .andDo(print())
-	            .andExpect(status().isOk())
+	            .andExpect(status().isFound())
 	            
 	         //   .andExpect(jsonPath("$.key.customerId").value(standardDocumentDetailsWithDummyDocument().getKey().getCustomerId()))
 		
@@ -133,7 +134,7 @@ public class VehicleDetailsControllerWACTest {
 	@Test
 	public void deleteByVehicleId() throws Exception
 	{
-		VehicleDetailsDTO vehicleDetails=vehicleDetailsService.addVehicle(standardVehicleDetails());
+		VehicleDetails vehicleDetails=vehicleDetailsService.addVehicle(standardVehicleDetails());
 		
 		this.mockMvc.perform(
 	            get("/vendor/vehicle/deleteByVehicleId/"+vehicleDetails.getVehicleId())
@@ -149,9 +150,9 @@ public class VehicleDetailsControllerWACTest {
 	@Test
 	public void getDriversByVendor() throws Exception
 	{
-		VehicleDetailsDTO vehicleDetails=vehicleDetailsService.addVehicle(standardVehicleDetails());
+		VehicleDetails vehicleDetails=vehicleDetailsService.addVehicle(standardVehicleDetails());
 		
-		VehicleDetailsDTO vehicleDetailsOther=vehicleDetailsService.addVehicle(standardVehicleDetailsOther());
+		VehicleDetails vehicleDetailsOther=vehicleDetailsService.addVehicle(standardVehicleDetailsOther());
 		
 		this.mockMvc.perform(
 	            get("/vendor/vehicle/getVehicleByVendor/"+vehicleDetails.getVendorId())

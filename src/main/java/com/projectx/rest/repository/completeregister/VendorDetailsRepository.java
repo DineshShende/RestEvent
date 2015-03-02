@@ -3,24 +3,27 @@ package com.projectx.rest.repository.completeregister;
 
 import org.springframework.stereotype.Repository;
 
-import com.projectx.data.domain.completeregister.UpdateEmailVerificationStatusDTO;
-import com.projectx.data.domain.completeregister.UpdateMobileVerificationStatusDTO;
+import com.projectx.data.domain.completeregister.UpdateEmailVerificationStatusUpdatedByDTO;
+import com.projectx.data.domain.completeregister.UpdateMobileVerificationStatusUpdatedByDTO;
 import com.projectx.rest.domain.completeregister.VendorDetails;
+import com.projectx.rest.exception.repository.completeregister.ValidationFailedException;
+import com.projectx.rest.exception.repository.completeregister.VendorDetailsAlreadyPresentException;
+import com.projectx.rest.exception.repository.completeregister.VendorDetailsNotFoundException;
 
 
 
 @Repository
 public interface VendorDetailsRepository {
 
-	VendorDetails save(VendorDetails vendorDetails);
+	VendorDetails save(VendorDetails vendorDetails) throws VendorDetailsAlreadyPresentException,ValidationFailedException;
 	
 	VendorDetails update( VendorDetails vendorDetails);
 	
-	VendorDetails findOne( Long vendorId);
+	VendorDetails findOne( Long vendorId) throws VendorDetailsNotFoundException;
 	
-	Integer updateEmailVerificationStatus( UpdateEmailVerificationStatusDTO updateVerificationStatusDTO);
+	Integer updateEmailVerificationStatus( UpdateEmailVerificationStatusUpdatedByDTO updateVerificationStatusDTO);
 	
-	Integer updateMobileVerificationStatus( UpdateMobileVerificationStatusDTO updateVerificationStatusDTO);
+	Integer updateMobileVerificationStatus( UpdateMobileVerificationStatusUpdatedByDTO updateVerificationStatusDTO);
 	
 	Integer count();
 	

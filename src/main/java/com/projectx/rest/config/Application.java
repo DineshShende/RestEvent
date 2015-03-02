@@ -4,10 +4,12 @@ package com.projectx.rest.config;
 
 import java.io.IOException;
 import java.security.SecureRandom;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Properties;
 import java.util.concurrent.ScheduledFuture;
 
+import javax.annotation.PostConstruct;
 import javax.transaction.HeuristicMixedException;
 import javax.transaction.HeuristicRollbackException;
 import javax.transaction.NotSupportedException;
@@ -15,6 +17,9 @@ import javax.transaction.RollbackException;
 import javax.transaction.SystemException;
 import javax.transaction.UserTransaction;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.AdviceMode;
@@ -22,6 +27,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.ImportResource;
+import org.springframework.core.env.Environment;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.scheduling.TaskScheduler;
@@ -32,25 +38,43 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.jta.JtaTransactionManager;
+import org.springframework.web.client.AsyncRestTemplate;
 import org.springframework.web.client.RestTemplate;
 
-import com.projectx.rest.handlers.quickregister.Receiver;
+import com.google.gson.Gson;
 
 
 
+
+@Configuration
 @EnableAutoConfiguration
 //@EnableAsync
 //@EnableScheduling
 @ComponentScan(basePackages="com.projectx")
-@EnableTransactionManagement
+//@EnableTransactionManagement
 //@ImportResource(value="/schedule-config.xml")
-
 //@Configuration(value="/schedule-config.xml")
 public class Application {
 
+    @Autowired
+    private Environment env;
+	
+    private final Logger log = LoggerFactory.getLogger(Application.class);
+    
     public static void main(String[] args) {
     	
         SpringApplication.run(Application.class, args);
+    }
+    
+    
+    @PostConstruct
+    public void initApplication() throws IOException {
+        if (env.getActiveProfiles().length == 0) {
+            log.warn("No Spring profile configured, running with default configuration");
+        } else {
+            log.info("Running with Spring profile(s) : {}", Arrays.toString(env.getActiveProfiles()));
+            log.info("System properties with :"+System.getProperty("spring.profiles.active"));
+        }
     }
     
     @Bean
@@ -60,6 +84,15 @@ public class Application {
     
     	return restTemplate;
     }
+    
+    @Bean
+    public AsyncRestTemplate asyncRestTemplate()
+    {
+    	AsyncRestTemplate asyncRestTemplate=new AsyncRestTemplate();
+    	
+    	return asyncRestTemplate;
+    }
+    
     
     @Bean
     public JavaMailSenderImpl mailSender()
@@ -85,6 +118,14 @@ public class Application {
     public SecureRandom secureRandom()
     {
     	return new SecureRandom();
+    }
+    
+    @Bean
+    public Gson gson()
+    {
+    	Gson gson=new Gson();
+    	
+    	return gson;
     }
     
     /*

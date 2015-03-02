@@ -16,9 +16,9 @@ public interface TransactionalUpdatesService {
 	
 	VendorDetails updateVendorDetails( VendorDetails vendorDetails);
 	
-	Boolean updateMobileInDetailsEnityAndAuthenticationDetails(Long entityId,Integer entityType,Integer mobileType);
+	Boolean updateMobileInDetailsEnityAndAuthenticationDetails(Long entityId,Integer entityType,Integer mobileType,String updatedBy);
 
-	Boolean updateEmailInDetailsEnityAndAuthenticationDetails(Long entityId,Integer entityType,Integer emailType);
+	Boolean updateEmailInDetailsEnityAndAuthenticationDetails(Long entityId,Integer entityType,Integer emailType,String updatedBy);
 
 	CustomerQuickRegisterEmailMobileVerificationEntity saveNewQuickRegisterEntity( QuickRegisterEntity quickRegisterEntity);
 	

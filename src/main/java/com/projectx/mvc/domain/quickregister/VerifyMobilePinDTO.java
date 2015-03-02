@@ -10,20 +10,25 @@ public class VerifyMobilePinDTO {
 	
 	private Integer mobilePin;
 	
+	private String requestBy;
+	
 
 	public VerifyMobilePinDTO() {
 	
 	}
 
-
 	public VerifyMobilePinDTO(Long customerId, Integer customerType,
-			Integer mobileType, Integer mobilePin) {
+			Integer mobileType, Integer mobilePin, String requestBy) {
 		super();
 		this.customerId = customerId;
 		this.customerType = customerType;
 		this.mobileType = mobileType;
 		this.mobilePin = mobilePin;
+		this.requestBy = requestBy;
 	}
+
+
+
 
 	public Long getCustomerId() {
 		return customerId;
@@ -64,14 +69,24 @@ public class VerifyMobilePinDTO {
 		this.customerType = customerType;
 	}
 
+	
+	
+
+	public String getRequestBy() {
+		return requestBy;
+	}
+
+	public void setRequestBy(String requestBy) {
+		this.requestBy = requestBy;
+	}
 
 	@Override
 	public String toString() {
 		return "VerifyMobilePinDTO [customerId=" + customerId
 				+ ", customerType=" + customerType + ", mobileType="
-				+ mobileType + ", mobilePin=" + mobilePin + "]";
+				+ mobileType + ", mobilePin=" + mobilePin + ", requestBy="
+				+ requestBy + "]";
 	}
-
 
 	@Override
 	public int hashCode() {
@@ -85,9 +100,10 @@ public class VerifyMobilePinDTO {
 				+ ((mobilePin == null) ? 0 : mobilePin.hashCode());
 		result = prime * result
 				+ ((mobileType == null) ? 0 : mobileType.hashCode());
+		result = prime * result
+				+ ((requestBy == null) ? 0 : requestBy.hashCode());
 		return result;
 	}
-
 
 	@Override
 	public boolean equals(Object obj) {
@@ -118,8 +134,13 @@ public class VerifyMobilePinDTO {
 				return false;
 		} else if (!mobileType.equals(other.mobileType))
 			return false;
+		if (requestBy == null) {
+			if (other.requestBy != null)
+				return false;
+		} else if (!requestBy.equals(other.requestBy))
+			return false;
 		return true;
 	}
 
-	
+		
 }

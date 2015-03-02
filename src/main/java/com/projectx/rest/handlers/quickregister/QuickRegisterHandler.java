@@ -17,6 +17,13 @@ import com.projectx.rest.domain.quickregister.CustomerQuickRegisterStatusEntity;
 import com.projectx.rest.domain.quickregister.EmailVerificationDetails;
 import com.projectx.rest.domain.quickregister.MobileVerificationDetails;
 import com.projectx.rest.domain.quickregister.QuickRegisterEntity;
+import com.projectx.rest.exception.repository.completeregister.ValidationFailedException;
+import com.projectx.rest.exception.repository.quickregister.EmailVerificationDetailNotFoundException;
+import com.projectx.rest.exception.repository.quickregister.MobileVerificationDetailsNotFoundException;
+import com.projectx.rest.exception.repository.quickregister.QuickRegisterDetailsAlreadyPresentException;
+import com.projectx.rest.exception.repository.quickregister.QuickRegisterEntityNotFoundException;
+import com.projectx.rest.exception.repository.quickregister.ResourceAlreadyPresentException;
+import com.projectx.rest.exception.repository.quickregister.ResourceNotFoundException;
 import com.projectx.rest.repository.completeregister.DocumentDetailsRepository;
 import com.projectx.rest.repository.completeregister.TransactionalUpdatesRepository;
 import com.projectx.rest.repository.quickregister.QuickRegisterRepository;
@@ -28,7 +35,6 @@ import com.projectx.rest.utils.MessageBuilder;
 import com.projectx.rest.utils.MessagerSender;
 
 @Component
-@Profile(value={"Dev","Test"})
 @PropertySource(value="classpath:/application.properties")
 public class QuickRegisterHandler implements
 		QuickRegisterService {
@@ -68,7 +74,7 @@ public class QuickRegisterHandler implements
 	
 	@Override
 	public CustomerQuickRegisterStringStatusEntity checkIfAlreadyRegistered(
-			CustomerQuickRegisterEntityDTO customer) throws Exception {
+			CustomerQuickRegisterEntityDTO customer)  {
 
 		String status=null;
 		
@@ -87,10 +93,25 @@ public class QuickRegisterHandler implements
 		MobileVerificationDetails entityByMobile=new MobileVerificationDetails();
 		
 		if(customer.getEmail()!=null)
-			entityByEmail=emailVerificationService.getByEmail(customer.getEmail());
+		{
+			try{
+				entityByEmail=emailVerificationService.getByEmail(customer.getEmail());
+			}catch(EmailVerificationDetailNotFoundException e)
+			{
+				//entityByEmail=new EmailVerificationDetails();
+			}
+		}
 		
 		if(customer.getMobile()!=null)
-			entityByMobile=mobileVerificationService.getByMobile(customer.getMobile());
+		{
+			try{
+				entityByMobile=mobileVerificationService.getByMobile(customer.getMobile());
+			}catch(MobileVerificationDetailsNotFoundException e)
+			{
+				//entityByMobile=new MobileVerificationDetails();
+			}
+			
+		}
 		
 
 		if(entityByEmail.getKey()!=null && entityByMobile.getKey()!=null && !entityByEmail.getKey().getCustomerId().equals(entityByMobile.getKey().getCustomerId())&&!entityByEmail.getKey().getCustomerType().equals(entityByMobile.getKey().getCustomerType()))
@@ -153,13 +174,10 @@ public class QuickRegisterHandler implements
 
 	@Override
 	public QuickRegisterEntity populateVerificationFields(
-			CustomerQuickRegisterEntityDTO customer) throws Exception {
+			CustomerQuickRegisterEntityDTO customer) {
 
 		QuickRegisterEntity customerToProcess = customer.toCustomerQuickRegisterEntity();
 		
-		if (customerToProcess.getEmail() == null && customerToProcess.getMobile() == null)
-			throw new Exception();
-
 		if (customerToProcess.getEmail() != null ) {
 			customerToProcess.setIsEmailVerified(false);
 		} 
@@ -186,7 +204,7 @@ public class QuickRegisterHandler implements
 	
 	@Override
 	public CustomerQuickRegisterEmailMobileVerificationEntity saveNewCustomerQuickRegisterEntity(
-			QuickRegisterEntity customer) throws Exception {
+			QuickRegisterEntity customer) throws QuickRegisterDetailsAlreadyPresentException,ValidationFailedException {
 				
 		
 		CustomerQuickRegisterEmailMobileVerificationEntity resultEntity=transactionalUpdatesRepository.saveNewQuickRegisterEntity(customer);
@@ -199,7 +217,8 @@ public class QuickRegisterHandler implements
 			
 		if(resultEntity.getCustomerMobileVerificationDetails().getKey()!=null && resultEntity.getCustomerMobileVerificationDetails().getMobilePin()==null)	
 			mobileVerificationService.updateMobilePin(resultEntity.getCustomerMobileVerificationDetails().getKey().getCustomerId(),
-					resultEntity.getCustomerMobileVerificationDetails().getKey().getCustomerType(), resultEntity.getCustomerMobileVerificationDetails().getKey().getMobileType());
+					resultEntity.getCustomerMobileVerificationDetails().getKey().getCustomerType(), resultEntity.getCustomerMobileVerificationDetails().getKey().getMobileType(),
+					resultEntity.getCustomerQuickRegisterEntity().getUpdatedBy());
 			
 		
 		return resultEntity;
@@ -208,7 +227,7 @@ public class QuickRegisterHandler implements
 
 		@Override
 	public CustomerQuickRegisterStatusEntity handleNewCustomerQuickRegister(
-			CustomerQuickRegisterEntityDTO customer) throws Exception {
+			CustomerQuickRegisterEntityDTO customer) throws ResourceAlreadyPresentException,ResourceNotFoundException,ValidationFailedException {
 		
 		QuickRegisterEntity customerWithStatusPopulated=populateVerificationFields(customer);
 		
@@ -224,18 +243,19 @@ public class QuickRegisterHandler implements
 
 	@Override
 	public CustomerQuickRegisterStatusEntity sendVerificationDetails(QuickRegisterEntity customer,
-			EmailVerificationDetails emailVerificationDetails,MobileVerificationDetails mobileVerificationDetails) {
+			EmailVerificationDetails emailVerificationDetails,MobileVerificationDetails mobileVerificationDetails)
+					throws ResourceNotFoundException{
 		
 		Boolean emailSentStatus=true;
 		Boolean mobileSentStatus=true;
 		
 		Boolean finalStatus=false;
 		
-		if(emailVerificationDetails.getEmailHash()==null)
+		if(customer.getEmail()!=null && emailVerificationDetails.getEmailHash()==null)
 			emailVerificationDetails=emailVerificationService.getByEntityIdTypeAndEmailType(customer.getCustomerId(), customer.getCustomerType(),
 					ENTITY_TYPE_PRIMARY);
 		
-		if(mobileVerificationDetails.getMobilePin()==null)
+		if(customer.getMobile()!=null && mobileVerificationDetails.getMobilePin()==null)
 			mobileVerificationDetails=mobileVerificationService.getByEntityIdTypeAndMobileType(customer.getCustomerId(), customer.getCustomerType(),
 					ENTITY_TYPE_PRIMARY);
 		
@@ -243,7 +263,7 @@ public class QuickRegisterHandler implements
 		{
 			emailSentStatus=messagerSender
 					.sendHashEmail(customer.getCustomerId(),ENTITY_TYPE_CUSTOMER,ENTITY_TYPE_PRIMARY, customer.getFirstName(), customer.getLastName(), 
-							customer.getEmail(), emailVerificationDetails.getEmailHash());
+							customer.getEmail(), emailVerificationDetails.getEmailHash(),emailVerificationDetails.getUpdatedBy());
 		}
 		
 		if(customer.getMobile()!=null && !customer.getIsMobileVerified())
@@ -285,7 +305,7 @@ public class QuickRegisterHandler implements
 
 	@Override
 	public QuickRegisterEntity saveCustomerQuickRegisterEntity(
-			QuickRegisterEntity customerQuickRegisterEntity) {
+			QuickRegisterEntity customerQuickRegisterEntity) throws QuickRegisterDetailsAlreadyPresentException,ValidationFailedException {
 		
 		QuickRegisterEntity quickRegisterEntity=customerQuickRegisterRepository.save(customerQuickRegisterEntity);
 		
@@ -296,7 +316,7 @@ public class QuickRegisterHandler implements
 	
 	@Override
 	public QuickRegisterEntity getByEntityId(
-			Long customerId) {
+			Long customerId)throws QuickRegisterEntityNotFoundException {
 		
 		return customerQuickRegisterRepository.findByCustomerId(customerId);
 	}
@@ -304,14 +324,14 @@ public class QuickRegisterHandler implements
 	
 	@Override
 	public QuickRegisterEntity getByEmail(
-			String email) {
+			String email) throws QuickRegisterEntityNotFoundException{
 		
 		return customerQuickRegisterRepository.findByEmail(email);
 	}
 
 	@Override
 	public QuickRegisterEntity getByMobile(
-			Long mobile) {
+			Long mobile) throws QuickRegisterEntityNotFoundException{
 		
 		return customerQuickRegisterRepository.findByMobile(mobile);
 	}

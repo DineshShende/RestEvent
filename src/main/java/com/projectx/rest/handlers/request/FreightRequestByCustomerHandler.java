@@ -8,11 +8,13 @@ import org.springframework.stereotype.Component;
 
 import com.projectx.rest.domain.request.FreightRequestByCustomer;
 import com.projectx.rest.domain.request.FreightRequestByVendor;
+import com.projectx.rest.exception.repository.completeregister.ValidationFailedException;
+import com.projectx.rest.exception.repository.quickregister.ResourceAlreadyPresentException;
+import com.projectx.rest.exception.repository.quickregister.ResourceNotFoundException;
 import com.projectx.rest.repository.request.FreightRequestByCustomerRepository;
 import com.projectx.rest.services.request.FreightRequestByCustomerService;
 
 @Component
-@Profile(value="Dev")
 public class FreightRequestByCustomerHandler implements
 		FreightRequestByCustomerService {
 
@@ -21,13 +23,13 @@ public class FreightRequestByCustomerHandler implements
 	
 	@Override
 	public FreightRequestByCustomer newRequest(
-			FreightRequestByCustomer freightRequestByCustomer) {
+			FreightRequestByCustomer freightRequestByCustomer) throws ResourceAlreadyPresentException,ValidationFailedException{
 		
 		return freightRequestByCustomerRepository.save(freightRequestByCustomer);
 	}
 
 	@Override
-	public FreightRequestByCustomer getRequestById(Long requestId) {
+	public FreightRequestByCustomer getRequestById(Long requestId) throws ResourceNotFoundException{
 
 		return freightRequestByCustomerRepository.getById(requestId);
 	}

@@ -6,15 +6,19 @@ import org.springframework.stereotype.Repository;
 
 import com.projectx.rest.domain.request.FreightRequestByCustomer;
 import com.projectx.rest.domain.request.FreightRequestByVendor;
+import com.projectx.rest.exception.repository.completeregister.ValidationFailedException;
+import com.projectx.rest.exception.repository.quickregister.ResourceAlreadyPresentException;
+import com.projectx.rest.exception.repository.quickregister.ResourceNotFoundException;
 
 
 
 @Repository
 public interface FreightRequestByCustomerRepository {
 	
-	FreightRequestByCustomer save(FreightRequestByCustomer freightRequestByCustomer);
+	FreightRequestByCustomer save(FreightRequestByCustomer freightRequestByCustomer)
+					throws ResourceAlreadyPresentException,ValidationFailedException;
 	
-	FreightRequestByCustomer getById(Long requestId);
+	FreightRequestByCustomer getById(Long requestId) throws ResourceNotFoundException;
 	
 	Boolean deleteById(Long requestId);
 	

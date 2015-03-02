@@ -27,9 +27,11 @@ import com.projectx.rest.services.quickregister.EmailVerificationService;
 import com.projectx.rest.services.quickregister.MobileVerificationService;
 import com.projectx.rest.services.quickregister.QuickRegisterService;
 
+import static com.projectx.rest.config.Constants.*;
+
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
-@ActiveProfiles(value="Dev")
+@ActiveProfiles(SPRING_PROFILE_ACTIVE)
 
 public class VendorDetailsServiceTest {
 
@@ -45,9 +47,6 @@ public class VendorDetailsServiceTest {
 	
 	@Autowired
 	QuickRegisterService quickRegisterService;
-	
-	@Autowired
-	AddressService addressService;
 	
 	private Integer ENTITY_TYPE_VENDOR=2;
 	
@@ -154,7 +153,8 @@ public class VendorDetailsServiceTest {
 		
 		assertFalse(savedEntity.getIsMobileVerified());
 		
-		assertTrue(vendorDetailsService.verifyMobileDetails(savedEntity.getVendorId(), ENTITY_TYPE_VENDOR, MOB_TYPE_PRIMARY, mobileVerificationDetails.getMobilePin()));
+		assertTrue(vendorDetailsService.verifyMobileDetails(savedEntity.getVendorId(), ENTITY_TYPE_VENDOR, MOB_TYPE_PRIMARY, 
+				mobileVerificationDetails.getMobilePin(),CUST_UPDATED_BY));
 		
 		assertTrue(vendorDetailsService.findById(savedEntity.getVendorId()).getIsMobileVerified());
 	}
@@ -179,7 +179,8 @@ public class VendorDetailsServiceTest {
 		
 		assertFalse(savedEntity.getIsEmailVerified());
 		
-		assertTrue(vendorDetailsService.verifyEmailDetails(savedEntity.getVendorId(), ENTITY_TYPE_VENDOR, EMAIL_TYPE_PRIMARY, emailVerificationDetails.getEmailHash()));
+		assertTrue(vendorDetailsService.verifyEmailDetails(savedEntity.getVendorId(), ENTITY_TYPE_VENDOR, EMAIL_TYPE_PRIMARY, 
+				emailVerificationDetails.getEmailHash(),CUST_UPDATED_BY));
 		
 		assertTrue(vendorDetailsService.findById(savedEntity.getVendorId()).getIsEmailVerified());
 	}
@@ -196,7 +197,7 @@ public class VendorDetailsServiceTest {
 		
 		VendorDetails savedEntity=vendorDetailsService.createCustomerDetailsFromQuickRegisterEntity(quickRegisterEntity);
 		
-		assertTrue(vendorDetailsService.sendMobileVerificationDetails(savedEntity.getVendorId(), ENTITY_TYPE_VENDOR, MOB_TYPE_PRIMARY));
+		assertTrue(vendorDetailsService.sendMobileVerificationDetails(savedEntity.getVendorId(), ENTITY_TYPE_VENDOR, MOB_TYPE_PRIMARY,CUST_UPDATED_BY));
 	}
 	
 	@Test
@@ -235,68 +236,6 @@ public class VendorDetailsServiceTest {
 	}
 	
 	
-	/*
-	@Test
-	public void checkIfMobileSaved() throws Exception
-	{
-		assertEquals(0, vendorDetailsService.count().intValue());
-		
-		QuickRegisterEntity quickRegisterEntity=quickRegisterService
-				.saveNewCustomerQuickRegisterEntity(standardEmailMobileVendor()).getCustomerQuickRegisterEntity();
-		
-		VendorDetails savedEntity=vendorDetailsService.createCustomerDetailsFromQuickRegisterEntity(quickRegisterEntity);
-		
-		assertEquals("EXIST", vendorDetailsService.checkIfMobileSaved(savedEntity.getVendorId(),2,MOB_TYPE_PRIMARY, savedEntity.getMobile()));
-		
-		assertEquals("NOTEXIST", vendorDetailsService.checkIfMobileSaved(savedEntity.getVendorId(),2,MOB_TYPE_PRIMARY, CUST_MOBILE));
-		
-		mobileVerificationService.saveDetails(standardCustomerMobileVerificationDetails());
-		
-		assertEquals("EXISTWITHOTHERENTITY", vendorDetailsService
-				.checkIfMobileSaved(savedEntity.getVendorId(),2,MOB_TYPE_PRIMARY, standardCustomerMobileVerificationDetails().getMobile()));
-	}
-
-
-	@Test
-	public void checkIfEmailSaved() throws Exception
-	{
-		assertEquals(0, vendorDetailsService.count().intValue());
-		
-		QuickRegisterEntity quickRegisterEntity=quickRegisterService
-				.saveNewCustomerQuickRegisterEntity(standardEmailMobileVendor()).getCustomerQuickRegisterEntity();
-		
-		VendorDetails savedEntity=vendorDetailsService.createCustomerDetailsFromQuickRegisterEntity(quickRegisterEntity);
-		
-		assertEquals("EXIST", vendorDetailsService.checkIfEmailSaved(savedEntity.getVendorId(),2, EMAIL_TYPE_PRIMARY,savedEntity.getEmail()));
-		
-		assertEquals("NOTEXIST", vendorDetailsService.checkIfEmailSaved(savedEntity.getVendorId(),2,EMAIL_TYPE_PRIMARY, CUST_EMAIL));
-		
-		emailVerificationService.saveDetails(standardCustomerEmailVerificationDetails());
-		
-		assertEquals("EXISTWITHOTHERENTITY", vendorDetailsService
-				.checkIfEmailSaved(savedEntity.getVendorId(),2,EMAIL_TYPE_PRIMARY, standardCustomerEmailVerificationDetails().getEmail()));
-	}
-
-	@Test
-	public void saveMobileVerificationDetails() 
-	{
-		assertEquals(0, mobileVerificationService.count().intValue());
-		
-		assertEquals(standardCustomerMobileVerificationDetails(), vendorDetailsService.saveMobileVerificationDetails(standardCustomerMobileVerificationDetails()));
-		
-		assertEquals(1, mobileVerificationService.count().intValue());
-	}
 	
-	@Test
-	public void saveEmailVerificationDetails() 
-	{
-		assertEquals(0, emailVerificationService.count().intValue());
-		
-		assertEquals(standardCustomerEmailVerificationDetails(), vendorDetailsService.saveEmailVerificationDetails(standardCustomerEmailVerificationDetails()));
-		
-		assertEquals(1, emailVerificationService.count().intValue());
-	}
-	*/
-
 	
 }

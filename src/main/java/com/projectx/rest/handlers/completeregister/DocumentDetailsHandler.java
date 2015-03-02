@@ -8,12 +8,13 @@ import org.springframework.stereotype.Component;
 
 import com.projectx.rest.domain.completeregister.DocumentDetails;
 import com.projectx.rest.domain.completeregister.DocumentKey;
+import com.projectx.rest.exception.repository.completeregister.DocumentDetailsNotFoundException;
 import com.projectx.rest.repository.completeregister.DocumentDetailsRepository;
 import com.projectx.rest.services.completeregister.DocumentDetailsService;
 
 
 @Component
-@Profile(value={"Dev","Test"})
+
 public class DocumentDetailsHandler implements DocumentDetailsService {
 	
 	@Autowired
@@ -40,7 +41,7 @@ public class DocumentDetailsHandler implements DocumentDetailsService {
 	@Override
 	
 	public DocumentDetails getById(
-			DocumentKey documentKey) {
+			DocumentKey documentKey) throws DocumentDetailsNotFoundException{
 		
 		DocumentDetails fetchedEntity=documentDetailsRepository.getByCustomerId(documentKey);
 		

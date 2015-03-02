@@ -3,8 +3,8 @@ package com.projectx.rest.fixture.completeregister;
 import java.util.Date;
 
 import com.google.gson.Gson;
-import com.projectx.data.domain.completeregister.UpdateEmailVerificationStatusDTO;
-import com.projectx.data.domain.completeregister.UpdateMobileVerificationStatusDTO;
+import com.projectx.data.domain.completeregister.UpdateEmailVerificationStatusUpdatedByDTO;
+import com.projectx.data.domain.completeregister.UpdateMobileVerificationStatusUpdatedByDTO;
 import com.projectx.rest.domain.completeregister.Address;
 import com.projectx.rest.domain.completeregister.VendorDetails;
 import com.projectx.rest.domain.quickregister.AuthenticationDetails;
@@ -99,14 +99,14 @@ public class VendorDetailsDataFixture {
 		return new AuthenticationDetails(standardAuthenticationDetailsKeyVendor(), VENDOR_EMAIL, VENDOR_MOBILE, CUST_PASSWORD_DEFAULT, CUST_PASSWORD_TYPE_DEFAULT, CUST_EMAILHASH, 0, 0,new Date(),new Date(),CUST_UPDATED_BY);
 	}
 	
-	public static UpdateMobileVerificationStatusDTO standardMobileUpdateVerificationStatusDTO()
+	public static UpdateMobileVerificationStatusUpdatedByDTO standardMobileUpdateVerificationStatusDTO()
 	{
-		return new UpdateMobileVerificationStatusDTO(VENDOR_ID,VENDOR_MOBILE, VENDOR_STATUS_TRUE);
+		return new UpdateMobileVerificationStatusUpdatedByDTO(VENDOR_ID,VENDOR_MOBILE, VENDOR_STATUS_TRUE,VENDOR_UPDATEDBY);
 	}
 	
-	public static UpdateEmailVerificationStatusDTO standardUpdateEmailVerificationStatusDTO()
+	public static UpdateEmailVerificationStatusUpdatedByDTO standardUpdateEmailVerificationStatusDTO()
 	{
-		return new UpdateEmailVerificationStatusDTO(VENDOR_ID,VENDOR_EMAIL, VENDOR_STATUS_TRUE);
+		return new UpdateEmailVerificationStatusUpdatedByDTO(VENDOR_ID,VENDOR_EMAIL, VENDOR_STATUS_TRUE,VENDOR_UPDATEDBY);
 	}
 	
 	public static String standardJsonVendor(VendorDetails vendorDetails)
@@ -116,7 +116,7 @@ public class VendorDetailsDataFixture {
 		return gson.toJson(vendorDetails);
 	}
 	
-	public static String standardJsonUpdateVerificationStatus(UpdateMobileVerificationStatusDTO vendorDetails)
+	public static String standardJsonUpdateVerificationStatus(UpdateMobileVerificationStatusUpdatedByDTO vendorDetails)
 	{
 		System.out.println(gson.toJson(vendorDetails));
 		

@@ -1,10 +1,10 @@
 package com.projectx.rest.repository.request;
 
 import static org.junit.Assert.*;
+import static com.projectx.rest.config.Constants.SPRING_PROFILE_ACTIVE;
 import static com.projectx.rest.fixture.completeregister.VehicleDetailsDataFixtures.standardVehicleDetails;
 import static com.projectx.rest.fixture.request.FreightRequestByCustomerDataFixture.*;
 import static com.projectx.rest.fixture.request.FreightRequestByVendorDataFixture.*;
-import static com.projectx.rest.fixture.request.TestRequestDataFixtures.*;
 
 import java.util.List;
 
@@ -25,7 +25,7 @@ import com.projectx.rest.repository.completeregister.VendorDetailsRepository;
 
 @RunWith(SpringJUnit4ClassRunner.class)   
 @SpringApplicationConfiguration(classes = Application.class)   
-@ActiveProfiles("Prod")
+@ActiveProfiles(SPRING_PROFILE_ACTIVE)
 
 public class FreightRequestByCustomerRepositoryTest {
  

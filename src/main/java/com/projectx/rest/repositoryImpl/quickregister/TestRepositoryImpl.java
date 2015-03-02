@@ -28,7 +28,6 @@ public class TestRepositoryImpl implements TestRepository {
 	@Override
 	public VendorDetails test() {
 
-		//ResponseEntity<CustomerDetails> response=restTemplate.getForObject(env.getProperty("data.url")+"/testing/save/test", CustomerDetails.class);
 
 		ResponseEntity<VendorDetails> response=restTemplate.exchange(env.getProperty("data.url")+"/testing/save/test",HttpMethod.GET,null,VendorDetails.class);
 		

@@ -108,32 +108,6 @@ public class AuthenticationDetailsMemRepository implements AuthenticationDetails
 			return 0;
 	}
 
-/*
-	@Override
-	public Integer updateEmailPasswordAndPasswordTypeAndCounts(Long customerId,Integer customerType,
-			String emailPassword) {
-		
-		AuthenticationDetailsKey key=new AuthenticationDetailsKey(customerId, customerType);
-		
-		AuthenticationDetails oldRecord=customerList.get(key);
-		
-		if(oldRecord!=null)
-		{	
-			customerList.remove(customerId);
-		
-			oldRecord.setEmailPassword(emailPassword);
-			oldRecord.setPasswordType("Default");
-			oldRecord.setLastUnsucessfullAttempts(0);
-			oldRecord.setResendCount(0);
-
-			customerList.put(key, oldRecord);
-		
-			return 1;
-		}
-		else
-			return 0;
-	}
-*/
 
 	@Override
 	public Integer incrementResendCount(Long customerId,Integer customerType) {

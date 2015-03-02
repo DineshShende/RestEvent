@@ -1,15 +1,25 @@
 package com.projectx.rest.repositoryImpl.completeregister;
 
+import javax.validation.ValidationException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import com.projectx.rest.domain.completeregister.DocumentDetails;
 import com.projectx.rest.domain.completeregister.DocumentKey;
 import com.projectx.rest.domain.quickregister.AuthenticationDetails;
+import com.projectx.rest.exception.repository.completeregister.DocumentDetailsNotFoundException;
+import com.projectx.rest.exception.repository.completeregister.DocumentDetailsNotSavedException;
+import com.projectx.rest.exception.repository.completeregister.ValidationFailedException;
 import com.projectx.rest.repository.completeregister.DocumentDetailsRepository;
 
 @Component
@@ -28,22 +38,40 @@ public class DocumentDetailsRepositoryImpl implements
 	
 	@Override
 	public DocumentDetails saveCustomerDocument(
-			DocumentDetails documentDetails) {
+			DocumentDetails documentDetails) throws DocumentDetailsNotSavedException,ValidationFailedException {
 		
-		DocumentDetails savedEntity=restTemplate.postForObject(env.getProperty("data.url")+"/document/saveCustomerDocument",
-				documentDetails, DocumentDetails.class);
+		HttpEntity<DocumentDetails> entity=new HttpEntity<DocumentDetails>(documentDetails);
 		
-		return savedEntity;
+		ResponseEntity<DocumentDetails> result=null;
+		
+		try
+		{
+			result=restTemplate.exchange(env.getProperty("data.url")+"/document/saveCustomerDocument", HttpMethod.POST, 
+					entity, DocumentDetails.class);
+		}catch(RestClientException e)
+		{
+			throw new ValidationFailedException();
+		}
+		
+		if(result.getStatusCode()==HttpStatus.CREATED)
+			return result.getBody();
+		else
+			throw new DocumentDetailsNotSavedException();
 	
 	}
 
 	@Override
-	public DocumentDetails getByCustomerId(DocumentKey documentKey) {
-		
-		DocumentDetails savedEntity=restTemplate.postForObject(env.getProperty("data.url")+"/document/getCustomerDocumentByKey",
-				documentKey, DocumentDetails.class);
+	public DocumentDetails getByCustomerId(DocumentKey documentKey) throws DocumentDetailsNotFoundException{
 
-		return savedEntity;
+		HttpEntity<DocumentKey> key=new HttpEntity<DocumentKey>(documentKey);
+		
+		ResponseEntity<DocumentDetails> savedEntity=restTemplate.exchange(env.getProperty("data.url")+"/document/getCustomerDocumentByKey",
+				HttpMethod.POST, key, DocumentDetails.class);
+				
+		if(savedEntity.getStatusCode()==HttpStatus.FOUND)		
+			return savedEntity.getBody();
+		else
+			throw new DocumentDetailsNotFoundException();
 	
 	}
 

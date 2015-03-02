@@ -1,5 +1,6 @@
 package com.projectx.rest.services.quickregister;
 
+import static com.projectx.rest.config.Constants.SPRING_PROFILE_ACTIVE;
 import static com.projectx.rest.fixture.quickregister.AuthenticationDetailsDataFixtures.*;
 import static com.projectx.rest.fixture.quickregister.QuickRegisterDataFixture.*;
 import static org.junit.Assert.*;
@@ -19,11 +20,12 @@ import com.projectx.rest.domain.quickregister.AuthenticationDetails;
 import com.projectx.rest.domain.quickregister.EmailVerificationDetails;
 import com.projectx.rest.domain.quickregister.MobileVerificationDetails;
 import com.projectx.rest.domain.quickregister.CustomerQuickRegisterStatusEntity;
+import com.projectx.rest.exception.repository.quickregister.AuthenticationDetailsNotFoundException;
 
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
-@ActiveProfiles(value="Dev")
+@ActiveProfiles(SPRING_PROFILE_ACTIVE)
 public class AuthenticationServiceTest {
 
 	@Autowired
@@ -58,7 +60,16 @@ public class AuthenticationServiceTest {
 	@Test
 	public void saveCustomerAuthenticationDetailsAndGetByCustomerId()
 	{
-		assertNull(authenticationService.getByEntityIdType(CUST_ID,ENTITY_TYPE_CUSTOMER).getKey());
+		AuthenticationDetails authenticationDetailsNull=null;
+		
+		try{
+			authenticationDetailsNull=authenticationService.getByEntityIdType(CUST_ID,ENTITY_TYPE_CUSTOMER);
+		}catch(AuthenticationDetailsNotFoundException e)
+		{
+			assertNull(authenticationDetailsNull);
+		}
+		
+		
 		
 		AuthenticationDetails authenticationDetails=authenticationService.saveCustomerAuthenticationDetails(standardCustomerEmailAuthenticationDetails());
 		
@@ -87,14 +98,16 @@ public class AuthenticationServiceTest {
 	@Test
 	public void getVerificationDetailsByCustomerIdFailingCase()
 	{
-		AuthenticationDetails authenticationDetails=authenticationService
-				.getByEntityIdType(standardEmailMobileCustomer().getCustomerId(),standardEmailMobileCustomer().getCustomerType());
+		AuthenticationDetails authenticationDetails=null;
+		
+		try{
+			authenticationDetails=authenticationService
+					.getByEntityIdType(standardEmailMobileCustomer().getCustomerId(),standardEmailMobileCustomer().getCustomerType());
+		}catch(AuthenticationDetailsNotFoundException e)
+		{
+			assertNull(authenticationDetails);
+		}
 				
-		assertNull( authenticationDetails.getKey());
-		assertNull(authenticationDetails.getEmail());
-		assertNull( authenticationDetails.getMobile());
-		assertNull( authenticationDetails.getPassword());
-		assertNull( authenticationDetails.getPasswordType());		
 	}
 	
 	

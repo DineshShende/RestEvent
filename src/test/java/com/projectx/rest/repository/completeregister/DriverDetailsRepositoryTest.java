@@ -1,6 +1,7 @@
 package com.projectx.rest.repository.completeregister;
 
 import static org.junit.Assert.*;
+import static com.projectx.rest.config.Constants.SPRING_PROFILE_ACTIVE;
 import static com.projectx.rest.fixture.completeregister.DriverDetailsDataFixtures.*;
 
 import java.util.Date;
@@ -19,12 +20,16 @@ import com.projectx.rest.domain.completeregister.Address;
 import com.projectx.rest.domain.completeregister.DriverDetails;
 import com.projectx.rest.domain.quickregister.MobileVerificationDetails;
 import com.projectx.rest.domain.quickregister.MobileVerificationDetailsKey;
+import com.projectx.rest.exception.repository.completeregister.DriverDetailsAlreadyPresentException;
+import com.projectx.rest.exception.repository.completeregister.DriverDetailsNotFoundException;
+import com.projectx.rest.exception.repository.completeregister.DriverDetailsUpdateFailedException;
+import com.projectx.rest.exception.repository.quickregister.MobileVerificationDetailsNotFoundException;
 import com.projectx.rest.repository.quickregister.MobileVerificationDetailsRepository;
 
 
 @RunWith(SpringJUnit4ClassRunner.class)   
 @SpringApplicationConfiguration(classes = Application.class)   
-@ActiveProfiles("Dev")
+@ActiveProfiles(SPRING_PROFILE_ACTIVE)
 //@Transactional
 public class DriverDetailsRepositoryTest {
 
@@ -76,10 +81,17 @@ public class DriverDetailsRepositoryTest {
 		
 		DriverDetails savedEntity=null;
 		
+		try
+		{
+			savedEntity=driverDetailsRepository.save(standardDriverDetails());
+		}
+		catch(DriverDetailsAlreadyPresentException e)
+		{
+			assertNull(savedEntity);
+		}
 		
-		savedEntity=driverDetailsRepository.save(standardDriverDetails());
 		
-		assertNull(savedEntity.getDriverId());
+		//assertNull(savedEntity.getDriverId());
 			
 		//assertEquals(savedEntity, driverDetailsRepository.findOne(savedEntity.getDriverId()));
 			
@@ -155,7 +167,7 @@ public class DriverDetailsRepositoryTest {
 		assertEquals(1, driverDetailsRepository.count().intValue());
 		
 		assertEquals(1, driverDetailsRepository
-				.updateMobileAndMobileVerificationStatus(savedEntity.getDriverId(), 988776655443L, true).intValue());
+				.updateMobileAndMobileVerificationStatus(savedEntity.getDriverId(), 988776655443L, true,savedEntity.getUpdatedBy()).intValue());
 		
 		
 	}
@@ -177,13 +189,32 @@ public class DriverDetailsRepositoryTest {
 		
 		assertNotNull(mobileVerificationDetailsRepository.getByMobile(standardDriverDetails().getMobile()));
 		
-		assertNull(mobileVerificationDetailsRepository.getByMobile(standardDriverDetailsNewMobileAndFirstName(savedEntity.getDriverId()).getMobile()).getKey());
+		MobileVerificationDetails mobileVerificationDetails=null;
 		
+		try{
+			
+			mobileVerificationDetails=
+					mobileVerificationDetailsRepository.getByMobile(standardDriverDetailsNewMobileAndFirstName(savedEntity.getDriverId()).getMobile());
+		}
+		catch(MobileVerificationDetailsNotFoundException e)
+		{
+			assertNull(mobileVerificationDetails);
+		}
+
 		savedEntity=driverDetailsRepository.update(standardDriverDetailsNewMobileAndFirstName(savedEntity.getDriverId()));
 		
 		assertNotNull(mobileVerificationDetailsRepository.getByMobile(standardDriverDetailsNewMobileAndFirstName(savedEntity.getDriverId()).getMobile()));
 		
-		assertNull(mobileVerificationDetailsRepository.getByMobile(standardDriverDetails().getMobile()).getKey());
+		
+		try{
+			
+			mobileVerificationDetails=
+					mobileVerificationDetailsRepository.getByMobile(standardDriverDetails().getMobile());
+		}
+		catch(MobileVerificationDetailsNotFoundException e)
+		{
+			assertNull(mobileVerificationDetails);
+		}
 		
 		assertEquals(standardDriverDetailsNewMobileAndFirstName(savedEntity.getDriverId()).getFirstName(), driverDetailsRepository.findOne(savedEntity.getDriverId()).getFirstName());
 		
@@ -214,8 +245,15 @@ public class DriverDetailsRepositoryTest {
 		
 		assertNotNull(mobileVerificationDetailsRepository.getByMobile(standardDriverDetailsNewMobileAndFirstName(savedEntity.getDriverId()).getMobile()));
 		
+		DriverDetails updatedEntity=null;
 		
-		savedEntity=driverDetailsRepository.update(standardDriverDetailsNewMobileAndFirstName(savedEntity.getDriverId()));
+		try{
+			updatedEntity=driverDetailsRepository.update(standardDriverDetailsNewMobileAndFirstName(savedEntity.getDriverId()));
+		}
+		catch(DriverDetailsUpdateFailedException e)
+		{
+			assertNull(updatedEntity);
+		}
 		
 			assertNotNull(mobileVerificationDetailsRepository.getByMobile(standardDriverDetails().getMobile()));
 			

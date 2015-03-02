@@ -5,6 +5,8 @@ import static com.projectx.rest.fixtures.quickregister.CustomerQuickRegisterData
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -20,6 +22,11 @@ import com.projectx.mvc.domain.quickregister.UpdatePasswordDTO;
 import com.projectx.rest.domain.quickregister.AuthenticationDetails;
 import com.projectx.rest.domain.quickregister.AuthenticationDetailsKey;
 import com.projectx.rest.domain.quickregister.QuickRegisterEntity;
+import com.projectx.rest.exception.AuthenticationService.LoginVerificationFailedException;
+import com.projectx.rest.exception.repository.completeregister.CustomerDetailsNotFoundException;
+import com.projectx.rest.exception.repository.completeregister.VendorDetailsNotFoundException;
+import com.projectx.rest.exception.repository.quickregister.AuthenticationDetailsNotFoundException;
+import com.projectx.rest.exception.repository.quickregister.QuickRegisterEntityNotFoundException;
 import com.projectx.rest.services.quickregister.AuthenticationService;
 
 @RestController
@@ -31,45 +38,87 @@ public class AuthenticationController {
 	AuthenticationService authenticationService;
 	
 	@RequestMapping(value="/verifyLoginDetails",method=RequestMethod.POST)
-	public AuthenticationDetails verifyLoginDetails(@RequestBody LoginVerificationDTO loginVerificationDTO)
+	public ResponseEntity<AuthenticationDetails> verifyLoginDetails(@RequestBody LoginVerificationDTO loginVerificationDTO)
 	{
-		AuthenticationDetails verifiedEntity= authenticationService.verifyLoginDetails(loginVerificationDTO);
+		ResponseEntity<AuthenticationDetails> result=null;
 		
-		return verifiedEntity;
+		try{
+			AuthenticationDetails verifiedEntity= authenticationService.verifyLoginDetails(loginVerificationDTO);
+			result=new ResponseEntity<AuthenticationDetails>(verifiedEntity, HttpStatus.OK);
+		}catch(AuthenticationDetailsNotFoundException | LoginVerificationFailedException e2 )
+		{
+			result=new ResponseEntity<>(HttpStatus.NO_CONTENT);
+		}
+				
+		return result;
 	}
 	
 	@RequestMapping(value="/verifyLoginDefaultEmailPassword")
-	public AuthenticationDetails verifyLoginDefaultEmailPassword(@RequestBody LoginVerificationWithDefaultEmailPasswordDTO emailPasswordDTO)
+	public ResponseEntity<AuthenticationDetails> verifyLoginDefaultEmailPassword(@RequestBody LoginVerificationWithDefaultEmailPasswordDTO emailPasswordDTO)
 	{
-		AuthenticationDetails verifiedEntity= authenticationService.verifyDefaultEmailLoginDetails(emailPasswordDTO);
+		ResponseEntity<AuthenticationDetails> result=null;
 		
-		return verifiedEntity;
+		try{
+			AuthenticationDetails verifiedEntity= authenticationService.verifyDefaultEmailLoginDetails(emailPasswordDTO);
+			result=new ResponseEntity<AuthenticationDetails>(verifiedEntity, HttpStatus.OK);
+		}catch(AuthenticationDetailsNotFoundException e)
+		{
+			result=new ResponseEntity<>(HttpStatus.NO_CONTENT);
+		}
+		
+		return result;
 		
 	}
 
 	
 	@RequestMapping(value="/resetPassword",method=RequestMethod.POST)
-	public Boolean resetPassword(@RequestBody CustomerIdTypeDTO customerIdDTO)
+	public ResponseEntity<Boolean> resetPassword(@RequestBody CustomerIdTypeDTO customerIdDTO)
 	{
-		Boolean result=authenticationService.resetPassword(customerIdDTO);
+		ResponseEntity<Boolean> result=null;
 		
+		try{
+			Boolean status=authenticationService.resetPassword(customerIdDTO);
+			result=new ResponseEntity<Boolean>(status, HttpStatus.OK);
+		}catch(AuthenticationDetailsNotFoundException  | QuickRegisterEntityNotFoundException | CustomerDetailsNotFoundException 
+				|VendorDetailsNotFoundException e)
+		{
+			result=new ResponseEntity<>(HttpStatus.NO_CONTENT);
+		}
+			
 		return result;
 	}
 	
 	@RequestMapping(value="/resendPassword",method=RequestMethod.POST)
-	public Boolean resendPassword(@RequestBody CustomerIdTypeDTO customerIdDTO)
+	public ResponseEntity<Boolean> resendPassword(@RequestBody CustomerIdTypeDTO customerIdDTO)
 	{
-		Boolean result=authenticationService.resendPassword(customerIdDTO);
+		ResponseEntity<Boolean> result=null;
 		
+		try{
+			Boolean status=authenticationService.resendPassword(customerIdDTO);
+			result=new ResponseEntity<Boolean>(status, HttpStatus.OK);
+		}catch(AuthenticationDetailsNotFoundException  | QuickRegisterEntityNotFoundException | CustomerDetailsNotFoundException 
+				|VendorDetailsNotFoundException e)
+		{
+			result=new ResponseEntity<>(HttpStatus.NO_CONTENT);
+		}
+			
 		return result;
 	}
 	
 	@RequestMapping(value="/resetPasswordRedirect",method=RequestMethod.POST)
-	public QuickRegisterEntity resetPasswordRedirect(@RequestBody ResetPasswordRedirectDTO passwordRedirectDTO)
+	public ResponseEntity<QuickRegisterEntity> resetPasswordRedirect(@RequestBody ResetPasswordRedirectDTO passwordRedirectDTO)
 	{
-		QuickRegisterEntity quickRegisterEntity=authenticationService.resetPasswordByEmailOrMobileRedirect(passwordRedirectDTO.getEntity());
+		ResponseEntity<QuickRegisterEntity> result=null;
 		
-		return quickRegisterEntity;
+		try{
+			QuickRegisterEntity quickRegisterEntity=authenticationService.resetPasswordByEmailOrMobileRedirect(passwordRedirectDTO.getEntity());
+			result=new ResponseEntity<QuickRegisterEntity>(quickRegisterEntity, HttpStatus.OK);
+		}catch(QuickRegisterEntityNotFoundException e)
+		{
+			result=new ResponseEntity<>(HttpStatus.NO_CONTENT);
+		}
+		
+		return result;
 	}
 	
 	@RequestMapping(value="/updatePassword",method=RequestMethod.POST)
@@ -84,19 +133,21 @@ public class AuthenticationController {
 	}
 
 	@RequestMapping(value="/getAuthenticationDetailsById",method=RequestMethod.POST)
-	public AuthenticationDetails getAuthenticationDetailsByCustomerId(@RequestBody CustomerIdTypeDTO customerId)
+	public ResponseEntity<AuthenticationDetails> getAuthenticationDetailsByCustomerId(@RequestBody CustomerIdTypeDTO customerId)
 	{
-		AuthenticationDetails verifiedEntity= authenticationService
-				.getByEntityIdType(customerId.getCustomerId(),customerId.getCustomerType());
+		ResponseEntity<AuthenticationDetails> result=null;
 		
-		return verifiedEntity;
-	}
-
-
-	@RequestMapping(value="/test",method=RequestMethod.GET)
-	public AuthenticationDetails test()
-	{
-		return new AuthenticationDetails(new AuthenticationDetailsKey(212L, 1), "dineshshe@gmail.com", 9960821869L, "123456","Default", "sdfsfcccccccccccccccc", 0, 0, new Date(), new Date(), "CUST_ONLINE");
+		try{
+			AuthenticationDetails verifiedEntity= authenticationService
+					.getByEntityIdType(customerId.getCustomerId(),customerId.getCustomerType());
+			
+			result=new ResponseEntity<AuthenticationDetails>(verifiedEntity, HttpStatus.FOUND);
+		}catch(AuthenticationDetailsNotFoundException e)
+		{
+			result=new ResponseEntity<>(HttpStatus.NO_CONTENT);
+		}
+		
+		return result;
 	}
 
 	

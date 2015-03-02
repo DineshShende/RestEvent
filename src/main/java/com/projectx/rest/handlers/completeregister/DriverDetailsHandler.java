@@ -11,7 +11,7 @@ import com.projectx.rest.repository.completeregister.DriverDetailsRepository;
 import com.projectx.rest.services.completeregister.DriverDetailsService;
 
 @Component
-@Profile(value="Dev")
+
 public class DriverDetailsHandler implements DriverDetailsService {
 
 	@Autowired
@@ -54,9 +54,9 @@ public class DriverDetailsHandler implements DriverDetailsService {
 
 	@Override
 	public Integer updateMobileAndVerificationStatus(Long driverId,
-			Long mobile, Boolean status) {
+			Long mobile, Boolean status,String updatedBy) {
 		
-		Integer result=driverDetailsRepository.updateMobileAndMobileVerificationStatus(driverId, mobile, status);
+		Integer result=driverDetailsRepository.updateMobileAndMobileVerificationStatus(driverId, mobile, status,updatedBy);
 		
 		return result;
 		

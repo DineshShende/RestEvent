@@ -5,7 +5,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import com.projectx.data.domain.quickregister.UpdateEmailPassword;
@@ -16,6 +21,9 @@ import com.projectx.mvc.domain.quickregister.GetByEmailDTO;
 import com.projectx.mvc.domain.quickregister.GetByMobileDTO;
 import com.projectx.mvc.domain.quickregister.LoginVerificationDTO;
 import com.projectx.rest.domain.quickregister.AuthenticationDetails;
+import com.projectx.rest.exception.repository.completeregister.ValidationFailedException;
+import com.projectx.rest.exception.repository.quickregister.AuthenticationDetailsNotFoundException;
+import com.projectx.rest.exception.repository.quickregister.ResourceAlreadyPresentException;
 import com.projectx.rest.repository.quickregister.AuthenticationDetailsRepository;
 
 @Component
@@ -29,34 +37,48 @@ public class AuthenticationDetailsRepositoryImpl implements AuthenticationDetail
 	@Autowired
 	Environment env;
 
-	/*
-	@Value("${data.url}")
-	String baseUrl;
-	*/
-	
+
 	@Override
 	public AuthenticationDetails save(
-			AuthenticationDetails authenticationDetails) {
+			AuthenticationDetails authenticationDetails) throws ResourceAlreadyPresentException,ValidationFailedException{
 		
-		AuthenticationDetails savedEntity=restTemplate.postForObject(env.getProperty("data.url")+"/customer/quickregister/customerAuthentication/saveLoginDetails", authenticationDetails, AuthenticationDetails.class);
+		HttpEntity<AuthenticationDetails> entity=new HttpEntity<AuthenticationDetails>(authenticationDetails);
 		
-		//System.out.println(baseUrl);
+		ResponseEntity<AuthenticationDetails> result=null;
 		
-		return savedEntity;
+		try{
+			result=restTemplate.exchange(env.getProperty("data.url")+"/customer/quickregister/customerAuthentication/saveLoginDetails",HttpMethod.POST,
+					entity, AuthenticationDetails.class);
+		}catch(RestClientException e)
+		{
+			throw new ValidationFailedException();
+		}
+		
+		if(result.getStatusCode()==HttpStatus.CREATED)
+			return result.getBody();
+		else
+			throw new ResourceAlreadyPresentException();
+			
 		
 	}
 
 	@Override
-	public AuthenticationDetails getByCustomerIdType(Long customerId,Integer customerType) {
+	public AuthenticationDetails getByCustomerIdType(Long customerId,Integer customerType) throws AuthenticationDetailsNotFoundException {
 		
 		CustomerIdTypeDTO customerIdDTO=new CustomerIdTypeDTO(customerId,customerType);
+	
+		HttpEntity<CustomerIdTypeDTO> entity=new HttpEntity<CustomerIdTypeDTO>(customerIdDTO);
 		
-		AuthenticationDetails fetchedEntity=restTemplate.postForObject(env.getProperty("data.url")+"/customer/quickregister/customerAuthentication/getLoginDetailsByCustomerIdType", customerIdDTO, AuthenticationDetails.class);
+		ResponseEntity<AuthenticationDetails> result=restTemplate.exchange(env.getProperty("data.url")+"/customer/quickregister/customerAuthentication/getLoginDetailsByCustomerIdType",
+					HttpMethod.POST, entity, AuthenticationDetails.class);
+		
+		
 
-		if(fetchedEntity==null)
-			return new AuthenticationDetails();
+		if(result.getStatusCode()==HttpStatus.FOUND)
+			return result.getBody();
+		else
+			throw new AuthenticationDetailsNotFoundException();
 		
-		return fetchedEntity;
 	}
 
 	@Override
@@ -65,33 +87,22 @@ public class AuthenticationDetailsRepositoryImpl implements AuthenticationDetail
 		
 		UpdatePasswordEmailPasswordAndPasswordTypeDTO passwordAndPasswordTypeDTO=new UpdatePasswordEmailPasswordAndPasswordTypeDTO(customerId,customerType, password, emailPassword,passwordType);
 
-		System.out.println(passwordAndPasswordTypeDTO);
+		ResponseEntity<Integer> updateStatus=restTemplate.exchange(env.getProperty("data.url")+"/customer/quickregister/customerAuthentication/updatePasswordEmailPasswordAndPasswordTypeAndCounts",
+					HttpMethod.POST,new HttpEntity<UpdatePasswordEmailPasswordAndPasswordTypeDTO>(passwordAndPasswordTypeDTO), Integer.class);
 		
-		Integer updateStatus=restTemplate.postForObject(env.getProperty("data.url")+"/customer/quickregister/customerAuthentication/updatePasswordEmailPasswordAndPasswordTypeAndCounts", passwordAndPasswordTypeDTO, Integer.class);
-		
-		return updateStatus;
+		return updateStatus.getBody();
 	}
 
-	/*
-	@Override
-	public Integer updateEmailPasswordAndPasswordTypeAndCounts(Long customerId,Integer customerType,
-			String emailPassword) {
-		UpdateEmailPassword emailPasswordDTO=new UpdateEmailPassword(customerId,customerType, emailPassword);
-		
-		Integer updateStatus=restTemplate.postForObject(env.getProperty("data.url")+"/customer/quickregister/customerAuthentication/updateEmailPasswordAndPasswordTypeAndCounts", emailPasswordDTO, Integer.class);
-		
-		return updateStatus;
-	}
-	*/
 
 	@Override
 	public Integer incrementResendCount(Long customerId,Integer customerType) {
 
 		CustomerIdTypeDTO customerIdDTO=new CustomerIdTypeDTO(customerId,customerType);
 		
-		Integer updateStatus=restTemplate.postForObject(env.getProperty("data.url")+"/customer/quickregister/customerAuthentication/incrementResendCount", customerIdDTO, Integer.class);
+		ResponseEntity<Integer> updateStatus=restTemplate.exchange(env.getProperty("data.url")+"/customer/quickregister/customerAuthentication/incrementResendCount",
+				HttpMethod.POST,new HttpEntity<CustomerIdTypeDTO>(customerIdDTO), Integer.class);
 		
-		return updateStatus;
+		return updateStatus.getBody();
 	}
 
 	@Override
@@ -99,40 +110,50 @@ public class AuthenticationDetailsRepositoryImpl implements AuthenticationDetail
 
 		CustomerIdTypeDTO customerIdDTO=new CustomerIdTypeDTO(customerId,customerType);
 		
-		Integer updateStatus=restTemplate.postForObject(env.getProperty("data.url")+"/customer/quickregister/customerAuthentication/incrementLastUnsucessfullAttempts", customerIdDTO, Integer.class);
+		ResponseEntity<Integer> updateStatus=restTemplate.exchange(env.getProperty("data.url")+"/customer/quickregister/customerAuthentication/incrementLastUnsucessfullAttempts", 
+				HttpMethod.POST,new HttpEntity<CustomerIdTypeDTO>(customerIdDTO), Integer.class);
 		
-		return updateStatus;
+		return updateStatus.getBody();
 	}
 
 	@Override
 	public AuthenticationDetails getByEmail(
-			String email) {
+			String email) throws AuthenticationDetailsNotFoundException{
 		GetByEmailDTO getByEmailDTO=new GetByEmailDTO(email);
 		
-		AuthenticationDetails fetchedEntity=restTemplate.postForObject(env.getProperty("data.url")+"/customer/quickregister/customerAuthentication/getLoginDetailsByEmail", getByEmailDTO, AuthenticationDetails.class);
-
-		if(fetchedEntity==null)
-			return new AuthenticationDetails();
+		HttpEntity<GetByEmailDTO> entity=new HttpEntity<GetByEmailDTO>(getByEmailDTO);
 		
-		return fetchedEntity;
-
+		
+		ResponseEntity<AuthenticationDetails> result=restTemplate.exchange(env.getProperty("data.url")+"/customer/quickregister/customerAuthentication/getLoginDetailsByEmail",
+					HttpMethod.POST, entity, AuthenticationDetails.class);
+		
+		if(result.getStatusCode()==HttpStatus.FOUND)
+			return result.getBody();
+		else
+			throw new AuthenticationDetailsNotFoundException();
+		
 	}
 
 	@Override
 	public AuthenticationDetails getByMobile(
-			Long mobile) {
+			Long mobile) throws AuthenticationDetailsNotFoundException{
 
 		GetByMobileDTO getByMobilelDTO=new GetByMobileDTO(mobile);
 		
-		AuthenticationDetails fetchedEntity=restTemplate.postForObject(env.getProperty("data.url")+"/customer/quickregister/customerAuthentication/getLoginDetailsByMobile", getByMobilelDTO, AuthenticationDetails.class);
-
-		if(fetchedEntity==null)
-			return new AuthenticationDetails();
+		HttpEntity<GetByMobileDTO> entity=new HttpEntity<GetByMobileDTO>(getByMobilelDTO);
 		
-		return fetchedEntity;
-
+		ResponseEntity<AuthenticationDetails> result=restTemplate.exchange(env.getProperty("data.url")+"/customer/quickregister/customerAuthentication/getLoginDetailsByMobile",
+				HttpMethod.POST, entity, AuthenticationDetails.class);
+		
+		
+		if(result.getStatusCode()==HttpStatus.FOUND)
+			return result.getBody();
+		else
+			throw new AuthenticationDetailsNotFoundException();
+		
 	}
 
+	
 	@Override
 	public Integer count() {
 		Integer count=restTemplate.getForObject(env.getProperty("data.url")+"/customer/quickregister/customerAuthentication/getCount", Integer.class);

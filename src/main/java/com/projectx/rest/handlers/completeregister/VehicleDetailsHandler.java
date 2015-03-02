@@ -6,21 +6,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
-import com.projectx.rest.domain.completeregister.VehicleDetailsDTO;
+import com.projectx.rest.domain.completeregister.VehicleDetails;
+import com.projectx.rest.exception.repository.completeregister.VehicleDetailsNotFoundException;
 import com.projectx.rest.repository.completeregister.VehicleDetailsRepository;
 import com.projectx.rest.services.completeregister.VehicleDetailsService;
 
 @Component
-@Profile(value="Dev")
+
 public class VehicleDetailsHandler implements VehicleDetailsService {
 
 	@Autowired
 	VehicleDetailsRepository vehicleDetailsRepository;
 	
 	@Override
-	public VehicleDetailsDTO addVehicle(VehicleDetailsDTO vehicleDetails) {
+	public VehicleDetails addVehicle(VehicleDetails vehicleDetails) {
 		
-		VehicleDetailsDTO addedVehicle=vehicleDetailsRepository.save(vehicleDetails);
+		VehicleDetails addedVehicle=vehicleDetailsRepository.save(vehicleDetails);
 		
 		return addedVehicle;		
 	}
@@ -36,18 +37,18 @@ public class VehicleDetailsHandler implements VehicleDetailsService {
 	}
 
 	@Override
-	public VehicleDetailsDTO getVehicleById(Long vehicleId) {
+	public VehicleDetails getVehicleById(Long vehicleId) throws VehicleDetailsNotFoundException{
 
-		VehicleDetailsDTO fetchedVehicle=vehicleDetailsRepository.findOne(vehicleId);
+		VehicleDetails fetchedVehicle=vehicleDetailsRepository.findOne(vehicleId);
 		
 		return fetchedVehicle;
 		
 	}
 
 	@Override
-	public List<VehicleDetailsDTO> vehiclesByVendorId(Long vendorId) {
+	public List<VehicleDetails> vehiclesByVendorId(Long vendorId) {
 
-		List<VehicleDetailsDTO> vehicleList=vehicleDetailsRepository.getVehiclesByVendorId(vendorId);
+		List<VehicleDetails> vehicleList=vehicleDetailsRepository.getVehiclesByVendorId(vendorId);
 		
 		return vehicleList;
 	}
@@ -68,10 +69,10 @@ public class VehicleDetailsHandler implements VehicleDetailsService {
 
 
 	@Override
-	public VehicleDetailsDTO getVehicleByRegistartionNumber(
+	public VehicleDetails getVehicleByRegistartionNumber(
 			String registartionNumber) {
 		
-		VehicleDetailsDTO fetchedVehicle=vehicleDetailsRepository.findByRegistrationNumber(registartionNumber);
+		VehicleDetails fetchedVehicle=vehicleDetailsRepository.findByRegistrationNumber(registartionNumber);
 		
 		return fetchedVehicle;
 	

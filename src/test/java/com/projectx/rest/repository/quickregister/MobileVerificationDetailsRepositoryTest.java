@@ -12,14 +12,16 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.projectx.rest.config.Application;
 import com.projectx.rest.domain.quickregister.MobileVerificationDetails;
+import com.projectx.rest.exception.repository.quickregister.MobileVerificationDetailsNotFoundException;
 import com.projectx.rest.repository.quickregister.MobileVerificationDetailsRepository;
 
+import static com.projectx.rest.config.Constants.SPRING_PROFILE_ACTIVE;
 import static com.projectx.rest.fixture.quickregister.MobileVericationDetailsFixtures.*;
 import static com.projectx.rest.fixture.quickregister.QuickRegisterDataFixture.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes=Application.class)
-@ActiveProfiles("Dev")
+@ActiveProfiles(SPRING_PROFILE_ACTIVE)
 
 public class MobileVerificationDetailsRepositoryTest {
 
@@ -45,9 +47,17 @@ public class MobileVerificationDetailsRepositoryTest {
 	{
 		assertEquals(0, customerMobileVerificationDetailsRepository.count().intValue());
 		
-		assertNull(customerMobileVerificationDetailsRepository.geByEntityIdTypeAndMobileType(standardCustomerMobileVerificationDetailsByCustomerIdAndMobileDTO().getCustomerId(),
-				standardCustomerMobileVerificationDetailsByCustomerIdAndMobileDTO().getCustomerType(),
-				MOB_TYPE_PRIMARY).getKey());
+		MobileVerificationDetails mobileVerificationDetails=null;
+		
+		try{
+			mobileVerificationDetails=customerMobileVerificationDetailsRepository.geByEntityIdTypeAndMobileType(standardCustomerMobileVerificationDetailsByCustomerIdAndMobileDTO().getCustomerId(),
+					standardCustomerMobileVerificationDetailsByCustomerIdAndMobileDTO().getCustomerType(),
+					MOB_TYPE_PRIMARY);
+		}
+		catch(MobileVerificationDetailsNotFoundException e)
+		{
+			assertNull(mobileVerificationDetails);
+		}
 		
 		MobileVerificationDetails savedEntity=customerMobileVerificationDetailsRepository.save(standardCustomerMobileVerificationDetails());
 		
@@ -66,8 +76,16 @@ public class MobileVerificationDetailsRepositoryTest {
 	{
 		assertEquals(0, customerMobileVerificationDetailsRepository.count().intValue());
 		
-		assertNull(customerMobileVerificationDetailsRepository.getByMobile(
-				CUST_MOBILE).getKey());
+		MobileVerificationDetails mobileVerificationDetails=null;
+		
+		try{
+			mobileVerificationDetails=customerMobileVerificationDetailsRepository.getByMobile(
+					CUST_MOBILE);
+		}
+		catch(MobileVerificationDetailsNotFoundException e)
+		{
+			assertNull(mobileVerificationDetails);
+		}
 		
 		MobileVerificationDetails savedEntity=customerMobileVerificationDetailsRepository.save(standardCustomerMobileVerificationDetails());
 		

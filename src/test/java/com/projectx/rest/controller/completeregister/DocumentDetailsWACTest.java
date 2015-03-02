@@ -1,5 +1,6 @@
 package com.projectx.rest.controller.completeregister;
 
+import static com.projectx.rest.config.Constants.SPRING_PROFILE_ACTIVE;
 import static com.projectx.rest.fixture.completeregister.DocumentDetailsDataFixture.*;
 import static org.junit.Assert.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -25,7 +26,7 @@ import com.projectx.rest.config.Application;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
 @WebAppConfiguration
-@ActiveProfiles("Dev")
+@ActiveProfiles(SPRING_PROFILE_ACTIVE)
 
 public class DocumentDetailsWACTest {
 
@@ -87,7 +88,7 @@ public class DocumentDetailsWACTest {
 	                    .contentType(MediaType.APPLICATION_JSON)
 	                    .accept(MediaType.APPLICATION_JSON))
 	            .andDo(print())
-	            .andExpect(status().isOk())
+	            .andExpect(status().isFound())
 	            
 	         //   .andExpect(jsonPath("$.key.customerId").value(standardDocumentDetailsWithDummyDocument().getKey().getCustomerId()))
 	            .andExpect(jsonPath("$.key.customerType").value(standardDocumentDetailsWithDummyDocument().getKey().getCustomerType()))

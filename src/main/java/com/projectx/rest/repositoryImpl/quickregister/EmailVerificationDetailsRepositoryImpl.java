@@ -2,11 +2,18 @@ package com.projectx.rest.repositoryImpl.quickregister;
 
 import java.util.Date;
 
+import javax.xml.ws.http.HTTPException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import com.projectx.data.domain.quickregister.CustomerIdTypeEmailTypeDTO;
@@ -14,6 +21,9 @@ import com.projectx.data.domain.quickregister.EmailDTO;
 import com.projectx.data.domain.quickregister.UpdateEmailHashAndEmailHashSentTimeAndResendCountDTO;
 import com.projectx.rest.domain.quickregister.EmailVerificationDetails;
 import com.projectx.rest.domain.quickregister.EmailVerificationDetailsKey;
+import com.projectx.rest.exception.repository.completeregister.ValidationFailedException;
+import com.projectx.rest.exception.repository.quickregister.EmailVerificationDetailNotFoundException;
+import com.projectx.rest.exception.repository.quickregister.ResourceAlreadyPresentException;
 import com.projectx.rest.repository.quickregister.EmailVericationDetailsRepository;
 
 
@@ -32,22 +42,44 @@ public class EmailVerificationDetailsRepositoryImpl implements EmailVericationDe
 	
 	@Override
 	public EmailVerificationDetails save(
-			EmailVerificationDetails mobileVerificationDetails) {
+			EmailVerificationDetails mobileVerificationDetails) throws ResourceAlreadyPresentException,ValidationFailedException{
 		
-		EmailVerificationDetails savedEntity=restTemplate.postForObject(env.getProperty("data.url")+"/customer/quickregister/emailVerification/saveEmailVerificationDetails", mobileVerificationDetails, EmailVerificationDetails.class);
+		HttpEntity<EmailVerificationDetails> entity=new HttpEntity<EmailVerificationDetails>(mobileVerificationDetails);
 		
-		return savedEntity;
+		ResponseEntity<EmailVerificationDetails> result=null;
+		
+		try{
+			result=restTemplate.exchange(env.getProperty("data.url")+"/customer/quickregister/emailVerification/saveEmailVerificationDetails", HttpMethod.POST,
+					entity, EmailVerificationDetails.class);
+		}catch(RestClientException e)
+		{
+			throw new ValidationFailedException();
+		}
+		
+		if(result.getStatusCode()==HttpStatus.CREATED)
+			return result.getBody();
+		else
+			throw new ResourceAlreadyPresentException();
 	}
 
 	@Override
 	public EmailVerificationDetails getByEntityIdTypeAndEmailType(
-			Long customerId,Integer customerType, Integer emailType) {
+			Long customerId,Integer customerType, Integer emailType) throws EmailVerificationDetailNotFoundException{
 		
 		CustomerIdTypeEmailTypeDTO emailDTO=new CustomerIdTypeEmailTypeDTO(customerId,customerType, emailType);
+
+		HttpEntity<CustomerIdTypeEmailTypeDTO> entity=new HttpEntity<CustomerIdTypeEmailTypeDTO>(emailDTO);
 		
-		EmailVerificationDetails savedEntity=restTemplate.postForObject(env.getProperty("data.url")+"/customer/quickregister/emailVerification/getEmailVerificationDetailsByCustomerIdAndEmail", emailDTO, EmailVerificationDetails.class);
+		ResponseEntity<EmailVerificationDetails> result=
+				restTemplate.exchange(env.getProperty("data.url")+"/customer/quickregister/emailVerification/getEmailVerificationDetailsByCustomerIdAndEmail",
+						HttpMethod.POST, entity, EmailVerificationDetails.class);
 		
-		return savedEntity;
+		if(result.getStatusCode()==HttpStatus.FOUND)
+			return result.getBody();
+		else
+			throw new EmailVerificationDetailNotFoundException();
+
+		
 	}
 
 	@Override
@@ -57,9 +89,10 @@ public class EmailVerificationDetailsRepositoryImpl implements EmailVericationDe
 		UpdateEmailHashAndEmailHashSentTimeAndResendCountDTO dto=new UpdateEmailHashAndEmailHashSentTimeAndResendCountDTO
 				(customerId,customerType, emailType, emailHash, emailHashSentTime, resetCount);
 		
-		Integer updateStatus=restTemplate.postForObject(env.getProperty("data.url")+"/customer/quickregister/emailVerification/resetEmailHashAndEmailHashSentTime", dto, Integer.class);
+		ResponseEntity<Integer> updateStatus=restTemplate.exchange(env.getProperty("data.url")+"/customer/quickregister/emailVerification/resetEmailHashAndEmailHashSentTime", 
+				HttpMethod.POST,new HttpEntity<UpdateEmailHashAndEmailHashSentTimeAndResendCountDTO>(dto), Integer.class);
 		
-		return updateStatus;
+		return updateStatus.getBody();
 	}
 
 	@Override
@@ -68,9 +101,10 @@ public class EmailVerificationDetailsRepositoryImpl implements EmailVericationDe
 		
 		CustomerIdTypeEmailTypeDTO emailDTO=new CustomerIdTypeEmailTypeDTO(customerId,customerType, emailType);
 		
-		Integer updateStatus=restTemplate.postForObject(env.getProperty("data.url")+"/customer/quickregister/emailVerification/incrementResendCountByCustomerIdAndEmail", emailDTO, Integer.class);
+		ResponseEntity<Integer> updateStatus=restTemplate.exchange(env.getProperty("data.url")+"/customer/quickregister/emailVerification/incrementResendCountByCustomerIdAndEmail",
+				HttpMethod.POST,new HttpEntity<CustomerIdTypeEmailTypeDTO>(emailDTO), Integer.class);
 		
-		return updateStatus;
+		return updateStatus.getBody();
 	}
 
 	@Override
@@ -98,14 +132,22 @@ public class EmailVerificationDetailsRepositoryImpl implements EmailVericationDe
 	}
 
 	@Override
-	public EmailVerificationDetails getByEmail(
-			String email) {
+	public EmailVerificationDetails getByEmail(	String email) throws EmailVerificationDetailNotFoundException{
 		
 		EmailDTO emailDTO=new EmailDTO(email);
 		
-		EmailVerificationDetails savedEntity=restTemplate.postForObject(env.getProperty("data.url")+"/customer/quickregister/emailVerification/getEmailVerificationDetailsByEmail", emailDTO, EmailVerificationDetails.class);
+		HttpEntity<EmailDTO> entity=new HttpEntity<EmailDTO>(emailDTO);
 		
-		return savedEntity;
+		ResponseEntity<EmailVerificationDetails> result=
+				restTemplate.exchange(env.getProperty("data.url")+"/customer/quickregister/emailVerification/getEmailVerificationDetailsByEmail",
+						HttpMethod.POST, entity, EmailVerificationDetails.class);
+		
+		if(result.getStatusCode()==HttpStatus.FOUND)
+			return result.getBody();
+		else
+			throw new EmailVerificationDetailNotFoundException();
+		
+		
 	}
 
 	

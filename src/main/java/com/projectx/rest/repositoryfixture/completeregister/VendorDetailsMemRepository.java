@@ -6,8 +6,8 @@ import java.util.Map;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
-import com.projectx.data.domain.completeregister.UpdateEmailVerificationStatusDTO;
-import com.projectx.data.domain.completeregister.UpdateMobileVerificationStatusDTO;
+import com.projectx.data.domain.completeregister.UpdateEmailVerificationStatusUpdatedByDTO;
+import com.projectx.data.domain.completeregister.UpdateMobileVerificationStatusUpdatedByDTO;
 import com.projectx.rest.domain.completeregister.CustomerDetails;
 import com.projectx.rest.domain.completeregister.VendorDetails;
 import com.projectx.rest.repository.completeregister.VendorDetailsRepository;
@@ -56,7 +56,7 @@ public class VendorDetailsMemRepository implements VendorDetailsRepository {
 
 	@Override
 	public Integer updateEmailVerificationStatus(
-			UpdateEmailVerificationStatusDTO updateVerificationStatusDTO) {
+			UpdateEmailVerificationStatusUpdatedByDTO updateVerificationStatusDTO) {
 		
 
 		VendorDetails oldRecord=vendorList.get(updateVerificationStatusDTO.getCustomerId());
@@ -81,7 +81,7 @@ public class VendorDetailsMemRepository implements VendorDetailsRepository {
 
 	@Override
 	public Integer updateMobileVerificationStatus(
-			UpdateMobileVerificationStatusDTO updateVerificationStatusDTO) {
+			UpdateMobileVerificationStatusUpdatedByDTO updateVerificationStatusDTO) {
 
 		VendorDetails oldRecord=vendorList.get(updateVerificationStatusDTO.getCustomerId());
 		

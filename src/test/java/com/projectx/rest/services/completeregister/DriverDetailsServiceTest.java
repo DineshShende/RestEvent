@@ -15,11 +15,13 @@ import com.projectx.rest.domain.completeregister.DriverDetails;
 import com.projectx.rest.domain.quickregister.MobileVerificationDetails;
 import com.projectx.rest.services.quickregister.MobileVerificationService;
 
+import static com.projectx.rest.config.Constants.SPRING_PROFILE_ACTIVE;
 import static com.projectx.rest.fixture.completeregister.DriverDetailsDataFixtures.*;
+import static com.projectx.rest.fixture.quickregister.QuickRegisterDataFixture.CUST_UPDATED_BY;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
-@ActiveProfiles(value="Dev")
+@ActiveProfiles(SPRING_PROFILE_ACTIVE)
 public class DriverDetailsServiceTest {
 
 	@Autowired
@@ -64,7 +66,7 @@ public class DriverDetailsServiceTest {
 		assertNotEquals(standardDriverDetailsNewMobileAndFirstName(savedEntity.getDriverId()).getMobile(),
 				updatedEntity.getMobile());
 		
-		mobileVerificationService.reSendMobilePin(savedEntity.getDriverId(),ENTITY_TYPE_DRIVER,ENTITY_TYPE_PRIMARY);
+		mobileVerificationService.reSendMobilePin(savedEntity.getDriverId(),ENTITY_TYPE_DRIVER,ENTITY_TYPE_PRIMARY,CUST_UPDATED_BY);
 		
 		MobileVerificationDetails mobileVerificationDetails
 			=mobileVerificationService.getByEntityIdTypeAndMobileType(savedEntity.getDriverId(),ENTITY_TYPE_DRIVER,ENTITY_TYPE_PRIMARY);
@@ -72,7 +74,8 @@ public class DriverDetailsServiceTest {
 		
 		
 		assertTrue(mobileVerificationService
-			.verifyMobilePinUpdateStatusAndSendPassword(savedEntity.getDriverId(),ENTITY_TYPE_DRIVER,ENTITY_TYPE_PRIMARY, mobileVerificationDetails.getMobilePin()));
+			.verifyMobilePinUpdateStatusAndSendPassword(savedEntity.getDriverId(),ENTITY_TYPE_DRIVER,ENTITY_TYPE_PRIMARY, 
+					mobileVerificationDetails.getMobilePin(),CUST_UPDATED_BY));
 		
 		assertEquals(standardDriverDetailsNewMobileAndFirstName(savedEntity.getDriverId()).getMobile(),
 				driverDetailsService.getDriverById(savedEntity.getDriverId()).getMobile());

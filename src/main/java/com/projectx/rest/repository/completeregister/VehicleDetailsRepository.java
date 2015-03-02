@@ -4,21 +4,24 @@ import java.util.List;
 
 import org.springframework.stereotype.Repository;
 
-import com.projectx.rest.domain.completeregister.VehicleDetailsDTO;
+import com.projectx.rest.domain.completeregister.VehicleDetails;
+import com.projectx.rest.exception.repository.completeregister.ValidationFailedException;
+import com.projectx.rest.exception.repository.completeregister.VehicleDetailsAlreadyPresentException;
+import com.projectx.rest.exception.repository.completeregister.VehicleDetailsNotFoundException;
 
 
 @Repository
 public interface VehicleDetailsRepository {
 
-	VehicleDetailsDTO save(VehicleDetailsDTO vehicleDetails);
+	VehicleDetails save(VehicleDetails vehicleDetails) throws VehicleDetailsAlreadyPresentException,ValidationFailedException;
 	
-	List<VehicleDetailsDTO> getVehiclesByVendorId(Long vendorId);
+	List<VehicleDetails> getVehiclesByVendorId(Long vendorId);
 	
 	Boolean deleteById( Long vehicleId);
 	
-	VehicleDetailsDTO findOne( Long vehicleId);
+	VehicleDetails findOne( Long vehicleId) throws VehicleDetailsNotFoundException;
 	
-	VehicleDetailsDTO findByRegistrationNumber(String registrationNumber);
+	VehicleDetails findByRegistrationNumber(String registrationNumber) throws VehicleDetailsNotFoundException;
 	
 	Integer count();
 	

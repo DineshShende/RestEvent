@@ -4,16 +4,31 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import com.projectx.data.domain.completeregister.CustomerOrVendorDetailsDTO;
 import com.projectx.data.domain.quickregister.CustomerIdTypeEmailTypeDTO;
+import com.projectx.data.domain.quickregister.CustomerIdTypeEmailTypeUpdatedByDTO;
 import com.projectx.data.domain.quickregister.CustomerIdTypeMobileTypeDTO;
+import com.projectx.data.domain.quickregister.CustomerIdTypeMobileTypeUpdatedByDTO;
 import com.projectx.rest.domain.completeregister.CustomerDetails;
 import com.projectx.rest.domain.completeregister.VendorDetails;
 import com.projectx.rest.domain.quickregister.CustomerQuickRegisterEmailMobileVerificationEntity;
 import com.projectx.rest.domain.quickregister.QuickRegisterEntity;
+import com.projectx.rest.exception.repository.completeregister.CustomerDetailsAlreadyPresentException;
+import com.projectx.rest.exception.repository.completeregister.CustomerDetailsTransactionalUpdateFailedException;
+import com.projectx.rest.exception.repository.completeregister.UpdateEmailInDetailsAndAuthenticationDetailsFailedException;
+import com.projectx.rest.exception.repository.completeregister.UpdateMobileInDetailsAndAuthentionDetailsFailedException;
+import com.projectx.rest.exception.repository.completeregister.ValidationFailedException;
+import com.projectx.rest.exception.repository.completeregister.VendorDetailsTransactionalUpdateFailedException;
+import com.projectx.rest.exception.repository.quickregister.DeleteQuickCreateDetailsEntityFailedException;
+import com.projectx.rest.exception.repository.quickregister.QuickRegisterDetailsAlreadyPresentException;
 import com.projectx.rest.repository.completeregister.TransactionalUpdatesRepository;
 
 @Component
@@ -31,74 +46,158 @@ public class TransactionalDetailsRepositoryImpl implements
 
 	
 	@Override
-	public CustomerDetails updateCustomerDetails(CustomerDetails customerDetails) {
+	public CustomerDetails updateCustomerDetails(CustomerDetails customerDetails) 
+			throws CustomerDetailsTransactionalUpdateFailedException,ValidationFailedException {
 
+		HttpEntity<CustomerDetails> entity=new HttpEntity<CustomerDetails>(customerDetails);
 		
-		CustomerDetails savedEntity=restTemplate.postForObject(env.getProperty("data.url")+"/transactional/updateCustomerDetails",
-				customerDetails, CustomerDetails.class);
-
-		return savedEntity;
+		ResponseEntity<CustomerDetails> result=null;
+		
+		try{
+			result=restTemplate.exchange(env.getProperty("data.url")+"/transactional/updateCustomerDetails",
+					HttpMethod.POST, entity, CustomerDetails.class);
+			
+		}catch(RestClientException e)
+		{
+			throw new ValidationFailedException();
+		}
+		
+		if(result.getStatusCode()==HttpStatus.OK)
+			return result.getBody();
+		else
+			throw new CustomerDetailsTransactionalUpdateFailedException();
 
 		
 	}
 
 	@Override
-	public VendorDetails updateVendorDetails(VendorDetails vendorDetails) {
+	public VendorDetails updateVendorDetails(VendorDetails vendorDetails) throws VendorDetailsTransactionalUpdateFailedException,
+																					ValidationFailedException			
+	{
 
-		VendorDetails savedEntity=restTemplate.postForObject(env.getProperty("data.url")+"/transactional/updateVendorDetails",
-				vendorDetails, VendorDetails.class);
-
-		return savedEntity;
+		HttpEntity<VendorDetails> entity=new HttpEntity<VendorDetails>(vendorDetails);
+		
+		ResponseEntity<VendorDetails> result=null;
+		
+		try{
+			result=restTemplate.exchange(env.getProperty("data.url")+"/transactional/updateVendorDetails",
+					HttpMethod.POST, entity, VendorDetails.class);
+			
+		}catch(RestClientException e)
+		{
+			throw new ValidationFailedException();
+		}
+		
+		if(result.getStatusCode()==HttpStatus.OK)
+			return result.getBody();
+		else
+			throw new VendorDetailsTransactionalUpdateFailedException();
 
 	}
 
 	@Override
-	public Boolean updateMobileInDetailsEnityAndAuthenticationDetails(
-			Long entityId, Integer entityType, Integer mobileType) {
+	public Boolean updateMobileInDetailsEnityAndAuthenticationDetails (
+			Long entityId, Integer entityType, Integer mobileType,String updatedBy) 
+					throws UpdateMobileInDetailsAndAuthentionDetailsFailedException,ValidationFailedException{
 
-		CustomerIdTypeMobileTypeDTO customerIdTypeMobileTypeDTO=new CustomerIdTypeMobileTypeDTO(entityId, entityType, mobileType);
+		CustomerIdTypeMobileTypeUpdatedByDTO customerIdTypeMobileTypeDTO=
+				new CustomerIdTypeMobileTypeUpdatedByDTO(entityId, entityType, mobileType,updatedBy);
 		
-		Boolean result=restTemplate.postForObject(env.getProperty("data.url")+"/transactional/updateMobileInDetailsEnityAndAuthenticationDetails",
-				customerIdTypeMobileTypeDTO, Boolean.class);
-
-		return result;
+		HttpEntity<CustomerIdTypeMobileTypeUpdatedByDTO> entity=new HttpEntity<CustomerIdTypeMobileTypeUpdatedByDTO>(customerIdTypeMobileTypeDTO);
+		
+		ResponseEntity<Boolean> result=null;
+		
+		try{
+			result=restTemplate.exchange(env.getProperty("data.url")+"/transactional/updateMobileInDetailsEnityAndAuthenticationDetails",
+					HttpMethod.POST, entity, Boolean.class);
+			
+		}catch(RestClientException e)
+		{
+			throw new ValidationFailedException();
+		}
+		
+		if(result.getStatusCode()==HttpStatus.OK)
+			return result.getBody();
+		else
+			throw new UpdateMobileInDetailsAndAuthentionDetailsFailedException();
 
 
 	}
 
 	@Override
 	public Boolean updateEmailInDetailsEnityAndAuthenticationDetails(
-			Long entityId, Integer entityType, Integer emailType) {
+			Long entityId, Integer entityType, Integer emailType,String updatedBy) 
+					throws UpdateEmailInDetailsAndAuthenticationDetailsFailedException,ValidationFailedException{
 
-		CustomerIdTypeEmailTypeDTO customerIdTypeEmailTypeDTO=new CustomerIdTypeEmailTypeDTO(entityId, entityType, emailType);
+		CustomerIdTypeEmailTypeUpdatedByDTO customerIdTypeEmailTypeDTO=
+				new CustomerIdTypeEmailTypeUpdatedByDTO(entityId, entityType, emailType,updatedBy);
 		
-		Boolean result=restTemplate.postForObject(env.getProperty("data.url")+"/transactional/updateEmailInDetailsEnityAndAuthenticationDetails",
-				customerIdTypeEmailTypeDTO, Boolean.class);
+		HttpEntity<CustomerIdTypeEmailTypeUpdatedByDTO> entity=new HttpEntity<CustomerIdTypeEmailTypeUpdatedByDTO>(customerIdTypeEmailTypeDTO);
+		
+		ResponseEntity<Boolean> result=null;
+		
+		try{
+			result=restTemplate.exchange(env.getProperty("data.url")+"/transactional/updateEmailInDetailsEnityAndAuthenticationDetails",
+					HttpMethod.POST, entity, Boolean.class);
 
-		return result;
+		}catch(RestClientException e)
+		{
+			throw new ValidationFailedException();
+		}
+		
+		if(result.getStatusCode()==HttpStatus.OK)
+			return result.getBody();
+		else
+			throw new UpdateEmailInDetailsAndAuthenticationDetailsFailedException();
 	}
 
 	@Override
 	public CustomerQuickRegisterEmailMobileVerificationEntity saveNewQuickRegisterEntity(
-			QuickRegisterEntity quickRegisterEntity) {
+			QuickRegisterEntity quickRegisterEntity)throws QuickRegisterDetailsAlreadyPresentException,ValidationFailedException {
 		
-		CustomerQuickRegisterEmailMobileVerificationEntity result=restTemplate.postForObject(env.getProperty("data.url")+"/transactional/saveNewQuickRegisterEntity",
-				quickRegisterEntity, CustomerQuickRegisterEmailMobileVerificationEntity.class);
-
-		return result;
+		HttpEntity<QuickRegisterEntity> entity=new HttpEntity<QuickRegisterEntity>(quickRegisterEntity);
+		
+		ResponseEntity<CustomerQuickRegisterEmailMobileVerificationEntity> result=null;
+		
+		try
+		{
+			result=restTemplate.exchange(env.getProperty("data.url")+"/transactional/saveNewQuickRegisterEntity",
+					HttpMethod.POST, entity, CustomerQuickRegisterEmailMobileVerificationEntity.class);
+		}catch(RestClientException e)
+		{
+			throw new ValidationFailedException();
+		}
+						
+		if(result.getStatusCode()==HttpStatus.CREATED)
+			return result.getBody();
+		else
+			throw new QuickRegisterDetailsAlreadyPresentException();
 
 		
 	}
 
 	@Override
 	public CustomerOrVendorDetailsDTO deleteQuickRegisterEntityCreateDetails(
-			QuickRegisterEntity quickRegisterEntity) {
+			QuickRegisterEntity quickRegisterEntity) throws DeleteQuickCreateDetailsEntityFailedException,ValidationFailedException{
 
-	
-		CustomerOrVendorDetailsDTO result=restTemplate.postForObject(env.getProperty("data.url")+"/transactional/deleteQuickRegisterEntityCreateDetails",
-				quickRegisterEntity, CustomerOrVendorDetailsDTO.class);
-
-		return result;
+		HttpEntity<QuickRegisterEntity> entity=new HttpEntity<QuickRegisterEntity>(quickRegisterEntity);
+		
+		ResponseEntity<CustomerOrVendorDetailsDTO> result=null;
+		
+		try{
+			result=restTemplate.exchange(env.getProperty("data.url")+"/transactional/deleteQuickRegisterEntityCreateDetails",
+					HttpMethod.POST, entity, CustomerOrVendorDetailsDTO.class);
+			
+		}catch(RestClientException e)
+		{
+			throw new ValidationFailedException();
+		}
+		
+		
+		if(result.getStatusCode()==HttpStatus.CREATED)
+			return result.getBody();
+		else
+			throw new DeleteQuickCreateDetailsEntityFailedException();
 
 	}
 

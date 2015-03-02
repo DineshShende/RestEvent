@@ -11,6 +11,10 @@ import org.springframework.stereotype.Component;
 import com.projectx.rest.domain.completeregister.CustomerDetails;
 import com.projectx.rest.domain.completeregister.VendorDetails;
 import com.projectx.rest.domain.quickregister.QuickRegisterEntity;
+import com.projectx.rest.exception.repository.completeregister.CustomerDetailsNotFoundException;
+import com.projectx.rest.exception.repository.completeregister.VendorDetailsNotFoundException;
+import com.projectx.rest.exception.repository.quickregister.QuickRegisterEntityNotFoundException;
+import com.projectx.rest.exception.repository.quickregister.ResourceNotFoundException;
 import com.projectx.rest.services.completeregister.CustomerDetailsService;
 import com.projectx.rest.services.completeregister.VendorDetailsService;
 import com.projectx.rest.services.quickregister.QuickRegisterService;
@@ -34,15 +38,24 @@ public class InformationMapper {
 
 	
 	
-	public HashMap<String,Object > getBasicInfoByEntityIdType(Long entityId,Integer entityType)
+	public HashMap<String,Object > getBasicInfoByEntityIdType(Long entityId,Integer entityType) throws QuickRegisterEntityNotFoundException,
+					CustomerDetailsNotFoundException,VendorDetailsNotFoundException
 	{
 		HashMap<String,Object> infoMap=new HashMap<String,Object>();
 		
-		QuickRegisterEntity quickRegisterEntity=customerQuickRegisterService.getByEntityId(entityId);
+		QuickRegisterEntity quickRegisterEntity=null;
+				
+		try{
+			quickRegisterEntity=customerQuickRegisterService.getByEntityId(entityId);
+		}catch(ResourceNotFoundException e)
+		{
+			quickRegisterEntity=null;
+		}
+		
 		
 		if(entityType.equals(ENTITY_TYPE_CUSTOMER))
 		{
-			if(quickRegisterEntity.getCustomerId()!=null)
+			if(quickRegisterEntity!=null)
 			{
 				
 				infoMap.put("firstName", quickRegisterEntity.getFirstName());
@@ -69,7 +82,7 @@ public class InformationMapper {
 		}
 		else if(entityType.equals(ENTITY_TYPE_VENDOR))
 		{
-			if(quickRegisterEntity.getCustomerId()!=null)
+			if(quickRegisterEntity!=null)
 			{
 				infoMap.put("firstName", quickRegisterEntity.getFirstName());
 				infoMap.put("lastName", quickRegisterEntity.getLastName());
