@@ -1,1 +1,5 @@
+/application.properties
 /com/
+/constants.properties
+/gradle.properties
+/schedule-config.xml
