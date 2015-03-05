@@ -1,25 +1,37 @@
 package com.projectx.mvc.domain.quickregister;
 
+import javax.validation.constraints.NotNull;
+
 import com.projectx.rest.domain.quickregister.AuthenticationDetailsKey;
 
 public class UpdatePasswordDTO {
 
+	@NotNull
 	private Long customerId;
 	
+	@NotNull
 	private Integer customerType;
 	
+	@NotNull
 	private String password;
+	
+	@NotNull
+	private String requestedBy;
 
 	public UpdatePasswordDTO() {
 
 	}
 
-	public UpdatePasswordDTO(Long customerId, Integer customerType, String password) {
+	public UpdatePasswordDTO(Long customerId, Integer customerType,
+			String password, String requestedBy) {
 		super();
 		this.customerId = customerId;
 		this.customerType = customerType;
 		this.password = password;
+		this.requestedBy = requestedBy;
 	}
+
+
 
 	public Long getCustomerId() {
 		return customerId;
@@ -45,11 +57,19 @@ public class UpdatePasswordDTO {
 		this.password = password;
 	}
 
+	public String getRequestedBy() {
+		return requestedBy;
+	}
+
+	public void setRequestedBy(String requestedBy) {
+		this.requestedBy = requestedBy;
+	}
+
 	@Override
 	public String toString() {
 		return "UpdatePasswordDTO [customerId=" + customerId
 				+ ", customerType=" + customerType + ", password=" + password
-				+ "]";
+				+ ", requestedBy=" + requestedBy + "]";
 	}
 
 	@Override
@@ -62,6 +82,8 @@ public class UpdatePasswordDTO {
 				+ ((customerType == null) ? 0 : customerType.hashCode());
 		result = prime * result
 				+ ((password == null) ? 0 : password.hashCode());
+		result = prime * result
+				+ ((requestedBy == null) ? 0 : requestedBy.hashCode());
 		return result;
 	}
 
@@ -89,8 +111,14 @@ public class UpdatePasswordDTO {
 				return false;
 		} else if (!password.equals(other.password))
 			return false;
+		if (requestedBy == null) {
+			if (other.requestedBy != null)
+				return false;
+		} else if (!requestedBy.equals(other.requestedBy))
+			return false;
 		return true;
 	}
 
+	
 	
 }

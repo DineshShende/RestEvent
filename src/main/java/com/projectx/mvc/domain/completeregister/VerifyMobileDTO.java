@@ -1,16 +1,22 @@
 package com.projectx.mvc.domain.completeregister;
 
+import javax.validation.constraints.NotNull;
+
 public class VerifyMobileDTO {
 	
 	
 	private Long entityId;
 	
+	@NotNull
 	private Integer entityType;
 	
+	@NotNull
 	private Integer mobileType;
 	
+	@NotNull
 	private Integer mobilePin;
 	
+	@NotNull
 	private String requestBy;
 
 	public VerifyMobileDTO() {

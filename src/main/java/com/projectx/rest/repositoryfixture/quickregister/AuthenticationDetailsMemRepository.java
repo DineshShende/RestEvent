@@ -84,7 +84,7 @@ public class AuthenticationDetailsMemRepository implements AuthenticationDetails
 
 	@Override
 	public Integer updatePasswordEmailPasswordAndPasswordTypeAndCounts(Long customerId,Integer customerType,
-			String password,String emailPassword, String passwordType) {
+			String password,String emailPassword, String passwordType,String updatedBy) {
 		
 		AuthenticationDetailsKey key=new AuthenticationDetailsKey(customerId, customerType);
 		
@@ -97,8 +97,9 @@ public class AuthenticationDetailsMemRepository implements AuthenticationDetails
 			oldRecord.setPassword(password);
 			oldRecord.setEmailPassword(emailPassword);			
 			oldRecord.setPasswordType(passwordType);
-			oldRecord.setLastUnsucessfullAttempts(0);;
+			oldRecord.setLastUnsucessfullAttempts(0);
 			oldRecord.setResendCount(0);
+			oldRecord.setUpdatedBy(updatedBy);
 
 			customerList.put(key, oldRecord);
 		
@@ -110,7 +111,7 @@ public class AuthenticationDetailsMemRepository implements AuthenticationDetails
 
 
 	@Override
-	public Integer incrementResendCount(Long customerId,Integer customerType) {
+	public Integer incrementResendCount(Long customerId,Integer customerType,String updatedBy) {
 		
 		AuthenticationDetailsKey key=new AuthenticationDetailsKey(customerId, customerType);
 		
@@ -121,6 +122,7 @@ public class AuthenticationDetailsMemRepository implements AuthenticationDetails
 			customerList.remove(customerId);
 		
 			oldRecord.setResendCount(oldRecord.getResendCount()+1);
+			oldRecord.setUpdatedBy(updatedBy);
 
 			customerList.put(key, oldRecord);
 		
@@ -132,7 +134,7 @@ public class AuthenticationDetailsMemRepository implements AuthenticationDetails
 
 
 	@Override
-	public Integer incrementLastUnsucessfullAttempts(Long customerId,Integer customerType) {
+	public Integer incrementLastUnsucessfullAttempts(Long customerId,Integer customerType,String updatedBy) {
 		
 		AuthenticationDetailsKey key=new AuthenticationDetailsKey(customerId, customerType);
 		
@@ -143,6 +145,7 @@ public class AuthenticationDetailsMemRepository implements AuthenticationDetails
 			customerList.remove(customerId);
 		
 			oldRecord.setLastUnsucessfullAttempts(oldRecord.getLastUnsucessfullAttempts()+1);
+			oldRecord.setUpdatedBy(updatedBy);
 
 			customerList.put(key, oldRecord);
 		

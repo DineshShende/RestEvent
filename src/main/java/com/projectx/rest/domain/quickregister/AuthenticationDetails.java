@@ -195,11 +195,6 @@ public class AuthenticationDetails {
 		if (getClass() != obj.getClass())
 			return false;
 		AuthenticationDetails other = (AuthenticationDetails) obj;
-		if (UpdateTime == null) {
-			if (other.UpdateTime != null)
-				return false;
-		} else if (Math.abs(UpdateTime.getTime()-other.UpdateTime.getTime())>10000)//!UpdateTime.equals(other.UpdateTime)
-			return false;
 		if (email == null) {
 			if (other.email != null)
 				return false;
@@ -209,11 +204,6 @@ public class AuthenticationDetails {
 			if (other.emailPassword != null)
 				return false;
 		} else if (!emailPassword.equals(other.emailPassword))
-			return false;
-		if (insertTime == null) {
-			if (other.insertTime != null)
-				return false;
-		} else if (Math.abs(insertTime.getTime()-other.insertTime.getTime())>10000)
 			return false;
 		if (key == null) {
 			if (other.key != null)

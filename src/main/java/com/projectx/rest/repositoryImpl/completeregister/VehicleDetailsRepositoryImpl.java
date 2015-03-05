@@ -82,6 +82,22 @@ public class VehicleDetailsRepositoryImpl implements VehicleDetailsRepository {
 
 		
 	}
+
+	@Override
+	public VehicleDetails findByRegistrationNumber(String registrationNumber) throws VehicleDetailsNotFoundException{
+
+				
+		ResponseEntity<VehicleDetails> result=restTemplate.exchange(env.getProperty("data.url")+"/vehicle/getByRegistrationNumber/"+registrationNumber, 
+				HttpMethod.GET, null, VehicleDetails.class);
+		
+		if(result.getStatusCode()==HttpStatus.FOUND)		
+			return result.getBody();
+		else
+			throw new VehicleDetailsNotFoundException();
+
+
+	}
+
 	
 	@Override
 	public VehicleDetails findOne(Long vehicleId) throws VehicleDetailsNotFoundException {
@@ -118,20 +134,6 @@ public class VehicleDetailsRepositoryImpl implements VehicleDetailsRepository {
 		
 	}
 
-	@Override
-	public VehicleDetails findByRegistrationNumber(String registrationNumber) throws VehicleDetailsNotFoundException{
-
-				
-		ResponseEntity<VehicleDetails> result=restTemplate.exchange(env.getProperty("data.url")+"/vehicle/getByRegistrationNumber/"+registrationNumber, 
-				HttpMethod.GET, null, VehicleDetails.class);
-		
-		if(result.getStatusCode()==HttpStatus.FOUND)		
-			return result.getBody();
-		else
-			throw new VehicleDetailsNotFoundException();
-
-
-	}
 
 	
 

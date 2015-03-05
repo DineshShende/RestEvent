@@ -14,6 +14,7 @@ import org.springframework.web.client.RestTemplate;
 
 import com.projectx.data.domain.quickregister.CustomerIdDTO;
 import com.projectx.data.domain.quickregister.CustomerIdTypeMobileTypeDTO;
+import com.projectx.data.domain.quickregister.CustomerIdTypeMobileTypeUpdatedByDTO;
 import com.projectx.data.domain.quickregister.EmailDTO;
 import com.projectx.data.domain.quickregister.MobileDTO;
 import com.projectx.data.domain.quickregister.UpdateMobilePinAndMobileVerificationAttemptsAndResetCountDTO;
@@ -81,38 +82,62 @@ public class MobileVerificationDetailsRepositoryImpl implements MobileVerificati
 	@Override
 	public Integer updateMobilePinAndMobileVerificationAttemptsAndResendCount(
 			Long customerId,Integer customerType, Integer mobileType, Integer mobilePin,
-			Integer mobileVerificationAttempts, Integer resendCount) {
+			Integer mobileVerificationAttempts, Integer resendCount,String updatedBy) {
 		
 		
 		UpdateMobilePinAndMobileVerificationAttemptsAndResetCountDTO dto=new UpdateMobilePinAndMobileVerificationAttemptsAndResetCountDTO
-				(customerId,customerType, mobileType, mobilePin, mobileVerificationAttempts, resendCount);
+				(customerId,customerType, mobileType, mobilePin, mobileVerificationAttempts, resendCount,updatedBy);
 		
-		ResponseEntity<Integer> updateStatus=restTemplate.exchange(env.getProperty("data.url")+"/customer/quickregister/mobileVerification/updateMobilePinAndMobileVerificationAttemptsAndResendCount",
-				HttpMethod.POST,new HttpEntity<UpdateMobilePinAndMobileVerificationAttemptsAndResetCountDTO>(dto), Integer.class);
+		ResponseEntity<Integer> updateStatus=null;
+		
+		try{
+			updateStatus=restTemplate.exchange(env.getProperty("data.url")+"/customer/quickregister/mobileVerification/updateMobilePinAndMobileVerificationAttemptsAndResendCount",
+					HttpMethod.POST,new HttpEntity<UpdateMobilePinAndMobileVerificationAttemptsAndResetCountDTO>(dto), Integer.class);
+			
+		}catch(RestClientException e)
+		{
+			throw new ValidationFailedException();
+		}
 		
 		return updateStatus.getBody();
 	}
 
 	@Override
 	public Integer incrementMobileVerificationAttempts(Long customerId,Integer customerType,
-			Integer mobileType) {
+			Integer mobileType,String updatedBy) {
 			
-		CustomerIdTypeMobileTypeDTO mobileDTO=new CustomerIdTypeMobileTypeDTO(customerId,customerType, mobileType);
+		CustomerIdTypeMobileTypeUpdatedByDTO mobileDTO=new CustomerIdTypeMobileTypeUpdatedByDTO(customerId,customerType, mobileType,updatedBy);
 		
-		ResponseEntity<Integer> updateStatus=restTemplate.exchange(env.getProperty("data.url")+"/customer/quickregister/mobileVerification/incrementMobileVerificationAttempts",
-				HttpMethod.POST,new HttpEntity<CustomerIdTypeMobileTypeDTO>(mobileDTO), Integer.class);
+		ResponseEntity<Integer> updateStatus=null;
+		
+		try{
+			updateStatus=restTemplate.exchange(env.getProperty("data.url")+"/customer/quickregister/mobileVerification/incrementMobileVerificationAttempts",
+					HttpMethod.POST,new HttpEntity<CustomerIdTypeMobileTypeUpdatedByDTO>(mobileDTO), Integer.class);
+			
+		}catch(RestClientException e)
+		{
+			throw new ValidationFailedException();
+		}
 		
 		return updateStatus.getBody();
 
 	}
 
 	@Override
-	public Integer incrementResendCount(Long customerId,Integer customerType, Integer mobileType) {
+	public Integer incrementResendCount(Long customerId,Integer customerType, Integer mobileType,String updatedBy) {
 
-		CustomerIdTypeMobileTypeDTO mobileDTO=new CustomerIdTypeMobileTypeDTO(customerId,customerType, mobileType);
+		CustomerIdTypeMobileTypeUpdatedByDTO mobileDTO=new CustomerIdTypeMobileTypeUpdatedByDTO(customerId,customerType, mobileType,updatedBy);
 		
-		ResponseEntity<Integer> updateStatus=restTemplate.exchange(env.getProperty("data.url")+"/customer/quickregister/mobileVerification/incrementResendCount",
-				HttpMethod.POST,new HttpEntity<CustomerIdTypeMobileTypeDTO>(mobileDTO), Integer.class);
+		ResponseEntity<Integer> updateStatus=null;
+		
+		try{
+			updateStatus=restTemplate.exchange(env.getProperty("data.url")+"/customer/quickregister/mobileVerification/incrementResendCount",
+					HttpMethod.POST,new HttpEntity<CustomerIdTypeMobileTypeUpdatedByDTO>(mobileDTO), Integer.class);
+			
+		}catch(RestClientException e)
+		{
+			throw new ValidationFailedException();
+		}
 		
 		return updateStatus.getBody();	
 		

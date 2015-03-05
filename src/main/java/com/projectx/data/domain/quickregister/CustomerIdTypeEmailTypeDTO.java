@@ -1,11 +1,16 @@
 package com.projectx.data.domain.quickregister;
 
+import javax.validation.constraints.NotNull;
+
 public class CustomerIdTypeEmailTypeDTO {
 
+	@NotNull
 	private Long customerId;
 	
+	@NotNull
 	private Integer customerType;
 	
+	@NotNull
 	private Integer emailType;
 	
 	

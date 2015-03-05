@@ -30,7 +30,7 @@ import com.projectx.rest.repository.quickregister.QuickRegisterRepository;
 import com.projectx.rest.services.quickregister.EmailVerificationService;
 import com.projectx.rest.services.quickregister.MobileVerificationService;
 import com.projectx.rest.services.quickregister.QuickRegisterService;
-import com.projectx.rest.utils.HandleCustomerVerification;
+import com.projectx.rest.utils.HandleVerificationService;
 import com.projectx.rest.utils.MessageBuilder;
 import com.projectx.rest.utils.MessagerSender;
 
@@ -58,7 +58,7 @@ public class QuickRegisterHandler implements
 	TransactionalUpdatesRepository transactionalUpdatesRepository;
 	
 	@Autowired 
-	HandleCustomerVerification handleCustomerVerification;
+	HandleVerificationService handleCustomerVerification;
 
 	@Autowired
 	MessageBuilder messageBuilder;
@@ -187,6 +187,8 @@ public class QuickRegisterHandler implements
 		}
 		//TODO
 		customerToProcess.setCustomerType(customer.getCustomerType());
+		customerToProcess.setUpdateTime(new Date());
+		customerToProcess.setInsertTime(new Date());
 
 		return customerToProcess;
 	}
@@ -212,7 +214,8 @@ public class QuickRegisterHandler implements
 		
 		if(resultEntity.getCustomerEmailVerificationDetails().getKey()!=null&&resultEntity.getCustomerEmailVerificationDetails().getEmailHash()==null)
 			emailVerificationService.updateEmailHash(resultEntity.getCustomerEmailVerificationDetails().getKey().getCustomerId(),
-					resultEntity.getCustomerEmailVerificationDetails().getKey().getCustomerType(),resultEntity.getCustomerEmailVerificationDetails().getKey().getEmailType());
+					resultEntity.getCustomerEmailVerificationDetails().getKey().getCustomerType(),resultEntity.getCustomerEmailVerificationDetails().getKey().getEmailType(),
+					resultEntity.getCustomerEmailVerificationDetails().getUpdatedBy());
 			
 			
 		if(resultEntity.getCustomerMobileVerificationDetails().getKey()!=null && resultEntity.getCustomerMobileVerificationDetails().getMobilePin()==null)	

@@ -396,7 +396,7 @@ public class CustomerDetailsServiceTest {
 		
 		assertNotEquals(standardCustomerDetailsWithNewEmail(mergeEntity).getEmail(),customerDetailsService.findById(mergeEntity.getCustomerId()).getEmail());
 		
-		assertTrue( emailVerificationService.reSetEmailHash(mergeEntity.getCustomerId(), ENTITY_TYPE_CUSTOMER, ENTITY_TYPE_PRIMARY));
+		assertTrue( emailVerificationService.reSetEmailHash(mergeEntity.getCustomerId(), ENTITY_TYPE_CUSTOMER, ENTITY_TYPE_PRIMARY,CUST_UPDATED_BY));
 		
 		EmailVerificationDetails emailVerificationDetails=
 				emailVerificationService.getByEntityIdTypeAndEmailType(mergeEntity.getCustomerId(), ENTITY_TYPE_CUSTOMER, ENTITY_TYPE_PRIMARY);
@@ -612,7 +612,7 @@ public class CustomerDetailsServiceTest {
 	
 			
 		assertTrue(customerDetailsService
-				.sendEmailVerificationDetails(mergeEntity.getCustomerId(), ENTITY_TYPE_CUSTOMER, EMAIL_TYPE_PRIMARY));
+				.sendEmailVerificationDetails(mergeEntity.getCustomerId(), ENTITY_TYPE_CUSTOMER, EMAIL_TYPE_PRIMARY,CUST_UPDATED_BY));
 		
 			
 	}

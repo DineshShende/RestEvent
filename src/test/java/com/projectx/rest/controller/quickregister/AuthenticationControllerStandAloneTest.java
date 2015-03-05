@@ -1,17 +1,8 @@
 package com.projectx.rest.controller.quickregister;
 
 import static com.projectx.rest.fixture.quickregister.AuthenticationDetailsDataFixtures.*;
-import static com.projectx.rest.fixture.quickregister.AuthenticationDetailsDataFixtures.standardCustomerEmailMobileAuthenticationDetails;
-import static com.projectx.rest.fixture.quickregister.AuthenticationDetailsDataFixtures.standardCustomerIdDTO;
-import static com.projectx.rest.fixture.quickregister.AuthenticationDetailsDataFixtures.standardEmailLoginVerification;
-import static com.projectx.rest.fixture.quickregister.AuthenticationDetailsDataFixtures.standardJsonLoginVerification;
-import static com.projectx.rest.fixture.quickregister.AuthenticationDetailsDataFixtures.standardJsonUpdatePasswordAndPasswordType;
-import static com.projectx.rest.fixture.quickregister.AuthenticationDetailsDataFixtures.standardLoginVerificationWithEmail;
-import static com.projectx.rest.fixture.quickregister.AuthenticationDetailsDataFixtures.standardUpdatePasswordEmailPasswordAndPasswordTypeDTO;
-import static com.projectx.rest.fixture.quickregister.AuthenticationDetailsDataFixtures.standardUpdatePasswordDTO;
-import static com.projectx.rest.fixture.quickregister.QuickRegisterDataFixture.CUST_MOBILE;
-import static com.projectx.rest.fixture.quickregister.QuickRegisterDataFixture.standardEmailMobileCustomer;
-import static com.projectx.rest.fixture.quickregister.QuickRegisterDataFixture.standardJsonCustomerIdDTO;
+import static com.projectx.rest.fixture.quickregister.QuickRegisterDataFixture.*;
+
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
@@ -59,7 +50,7 @@ public class AuthenticationControllerStandAloneTest {
 		
 	}
 	
-/*
+
 	@Test
 	public void verifyLoginDetails() throws Exception
 	{
@@ -130,11 +121,11 @@ public class AuthenticationControllerStandAloneTest {
 	@Test
 	public void resetPassword() throws Exception
 	{
-		when(authenticationService.resetPassword(standardCustomerIdDTO())).thenReturn(true);
+		when(authenticationService.resetPassword(standardCustomerIdTypeUpdatedByDTO())).thenReturn(true);
 		
 		this.mockMvc.perform(
 	            post("/customer/quickregister/resetPassword")
-	                    .content(standardJsonCustomerIdDTO())
+	                    .content(standardJsonCustomerIdUpdatedByDTO(standardCustomerIdTypeUpdatedByDTO()))
 	                    .contentType(MediaType.APPLICATION_JSON)
 	                    .accept(MediaType.APPLICATION_JSON))
 
@@ -144,17 +135,17 @@ public class AuthenticationControllerStandAloneTest {
 		
 		
 	}
-*/
+
 
 	
 	@Test
 	public void resendPassword() throws Exception
 	{
-		when(authenticationService.resendPassword(standardCustomerIdDTO())).thenReturn(true);
+		when(authenticationService.resendPassword(standardCustomerIdTypeUpdatedByDTO())).thenReturn(true);
 		
 		this.mockMvc.perform(
 	            post("/customer/quickregister/resendPassword")
-	                    .content(standardJsonCustomerIdDTO())
+	                    .content(standardJsonCustomerIdUpdatedByDTO(standardCustomerIdTypeUpdatedByDTO()))
 	                    .contentType(MediaType.APPLICATION_JSON)
 	                    .accept(MediaType.APPLICATION_JSON))
 

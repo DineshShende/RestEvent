@@ -1276,8 +1276,8 @@ public class TransactionalUpdatesRepositoryTest {
 		
 		QuickRegisterEntity quickRegisterEntity=quickRegisterRepository.save(standardEmailMobileCustomer());
 		
-		customerDetailsCustomRepository.save(new CustomerDetails(215L, "ABX", "ASD", null, null, CUST_MOBILE,null, CUST_EMAIL, null, 
-				null, null, null, null, null, null, null, null, null, null));
+		customerDetailsCustomRepository.save(new CustomerDetails(215L, "ABX", "ASD", null, null, CUST_MOBILE,false, CUST_EMAIL, false, 
+				null, null, null, null, null, null, null, new Date(), new Date(), "CUST_ONLINE"));
 		
 		
 		assertEquals(1,quickRegisterRepository.findAll().size());

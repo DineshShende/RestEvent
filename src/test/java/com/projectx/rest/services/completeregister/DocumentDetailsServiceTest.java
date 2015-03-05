@@ -70,7 +70,7 @@ public class DocumentDetailsServiceTest {
 		assertEquals(standardDocumentDetailsWithDummyDocument(), savedEntity);
 		
 		DocumentDetails updatedEntity=documentDetailsService.updateDocument(savedEntity.getKey(),
-				standardDocumentDetailsWithDummyDocumentNew().getDocument(), standardDocumentDetailsWithDummyDocumentNew().getContentType());
+				standardDocumentDetailsWithDummyDocumentNew().getDocument(), standardDocumentDetailsWithDummyDocumentNew().getContentType(),"CUST_ONLINE");
 		
 		assertEquals(standardDocumentDetailsWithDummyDocumentNew(), updatedEntity);
 		
@@ -88,7 +88,7 @@ public class DocumentDetailsServiceTest {
 		
 		DocumentDetails updatedEntity=documentDetailsService.updateVerificationStatusAndRemark(savedEntity.getKey(),
 				standardDocumentDetailsWithDummyDocumentWithNewVerificationStatusAndRemark().getVerificationStatus(), 
-				standardDocumentDetailsWithDummyDocumentWithNewVerificationStatusAndRemark().getVerificationRemark());
+				standardDocumentDetailsWithDummyDocumentWithNewVerificationStatusAndRemark().getVerificationRemark(),"CUST_ONLINE");
 		
 		assertEquals(standardDocumentDetailsWithDummyDocumentWithNewVerificationStatusAndRemark(), updatedEntity);
 		

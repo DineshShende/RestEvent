@@ -48,6 +48,8 @@ public class CustomerQuickRegisterDataFixture {
 	public static String CUST_PASSWORD_CHANGED="654321";
 	public static String CUST_PASSWORD_TYPE_CHANGED="Changed";
 	
+	public static String CUST_UPDATED_BY="CUST_ONLINE";
+	
 	
 	public static String STATUS_EMAIL_VERFIED_MOBILE_PENDING="EmailVerifiedMobileVerficationPending";
 	public static String STATUS_MOBILE_VERFIED_EMAIL_PENDING="MobileVerifiedEmailVerficationPending";

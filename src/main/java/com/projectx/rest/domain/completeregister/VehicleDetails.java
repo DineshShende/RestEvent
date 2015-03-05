@@ -6,6 +6,9 @@ import java.util.Date;
 
 
 
+
+import javax.validation.constraints.NotNull;
+
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.projectx.rest.util.serializer.JsonDateDeSerializer;
@@ -17,48 +20,65 @@ public class VehicleDetails {
 
 	private Long vehicleId;
 	
+	@NotNull
 	private String ownerFirstName;
 	
 	private String ownerMiddleName;
 	
+	@NotNull
 	private String ownerLastName;
 	
 	private VehicleTypeDetails vehicleTypeId;
 	
 	private VehicleBrandDetails vehicleBrandId;
 	
+	@NotNull
 	private String vehicleBodyType;
 	
+	@NotNull
 	private Boolean isBodyTypeFlexible;
 	
+	@NotNull
 	private String registrationNumber;
 	
+	@NotNull
 	private String chassisNumber;
 	
+	@NotNull
 	private Integer loadCapacityInTons;
 	
+	@NotNull
 	private Integer length;
 	
+	@NotNull
 	private Integer width;
 	
+	@NotNull
 	private Integer height;
 	
+	@NotNull
 	private Integer numberOfWheels;
 	
+	@NotNull
 	private String permitType;
 	
+	@NotNull
 	private Boolean insuranceStatus;
 	
 	private String insuranceNumber;
 	
 	private String insuranceCompany;
 	
+	@NotNull
 	private Long vendorId;
 	
+	@NotNull
 	private Date insertTime;
 	
+	@NotNull
 	private Date updateTime;
 	
+	@NotNull
 	private String updatedBy;
 
 	public VehicleDetails() {

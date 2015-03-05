@@ -10,6 +10,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+
+import javax.swing.text.AbstractDocument.Content;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -27,6 +30,7 @@ import org.springframework.web.context.WebApplicationContext;
 import com.projectx.rest.config.Application;
 import com.projectx.rest.domain.quickregister.QuickRegisterEntity;
 import com.projectx.rest.exception.repository.quickregister.QuickRegisterEntityNotFoundException;
+import com.projectx.rest.exception.repository.quickregister.ResourceNotFoundException;
 import com.projectx.rest.handlers.quickregister.QuickRegisterHandler;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -47,6 +51,7 @@ public class MobileVerificationControllerWACTest {
 	public void setUp()
 	{
 		this.mockMvc=MockMvcBuilders.webAppContextSetup(wac).build();
+		customerQuickRegisterHandler.clearDataForTesting();
 	}
 	
 	@Test
@@ -63,7 +68,7 @@ public class MobileVerificationControllerWACTest {
 		
 		try{
 			quickRegisterEntity=customerQuickRegisterHandler.getByEntityId(CUST_ID);
-		}catch(QuickRegisterEntityNotFoundException e)
+		}catch(ResourceNotFoundException e)
 		{
 			assertNull(quickRegisterEntity);
 		}
@@ -74,13 +79,13 @@ public class MobileVerificationControllerWACTest {
 
 		this.mockMvc.perform(
 	            post("/customer/quickregister/resendEmailHash")
-	                    .content(standardJsonUpdateEmailHashDTOMVC(handledEntity.getCustomerId()))
+	                    .content(standardJsonUpdateEmailHashDTOMVC(standardUpdateEmailHashDTO(handledEntity.getCustomerId())))
 	                    .contentType(MediaType.APPLICATION_JSON)
 	                    .accept(MediaType.APPLICATION_JSON))
-	            .andDo(print());/*
-	            .andExpect(status().isCreated())
-	            .andExpect(jsonPath("status").value(true))
-	    */
+	            .andDo(print())
+	            .andExpect(status().isOk())
+	            .andExpect(content().string("true"));
+	    
 				
 	}
 	

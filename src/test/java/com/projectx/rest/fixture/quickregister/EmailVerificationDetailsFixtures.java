@@ -1,12 +1,12 @@
 package com.projectx.rest.fixture.quickregister;
 
 import static com.projectx.rest.fixture.quickregister.QuickRegisterDataFixture.*;
-
 import java.util.Date;
 
 import com.google.gson.Gson;
 import com.projectx.data.domain.quickregister.CustomerEmailVerificationDetailsByCustomerIdTypeAndEmailTypeDTO;
 import com.projectx.data.domain.quickregister.CustomerIdTypeEmailTypeDTO;
+import com.projectx.data.domain.quickregister.CustomerIdTypeEmailTypeUpdatedByDTO;
 import com.projectx.data.domain.quickregister.UpdateEmailHashAndEmailHashSentTimeAndResendCountDTO;
 import com.projectx.data.domain.quickregister.UpdateEmailHashDTO;
 import com.projectx.mvc.domain.quickregister.VerifyEmailHashDTO;
@@ -50,12 +50,18 @@ public class EmailVerificationDetailsFixtures {
 	
 	public static UpdateEmailHashAndEmailHashSentTimeAndResendCountDTO standardUpdateEmailHashAndEmailHashSentTimeDTO()
 	{
-		return new UpdateEmailHashAndEmailHashSentTimeAndResendCountDTO(CUST_ID,ENTITY_TYPE_CUSTOMER, CUST_EMAIL_TYPE_PRIMARY, CUST_EMAILHASH_UPDATED, CUST_EMAIL_HASH_SENT_TIME,CUST_RESEND_COUNT+1);
+		return new UpdateEmailHashAndEmailHashSentTimeAndResendCountDTO(CUST_ID,ENTITY_TYPE_CUSTOMER, CUST_EMAIL_TYPE_PRIMARY, CUST_EMAILHASH_UPDATED, CUST_EMAIL_HASH_SENT_TIME,
+				CUST_RESEND_COUNT+1,CUST_UPDATED_BY);
 	}
 	
 	public static CustomerIdTypeEmailTypeDTO standardCustomerIdEmailDTO()
 	{
 		return new CustomerIdTypeEmailTypeDTO(CUST_ID,ENTITY_TYPE_CUSTOMER, CUST_EMAIL_TYPE_PRIMARY);
+	}
+	
+	public static CustomerIdTypeEmailTypeUpdatedByDTO standardCustomerIdTypeEmailTypeUpdatedByDTO()
+	{
+		return new CustomerIdTypeEmailTypeUpdatedByDTO(CUST_ID,ENTITY_TYPE_CUSTOMER, CUST_EMAIL_TYPE_PRIMARY,CUST_UPDATED_BY);
 	}
 	
 	public static String standardJsonUpdateEmailHashDTOMVC()
@@ -64,10 +70,19 @@ public class EmailVerificationDetailsFixtures {
 		return "{\"customerId\":"+CUST_ID+",\"customerType\":"+ENTITY_TYPE_CUSTOMER+",\"emailType\":\""+CUST_EMAIL_TYPE_PRIMARY+"\"}";
 	}
 	
-	public static String standardJsonUpdateEmailHashDTOMVC(Long customerId)
+	public static com.projectx.mvc.domain.quickregister.UpdateEmailHashDTO standardUpdateEmailHashDTO(Long customerId)
+	{
+		return new com.projectx.mvc.domain.quickregister.UpdateEmailHashDTO(customerId,ENTITY_TYPE_CUSTOMER,EMAIL_TYPE_PRIMARY, CUST_UPDATED_BY);
+	}
+	
+	public static String standardJsonUpdateEmailHashDTOMVC(com.projectx.mvc.domain.quickregister.UpdateEmailHashDTO customerId)
 	{
 		
-		return "{\"customerId\":"+customerId+",\"customerType\":"+ENTITY_TYPE_CUSTOMER+",\"emailType\":\""+CUST_EMAIL_TYPE_PRIMARY+"\"}";
+		//System.out.println("{\"customerId\":"+customerId+",\"customerType\":"+ENTITY_TYPE_CUSTOMER+",\"emailType\":\""+CUST_EMAIL_TYPE_PRIMARY+",\"requestedBy\":\""+CUST_UPDATED_BY+"\"}");
+		
+		//return "{\"customerId\":"+customerId+",\"customerType\":"+ENTITY_TYPE_CUSTOMER+",\"emailType\":\""+CUST_EMAIL_TYPE_PRIMARY+",\"requestedBy\":\""+CUST_UPDATED_BY+"\"}";
+		
+		return gson.toJson(customerId);
 	}
 	
 	

@@ -23,7 +23,7 @@ import com.projectx.rest.domain.quickregister.QuickRegisterEntity;
 public class HandleCustomerVerificationTest {
 
 	@Autowired
-	HandleCustomerVerification handleCustomerVerification;
+	HandleVerificationService handleCustomerVerification;
 	
 	@Test
 	public void sendEmail() throws InterruptedException, ExecutionException  {

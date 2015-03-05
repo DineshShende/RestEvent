@@ -1,8 +1,11 @@
 package com.projectx.rest.controller.quickregister;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -28,8 +31,11 @@ public class MobileVerificationController {
 	MobileVerificationService mobileVerificationService;
 	
 	@RequestMapping(value="/verifyMobilePin",method=RequestMethod.POST)
-	public ResponseEntity<Boolean> verifyMobilePin(@RequestBody VerifyMobilePinDTO verifyMobile)
+	public ResponseEntity<Boolean> verifyMobilePin(@Valid @RequestBody VerifyMobilePinDTO verifyMobile,BindingResult bindingResult)
 	{
+		if(bindingResult.hasErrors())
+			return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+		
 			
 		try{
 			Boolean status=mobileVerificationService.verifyMobilePinUpdateStatusAndSendPassword(verifyMobile.getCustomerId(),verifyMobile.getCustomerType(),
@@ -50,8 +56,12 @@ public class MobileVerificationController {
 	
 	
 	@RequestMapping(value="/resetMobilePin",method=RequestMethod.POST)
-	public ResponseEntity<Boolean> updateMobilePin(@RequestBody CustomerIdTypeMobileTypeUpdatedByDTO updateMobilePin)
+	public ResponseEntity<Boolean> updateMobilePin(@Valid @RequestBody CustomerIdTypeMobileTypeUpdatedByDTO updateMobilePin,
+			BindingResult bindingResult)
 	{
+		if(bindingResult.hasErrors())
+			return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+		
 		try{
 			Boolean status=mobileVerificationService.reSetMobilePin(updateMobilePin.getCustomerId(),updateMobilePin.getCustomerType(),
 					updateMobilePin.getMobileType(),updateMobilePin.getUpdatedBy());
@@ -66,8 +76,12 @@ public class MobileVerificationController {
 	
 	
 	@RequestMapping(value="/resendMobilePin",method=RequestMethod.POST)
-	public ResponseEntity<Boolean> reSendMobilePin(@RequestBody CustomerIdTypeMobileTypeUpdatedByDTO updateMobilePin)
+	public ResponseEntity<Boolean> reSendMobilePin(@Valid @RequestBody CustomerIdTypeMobileTypeUpdatedByDTO updateMobilePin,
+			BindingResult bindingResult)
 	{
+		if(bindingResult.hasErrors())
+			return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+		
 		try{
 		
 			Boolean result= mobileVerificationService.reSendMobilePin(updateMobilePin.getCustomerId(),updateMobilePin.getCustomerType(),
@@ -82,8 +96,12 @@ public class MobileVerificationController {
 	
 
 	@RequestMapping(value="/getMobileVerificationDetails",method=RequestMethod.POST)
-	public ResponseEntity<MobileVerificationDetails> getMobileVerificationDetails(@RequestBody CustomerIdTypeMobileTypeDTO mobileDTO)
+	public ResponseEntity<MobileVerificationDetails> getMobileVerificationDetails(@Valid @RequestBody CustomerIdTypeMobileTypeDTO mobileDTO,
+			BindingResult bindingResult)
 	{
+		if(bindingResult.hasErrors())
+			return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+		
 		ResponseEntity<MobileVerificationDetails> result=null;
 		
 		try{

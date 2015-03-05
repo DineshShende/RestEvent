@@ -1,13 +1,19 @@
 package com.projectx.data.domain.quickregister;
 
+import javax.validation.constraints.NotNull;
+
 public class CustomerIdTypeMobileTypeUpdatedByDTO {
 
+	@NotNull
 	private Long customerId;
 	
+	@NotNull
 	private Integer customerType;
 	
+	@NotNull
 	private Integer mobileType;
 	
+	@NotNull
 	private String updatedBy;
 
 	public CustomerIdTypeMobileTypeUpdatedByDTO() {

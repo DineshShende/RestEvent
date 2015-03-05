@@ -1,11 +1,16 @@
 package com.projectx.mvc.domain.quickregister;
 
+import javax.validation.constraints.NotNull;
+
 public class LoginVerificationWithDefaultEmailPasswordDTO {
 	
+	@NotNull
 	private Long customerId;
 	
+	@NotNull
 	private Integer customerType;
 	
+	@NotNull
 	private String emailPassword;
 
 	public LoginVerificationWithDefaultEmailPasswordDTO() {

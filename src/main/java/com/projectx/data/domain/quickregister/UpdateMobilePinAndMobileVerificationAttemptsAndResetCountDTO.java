@@ -10,18 +10,18 @@ public class UpdateMobilePinAndMobileVerificationAttemptsAndResetCountDTO {
 	private Integer mobilePin;
 	private Integer mobileVerificationAttempts;
 	private Integer resendCount;
-	
+	private String updatedBy;
 	
 	
 	public UpdateMobilePinAndMobileVerificationAttemptsAndResetCountDTO() {
-		super();
+
 	}
 
 
 	public UpdateMobilePinAndMobileVerificationAttemptsAndResetCountDTO(
 			Long customerId, Integer customerType, Integer mobileType,
 			Integer mobilePin, Integer mobileVerificationAttempts,
-			Integer resendCount) {
+			Integer resendCount, String updatedBy) {
 		super();
 		this.customerId = customerId;
 		this.customerType = customerType;
@@ -29,7 +29,10 @@ public class UpdateMobilePinAndMobileVerificationAttemptsAndResetCountDTO {
 		this.mobilePin = mobilePin;
 		this.mobileVerificationAttempts = mobileVerificationAttempts;
 		this.resendCount = resendCount;
+		this.updatedBy = updatedBy;
 	}
+
+
 
 
 
@@ -104,6 +107,17 @@ public class UpdateMobilePinAndMobileVerificationAttemptsAndResetCountDTO {
 		this.customerType = customerType;
 	}
 
+	
+
+	public String getUpdatedBy() {
+		return updatedBy;
+	}
+
+
+	public void setUpdatedBy(String updatedBy) {
+		this.updatedBy = updatedBy;
+	}
+
 
 	@Override
 	public String toString() {
@@ -117,7 +131,11 @@ public class UpdateMobilePinAndMobileVerificationAttemptsAndResetCountDTO {
 				+ mobilePin
 				+ ", mobileVerificationAttempts="
 				+ mobileVerificationAttempts
-				+ ", resendCount=" + resendCount + "]";
+				+ ", resendCount="
+				+ resendCount
+				+ ", updatedBy="
+				+ updatedBy
+				+ "]";
 	}
 
 
@@ -139,6 +157,8 @@ public class UpdateMobilePinAndMobileVerificationAttemptsAndResetCountDTO {
 						: mobileVerificationAttempts.hashCode());
 		result = prime * result
 				+ ((resendCount == null) ? 0 : resendCount.hashCode());
+		result = prime * result
+				+ ((updatedBy == null) ? 0 : updatedBy.hashCode());
 		return result;
 	}
 
@@ -183,9 +203,15 @@ public class UpdateMobilePinAndMobileVerificationAttemptsAndResetCountDTO {
 				return false;
 		} else if (!resendCount.equals(other.resendCount))
 			return false;
+		if (updatedBy == null) {
+			if (other.updatedBy != null)
+				return false;
+		} else if (!updatedBy.equals(other.updatedBy))
+			return false;
 		return true;
 	}
 
 
+	
 		
 }

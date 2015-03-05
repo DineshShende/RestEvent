@@ -2,9 +2,12 @@ package com.projectx.rest.controller.completeregister;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,6 +18,7 @@ import com.projectx.rest.domain.completeregister.DriverDetails;
 import com.projectx.rest.exception.repository.completeregister.DriverDetailsAlreadyPresentException;
 import com.projectx.rest.exception.repository.completeregister.DriverDetailsNotFoundException;
 import com.projectx.rest.exception.repository.completeregister.DriverDetailsUpdateFailedException;
+import com.projectx.rest.exception.repository.completeregister.ValidationFailedException;
 import com.projectx.rest.services.completeregister.DriverDetailsService;
 
 @RestController
@@ -25,14 +29,21 @@ public class DriverDetailsController {
 	DriverDetailsService driverDetailsService;
 	
 	@RequestMapping(method=RequestMethod.POST)
-	public ResponseEntity<DriverDetails> addDriver(@RequestBody DriverDetails driverDetails)
+	public ResponseEntity<DriverDetails> addDriver(@Valid @RequestBody DriverDetails driverDetails,BindingResult  bindingResult)
 	{
+		if(bindingResult.hasErrors())
+			return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+		
 		ResponseEntity<DriverDetails> result=null;
 		
 		try{
 			DriverDetails savedDriver=driverDetailsService.addDriver(driverDetails);
 			result=new ResponseEntity<DriverDetails>(savedDriver, HttpStatus.CREATED);
-		}catch(DriverDetailsAlreadyPresentException e)
+		}catch(ValidationFailedException e)
+		{
+			result=new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+		}
+		catch(DriverDetailsAlreadyPresentException e)
 		{
 			result=new ResponseEntity<>(HttpStatus.ALREADY_REPORTED);
 		}
@@ -42,8 +53,11 @@ public class DriverDetailsController {
 	}
 	
 	@RequestMapping(value="/update",method=RequestMethod.POST)
-	public ResponseEntity<DriverDetails> updateDriver(@RequestBody DriverDetails driverDetails)
+	public ResponseEntity<DriverDetails> updateDriver(@Valid @RequestBody DriverDetails driverDetails,BindingResult bindingResult)
 	{
+		if(bindingResult.hasErrors())
+			return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+		
 		ResponseEntity<DriverDetails> result=null;
 		
 		try{
@@ -74,11 +88,11 @@ public class DriverDetailsController {
 	}
 	
 	@RequestMapping(value="/deleteByDriverId/{driverId}")
-	public Boolean deleteByDriverId(@PathVariable Long driverId)
+	public ResponseEntity<Boolean> deleteByDriverId(@PathVariable Long driverId)
 	{
 		Boolean result=driverDetailsService.deleteDriver(driverId);
 		
-		return result;
+		return new ResponseEntity<Boolean>(result, HttpStatus.OK);
 		
 	}
 	

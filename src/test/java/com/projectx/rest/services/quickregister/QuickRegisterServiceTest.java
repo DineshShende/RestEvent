@@ -4,6 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -40,6 +41,10 @@ public class QuickRegisterServiceTest {
 	
 	@Autowired
 	AuthenticationService authenticationService;
+	
+	
+	@Value("${PASSWORD_TYPE_DEFAULT}")
+	private String PASSWORD_TYPE_DEFAULT;
 	
 	@Before()
 	public void setUp()
@@ -401,7 +406,7 @@ public class QuickRegisterServiceTest {
 		assertEquals(fetced.getEmail(), authenticationDetails.getEmail());
 		assertEquals(fetced.getMobile(), authenticationDetails.getMobile());
 		assertNull(authenticationDetails.getPassword());
-		assertNull(authenticationDetails.getPasswordType());
+		assertEquals(PASSWORD_TYPE_DEFAULT, authenticationDetails.getPasswordType());
 		assertNull(authenticationDetails.getEmailPassword());
 		assertEquals(0, authenticationDetails.getLastUnsucessfullAttempts().intValue());
 		assertEquals(0, authenticationDetails.getResendCount().intValue());
@@ -445,7 +450,7 @@ public class QuickRegisterServiceTest {
 		assertEquals(fetced.getEmail(), authenticationDetails.getEmail());
 		assertEquals(fetced.getMobile(), authenticationDetails.getMobile());
 		assertNull(authenticationDetails.getPassword());
-		assertNull(authenticationDetails.getPasswordType());
+		assertEquals(PASSWORD_TYPE_DEFAULT, authenticationDetails.getPasswordType());
 		assertNull(authenticationDetails.getEmailPassword());
 		assertEquals(0, authenticationDetails.getLastUnsucessfullAttempts().intValue());
 		assertEquals(0, authenticationDetails.getResendCount().intValue());
@@ -488,7 +493,7 @@ public class QuickRegisterServiceTest {
 		assertEquals(fetced.getEmail(), authenticationDetails.getEmail());
 		assertEquals(fetced.getMobile(), authenticationDetails.getMobile());
 		assertNull(authenticationDetails.getPassword());
-		assertNull(authenticationDetails.getPasswordType());
+		assertEquals(PASSWORD_TYPE_DEFAULT, authenticationDetails.getPasswordType());
 		assertNull(authenticationDetails.getEmailPassword());
 		assertEquals(0, authenticationDetails.getLastUnsucessfullAttempts().intValue());
 		assertEquals(0, authenticationDetails.getResendCount().intValue());
@@ -576,7 +581,7 @@ public class QuickRegisterServiceTest {
 		assertEquals(handledEntity.getCustomer().getEmail(), authenticationDetails.getEmail());
 		assertEquals(handledEntity.getCustomer().getMobile(), authenticationDetails.getMobile());
 		assertNull( authenticationDetails.getPassword());
-		assertNull( authenticationDetails.getPasswordType());
+		assertEquals(PASSWORD_TYPE_DEFAULT, authenticationDetails.getPasswordType());
 	}
 
 	
@@ -604,7 +609,7 @@ public class QuickRegisterServiceTest {
 		assertEquals(handledEntity.getCustomer().getEmail(), authenticationDetails.getEmail());
 		assertEquals(handledEntity.getCustomer().getMobile(), authenticationDetails.getMobile());
 		assertNull( authenticationDetails.getPassword());
-		assertNull( authenticationDetails.getPasswordType());
+		assertEquals(PASSWORD_TYPE_DEFAULT, authenticationDetails.getPasswordType());
 	}
 
 
@@ -632,7 +637,7 @@ public class QuickRegisterServiceTest {
 		assertEquals(handledEntity.getCustomer().getEmail(), authenticationDetails.getEmail());
 		assertEquals(handledEntity.getCustomer().getMobile(), authenticationDetails.getMobile());
 		assertNull( authenticationDetails.getPassword());
-		assertNull( authenticationDetails.getPasswordType());
+		assertEquals(PASSWORD_TYPE_DEFAULT, authenticationDetails.getPasswordType());
 	}
 
 

@@ -75,8 +75,12 @@ public class FreightRequestByCustomerController {
 	}
 	
 	@RequestMapping(value="/getMatchingCustomerReqForVendorReq",method=RequestMethod.POST)
-	public ResponseEntity<List<FreightRequestByCustomer>> getMatchingCustomerReqForVendorReq(@RequestBody FreightRequestByVendor freightRequestByVendor)
+	public ResponseEntity<List<FreightRequestByCustomer>> getMatchingCustomerReqForVendorReq(@Valid @RequestBody FreightRequestByVendor freightRequestByVendor,
+			BindingResult bindingResult)
 	{
+		if(bindingResult.hasErrors())
+			return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+		
 		List<FreightRequestByCustomer> savedEntity=freightRequestByCustomerService.getMatchingCustReqForVendorReq(freightRequestByVendor);
 		
 		return new ResponseEntity<List<FreightRequestByCustomer>>(savedEntity, HttpStatus.OK);

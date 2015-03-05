@@ -71,33 +71,37 @@ public class FreightRequestByVendorController {
 	}
 
 	@RequestMapping(value = "/findByVendorId/{vendorId}")
-	public List<FreightRequestByVendor> getAllRequestForVendor(
+	public ResponseEntity<List<FreightRequestByVendor>> getAllRequestForVendor(
 			@PathVariable Long vendorId) {
 		List<FreightRequestByVendor> savedEntity = freightRequestByVendorService
 				.getAllRequestForVendor(vendorId);
 
-		return savedEntity;
+		return new ResponseEntity<List<FreightRequestByVendor>>(savedEntity, HttpStatus.OK);
 
 	}
 
 	@RequestMapping(value = "/getMatchingVendorReqForCustomerReq",method=RequestMethod.POST)
-	public List<FreightRequestByVendor> getMatchingVendorReqForCustomerReq(@RequestBody FreightRequestByCustomer freightRequestByCustomer) {
+	public ResponseEntity<List<FreightRequestByVendor>> getMatchingVendorReqForCustomerReq(@Valid @RequestBody FreightRequestByCustomer freightRequestByCustomer,
+			BindingResult bindingResult) {
+		
+		if(bindingResult.hasErrors())
+			return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
 		
 		List<FreightRequestByVendor> savedEntity = freightRequestByVendorService
 				.getMatchingVendorReqFromCustomerReq(freightRequestByCustomer);
 
-		return savedEntity;
+		return new ResponseEntity<List<FreightRequestByVendor>>(savedEntity, HttpStatus.OK);
 
 	}
 
 	
 	
 	@RequestMapping(value = "/deleteById/{requestId}")
-	public Boolean deleteRequestById(@PathVariable Long requestId) {
+	public ResponseEntity<Boolean> deleteRequestById(@PathVariable Long requestId) {
 		Boolean result = freightRequestByVendorService
 				.deleteRequestById(requestId);
 
-		return result;
+		return new ResponseEntity<Boolean>(result, HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/clearTestData")

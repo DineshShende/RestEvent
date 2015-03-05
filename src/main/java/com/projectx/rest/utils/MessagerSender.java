@@ -19,7 +19,7 @@ public class MessagerSender {
 	MessageBuilder messageBuilder;
 	
 	@Autowired
-	HandleCustomerVerification handleCustomerVerification;
+	HandleVerificationService handleCustomerVerification;
 	
 	
 	public Boolean sendHashEmail(Long customerId,Integer customerType,Integer entityType,String firstName,String lastName,String email,

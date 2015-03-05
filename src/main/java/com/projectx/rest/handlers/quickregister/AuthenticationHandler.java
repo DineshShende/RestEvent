@@ -1,7 +1,6 @@
 package com.projectx.rest.handlers.quickregister;
 
-import static com.projectx.rest.fixtures.quickregister.CustomerQuickRegisterDataFixture.CUST_PASSWORD_TYPE_CHANGED;
-import static com.projectx.rest.fixtures.quickregister.CustomerQuickRegisterDataFixture.CUST_PASSWORD_TYPE_DEFAULT;
+import static com.projectx.rest.fixtures.quickregister.CustomerQuickRegisterDataFixture.*;
 
 import java.text.NumberFormat;
 import java.text.ParsePosition;
@@ -17,6 +16,7 @@ import org.springframework.stereotype.Component;
 import com.projectx.data.domain.quickregister.UpdatePasswordAndPasswordTypeDTO;
 import com.projectx.data.domain.quickregister.UpdatePasswordEmailPasswordAndPasswordTypeDTO;
 import com.projectx.mvc.domain.quickregister.CustomerIdTypeDTO;
+import com.projectx.mvc.domain.quickregister.CustomerIdTypeUpdatedByDTO;
 import com.projectx.mvc.domain.quickregister.LoginVerificationDTO;
 import com.projectx.mvc.domain.quickregister.LoginVerificationWithDefaultEmailPasswordDTO;
 import com.projectx.rest.domain.completeregister.CustomerDetails;
@@ -36,7 +36,7 @@ import com.projectx.rest.services.completeregister.CustomerDetailsService;
 import com.projectx.rest.services.completeregister.VendorDetailsService;
 import com.projectx.rest.services.quickregister.AuthenticationService;
 import com.projectx.rest.services.quickregister.QuickRegisterService;
-import com.projectx.rest.utils.HandleCustomerVerification;
+import com.projectx.rest.utils.HandleVerificationService;
 import com.projectx.rest.utils.InformationMapper;
 import com.projectx.rest.utils.MessageBuilder;
 import com.projectx.rest.utils.MessagerSender;
@@ -49,7 +49,7 @@ public class AuthenticationHandler implements AuthenticationService {
 	AuthenticationDetailsRepository customerAuthenticationDetailsRepository;
 
 	@Autowired
-	HandleCustomerVerification handleCustomerVerification; 
+	HandleVerificationService handleCustomerVerification; 
 	
 	@Autowired
 	QuickRegisterService customerQuickRegisterService;
@@ -114,7 +114,7 @@ public class AuthenticationHandler implements AuthenticationService {
 		if(customerAuthenticationDetails.getKey()!=null && !loginVerificationDTO.getPassword().equals(customerAuthenticationDetails.getPassword()))
 		{
 			customerAuthenticationDetailsRepository.incrementLastUnsucessfullAttempts(customerAuthenticationDetails.getKey().getCustomerId(),
-					customerAuthenticationDetails.getKey().getCustomerType());
+					customerAuthenticationDetails.getKey().getCustomerType(),CUST_UPDATED_BY);
 			
 			throw new LoginVerificationFailedException(); 	
 			
@@ -150,7 +150,7 @@ public class AuthenticationHandler implements AuthenticationService {
 	
 	@Override
 	public Boolean sendOrResendOrResetDefaultPassword(Long entityId,
-			Integer entityType, Boolean resetFlag, Boolean resendFlag)throws AuthenticationDetailsNotFoundException,
+			Integer entityType, Boolean resetFlag, Boolean resendFlag,String requestedBy)throws AuthenticationDetailsNotFoundException,
 			QuickRegisterEntityNotFoundException,CustomerDetailsNotFoundException,VendorDetailsNotFoundException {
 		
 		
@@ -192,14 +192,14 @@ public class AuthenticationHandler implements AuthenticationService {
 				 passwordUpdateStatus=customerAuthenticationDetailsRepository
 						 .updatePasswordEmailPasswordAndPasswordTypeAndCounts(customerAuthenticationDetails.getKey().getCustomerId(),
 								 customerAuthenticationDetails.getKey().getCustomerType(), customerAuthenticationDetails.getPassword(),
-								 customerAuthenticationDetails.getEmailPassword(), customerAuthenticationDetails.getPasswordType());
+								 customerAuthenticationDetails.getEmailPassword(), customerAuthenticationDetails.getPasswordType(),requestedBy);
 						 
 			 }
 			 else
 			 {
 				 passwordUpdateStatus=customerAuthenticationDetailsRepository.updatePasswordEmailPasswordAndPasswordTypeAndCounts 
 						 (customerAuthenticationDetails.getKey().getCustomerId(),customerAuthenticationDetails.getKey().getCustomerType(),
-								 customerAuthenticationDetails.getPassword(),null, customerAuthenticationDetails.getPasswordType());
+								 customerAuthenticationDetails.getPassword(),null, customerAuthenticationDetails.getPasswordType(),requestedBy);
 			 }
 			 
 		}
@@ -218,7 +218,7 @@ public class AuthenticationHandler implements AuthenticationService {
 		}	
 		
 		if(resendFlag)
-			resendStatus=customerAuthenticationDetailsRepository.incrementResendCount(entityId,entityType);
+			resendStatus=customerAuthenticationDetailsRepository.incrementResendCount(entityId,entityType,requestedBy);
 		
 		if(passwordUpdateStatus.equals(UPDATE_SUCESS) && emailSendStatus && smsSendStatus&&resendStatus.equals(UPDATE_SUCESS))
 			return true;
@@ -231,10 +231,10 @@ public class AuthenticationHandler implements AuthenticationService {
 	
 
 	@Override
-	public Boolean sendDefaultPassword(QuickRegisterEntity customer,Boolean resetFlag) throws AuthenticationDetailsNotFoundException,
+	public Boolean sendDefaultPassword(QuickRegisterEntity customer,Boolean resetFlag,String requestedBy) throws AuthenticationDetailsNotFoundException,
 		QuickRegisterEntityNotFoundException,CustomerDetailsNotFoundException,VendorDetailsNotFoundException
 	{
-		Boolean status=sendOrResendOrResetDefaultPassword(customer.getCustomerId(), customer.getCustomerType(), resetFlag, false);
+		Boolean status=sendOrResendOrResetDefaultPassword(customer.getCustomerId(), customer.getCustomerType(), resetFlag, false,requestedBy);
 		
 		return status;		
 		
@@ -243,40 +243,40 @@ public class AuthenticationHandler implements AuthenticationService {
 	
 	@Override
 	public Boolean resendDefaultPassword(
-			QuickRegisterEntity customer) throws AuthenticationDetailsNotFoundException,
+			QuickRegisterEntity customer,String requestedBy) throws AuthenticationDetailsNotFoundException,
 				QuickRegisterEntityNotFoundException,CustomerDetailsNotFoundException,VendorDetailsNotFoundException{
 
-		Boolean status=sendOrResendOrResetDefaultPassword(customer.getCustomerId(), customer.getCustomerType(), false, true);
+		Boolean status=sendOrResendOrResetDefaultPassword(customer.getCustomerId(), customer.getCustomerType(), false, true,requestedBy);
 		
 		return status;
 	}
 
 	@Override
-	public Boolean resetPassword(CustomerIdTypeDTO customerIdDTO) throws AuthenticationDetailsNotFoundException,
+	public Boolean resetPassword(CustomerIdTypeUpdatedByDTO customerIdDTO) throws AuthenticationDetailsNotFoundException,
 	QuickRegisterEntityNotFoundException,CustomerDetailsNotFoundException,VendorDetailsNotFoundException 
 	{
 		QuickRegisterEntity customer=customerQuickRegisterService
 				.getByEntityId(customerIdDTO.getCustomerId());
 		
-		return sendDefaultPassword(customer,true);
+		return sendDefaultPassword(customer,true,customerIdDTO.getUpdatedBy());
 	}
 	
 	@Override
-	public Boolean resendPassword(CustomerIdTypeDTO customerIdDTO) throws AuthenticationDetailsNotFoundException,
+	public Boolean resendPassword(CustomerIdTypeUpdatedByDTO customerIdDTO) throws AuthenticationDetailsNotFoundException,
 		QuickRegisterEntityNotFoundException,CustomerDetailsNotFoundException,VendorDetailsNotFoundException{
 
 		QuickRegisterEntity customer=customerQuickRegisterService
 				.getByEntityId(customerIdDTO.getCustomerId());
 		
-		return resendDefaultPassword(customer);
+		return resendDefaultPassword(customer,customerIdDTO.getUpdatedBy());
 	}
 
 
 	@Override
-	public Boolean updatePassword(UpdatePasswordAndPasswordTypeDTO updatePasswordDTO)
+	public Boolean updatePassword(UpdatePasswordAndPasswordTypeDTO updatePasswordDTO) throws ValidationFailedException
 	{
 		Integer updateStatus=customerAuthenticationDetailsRepository.updatePasswordEmailPasswordAndPasswordTypeAndCounts(updatePasswordDTO.getCustomerId(),
-				updatePasswordDTO.getCustomerType(),updatePasswordDTO.getPassword(),null, CUST_PASSWORD_TYPE_CHANGED);
+				updatePasswordDTO.getCustomerType(),updatePasswordDTO.getPassword(),null, CUST_PASSWORD_TYPE_CHANGED,updatePasswordDTO.getUpdatedBy());
 		
 		if(updateStatus.equals(UPDATE_SUCESS))
 			return true;

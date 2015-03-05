@@ -2,10 +2,7 @@ package com.projectx.rest.services.completeregister;
 
 import org.springframework.stereotype.Service;
 
-
 import com.projectx.rest.domain.completeregister.VendorDetails;
-import com.projectx.rest.domain.quickregister.EmailVerificationDetails;
-import com.projectx.rest.domain.quickregister.MobileVerificationDetails;
 import com.projectx.rest.domain.quickregister.QuickRegisterEntity;
 
 @Service
@@ -23,7 +20,7 @@ public interface VendorDetailsService {
 	
 	Boolean sendMobileVerificationDetails(Long vendorId,Integer entityType,Integer mobileType,String updatedBy);
 	
-	Boolean sendEmailVerificationDetails(Long vendorId,Integer entityType,Integer emailType);
+	Boolean sendEmailVerificationDetails(Long vendorId,Integer entityType,Integer emailType,String requestedBy);
 	
 	void clearTestData();
 	

@@ -16,8 +16,6 @@ import com.projectx.rest.util.validator.VendorDetailsValidator;
 
 
 
-
-
 @Documented
 @Constraint(validatedBy = VendorDetailsValidator.class)
 @Target({TYPE, ANNOTATION_TYPE})

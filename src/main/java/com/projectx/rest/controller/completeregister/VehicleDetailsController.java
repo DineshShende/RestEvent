@@ -2,17 +2,21 @@ package com.projectx.rest.controller.completeregister;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.projectx.rest.domain.completeregister.DriverDetails;
 import com.projectx.rest.domain.completeregister.VehicleDetails;
+import com.projectx.rest.exception.repository.completeregister.ValidationFailedException;
+import com.projectx.rest.exception.repository.completeregister.VehicleDetailsAlreadyPresentException;
 import com.projectx.rest.exception.repository.completeregister.VehicleDetailsNotFoundException;
 import com.projectx.rest.services.completeregister.VehicleDetailsService;
 
@@ -24,12 +28,23 @@ public class VehicleDetailsController {
 	VehicleDetailsService vehicleDetailsService;
 	
 	@RequestMapping(method=RequestMethod.POST)
-	public VehicleDetails addVehicle(@RequestBody VehicleDetails vehicleDetails)
+	public ResponseEntity<VehicleDetails> addVehicle(@Valid @RequestBody VehicleDetails vehicleDetails,BindingResult bindingResult)
 	{
-		VehicleDetails savedVehicle=vehicleDetailsService.addVehicle(vehicleDetails);
+		if(bindingResult.hasErrors())
+			return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
 		
-		return savedVehicle;
+		try{
+			VehicleDetails savedVehicle=vehicleDetailsService.addVehicle(vehicleDetails);
+			return new ResponseEntity<VehicleDetails>(savedVehicle, HttpStatus.CREATED);
+		}catch(ValidationFailedException e)
+		{
+			return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+		}catch(VehicleDetailsAlreadyPresentException e)
+		{
+			return new ResponseEntity<>(HttpStatus.ALREADY_REPORTED);
+		}
 		
+				
 	}
 	
 	@RequestMapping(value="/getByVehicleId/{vehicleId}")
@@ -50,11 +65,11 @@ public class VehicleDetailsController {
 	}
 	
 	@RequestMapping(value="/deleteByVehicleId/{vehicleId}")
-	public Boolean deleteByVehicleId(@PathVariable Long vehicleId)
+	public ResponseEntity<Boolean> deleteByVehicleId(@PathVariable Long vehicleId)
 	{
 		Boolean result=vehicleDetailsService.deleteVehicle(vehicleId);
-		
-		return result;
+			
+		return new ResponseEntity<Boolean>(result, HttpStatus.OK);
 		
 	}
 	

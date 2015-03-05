@@ -2,9 +2,12 @@ package com.projectx.rest.controller.quickregister;
 
 import java.util.Date;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -46,14 +49,23 @@ public class QuickRegisterController {
 	QuickRegisterService customerQuickRegisterService;
 	
 	@RequestMapping(value="/checkifexist",method=RequestMethod.POST)
-	public CustomerQuickRegisterStringStatusEntity checkIfCustomerAlreadyExist(@RequestBody CustomerQuickRegisterEntityDTO customer) throws Exception
+	public ResponseEntity<CustomerQuickRegisterStringStatusEntity> checkIfCustomerAlreadyExist(@Valid @RequestBody CustomerQuickRegisterEntityDTO customer,
+			BindingResult bindingResult) throws Exception
 	{
-		return customerQuickRegisterService.checkIfAlreadyRegistered(customer);
+		if(bindingResult.hasErrors())
+			return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+		
+		return new ResponseEntity<CustomerQuickRegisterStringStatusEntity>(customerQuickRegisterService.checkIfAlreadyRegistered(customer),
+				HttpStatus.OK);
 	}
 	
 	@RequestMapping(method=RequestMethod.POST)
-	public ResponseEntity<CustomerQuickRegisterStatusEntity> addNewCustomerQuickRegister(@RequestBody CustomerQuickRegisterEntityDTO newCustomer) throws Exception
+	public ResponseEntity<CustomerQuickRegisterStatusEntity> addNewCustomerQuickRegister(@Valid @RequestBody CustomerQuickRegisterEntityDTO newCustomer,
+			BindingResult bindingResult) throws Exception
 	{		
+		if(bindingResult.hasErrors())
+			return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+		
 		ResponseEntity<CustomerQuickRegisterStatusEntity> result=null;
 		
 		try{
@@ -74,8 +86,12 @@ public class QuickRegisterController {
 	}
 
 	@RequestMapping(value="/getByCustomerId",method=RequestMethod.POST)
-	public ResponseEntity<QuickRegisterEntity> getCustomerByCustomerId(@RequestBody CustomerIdTypeDTO customerIdDTO)
+	public ResponseEntity<QuickRegisterEntity> getCustomerByCustomerId(@Valid @RequestBody CustomerIdTypeDTO customerIdDTO,
+			BindingResult bindingResult )
 	{
+		if(bindingResult.hasErrors())
+			return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+		
 		ResponseEntity<QuickRegisterEntity> result=null;
 		
 		try{
@@ -99,22 +115,5 @@ public class QuickRegisterController {
 	//Document
 	
 	
-	
-	
-	/*
-	
-	@RequestMapping(value="/customer")
-	public QuickRegisterEntity show()
-	{
-		return new QuickRegisterEntity(CUST_ID, CUST_FIRSTNAME, CUST_LASTNAME, CUST_EMAIL, CUST_MOBILE, CUST_PIN, false, false, CUST_EMAIL_TYPE_PRIMARY,
-				new Date(), new Date(), "CUST_ONLINE");
-	}
-	
-	@RequestMapping(value="/customer")
-	public MobileVerificationDetails show()
-	{
-		return new MobileVerificationDetails(CUST_ID, CUST_MOBILE_TYPE_PRIMARY, CUST_MOBILE, CUST_MOBILEPIN, 0, 0);
-	}
-	*/
 	
 }

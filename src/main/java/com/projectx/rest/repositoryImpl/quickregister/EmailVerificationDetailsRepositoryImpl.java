@@ -17,6 +17,7 @@ import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import com.projectx.data.domain.quickregister.CustomerIdTypeEmailTypeDTO;
+import com.projectx.data.domain.quickregister.CustomerIdTypeEmailTypeUpdatedByDTO;
 import com.projectx.data.domain.quickregister.EmailDTO;
 import com.projectx.data.domain.quickregister.UpdateEmailHashAndEmailHashSentTimeAndResendCountDTO;
 import com.projectx.rest.domain.quickregister.EmailVerificationDetails;
@@ -85,24 +86,40 @@ public class EmailVerificationDetailsRepositoryImpl implements EmailVericationDe
 	@Override
 	public Integer resetEmailHashAndEmailHashSentTime(Long customerId,Integer customerType,
 			Integer emailType, String emailHash, Date emailHashSentTime,
-			Integer resetCount) {
+			Integer resetCount,String updatedBy) {
 		UpdateEmailHashAndEmailHashSentTimeAndResendCountDTO dto=new UpdateEmailHashAndEmailHashSentTimeAndResendCountDTO
-				(customerId,customerType, emailType, emailHash, emailHashSentTime, resetCount);
+				(customerId,customerType, emailType, emailHash, emailHashSentTime, resetCount,updatedBy);
 		
-		ResponseEntity<Integer> updateStatus=restTemplate.exchange(env.getProperty("data.url")+"/customer/quickregister/emailVerification/resetEmailHashAndEmailHashSentTime", 
-				HttpMethod.POST,new HttpEntity<UpdateEmailHashAndEmailHashSentTimeAndResendCountDTO>(dto), Integer.class);
+		ResponseEntity<Integer> updateStatus=null;
+		
+		try{
+			updateStatus=restTemplate.exchange(env.getProperty("data.url")+"/customer/quickregister/emailVerification/resetEmailHashAndEmailHashSentTime", 
+					HttpMethod.POST,new HttpEntity<UpdateEmailHashAndEmailHashSentTimeAndResendCountDTO>(dto), Integer.class);
+			
+		}catch(RestClientException e)
+		{
+			throw new ValidationFailedException();
+		}
 		
 		return updateStatus.getBody();
 	}
 
 	@Override
 	public Integer incrementResendCountByCustomerIdAndEmail(Long customerId,Integer customerType,
-			Integer emailType) {
+			Integer emailType,String updatedBy) {
 		
-		CustomerIdTypeEmailTypeDTO emailDTO=new CustomerIdTypeEmailTypeDTO(customerId,customerType, emailType);
+		CustomerIdTypeEmailTypeUpdatedByDTO emailDTO=new CustomerIdTypeEmailTypeUpdatedByDTO(customerId,customerType, emailType,updatedBy);
 		
-		ResponseEntity<Integer> updateStatus=restTemplate.exchange(env.getProperty("data.url")+"/customer/quickregister/emailVerification/incrementResendCountByCustomerIdAndEmail",
-				HttpMethod.POST,new HttpEntity<CustomerIdTypeEmailTypeDTO>(emailDTO), Integer.class);
+		ResponseEntity<Integer> updateStatus=null;
+		
+		try{
+			updateStatus=restTemplate.exchange(env.getProperty("data.url")+"/customer/quickregister/emailVerification/incrementResendCountByCustomerIdAndEmail",
+					HttpMethod.POST,new HttpEntity<CustomerIdTypeEmailTypeUpdatedByDTO>(emailDTO), Integer.class);
+			
+		}catch(RestClientException e)
+		{
+			throw new ValidationFailedException();
+		}
 		
 		return updateStatus.getBody();
 	}

@@ -210,7 +210,7 @@ public class VendorDetailsServiceTest {
 		
 		VendorDetails savedEntity=vendorDetailsService.createCustomerDetailsFromQuickRegisterEntity(quickRegisterEntity);
 		
-		assertTrue(vendorDetailsService.sendEmailVerificationDetails(savedEntity.getVendorId(), ENTITY_TYPE_VENDOR, EMAIL_TYPE_PRIMARY));
+		assertTrue(vendorDetailsService.sendEmailVerificationDetails(savedEntity.getVendorId(), ENTITY_TYPE_VENDOR, EMAIL_TYPE_PRIMARY,CUST_UPDATED_BY));
 	}
 	
 	@Test

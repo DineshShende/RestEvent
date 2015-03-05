@@ -14,9 +14,6 @@ import javax.validation.Payload;
 import com.projectx.rest.util.validator.QuickRegisterEntityValidator;
 
 
-
-
-
 @Documented
 @Constraint(validatedBy = QuickRegisterEntityValidator.class)
 @Target({TYPE, ANNOTATION_TYPE})

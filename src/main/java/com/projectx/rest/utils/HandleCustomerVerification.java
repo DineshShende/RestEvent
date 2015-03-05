@@ -43,10 +43,9 @@ import com.projectx.rest.exception.repository.async.RetriggerDetailsRepository;
 import com.projectx.rest.services.async.RetriggerService;
 
 @Component
-@Profile(value={"Dev","Test"})
-
+@Profile(value={"Prod"})
 @PropertySource(value="classpath:/application.properties")
-public class HandleCustomerVerification {
+public class HandleCustomerVerification implements HandleVerificationService {
 	
 	@Autowired
 	RestTemplate restTemplate;
@@ -78,6 +77,10 @@ public class HandleCustomerVerification {
 	
 	private final int PASSWORD_LENGTH=6;
 	
+	/* (non-Javadoc)
+	 * @see com.projectx.rest.utils.HandleVerificationService#generateEmailHash()
+	 */
+	@Override
 	public  String generateEmailHash() {
 
 		String allPossibleChar="01234567789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -118,6 +121,10 @@ public class HandleCustomerVerification {
 		
 	}
 
+	/* (non-Javadoc)
+	 * @see com.projectx.rest.utils.HandleVerificationService#genarateMobilePin()
+	 */
+	@Override
 	public  Integer genarateMobilePin() {
 
 		int number=secureRandom.nextInt(9)+1;
@@ -130,6 +137,10 @@ public class HandleCustomerVerification {
 		return number;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.projectx.rest.utils.HandleVerificationService#generatePassword()
+	 */
+	@Override
 	public String generatePassword()
 	{
 		StringBuilder passwordBuilder=new StringBuilder();
@@ -147,6 +158,10 @@ public class HandleCustomerVerification {
 	
 	
 	//@Async
+	/* (non-Javadoc)
+	 * @see com.projectx.rest.utils.HandleVerificationService#sendEmailAsynchronous(java.lang.String, java.lang.String)
+	 */
+	@Override
 	public Boolean sendEmailAsynchronous(String email,String message) 
 	{
 		SimpleMailMessage mailMessage=new SimpleMailMessage();
@@ -169,6 +184,10 @@ public class HandleCustomerVerification {
 		return status;
 	}
 	
+	/* (non-Javadoc)
+	 * @see com.projectx.rest.utils.HandleVerificationService#sendEmail(java.lang.String, java.lang.String)
+	 */
+	@Override
 	public Boolean sendEmail(String email,String message) 
 	{
 		
@@ -234,6 +253,10 @@ public class HandleCustomerVerification {
 	
 	
 	//@Async
+	/* (non-Javadoc)
+	 * @see com.projectx.rest.utils.HandleVerificationService#sendSMSAsynchronous(java.lang.Long, java.lang.String)
+	 */
+	@Override
 	public Boolean sendSMSAsynchronous(Long mobile,String message)  
 	{
 		StringBuilder requestBuilder=new StringBuilder();
@@ -263,6 +286,10 @@ public class HandleCustomerVerification {
 		
 	}
 	
+	/* (non-Javadoc)
+	 * @see com.projectx.rest.utils.HandleVerificationService#sendSMS(java.lang.Long, java.lang.String)
+	 */
+	@Override
 	public Boolean sendSMS(Long mobile,String message)  
 	{
 		MobileMessageDTO mobileMessageDTO=new MobileMessageDTO(mobile, UUID.randomUUID(),message);

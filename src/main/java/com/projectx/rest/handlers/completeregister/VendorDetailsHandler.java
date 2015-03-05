@@ -12,9 +12,11 @@ import com.projectx.rest.domain.completeregister.VendorDetails;
 import com.projectx.rest.domain.quickregister.EmailVerificationDetails;
 import com.projectx.rest.domain.quickregister.MobileVerificationDetails;
 import com.projectx.rest.domain.quickregister.QuickRegisterEntity;
+import com.projectx.rest.exception.repository.completeregister.ValidationFailedException;
 import com.projectx.rest.exception.repository.completeregister.VendorDetailsNotFoundException;
 import com.projectx.rest.exception.repository.completeregister.VendorDetailsTransactionalUpdateFailedException;
 import com.projectx.rest.exception.repository.quickregister.DeleteQuickCreateDetailsEntityFailedException;
+import com.projectx.rest.exception.repository.quickregister.ResourceNotFoundException;
 import com.projectx.rest.repository.completeregister.CustomerDetailsRepository;
 import com.projectx.rest.repository.completeregister.VendorDetailsRepository;
 import com.projectx.rest.services.completeregister.TransactionalUpdatesService;
@@ -75,7 +77,7 @@ public class VendorDetailsHandler implements VendorDetailsService {
 
 	@Override
 	public Boolean verifyMobileDetails(Long customerId, Integer customerType,
-			 Integer mobileType,Integer mobilePin,String updatedBy) {
+			 Integer mobileType,Integer mobilePin,String updatedBy)throws ResourceNotFoundException,ValidationFailedException {
 		
 		Boolean verificationStatus=mobileVerificationService
 				.verifyMobilePinUpdateStatusAndSendPassword(customerId, customerType, mobileType, mobilePin,updatedBy);
@@ -86,7 +88,7 @@ public class VendorDetailsHandler implements VendorDetailsService {
 	
 	@Override
 	public Boolean verifyEmailDetails(Long customerId, Integer customerType,
-			Integer emailType,  String emailHash,String requestedBy) {
+			Integer emailType,  String emailHash,String requestedBy) throws ResourceNotFoundException{
 		
 		Boolean verificationStatus=emailVerificationService
 				.verifyEmailHashUpdateStatusAndSendPassword(customerId, customerType, emailType, emailHash,requestedBy);
@@ -95,7 +97,7 @@ public class VendorDetailsHandler implements VendorDetailsService {
 	}
 	@Override
 	public Boolean sendMobileVerificationDetails(Long vendorId,
-			Integer entityType, Integer mobileType,String updatedBy) {
+			Integer entityType, Integer mobileType,String updatedBy)throws ResourceNotFoundException {
 
 		Boolean sendStatus=mobileVerificationService.sendMobilePin(vendorId, entityType, mobileType,updatedBy);
 		
@@ -104,9 +106,9 @@ public class VendorDetailsHandler implements VendorDetailsService {
 
 	@Override
 	public Boolean sendEmailVerificationDetails(Long vendorId,
-			Integer entityType, Integer emailType) {
+			Integer entityType, Integer emailType,String requestedBy) throws ResourceNotFoundException{
 
-		Boolean sendStatus=emailVerificationService.sendEmailHash(vendorId, entityType, emailType);
+		Boolean sendStatus=emailVerificationService.sendEmailHash(vendorId, entityType, emailType,requestedBy);
 		
 		return sendStatus;
 	

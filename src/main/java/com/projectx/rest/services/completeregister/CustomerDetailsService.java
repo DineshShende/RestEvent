@@ -29,7 +29,7 @@ public interface CustomerDetailsService {
 	
 	Boolean sendMobileVerificationDetails(Long customerId,Integer customerType,Integer mobileType,String updatedBy);
 	
-	Boolean sendEmailVerificationDetails(Long customerId,Integer customerType,Integer emailType);
+	Boolean sendEmailVerificationDetails(Long customerId,Integer customerType,Integer emailType,String requestedBy);
 	
 	void clearTestData();
 	

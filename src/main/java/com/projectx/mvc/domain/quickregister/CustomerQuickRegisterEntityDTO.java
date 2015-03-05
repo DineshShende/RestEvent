@@ -1,18 +1,33 @@
 package com.projectx.mvc.domain.quickregister;
 
-import com.projectx.rest.domain.quickregister.QuickRegisterEntity;
+import javax.validation.constraints.NotNull;
 
+import com.projectx.rest.domain.quickregister.QuickRegisterEntity;
+import com.projectx.rest.util.annotation.QuickRegisterDTOValid;
+import com.projectx.rest.util.annotation.QuickRegisterEntityValid;
+
+@QuickRegisterDTOValid
 public class CustomerQuickRegisterEntityDTO {
 	
+	@NotNull
 	private String firstName;
+	
+	@NotNull
 	private String lastName;
 
+	
 	private String email;
+	
 	private Long mobile;
 
+	@NotNull
 	private Integer pin;
 	
+	@NotNull
 	private Integer customerType;
+	
+	@NotNull
+	private String  requestBy;
 	
 	
 	public CustomerQuickRegisterEntityDTO()
@@ -21,14 +36,19 @@ public class CustomerQuickRegisterEntityDTO {
 	}
 
 	public CustomerQuickRegisterEntityDTO(String firstName, String lastName,
-			String email, Long mobile, Integer pin, Integer customerType) {
+			String email, Long mobile, Integer pin, Integer customerType,
+			String requestBy) {
+		super();
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.email = email;
 		this.mobile = mobile;
 		this.pin = pin;
 		this.customerType = customerType;
+		this.requestBy = requestBy;
 	}
+
+
 
 
 
@@ -43,6 +63,7 @@ public class CustomerQuickRegisterEntityDTO {
 		newCustomer.setCustomerType(this.customerType);
 		//newCustomer.setIsEmailVerified(false);
 		//newCustomer.setIsMobileVerified(false);
+		newCustomer.setUpdatedBy(this.requestBy);
 		
 		return newCustomer;
 		
@@ -86,13 +107,23 @@ public class CustomerQuickRegisterEntityDTO {
 	public void setCustomerType(Integer customerType) {
 		this.customerType = customerType;
 	}
+	
+	
+
+	public String getRequestBy() {
+		return requestBy;
+	}
+
+	public void setRequestBy(String requestBy) {
+		this.requestBy = requestBy;
+	}
 
 	@Override
 	public String toString() {
 		return "CustomerQuickRegisterEntityDTO [firstName=" + firstName
 				+ ", lastName=" + lastName + ", email=" + email + ", mobile="
 				+ mobile + ", pin=" + pin + ", customerType=" + customerType
-				+ "]";
+				+ ", requestBy=" + requestBy + "]";
 	}
 
 	@Override
@@ -108,6 +139,8 @@ public class CustomerQuickRegisterEntityDTO {
 				+ ((lastName == null) ? 0 : lastName.hashCode());
 		result = prime * result + ((mobile == null) ? 0 : mobile.hashCode());
 		result = prime * result + ((pin == null) ? 0 : pin.hashCode());
+		result = prime * result
+				+ ((requestBy == null) ? 0 : requestBy.hashCode());
 		return result;
 	}
 
@@ -150,9 +183,14 @@ public class CustomerQuickRegisterEntityDTO {
 				return false;
 		} else if (!pin.equals(other.pin))
 			return false;
+		if (requestBy == null) {
+			if (other.requestBy != null)
+				return false;
+		} else if (!requestBy.equals(other.requestBy))
+			return false;
 		return true;
 	}
 
-		
+			
 
 }

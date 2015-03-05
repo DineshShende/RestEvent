@@ -5,6 +5,7 @@ import static com.projectx.rest.fixture.quickregister.QuickRegisterDataFixture.*
 import java.util.Date;
 
 import com.projectx.data.domain.quickregister.CustomerIdTypeMobileTypeDTO;
+import com.projectx.data.domain.quickregister.CustomerIdTypeMobileTypeUpdatedByDTO;
 import com.projectx.data.domain.quickregister.CustomerMobileVerificationDetailsByCustomerIdTypeAndMobileTypeDTO;
 import com.projectx.data.domain.quickregister.MobileDTO;
 import com.projectx.data.domain.quickregister.UpdateMobilePinAndMobileVerificationAttemptsAndResetCountDTO;
@@ -43,7 +44,8 @@ public class MobileVericationDetailsFixtures {
 	
 	public static UpdateMobilePinAndMobileVerificationAttemptsAndResetCountDTO standardUpdateMobilePinAndMobileVerificationAttemptsDTO()
 	{
-		return new UpdateMobilePinAndMobileVerificationAttemptsAndResetCountDTO(CUST_ID,ENTITY_TYPE_CUSTOMER, CUST_MOBILE_TYPE_PRIMARY, CUST_MOBILEPIN_UPDATED, CUST_MOBILE_VERIFICATION_ATTEMPTS+1,CUST_RESEND_COUNT+1);
+		return new UpdateMobilePinAndMobileVerificationAttemptsAndResetCountDTO(CUST_ID,ENTITY_TYPE_CUSTOMER, CUST_MOBILE_TYPE_PRIMARY, CUST_MOBILEPIN_UPDATED, CUST_MOBILE_VERIFICATION_ATTEMPTS+1,
+				CUST_RESEND_COUNT+1,CUST_UPDATED_BY);
 	}
 	
 
@@ -55,6 +57,11 @@ public class MobileVericationDetailsFixtures {
 	public static CustomerIdTypeMobileTypeDTO standardCustomerIdMobileDTO()
 	{
 		return new CustomerIdTypeMobileTypeDTO(CUST_ID,ENTITY_TYPE_CUSTOMER, CUST_MOBILE_TYPE_PRIMARY);
+	}
+	
+	public static CustomerIdTypeMobileTypeUpdatedByDTO standardCustomerIdTypeMobileTypeUpdatedByDTO()
+	{
+		return new CustomerIdTypeMobileTypeUpdatedByDTO(CUST_ID,ENTITY_TYPE_CUSTOMER, CUST_MOBILE_TYPE_PRIMARY,CUST_UPDATED_BY);
 	}
 	
 	public static String standardJsonUpdateMobilePinDTOMVC()

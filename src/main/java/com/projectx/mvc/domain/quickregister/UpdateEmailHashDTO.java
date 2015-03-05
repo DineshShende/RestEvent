@@ -1,25 +1,35 @@
 package com.projectx.mvc.domain.quickregister;
 
+import javax.validation.constraints.NotNull;
+
 public class UpdateEmailHashDTO {
 
+	@NotNull
 	private Long customerId;
 	
+	@NotNull
 	private Integer customerType;
 	
+	@NotNull
 	private Integer emailType;
+	
+	@NotNull
+	private String requestedBy;
 	
 	public UpdateEmailHashDTO() {
 	
 	}
 
-	
 	public UpdateEmailHashDTO(Long customerId, Integer customerType,
-			Integer emailType) {
+			Integer emailType, String  requestedBy) {
 		super();
 		this.customerId = customerId;
 		this.customerType = customerType;
 		this.emailType = emailType;
+		this.requestedBy = requestedBy;
 	}
+
+
 
 
 	public Long getCustomerId() {
@@ -52,13 +62,21 @@ public class UpdateEmailHashDTO {
 	}
 
 
+
+	public String getRequestedBy() {
+		return requestedBy;
+	}
+
+	public void setRequestedBy(String requestedBy) {
+		this.requestedBy = requestedBy;
+	}
+
 	@Override
 	public String toString() {
 		return "UpdateEmailHashDTO [customerId=" + customerId
 				+ ", customerType=" + customerType + ", emailType=" + emailType
-				+ "]";
+				+ ", requestedBy=" + requestedBy + "]";
 	}
-
 
 	@Override
 	public int hashCode() {
@@ -70,9 +88,10 @@ public class UpdateEmailHashDTO {
 				+ ((customerType == null) ? 0 : customerType.hashCode());
 		result = prime * result
 				+ ((emailType == null) ? 0 : emailType.hashCode());
+		result = prime * result
+				+ ((requestedBy == null) ? 0 : requestedBy.hashCode());
 		return result;
 	}
-
 
 	@Override
 	public boolean equals(Object obj) {
@@ -98,10 +117,15 @@ public class UpdateEmailHashDTO {
 				return false;
 		} else if (!emailType.equals(other.emailType))
 			return false;
+		if (requestedBy == null) {
+			if (other.requestedBy != null)
+				return false;
+		} else if (!requestedBy.equals(other.requestedBy))
+			return false;
 		return true;
 	}
 
-
+	
 
 	
 		

@@ -24,7 +24,9 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import com.projectx.data.domain.quickregister.CustomerIdTypeEmailTypeDTO;
+import com.projectx.data.domain.quickregister.CustomerIdTypeEmailTypeUpdatedByDTO;
 import com.projectx.data.domain.quickregister.CustomerIdTypeMobileTypeDTO;
+import com.projectx.data.domain.quickregister.CustomerIdTypeMobileTypeUpdatedByDTO;
 import com.projectx.mvc.domain.completeregister.VerifyEmailDTO;
 import com.projectx.mvc.domain.completeregister.VerifyMobileDTO;
 import com.projectx.rest.config.Application;
@@ -331,11 +333,12 @@ public class CustomerDetailsWACTest {
 		
 		CustomerDetails newEntity=customerDetailsService.createCustomerDetailsFromQuickRegisterEntity(quickRegisterEntity);
 		
-		CustomerIdTypeMobileTypeDTO customerIdTypeMobileDTO=new CustomerIdTypeMobileTypeDTO(newEntity.getCustomerId(), 1, MOB_TYPE_PRIMARY);
+		CustomerIdTypeMobileTypeUpdatedByDTO customerIdTypeMobileDTO=new CustomerIdTypeMobileTypeUpdatedByDTO
+				(newEntity.getCustomerId(), 1, MOB_TYPE_PRIMARY,CUST_UPDATED_BY);
 		
 		this.mockMvc.perform(
 				post("/customer/sendMobileVerificationDetails")
-				.content(standardJsonCustomerIdTypeMobileDTO(customerIdTypeMobileDTO))
+				.content(standardJsonCustomerIdTypeMobileUpdatedBy(customerIdTypeMobileDTO))
 				.contentType(MediaType.APPLICATION_JSON)
 				.accept(MediaType.APPLICATION_JSON))
 		.andDo(print())
@@ -355,11 +358,12 @@ public class CustomerDetailsWACTest {
 		
 		CustomerDetails newEntity=customerDetailsService.createCustomerDetailsFromQuickRegisterEntity(quickRegisterEntity);
 		
-		CustomerIdTypeEmailTypeDTO customerIdTypeEmailDTO=new CustomerIdTypeEmailTypeDTO(newEntity.getCustomerId(), 1, EMAIL_TYPE_PRIMARY);
+		CustomerIdTypeEmailTypeUpdatedByDTO customerIdTypeEmailDTO=new CustomerIdTypeEmailTypeUpdatedByDTO
+				(newEntity.getCustomerId(), 1, EMAIL_TYPE_PRIMARY,CUST_UPDATED_BY);
 		
 		this.mockMvc.perform(
 				post("/customer/sendEmailVerificationDetails")
-				.content(standardJsonCustomerIdTypeEmailDTO(customerIdTypeEmailDTO))
+				.content(standardJsonCustomerIdTypeEmailUpdatedBy(customerIdTypeEmailDTO))
 				.contentType(MediaType.APPLICATION_JSON)
 				.accept(MediaType.APPLICATION_JSON))
 		.andDo(print())

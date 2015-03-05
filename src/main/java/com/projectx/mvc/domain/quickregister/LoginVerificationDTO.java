@@ -1,9 +1,13 @@
 package com.projectx.mvc.domain.quickregister;
 
+import javax.validation.constraints.NotNull;
+
 public class LoginVerificationDTO {
 
+	@NotNull
 	private String loginEntity;
 	
+	@NotNull
 	private String password;
 
 	public LoginVerificationDTO() {

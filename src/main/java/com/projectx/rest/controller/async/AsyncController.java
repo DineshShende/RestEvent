@@ -13,14 +13,14 @@ import com.projectx.mvc.domain.completeregister.EmailMessageDTO;
 import com.projectx.mvc.domain.completeregister.MobileMessageDTO;
 import com.projectx.rest.domain.request.FreightRequestByCustomer;
 import com.projectx.rest.domain.request.FreightRequestByVendor;
-import com.projectx.rest.utils.HandleCustomerVerification;
+import com.projectx.rest.utils.HandleVerificationService;
 
 @RestController
 @RequestMapping(value="/asycn")
 public class AsyncController {
 	
 	@Autowired
-	HandleCustomerVerification handleCustomerVerification;
+	HandleVerificationService handleCustomerVerification;
 	
 		
 	@RequestMapping(value="/sendEmail",method=RequestMethod.POST)

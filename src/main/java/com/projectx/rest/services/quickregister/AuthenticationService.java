@@ -3,6 +3,7 @@ package com.projectx.rest.services.quickregister;
 import com.projectx.data.domain.quickregister.UpdatePasswordAndPasswordTypeDTO;
 import com.projectx.data.domain.quickregister.UpdatePasswordEmailPasswordAndPasswordTypeDTO;
 import com.projectx.mvc.domain.quickregister.CustomerIdTypeDTO;
+import com.projectx.mvc.domain.quickregister.CustomerIdTypeUpdatedByDTO;
 import com.projectx.mvc.domain.quickregister.LoginVerificationDTO;
 import com.projectx.mvc.domain.quickregister.LoginVerificationWithDefaultEmailPasswordDTO;
 import com.projectx.rest.domain.quickregister.AuthenticationDetails;
@@ -27,18 +28,18 @@ public interface AuthenticationService {
 	AuthenticationDetails verifyDefaultEmailLoginDetails(LoginVerificationWithDefaultEmailPasswordDTO emailPasswordDTO)
 			throws AuthenticationDetailsNotFoundException,LoginVerificationFailedException;
 
-	Boolean sendOrResendOrResetDefaultPassword(Long entityId,Integer entityType,Boolean resetFlag,Boolean resendFlag) throws ResourceAlreadyPresentException;
+	Boolean sendOrResendOrResetDefaultPassword(Long entityId,Integer entityType,Boolean resetFlag,Boolean resendFlag,String requestedBy) throws ResourceAlreadyPresentException;
 	
 	//TODO
 	QuickRegisterEntity resetPasswordByEmailOrMobileRedirect(String entity) throws ResourceAlreadyPresentException;
 	
-	Boolean sendDefaultPassword(QuickRegisterEntity customer,Boolean resetFlag) throws ResourceAlreadyPresentException;
+	Boolean sendDefaultPassword(QuickRegisterEntity customer,Boolean resetFlag,String requestedBy) throws ResourceAlreadyPresentException;
 	
-	Boolean resendDefaultPassword(QuickRegisterEntity customerQuickRegisterEntity) throws ResourceAlreadyPresentException;
+	Boolean resendDefaultPassword(QuickRegisterEntity customerQuickRegisterEntity,String requestedBy) throws ResourceAlreadyPresentException;
 	
-	Boolean resetPassword(CustomerIdTypeDTO customerIdDTO) throws ResourceAlreadyPresentException;
+	Boolean resetPassword(CustomerIdTypeUpdatedByDTO customerIdDTO) throws ResourceAlreadyPresentException;
 	
-	Boolean resendPassword(CustomerIdTypeDTO customerIdDTO) throws ResourceAlreadyPresentException;
+	Boolean resendPassword(CustomerIdTypeUpdatedByDTO customerIdDTO) throws ResourceAlreadyPresentException;
 	
 	
 	

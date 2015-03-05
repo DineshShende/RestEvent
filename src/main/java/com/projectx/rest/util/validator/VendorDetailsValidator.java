@@ -6,6 +6,9 @@ import javax.validation.ConstraintValidatorContext;
 import com.projectx.rest.domain.completeregister.VendorDetails;
 import com.projectx.rest.util.annotation.VendorDetailsValid;
 
+
+
+
 public class VendorDetailsValidator implements ConstraintValidator<VendorDetailsValid, VendorDetails>{
 
 	@Override

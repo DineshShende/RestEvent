@@ -1,11 +1,22 @@
 package com.projectx.mvc.domain.quickregister;
 
+import javax.validation.constraints.NotNull;
+
 public class VerifyEmailHashDTO {
 
+	@NotNull
 	private Long customerId;
+	
+	@NotNull
 	private Integer customerType;
+	
+	@NotNull
 	private Integer emailType;
+	
+	@NotNull
 	private String emailHash;
+	
+	@NotNull
 	private String updatedBy;
 	
 	public VerifyEmailHashDTO() {

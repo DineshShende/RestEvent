@@ -17,21 +17,21 @@ public interface EmailVerificationService {
     
     EmailVerificationDetails getByEmail(String email) throws ResourceNotFoundException;
     
-    Boolean sendOrResendOrResetEmailHash(Long customerId,Integer customerType,Integer emailType,Boolean resetFlag,Boolean resendFlag)
-    						throws ResourceNotFoundException;
+    Boolean sendOrResendOrResetEmailHash(Long customerId,Integer customerType,Integer emailType,Boolean resetFlag,
+    		Boolean resendFlag,String requestedBy)throws ResourceNotFoundException;
     
-    Boolean sendEmailHash(Long customerId,Integer customerType,Integer emailType) throws ResourceNotFoundException;
+    Boolean sendEmailHash(Long customerId,Integer customerType,Integer emailType,String requestedBy) throws ResourceNotFoundException;
     
-    Boolean reSendEmailHash(Long customerId,Integer customerType,Integer emailType) throws ResourceNotFoundException;
+    Boolean reSendEmailHash(Long customerId,Integer customerType,Integer emailType,String requestedBy) throws ResourceNotFoundException;
 	
-	Boolean reSetEmailHash(Long customerId,Integer customerType,Integer emailType) throws ResourceNotFoundException;
+	Boolean reSetEmailHash(Long customerId,Integer customerType,Integer emailType,String requestedBy) throws ResourceNotFoundException;
 	
 	Boolean verifyEmailHash(Long customerId,Integer customerType,Integer emailType,String emailHash);
 	
 	Boolean verifyEmailHashUpdateStatusAndSendPassword(Long customerId,Integer customerType,Integer emailType, String emailHash,String requestBy) 
 															throws ResourceNotFoundException;
 	
-	Integer updateEmailHash(Long customerId,Integer customerType,Integer emailType);
+	Integer updateEmailHash(Long customerId,Integer customerType,Integer emailType,String requestedBy);
 	
 	EmailVerificationDetails createEntity(Long customerId,Integer customerType,String email,Integer emailType,String updatedBy);
 	

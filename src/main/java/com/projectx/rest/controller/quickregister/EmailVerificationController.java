@@ -1,18 +1,18 @@
 package com.projectx.rest.controller.quickregister;
 
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.concurrent.ListenableFuture;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.context.request.async.DeferredResult;
 
 import com.projectx.data.domain.quickregister.CustomerIdTypeEmailTypeDTO;
-import com.projectx.mvc.domain.completeregister.EmailMessageDTO;
 import com.projectx.mvc.domain.quickregister.UpdateEmailHashDTO;
 import com.projectx.mvc.domain.quickregister.VerifyEmailHashDTO;
 import com.projectx.rest.domain.quickregister.EmailVerificationDetails;
@@ -20,7 +20,7 @@ import com.projectx.rest.exception.repository.completeregister.ValidationFailedE
 import com.projectx.rest.exception.repository.quickregister.EmailVerificationDetailNotFoundException;
 import com.projectx.rest.exception.repository.quickregister.ResourceNotFoundException;
 import com.projectx.rest.services.quickregister.EmailVerificationService;
-import com.projectx.rest.utils.HandleCustomerVerification;
+import com.projectx.rest.utils.HandleVerificationService;
 
 @RestController
 @RequestMapping(value="/customer/quickregister")
@@ -30,12 +30,14 @@ public class EmailVerificationController {
 	EmailVerificationService emailVerificationService; 
 	
 	@Autowired
-	HandleCustomerVerification handleCustomerVerification; 
+	HandleVerificationService handleCustomerVerification; 
 	
 	@RequestMapping(value="/verifyEmailHash",method=RequestMethod.POST)
-	public ResponseEntity<Boolean> verifyEmailHash(@RequestBody VerifyEmailHashDTO verifyEmail)
+	public ResponseEntity<Boolean> verifyEmailHash(@Valid @RequestBody VerifyEmailHashDTO verifyEmail,BindingResult bindingResult)
 	{
-	
+		if(bindingResult.hasErrors())
+			return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+		
 		ResponseEntity<Boolean> result=null;
 		
 		try{
@@ -44,20 +46,26 @@ public class EmailVerificationController {
 			
 			result=new ResponseEntity<Boolean>(status, HttpStatus.OK);
 			
-		}catch(ResourceNotFoundException | ValidationFailedException e)
+		}catch(ResourceNotFoundException e)
 		{
 			result= new ResponseEntity<>(HttpStatus.NO_CONTENT);
+		}catch(ValidationFailedException e)
+		{
+			return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
 		}
 		
 		return result;
 	}
 	
 	@RequestMapping(value="/resetEmailHash",method=RequestMethod.POST)
-	public ResponseEntity<Boolean> updateEmailHash(@RequestBody UpdateEmailHashDTO updateEmailHash)
+	public ResponseEntity<Boolean> updateEmailHash(@Valid @RequestBody UpdateEmailHashDTO updateEmailHash,BindingResult  bindingResult)
 	{
+		if(bindingResult.hasErrors())
+			return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+		
 		try{
 			Boolean result=emailVerificationService
-					.reSetEmailHash(updateEmailHash.getCustomerId(),updateEmailHash.getCustomerType(),updateEmailHash.getEmailType());
+					.reSetEmailHash(updateEmailHash.getCustomerId(),updateEmailHash.getCustomerType(),updateEmailHash.getEmailType(),updateEmailHash.getRequestedBy());
 			return new ResponseEntity<Boolean>(result, HttpStatus.OK);
 			
 		}catch(ResourceNotFoundException e)
@@ -68,11 +76,15 @@ public class EmailVerificationController {
 	}
 	
 	@RequestMapping(value="/resendEmailHash",method=RequestMethod.POST)
-	public ResponseEntity<Boolean> reSendEmailHash(@RequestBody UpdateEmailHashDTO updateEmailHash)
+	public ResponseEntity<Boolean> reSendEmailHash(@Valid @RequestBody UpdateEmailHashDTO updateEmailHash,BindingResult bindingResult)
 	{
+		if(bindingResult.hasErrors())	
+			return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
 			
+		
 		try{
-			Boolean result= emailVerificationService.reSendEmailHash(updateEmailHash.getCustomerId(),updateEmailHash.getCustomerType(),updateEmailHash.getEmailType());
+			Boolean result= emailVerificationService.reSendEmailHash(updateEmailHash.getCustomerId(),updateEmailHash.getCustomerType(),
+					updateEmailHash.getEmailType(),updateEmailHash.getRequestedBy());
 			
 			return new ResponseEntity<Boolean>(result, HttpStatus.OK);
 		}catch(ResourceNotFoundException e)
@@ -86,8 +98,12 @@ public class EmailVerificationController {
 
 
 	@RequestMapping(value="/getEmailVerificationDetails",method=RequestMethod.POST)
-	public ResponseEntity<EmailVerificationDetails> getEmailVerificationDetails(@RequestBody CustomerIdTypeEmailTypeDTO emailDTO)
+	public ResponseEntity<EmailVerificationDetails> getEmailVerificationDetails(@Valid @RequestBody CustomerIdTypeEmailTypeDTO emailDTO,
+			BindingResult bindingResult)
 	{
+		if(bindingResult.hasErrors())
+			return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+		
 		ResponseEntity<EmailVerificationDetails> result=null;
 		
 		try{
@@ -104,15 +120,5 @@ public class EmailVerificationController {
 		return result;
 	}
 	
-	@RequestMapping(value="/sendEmail",method=RequestMethod.GET)
-	public DeferredResult<Boolean> sendEmail()
-	{
-		DeferredResult<Boolean> result=new DeferredResult<Boolean>();
-		
-		//ListenableFuture<Boolean> resultFuture=handleCustomerVerification.sendEmail("dineshshe@gmail.com", "Hi");
-		
-		//return handleCustomerVerification.sendEmail("dineshshe@gmail.com", "Hi");
-		return result;
-	}
 
 }

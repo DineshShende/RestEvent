@@ -1,9 +1,13 @@
 package com.projectx.mvc.domain.quickregister;
 
+import javax.validation.constraints.NotNull;
+
 public class CustomerIdTypeDTO {
 
+	@NotNull
 	private Long customerId;
 	
+	@NotNull
 	private Integer customerType;
 
 	public CustomerIdTypeDTO() {

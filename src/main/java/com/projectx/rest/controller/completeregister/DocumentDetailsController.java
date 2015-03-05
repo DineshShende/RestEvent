@@ -1,8 +1,11 @@
 package com.projectx.rest.controller.completeregister;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -13,6 +16,8 @@ import com.projectx.mvc.domain.completeregister.UpdateDocumentVerificationStatus
 import com.projectx.rest.domain.completeregister.DocumentDetails;
 import com.projectx.rest.domain.completeregister.DocumentKey;
 import com.projectx.rest.exception.repository.completeregister.DocumentDetailsNotFoundException;
+import com.projectx.rest.exception.repository.completeregister.DocumentDetailsNotSavedException;
+import com.projectx.rest.exception.repository.completeregister.ValidationFailedException;
 import com.projectx.rest.services.completeregister.DocumentDetailsService;
 
 
@@ -24,16 +29,30 @@ public class DocumentDetailsController {
 	DocumentDetailsService documentDetailsService;
 
 	@RequestMapping(value="/saveCustomerDocument",method=RequestMethod.POST)
-	public DocumentDetails saveCustomerDocument(@RequestBody DocumentDetails customerDocument)
+	public ResponseEntity<DocumentDetails> saveCustomerDocument(@Valid @RequestBody DocumentDetails customerDocument,BindingResult bindingResult)
 	{
-		DocumentDetails savedEntity=documentDetailsService.saveCustomerDocument(customerDocument);
+		if(bindingResult.hasErrors())
+			return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
 		
-		return savedEntity;
+		try{
+			DocumentDetails savedEntity=documentDetailsService.saveCustomerDocument(customerDocument);
+			return new ResponseEntity<DocumentDetails>(savedEntity, HttpStatus.OK);
+		}catch(ValidationFailedException e)
+		{
+			return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+		}catch (DocumentDetailsNotSavedException e) {
+			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+		}
+		
+		
 	}
 	
 	@RequestMapping(value="/getCustomerDocumentById",method=RequestMethod.POST)
-	public ResponseEntity<DocumentDetails> getCustomerDocumentById(@RequestBody DocumentKey documentKey)
+	public ResponseEntity<DocumentDetails> getCustomerDocumentById(@Valid @RequestBody DocumentKey documentKey,BindingResult bindingResult)
 	{
+		if(bindingResult.hasErrors())
+			return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+		
 		ResponseEntity<DocumentDetails> result=null;
 		try{
 			DocumentDetails fetchedEntity=documentDetailsService.getById(documentKey);
@@ -46,21 +65,45 @@ public class DocumentDetailsController {
 	}
 
 	@RequestMapping(value="/updateDocument",method=RequestMethod.POST)
-	public DocumentDetails updateDocument(@RequestBody UpdateDocumentDTO updateDocumentDTO)
+	public ResponseEntity<DocumentDetails> updateDocument(@Valid @RequestBody UpdateDocumentDTO updateDocumentDTO,BindingResult bindingResult)
 	{
-		DocumentDetails updatedEntity=documentDetailsService
-				.updateDocument(updateDocumentDTO.getKey(), updateDocumentDTO.getDocument(), updateDocumentDTO.getContentType());
+		if(bindingResult.hasErrors())
+			return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
 		
-		return updatedEntity;
+		try{
+			DocumentDetails updatedEntity=documentDetailsService
+					.updateDocument(updateDocumentDTO.getKey(), updateDocumentDTO.getDocument(), updateDocumentDTO.getContentType(),
+							updateDocumentDTO.getRequestedBy());
+			
+			return new ResponseEntity<DocumentDetails>(updatedEntity, HttpStatus.OK);
+			
+		}catch(DocumentDetailsNotFoundException e)
+		{
+			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+		}
+		
+		
 	}
 	
 	@RequestMapping(value="/updateVerificationStatusAndRemark",method=RequestMethod.POST)
-	public DocumentDetails updateDocumentVerificationDetails(@RequestBody UpdateDocumentVerificationStatusAndRemarkDTO updateDocumentDTO)
+	public ResponseEntity<DocumentDetails> updateDocumentVerificationDetails(@Valid @RequestBody UpdateDocumentVerificationStatusAndRemarkDTO 
+			updateDocumentDTO,BindingResult bindingResult)
 	{
-		DocumentDetails updatedEntity=documentDetailsService
-				.updateVerificationStatusAndRemark(updateDocumentDTO.getKey(), updateDocumentDTO.getVerificationStatus(), updateDocumentDTO.getVerificationRemark());
+		if(bindingResult.hasErrors())
+			return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
 		
-		return updatedEntity;
+		try{
+			DocumentDetails updatedEntity=documentDetailsService
+					.updateVerificationStatusAndRemark(updateDocumentDTO.getKey(), updateDocumentDTO.getVerificationStatus(), 
+							updateDocumentDTO.getVerificationRemark(),updateDocumentDTO.getRequestedBy());
+			return new ResponseEntity<DocumentDetails>(updatedEntity, HttpStatus.OK);
+			
+		}catch(DocumentDetailsNotFoundException e)
+		{
+			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+		}
+		
+		
 	}
 	
 	

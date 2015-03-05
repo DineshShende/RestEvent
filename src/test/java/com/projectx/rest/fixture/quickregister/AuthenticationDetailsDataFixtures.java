@@ -4,10 +4,15 @@ import static com.projectx.rest.fixture.quickregister.QuickRegisterDataFixture.*
 
 import java.util.Date;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.google.gson.Gson;
 import com.projectx.data.domain.quickregister.UpdateEmailPassword;
+import com.projectx.data.domain.quickregister.UpdatePasswordAndPasswordTypeDTO;
 import com.projectx.data.domain.quickregister.UpdatePasswordEmailPasswordAndPasswordTypeDTO;
 import com.projectx.data.domain.quickregister.VerifyLoginDetailsDataDTO;
 import com.projectx.mvc.domain.quickregister.CustomerIdTypeDTO;
+import com.projectx.mvc.domain.quickregister.CustomerIdTypeUpdatedByDTO;
 import com.projectx.mvc.domain.quickregister.LoginVerificationDTO;
 import com.projectx.mvc.domain.quickregister.LoginVerificationWithDefaultEmailPasswordDTO;
 import com.projectx.mvc.domain.quickregister.UpdatePasswordDTO;
@@ -17,7 +22,9 @@ import com.projectx.rest.domain.quickregister.AuthenticationDetailsKey;
 
 public class AuthenticationDetailsDataFixtures {
 	
-
+	
+	private static Gson gson=new Gson();
+	
 	public static Integer CUST_RESEND_COUNT=0;
 	public static Integer CUST_LOGIN_VERIFICATION_ATTEMPTS=0;
 	
@@ -25,6 +32,7 @@ public class AuthenticationDetailsDataFixtures {
 	//public static Integer CUST_TYPE_VENDOR=2;
 	
 	public static Date CUST_DATE=new Date();
+	
 	
 	
 	
@@ -77,7 +85,7 @@ public class AuthenticationDetailsDataFixtures {
 	
 	public static UpdatePasswordEmailPasswordAndPasswordTypeDTO standardUpdatePasswordEmailPasswordAndPasswordTypeDTO()
 	{
-		return new UpdatePasswordEmailPasswordAndPasswordTypeDTO(CUST_ID,ENTITY_TYPE_CUSTOMER, CUST_PASSWORD_CHANGED,CUST_EMAILHASH_UPDATED,CUST_PASSWORD_TYPE_CHANGED);
+		return new UpdatePasswordEmailPasswordAndPasswordTypeDTO(CUST_ID,ENTITY_TYPE_CUSTOMER, CUST_PASSWORD_CHANGED,CUST_EMAILHASH_UPDATED,CUST_PASSWORD_TYPE_CHANGED,CUST_UPDATED_BY);
 	}
 //	
 //	public static UpdateCountByCustomerId standardUpdateCountByCustomerId()
@@ -92,7 +100,12 @@ public class AuthenticationDetailsDataFixtures {
 	
 	public static UpdatePasswordDTO standardUpdatePasswordDTO()
 	{
-		return new UpdatePasswordDTO(CUST_ID,ENTITY_TYPE_CUSTOMER, CUST_PASSWORD_CHANGED);
+		return new UpdatePasswordDTO(CUST_ID,ENTITY_TYPE_CUSTOMER, CUST_PASSWORD_CHANGED,CUST_UPDATED_BY);
+	}
+	
+	public static UpdatePasswordAndPasswordTypeDTO standardUpdatePasswordAndPasswordTypeDTO()
+	{
+		return new UpdatePasswordAndPasswordTypeDTO(CUST_ID,ENTITY_TYPE_CUSTOMER, CUST_PASSWORD_CHANGED,CUST_PASSWORD_TYPE_CHANGED,CUST_UPDATED_BY);
 	}
 	
 	public static LoginVerificationDTO standardLoginVerificationWithEmail()
@@ -137,6 +150,10 @@ public class AuthenticationDetailsDataFixtures {
 		return new CustomerIdTypeDTO(CUST_ID,ENTITY_TYPE_CUSTOMER);
 	}
 	
+	public static CustomerIdTypeUpdatedByDTO standardCustomerIdTypeUpdatedByDTO()
+	{
+		return new CustomerIdTypeUpdatedByDTO(CUST_ID,ENTITY_TYPE_CUSTOMER,CUST_UPDATED_BY);
+	}
 	
 	public static String standardJsonCustomerIdDTO(CustomerIdTypeDTO customerIdDTO)
 	{
@@ -181,8 +198,17 @@ public class AuthenticationDetailsDataFixtures {
 	}
 	
 	
+	public static String standardJsonUpdatePasswordAndPasswordTypeUpdatedBy(UpdatePasswordAndPasswordTypeDTO dto)
+	{
+		System.out.println(gson.toJson(dto));
+		
+		return gson.toJson(dto);
+		
+	}
+	
 	public static String standardJsonUpdatePasswordAndPasswordType(UpdatePasswordDTO dto)
 	{
+		/*
 		StringBuilder jsonBuilder=new StringBuilder();
 
 		jsonBuilder.append("{\"customerId\":"+standardUpdatePasswordEmailPasswordAndPasswordTypeDTO().getCustomerId()+",");
@@ -195,7 +221,9 @@ public class AuthenticationDetailsDataFixtures {
 		System.out.println(jsonBuilder.toString());
 		
 		return jsonBuilder.toString();
+		*/
 		
+		return gson.toJson(dto);
 	}
 	
 	public static String standJsonEmailPasswordLoginVerification()

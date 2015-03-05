@@ -1,10 +1,11 @@
 package com.projectx.rest.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 
 
-
+@PropertySource(value="classpath:/application.properties")
 public class Constants {
 
 	 private Constants() {

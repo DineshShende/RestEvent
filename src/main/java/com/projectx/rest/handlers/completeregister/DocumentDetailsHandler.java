@@ -9,6 +9,8 @@ import org.springframework.stereotype.Component;
 import com.projectx.rest.domain.completeregister.DocumentDetails;
 import com.projectx.rest.domain.completeregister.DocumentKey;
 import com.projectx.rest.exception.repository.completeregister.DocumentDetailsNotFoundException;
+import com.projectx.rest.exception.repository.completeregister.DocumentDetailsNotSavedException;
+import com.projectx.rest.exception.repository.completeregister.ValidationFailedException;
 import com.projectx.rest.repository.completeregister.DocumentDetailsRepository;
 import com.projectx.rest.services.completeregister.DocumentDetailsService;
 
@@ -24,7 +26,7 @@ public class DocumentDetailsHandler implements DocumentDetailsService {
 	@Override
 	
 	public DocumentDetails saveCustomerDocument(
-			DocumentDetails customerDocument) {
+			DocumentDetails customerDocument)throws DocumentDetailsNotSavedException,ValidationFailedException {
 		
 		customerDocument.setInsertTime(new Date());
 		customerDocument.setUpdatedBy("CUST_ONLINE");
@@ -50,7 +52,7 @@ public class DocumentDetailsHandler implements DocumentDetailsService {
 
 	@Override
 	public DocumentDetails updateDocument(DocumentKey key, byte[] document,
-			String contentType) {
+			String contentType,String requestedBy)  throws DocumentDetailsNotFoundException{
 		
 		DocumentDetails fetchedEntity=documentDetailsRepository.getByCustomerId(key);
 		
@@ -60,7 +62,7 @@ public class DocumentDetailsHandler implements DocumentDetailsService {
 			fetchedEntity.setContentType(contentType);
 			fetchedEntity.setVerificationRemark("NOT VERIFIED");
 			fetchedEntity.setVerificationStatus(1);
-			fetchedEntity.setUpdatedBy("CUST_ONLINE");
+			fetchedEntity.setUpdatedBy(requestedBy);
 			fetchedEntity.setUpdateTime(new Date());
 		
 			DocumentDetails updatedEntity=documentDetailsRepository.saveCustomerDocument(fetchedEntity);
@@ -68,13 +70,13 @@ public class DocumentDetailsHandler implements DocumentDetailsService {
 			return updatedEntity;
 		}
 		else
-			return new DocumentDetails();
+			throw new  DocumentDetailsNotFoundException();
 		
 	}
 
 	@Override
 	public DocumentDetails updateVerificationStatusAndRemark(DocumentKey key,
-			Integer verificationStatus, String verificationRemark) {
+			Integer verificationStatus, String verificationRemark,String requestedBy)throws DocumentDetailsNotFoundException {
 		
 		DocumentDetails fetchedEntity=documentDetailsRepository.getByCustomerId(key);
 		
@@ -82,7 +84,7 @@ public class DocumentDetailsHandler implements DocumentDetailsService {
 		{
 			fetchedEntity.setVerificationStatus(verificationStatus);
 			fetchedEntity.setVerificationRemark(verificationRemark);
-			fetchedEntity.setUpdatedBy("CUST_ONLINE");
+			fetchedEntity.setUpdatedBy(requestedBy);
 			fetchedEntity.setUpdateTime(new Date());
 		
 			DocumentDetails updatedEntity=documentDetailsRepository.saveCustomerDocument(fetchedEntity);
@@ -90,7 +92,7 @@ public class DocumentDetailsHandler implements DocumentDetailsService {
 			return updatedEntity;
 		}
 		else
-			return new DocumentDetails();
+			throw new DocumentDetailsNotFoundException();
 		
 	}
 

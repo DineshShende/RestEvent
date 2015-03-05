@@ -6,6 +6,11 @@ import javax.validation.ConstraintValidatorContext;
 import com.projectx.rest.domain.quickregister.QuickRegisterEntity;
 import com.projectx.rest.util.annotation.QuickRegisterEntityValid;
 
+
+
+
+
+
 public class QuickRegisterEntityValidator implements ConstraintValidator<QuickRegisterEntityValid, QuickRegisterEntity>{
 
 	@Override
@@ -17,7 +22,8 @@ public class QuickRegisterEntityValidator implements ConstraintValidator<QuickRe
 	@Override
 	public boolean isValid(QuickRegisterEntity value, ConstraintValidatorContext context) {
 		
-		if(value.getMobile()==null && value.getEmail()==null)
+		if((value.getMobile()==null && value.getEmail()==null)||((value.getMobile()!=null && value.getIsMobileVerified()==null)||
+				(value.getEmail()!=null && value.getIsEmailVerified()==null)))
 			return false;
 		else
 			return true;

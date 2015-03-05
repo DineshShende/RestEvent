@@ -14,8 +14,6 @@ import javax.validation.Payload;
 import com.projectx.rest.util.validator.VehicleDetailsValidator;
 
 
-
-
 @Documented
 @Constraint(validatedBy = VehicleDetailsValidator.class)
 @Target({TYPE, ANNOTATION_TYPE})

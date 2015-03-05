@@ -7,7 +7,7 @@ public class UpdatePasswordEmailPasswordAndPasswordTypeDTO {
 	private String password;
 	private String emailPassword;
 	private String passwordType;
-	
+	private String updatedBy;
 	
 	public UpdatePasswordEmailPasswordAndPasswordTypeDTO() {
 		
@@ -15,14 +15,17 @@ public class UpdatePasswordEmailPasswordAndPasswordTypeDTO {
 
 	public UpdatePasswordEmailPasswordAndPasswordTypeDTO(Long customerId,
 			Integer customerType, String password, String emailPassword,
-			String passwordType) {
+			String passwordType, String updatedBy) {
 		super();
 		this.customerId = customerId;
 		this.customerType = customerType;
 		this.password = password;
 		this.emailPassword = emailPassword;
 		this.passwordType = passwordType;
+		this.updatedBy = updatedBy;
 	}
+
+
 
 
 	public Long getCustomerId() {
@@ -71,12 +74,21 @@ public class UpdatePasswordEmailPasswordAndPasswordTypeDTO {
 		this.customerType = customerType;
 	}
 
+	public String getUpdatedBy() {
+		return updatedBy;
+	}
+
+	public void setUpdatedBy(String updatedBy) {
+		this.updatedBy = updatedBy;
+	}
+
 	@Override
 	public String toString() {
 		return "UpdatePasswordEmailPasswordAndPasswordTypeDTO [customerId="
 				+ customerId + ", customerType=" + customerType + ", password="
 				+ password + ", emailPassword=" + emailPassword
-				+ ", passwordType=" + passwordType + "]";
+				+ ", passwordType=" + passwordType + ", updatedBy=" + updatedBy
+				+ "]";
 	}
 
 	@Override
@@ -93,6 +105,8 @@ public class UpdatePasswordEmailPasswordAndPasswordTypeDTO {
 				+ ((password == null) ? 0 : password.hashCode());
 		result = prime * result
 				+ ((passwordType == null) ? 0 : passwordType.hashCode());
+		result = prime * result
+				+ ((updatedBy == null) ? 0 : updatedBy.hashCode());
 		return result;
 	}
 
@@ -130,9 +144,15 @@ public class UpdatePasswordEmailPasswordAndPasswordTypeDTO {
 				return false;
 		} else if (!passwordType.equals(other.passwordType))
 			return false;
+		if (updatedBy == null) {
+			if (other.updatedBy != null)
+				return false;
+		} else if (!updatedBy.equals(other.updatedBy))
+			return false;
 		return true;
 	}
 
+	
 		
 	
 }

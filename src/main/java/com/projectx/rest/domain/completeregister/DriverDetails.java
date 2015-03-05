@@ -2,6 +2,7 @@ package com.projectx.rest.domain.completeregister;
 
 import java.util.Date;
 
+import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -13,10 +14,12 @@ public class DriverDetails {
 	
 	private Long driverId;
 	
+	@NotNull
 	private String firstName;
 	
 	private String middleName;
 	
+	@NotNull
 	private String lastName;
 	
 	private Date dateOfBirth;
@@ -25,30 +28,41 @@ public class DriverDetails {
 	
 	private Address homeAddress;
 	
+	@NotNull
 	private Long mobile;
 	
+	@NotNull
 	private Boolean isMobileVerified;
 	
+	@NotNull
 	private Long homeContactNumber;
 	
+	@NotNull
 	private String licenceNumber;
 	
 	private Date drivingSince;
 	
 	private Date employedSince;
 	
+	@NotNull
 	private Boolean isFreightRequestPermissionGiven;
 	
+	@NotNull
 	private Boolean isDealFinalizationPermissionGiven;
 
+	@NotNull
 	private String language;
 	
+	@NotNull
 	private Long vendorId;
 	
+	@NotNull
 	private Date insertTime;
 	
+	@NotNull
 	private Date updateTime;
 	
+	@NotNull
 	private String updatedBy;
 
 	public DriverDetails() {

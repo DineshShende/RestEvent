@@ -9,22 +9,23 @@ public class UpdatePasswordAndPasswordTypeDTO {
 	private String password;
 	
 	private String passwordType;
+	
+	private String updatedBy;
 
 	public UpdatePasswordAndPasswordTypeDTO() {
 	
 	}
 
-
-
 	public UpdatePasswordAndPasswordTypeDTO(Long customerId,
-			Integer customerType, String password, String passwordType) {
+			Integer customerType, String password, String passwordType,
+			String updatedBy) {
 		super();
 		this.customerId = customerId;
 		this.customerType = customerType;
 		this.password = password;
 		this.passwordType = passwordType;
+		this.updatedBy = updatedBy;
 	}
-
 
 
 	public Long getCustomerId() {
@@ -64,15 +65,21 @@ public class UpdatePasswordAndPasswordTypeDTO {
 	}
 
 
+	public String getUpdatedBy() {
+		return updatedBy;
+	}
+
+	public void setUpdatedBy(String updatedBy) {
+		this.updatedBy = updatedBy;
+	}
 
 	@Override
 	public String toString() {
 		return "UpdatePasswordAndPasswordTypeDTO [customerId=" + customerId
 				+ ", customerType=" + customerType + ", password=" + password
-				+ ", passwordType=" + passwordType + "]";
+				+ ", passwordType=" + passwordType + ", updatedBy=" + updatedBy
+				+ "]";
 	}
-
-
 
 	@Override
 	public int hashCode() {
@@ -86,10 +93,10 @@ public class UpdatePasswordAndPasswordTypeDTO {
 				+ ((password == null) ? 0 : password.hashCode());
 		result = prime * result
 				+ ((passwordType == null) ? 0 : passwordType.hashCode());
+		result = prime * result
+				+ ((updatedBy == null) ? 0 : updatedBy.hashCode());
 		return result;
 	}
-
-
 
 	@Override
 	public boolean equals(Object obj) {
@@ -120,10 +127,13 @@ public class UpdatePasswordAndPasswordTypeDTO {
 				return false;
 		} else if (!passwordType.equals(other.passwordType))
 			return false;
+		if (updatedBy == null) {
+			if (other.updatedBy != null)
+				return false;
+		} else if (!updatedBy.equals(other.updatedBy))
+			return false;
 		return true;
 	}
-
-
 
 	
 	

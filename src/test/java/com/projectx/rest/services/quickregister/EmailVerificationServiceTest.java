@@ -9,6 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -39,6 +40,9 @@ public class EmailVerificationServiceTest {
 	
 	@Autowired
 	AuthenticationService 	authenticationService;
+	
+	@Value("${PASSWORD_TYPE_DEFAULT}")
+	private String PASSWORD_TYPE_DEFAULT;
 	
 	@Before
 	public void clearTestData()
@@ -106,7 +110,7 @@ public class EmailVerificationServiceTest {
 				.getByEntityIdTypeAndMobileType(handledEntity.getCustomer().getCustomerId(),
 						handledEntity.getCustomer().getCustomerType(),1);
 		assertNull(authenticationDetails.getPassword());
-		assertNull(authenticationDetails.getPasswordType());
+		assertEquals(PASSWORD_TYPE_DEFAULT,authenticationDetails.getPasswordType());
 		assertNull(authenticationDetails.getEmailPassword());
 		
 		assertTrue(emailVerificationService.verifyEmailHashUpdateStatusAndSendPassword(handledEntity.getCustomer().getCustomerId(),
@@ -171,7 +175,7 @@ public class EmailVerificationServiceTest {
 				.getByEntityIdType(handledEntity.getCustomerId(),handledEntity.getCustomerType());
 		
 		assertNull(authenticationDetails.getPassword());
-		assertNull(authenticationDetails.getPasswordType());
+		assertEquals(PASSWORD_TYPE_DEFAULT,authenticationDetails.getPasswordType());
 	
 		
 		assertTrue(emailVerificationService.verifyEmailHashUpdateStatusAndSendPassword(handledEntity.getCustomerId(),
@@ -209,7 +213,7 @@ public class EmailVerificationServiceTest {
 		EmailVerificationDetails emailVerificationDetail=emailVerificationService.getByEntityIdTypeAndEmailType
 													(handledEntity.getCustomerId(),handledEntity.getCustomerType(), 1); 
 		
-		Boolean status=emailVerificationService.sendEmailHash(handledEntity.getCustomerId(), ENTITY_TYPE_CUSTOMER, ENTITY_TYPE_CUSTOMER);
+		Boolean status=emailVerificationService.sendEmailHash(handledEntity.getCustomerId(), ENTITY_TYPE_CUSTOMER, ENTITY_TYPE_CUSTOMER,CUST_UPDATED_BY);
 		
 		assertTrue(status);
 	

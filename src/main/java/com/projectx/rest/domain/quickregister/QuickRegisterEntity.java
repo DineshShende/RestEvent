@@ -2,38 +2,49 @@ package com.projectx.rest.domain.quickregister;
 
 import java.util.Date;
 
+import javax.validation.constraints.NotNull;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.projectx.data.domain.quickregister.CustomerQuickEntitySaveDTO;
+import com.projectx.rest.util.annotation.Pincode;
+import com.projectx.rest.util.annotation.QuickRegisterEntityValid;
 import com.projectx.rest.util.serializer.JsonDateDeSerializer;
 import com.projectx.rest.util.serializer.JsonDateSerializer;
 
+@QuickRegisterEntityValid
 public class QuickRegisterEntity {
 
-	
 	private Long customerId;
 	
+	@NotNull
 	private String firstName;
 	
+	@NotNull
 	private String lastName;
 	
 	private String email;
 	
 	private Long mobile;
 	
+	@Pincode
 	private Integer pincode;
 	
 	private Boolean isEmailVerified;
 
 	private Boolean isMobileVerified;
 	
+	@NotNull
 	private Integer customerType;
-		
+	
+	@NotNull
 	private Date insertTime;
 	
+	@NotNull
 	private Date updateTime;
 	
+	@NotNull
 	private String updatedBy;
 	
 	

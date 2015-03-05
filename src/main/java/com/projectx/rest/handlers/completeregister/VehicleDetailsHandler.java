@@ -7,6 +7,8 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import com.projectx.rest.domain.completeregister.VehicleDetails;
+import com.projectx.rest.exception.repository.completeregister.ValidationFailedException;
+import com.projectx.rest.exception.repository.completeregister.VehicleDetailsAlreadyPresentException;
 import com.projectx.rest.exception.repository.completeregister.VehicleDetailsNotFoundException;
 import com.projectx.rest.repository.completeregister.VehicleDetailsRepository;
 import com.projectx.rest.services.completeregister.VehicleDetailsService;
@@ -19,7 +21,7 @@ public class VehicleDetailsHandler implements VehicleDetailsService {
 	VehicleDetailsRepository vehicleDetailsRepository;
 	
 	@Override
-	public VehicleDetails addVehicle(VehicleDetails vehicleDetails) {
+	public VehicleDetails addVehicle(VehicleDetails vehicleDetails) throws VehicleDetailsAlreadyPresentException,ValidationFailedException{
 		
 		VehicleDetails addedVehicle=vehicleDetailsRepository.save(vehicleDetails);
 		

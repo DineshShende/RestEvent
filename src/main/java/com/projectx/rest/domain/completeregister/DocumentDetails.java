@@ -3,10 +3,10 @@ package com.projectx.rest.domain.completeregister;
 import java.util.Arrays;
 import java.util.Date;
 
+import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-
 import com.projectx.rest.util.serializer.*;
 
 public class DocumentDetails {
@@ -16,16 +16,21 @@ public class DocumentDetails {
 	
 	private byte[] document;
 	
+	@NotNull
 	private String contentType;
 	
+	@NotNull
 	private Integer verificationStatus;
 	
 	private String verificationRemark;
 	
+	@NotNull
 	private Date insertTime;
 	
+	@NotNull
 	private Date updateTime;
 	
+	@NotNull
 	private String updatedBy;
 
 	public DocumentDetails() {
@@ -169,20 +174,10 @@ public class DocumentDetails {
 			return false;
 		if (!Arrays.equals(document, other.document))
 			return false;
-		if (insertTime == null) {
-			if (other.insertTime != null)
-				return false;
-		} else if (Math.abs(insertTime.getTime()-other.insertTime.getTime())>100000)//!insertTime.equals(other.insertTime)
-			return false;
 		if (key == null) {
 			if (other.key != null)
 				return false;
 		} else if (!key.equals(other.key))
-			return false;
-		if (updateTime == null) {
-			if (other.updateTime != null)
-				return false;
-		} else if (Math.abs(updateTime.getTime()-other.updateTime.getTime())>100000)
 			return false;
 		if (updatedBy == null) {
 			if (other.updatedBy != null)

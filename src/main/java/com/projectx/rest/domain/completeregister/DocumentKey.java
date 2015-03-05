@@ -1,14 +1,19 @@
 package com.projectx.rest.domain.completeregister;
 
+import javax.validation.constraints.NotNull;
+
 
 
 
 public class DocumentKey   {
 
+	@NotNull
 	private Long customerId;
 	
+	@NotNull
 	private Integer customerType;
 	
+	@NotNull
 	private String documentName;
 
 	public DocumentKey() {

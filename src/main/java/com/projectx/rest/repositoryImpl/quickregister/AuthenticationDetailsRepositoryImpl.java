@@ -17,6 +17,7 @@ import com.projectx.data.domain.quickregister.UpdateEmailPassword;
 import com.projectx.data.domain.quickregister.UpdatePasswordEmailPasswordAndPasswordTypeDTO;
 import com.projectx.data.domain.quickregister.VerifyLoginDetailsDataDTO;
 import com.projectx.mvc.domain.quickregister.CustomerIdTypeDTO;
+import com.projectx.mvc.domain.quickregister.CustomerIdTypeUpdatedByDTO;
 import com.projectx.mvc.domain.quickregister.GetByEmailDTO;
 import com.projectx.mvc.domain.quickregister.GetByMobileDTO;
 import com.projectx.mvc.domain.quickregister.LoginVerificationDTO;
@@ -24,6 +25,7 @@ import com.projectx.rest.domain.quickregister.AuthenticationDetails;
 import com.projectx.rest.exception.repository.completeregister.ValidationFailedException;
 import com.projectx.rest.exception.repository.quickregister.AuthenticationDetailsNotFoundException;
 import com.projectx.rest.exception.repository.quickregister.ResourceAlreadyPresentException;
+import com.projectx.rest.exception.repository.quickregister.ResourceNotFoundException;
 import com.projectx.rest.repository.quickregister.AuthenticationDetailsRepository;
 
 @Component
@@ -83,35 +85,63 @@ public class AuthenticationDetailsRepositoryImpl implements AuthenticationDetail
 
 	@Override
 	public Integer updatePasswordEmailPasswordAndPasswordTypeAndCounts(Long customerId,Integer customerType,String password,
-			String emailPassword, String passwordType) {
+			String emailPassword, String passwordType,String updatedBy) throws ValidationFailedException{
 		
-		UpdatePasswordEmailPasswordAndPasswordTypeDTO passwordAndPasswordTypeDTO=new UpdatePasswordEmailPasswordAndPasswordTypeDTO(customerId,customerType, password, emailPassword,passwordType);
+		UpdatePasswordEmailPasswordAndPasswordTypeDTO passwordAndPasswordTypeDTO=new UpdatePasswordEmailPasswordAndPasswordTypeDTO(customerId,customerType, password, 
+				emailPassword,passwordType,updatedBy);
 
-		ResponseEntity<Integer> updateStatus=restTemplate.exchange(env.getProperty("data.url")+"/customer/quickregister/customerAuthentication/updatePasswordEmailPasswordAndPasswordTypeAndCounts",
+		ResponseEntity<Integer> updateStatus=null;
+		
+		try{
+		
+		updateStatus=restTemplate.exchange(env.getProperty("data.url")+"/customer/quickregister/customerAuthentication/updatePasswordEmailPasswordAndPasswordTypeAndCounts",
 					HttpMethod.POST,new HttpEntity<UpdatePasswordEmailPasswordAndPasswordTypeDTO>(passwordAndPasswordTypeDTO), Integer.class);
 		
+		}catch(RestClientException e)
+		{
+			throw new ValidationFailedException();
+		}
+		
+		
 		return updateStatus.getBody();
+		
 	}
 
 
 	@Override
-	public Integer incrementResendCount(Long customerId,Integer customerType) {
+	public Integer incrementResendCount(Long customerId,Integer customerType,String updatedBy) {
 
-		CustomerIdTypeDTO customerIdDTO=new CustomerIdTypeDTO(customerId,customerType);
+		CustomerIdTypeUpdatedByDTO customerIdDTO=new CustomerIdTypeUpdatedByDTO(customerId,customerType,updatedBy);
 		
-		ResponseEntity<Integer> updateStatus=restTemplate.exchange(env.getProperty("data.url")+"/customer/quickregister/customerAuthentication/incrementResendCount",
-				HttpMethod.POST,new HttpEntity<CustomerIdTypeDTO>(customerIdDTO), Integer.class);
+		ResponseEntity<Integer> updateStatus=null;
+		
+		try{
+			updateStatus=restTemplate.exchange(env.getProperty("data.url")+"/customer/quickregister/customerAuthentication/incrementResendCount",
+					HttpMethod.POST,new HttpEntity<CustomerIdTypeUpdatedByDTO>(customerIdDTO), Integer.class);
+			
+		}catch(RestClientException e)
+		{
+			throw new ValidationFailedException();
+		}
 		
 		return updateStatus.getBody();
 	}
 
 	@Override
-	public Integer incrementLastUnsucessfullAttempts(Long customerId,Integer customerType) {
+	public Integer incrementLastUnsucessfullAttempts(Long customerId,Integer customerType,String updatedBy) {
 
-		CustomerIdTypeDTO customerIdDTO=new CustomerIdTypeDTO(customerId,customerType);
+		CustomerIdTypeUpdatedByDTO customerIdDTO=new CustomerIdTypeUpdatedByDTO(customerId,customerType,updatedBy);
 		
-		ResponseEntity<Integer> updateStatus=restTemplate.exchange(env.getProperty("data.url")+"/customer/quickregister/customerAuthentication/incrementLastUnsucessfullAttempts", 
-				HttpMethod.POST,new HttpEntity<CustomerIdTypeDTO>(customerIdDTO), Integer.class);
+		ResponseEntity<Integer> updateStatus=null;
+		
+		try{
+			updateStatus=restTemplate.exchange(env.getProperty("data.url")+"/customer/quickregister/customerAuthentication/incrementLastUnsucessfullAttempts", 
+					HttpMethod.POST,new HttpEntity<CustomerIdTypeUpdatedByDTO>(customerIdDTO), Integer.class);
+			
+		}catch(RestClientException e)
+		{
+			throw new ValidationFailedException();
+		}
 		
 		return updateStatus.getBody();
 	}
@@ -168,31 +198,7 @@ public class AuthenticationDetailsRepositoryImpl implements AuthenticationDetail
 		return status;
 	}
 	
-	/*
-	@Override
-	public Integer updatePasswordAndPasswordType(Long customerId,
-			String password, String passwordType) {
 
-		UpdatePasswordAndPasswordTypeDTO updatePasswordAndPasswordTypeDTO=new UpdatePasswordAndPasswordTypeDTO(customerId, password, passwordType);
-		
-		Integer updateStatus=restTemplate.postForObject(env.getProperty("data.url")+"/customer/quickregister/updatePassword", updatePasswordAndPasswordTypeDTO, Integer.class);
-				
-		return updateStatus;
-	}
-
-	@Override
-	public CustomerAuthenticationDetails loginVerification(String email,
-			Long mobile, String password) {
-		
-		VerifyLoginDetailsDataDTO loginVerificationDTO=new VerifyLoginDetailsDataDTO(email, mobile, password);
-		
-		//System.out.println(loginVerificationDTO);
-		
-		CustomerAuthenticationDetails verificationEntity=restTemplate.postForObject(env.getProperty("data.url")+"/customer/quickregister/verifyLoginDetails", loginVerificationDTO, CustomerAuthenticationDetails.class);
-		
-		return verificationEntity;
-	}
-*/
 	
 
 }

@@ -7,6 +7,8 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import com.projectx.rest.domain.completeregister.DriverDetails;
+import com.projectx.rest.exception.repository.completeregister.DriverDetailsAlreadyPresentException;
+import com.projectx.rest.exception.repository.completeregister.ValidationFailedException;
 import com.projectx.rest.repository.completeregister.DriverDetailsRepository;
 import com.projectx.rest.services.completeregister.DriverDetailsService;
 
@@ -18,7 +20,7 @@ public class DriverDetailsHandler implements DriverDetailsService {
 	DriverDetailsRepository driverDetailsRepository;
 	
 	@Override
-	public DriverDetails addDriver(DriverDetails driverDetails) {
+	public DriverDetails addDriver(DriverDetails driverDetails) throws DriverDetailsAlreadyPresentException,ValidationFailedException{
 		
 		DriverDetails addedDriver=driverDetailsRepository.save(driverDetails);
 		

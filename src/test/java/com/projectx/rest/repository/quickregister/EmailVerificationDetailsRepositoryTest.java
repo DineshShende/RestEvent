@@ -130,7 +130,8 @@ public class EmailVerificationDetailsRepositoryTest {
 		assertEquals(0, customerEmailVericationDetailsRepository.resetEmailHashAndEmailHashSentTime(standardUpdateEmailHashAndEmailHashSentTimeDTO().getCustomerId(),
 				standardUpdateEmailHashAndEmailHashSentTimeDTO().getCustomerType(),
 				standardUpdateEmailHashAndEmailHashSentTimeDTO().getEmailType(), standardUpdateEmailHashAndEmailHashSentTimeDTO().getEmailHash(), standardUpdateEmailHashAndEmailHashSentTimeDTO().getEmailHashSentTime(),
-				standardUpdateEmailHashAndEmailHashSentTimeDTO().getResendCount()).intValue());
+				standardUpdateEmailHashAndEmailHashSentTimeDTO().getResendCount(),
+				standardUpdateEmailHashAndEmailHashSentTimeDTO().getUpdatedBy()).intValue());
 		
 		EmailVerificationDetails oldSaved=customerEmailVericationDetailsRepository.save(standardCustomerEmailVerificationDetails());
 		
@@ -139,7 +140,8 @@ public class EmailVerificationDetailsRepositoryTest {
 		assertEquals(1, customerEmailVericationDetailsRepository.resetEmailHashAndEmailHashSentTime(standardUpdateEmailHashAndEmailHashSentTimeDTO().getCustomerId(),
 				standardUpdateEmailHashAndEmailHashSentTimeDTO().getCustomerType(),
 				standardUpdateEmailHashAndEmailHashSentTimeDTO().getEmailType(), standardUpdateEmailHashAndEmailHashSentTimeDTO().getEmailHash(), standardUpdateEmailHashAndEmailHashSentTimeDTO().getEmailHashSentTime(),
-				standardUpdateEmailHashAndEmailHashSentTimeDTO().getResendCount()).intValue());
+				standardUpdateEmailHashAndEmailHashSentTimeDTO().getResendCount(),
+				standardUpdateEmailHashAndEmailHashSentTimeDTO().getUpdatedBy()).intValue());
 		
 		EmailVerificationDetails newFetched=customerEmailVericationDetailsRepository.getByEntityIdTypeAndEmailType(standardCustomerEmailVerificationDetailsByCustomerIdAndEmailDTO().getCustomerId(),
 				standardCustomerEmailVerificationDetailsByCustomerIdAndEmailDTO().getCustomerType(),
@@ -157,15 +159,15 @@ public class EmailVerificationDetailsRepositoryTest {
 	{
 		assertEquals(0, customerEmailVericationDetailsRepository.count().intValue());
 		
-		assertEquals(0, customerEmailVericationDetailsRepository.incrementResendCountByCustomerIdAndEmail(standardCustomerIdEmailDTO().getCustomerId(),
-				standardCustomerIdEmailDTO().getCustomerType(),EMAIL_TYPE_PRIMARY).intValue());
+		assertEquals(0, customerEmailVericationDetailsRepository.incrementResendCountByCustomerIdAndEmail(standardCustomerIdTypeEmailTypeUpdatedByDTO().getCustomerId(),
+				standardCustomerIdTypeEmailTypeUpdatedByDTO().getCustomerType(),EMAIL_TYPE_PRIMARY,standardCustomerIdTypeEmailTypeUpdatedByDTO().getUpdatedBy()).intValue());
 		
 		EmailVerificationDetails oldSaved=customerEmailVericationDetailsRepository.save(standardCustomerEmailVerificationDetails());
 		
 		assertEquals(0, oldSaved.getResendCount().intValue());
 		
-		assertEquals(1, customerEmailVericationDetailsRepository.incrementResendCountByCustomerIdAndEmail(standardCustomerIdEmailDTO().getCustomerId(),
-				standardCustomerIdEmailDTO().getCustomerType(),EMAIL_TYPE_PRIMARY).intValue());
+		assertEquals(1, customerEmailVericationDetailsRepository.incrementResendCountByCustomerIdAndEmail(standardCustomerIdTypeEmailTypeUpdatedByDTO().getCustomerId(),
+				standardCustomerIdTypeEmailTypeUpdatedByDTO().getCustomerType(),EMAIL_TYPE_PRIMARY,standardCustomerIdTypeEmailTypeUpdatedByDTO().getUpdatedBy()).intValue());
 		
 		assertEquals(1, customerEmailVericationDetailsRepository.getByEntityIdTypeAndEmailType(oldSaved.getKey().getCustomerId(),oldSaved.getKey().getCustomerType(), EMAIL_TYPE_PRIMARY).getResendCount().intValue());
 		

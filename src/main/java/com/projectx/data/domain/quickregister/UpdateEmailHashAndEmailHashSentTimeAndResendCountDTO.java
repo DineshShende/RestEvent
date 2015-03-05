@@ -20,16 +20,17 @@ public class UpdateEmailHashAndEmailHashSentTimeAndResendCountDTO {
 	private Date emailHashSentTime;
 	
 	private Integer resendCount;
+	
+	private String updatedBy;
 
 	public UpdateEmailHashAndEmailHashSentTimeAndResendCountDTO() {
-		super();
-	}
 
-	
+	}
 
 	public UpdateEmailHashAndEmailHashSentTimeAndResendCountDTO(
 			Long customerId, Integer customerType, Integer emailType,
-			String emailHash, Date emailHashSentTime, Integer resendCount) {
+			String emailHash, Date emailHashSentTime, Integer resendCount,
+			String updatedBy) {
 		super();
 		this.customerId = customerId;
 		this.customerType = customerType;
@@ -37,6 +38,7 @@ public class UpdateEmailHashAndEmailHashSentTimeAndResendCountDTO {
 		this.emailHash = emailHash;
 		this.emailHashSentTime = emailHashSentTime;
 		this.resendCount = resendCount;
+		this.updatedBy = updatedBy;
 	}
 
 
@@ -98,7 +100,13 @@ public class UpdateEmailHashAndEmailHashSentTimeAndResendCountDTO {
 		this.customerType = customerType;
 	}
 
+	public String getUpdatedBy() {
+		return updatedBy;
+	}
 
+	public void setUpdatedBy(String updatedBy) {
+		this.updatedBy = updatedBy;
+	}
 
 	@Override
 	public String toString() {
@@ -111,10 +119,10 @@ public class UpdateEmailHashAndEmailHashSentTimeAndResendCountDTO {
 				+ ", emailHash="
 				+ emailHash
 				+ ", emailHashSentTime="
-				+ emailHashSentTime + ", resendCount=" + resendCount + "]";
+				+ emailHashSentTime
+				+ ", resendCount="
+				+ resendCount + ", updatedBy=" + updatedBy + "]";
 	}
-
-
 
 	@Override
 	public int hashCode() {
@@ -124,7 +132,6 @@ public class UpdateEmailHashAndEmailHashSentTimeAndResendCountDTO {
 				+ ((customerId == null) ? 0 : customerId.hashCode());
 		result = prime * result
 				+ ((customerType == null) ? 0 : customerType.hashCode());
-		result = prime * result + ((emailType == null) ? 0 : emailType.hashCode());
 		result = prime * result
 				+ ((emailHash == null) ? 0 : emailHash.hashCode());
 		result = prime
@@ -132,11 +139,13 @@ public class UpdateEmailHashAndEmailHashSentTimeAndResendCountDTO {
 				+ ((emailHashSentTime == null) ? 0 : emailHashSentTime
 						.hashCode());
 		result = prime * result
+				+ ((emailType == null) ? 0 : emailType.hashCode());
+		result = prime * result
 				+ ((resendCount == null) ? 0 : resendCount.hashCode());
+		result = prime * result
+				+ ((updatedBy == null) ? 0 : updatedBy.hashCode());
 		return result;
 	}
-
-
 
 	@Override
 	public boolean equals(Object obj) {
@@ -157,11 +166,6 @@ public class UpdateEmailHashAndEmailHashSentTimeAndResendCountDTO {
 				return false;
 		} else if (!customerType.equals(other.customerType))
 			return false;
-		if (emailType == null) {
-			if (other.emailType != null)
-				return false;
-		} else if (!emailType.equals(other.emailType))
-			return false;
 		if (emailHash == null) {
 			if (other.emailHash != null)
 				return false;
@@ -172,16 +176,25 @@ public class UpdateEmailHashAndEmailHashSentTimeAndResendCountDTO {
 				return false;
 		} else if (!emailHashSentTime.equals(other.emailHashSentTime))
 			return false;
+		if (emailType == null) {
+			if (other.emailType != null)
+				return false;
+		} else if (!emailType.equals(other.emailType))
+			return false;
 		if (resendCount == null) {
 			if (other.resendCount != null)
 				return false;
 		} else if (!resendCount.equals(other.resendCount))
 			return false;
+		if (updatedBy == null) {
+			if (other.updatedBy != null)
+				return false;
+		} else if (!updatedBy.equals(other.updatedBy))
+			return false;
 		return true;
 	}
 
-
-
+	
 	
 	
 }

@@ -27,7 +27,7 @@ public interface MobileVerificationService {
 	
 	Boolean reSetMobilePin(Long customerId,Integer customerType,Integer mobileType,String updatedBy) throws ResourceNotFoundException;
 	
-	Boolean verifyMobilePin(Long customerId,Integer customerType,Integer mobileType,Integer mobilePin);
+	Boolean verifyMobilePin(Long customerId,Integer customerType,Integer mobileType,Integer mobilePin,String requestedBy);
 	
 	Boolean verifyMobilePinUpdateStatusAndSendPassword(Long customerId,Integer customerType,Integer mobileType,Integer mobilePin,String updatedBy);
 	

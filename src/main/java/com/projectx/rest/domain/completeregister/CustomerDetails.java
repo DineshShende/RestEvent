@@ -2,18 +2,23 @@ package com.projectx.rest.domain.completeregister;
 
 import java.util.Date;
 
+import javax.validation.constraints.NotNull;
+
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.projectx.rest.util.annotation.CustomerDetailsValid;
 import com.projectx.rest.util.serializer.JsonDateDeSerializer;
 import com.projectx.rest.util.serializer.JsonDateSerializer;
 
-
+@CustomerDetailsValid
 public class CustomerDetails {
 	
 	private Long customerId;
 	
+	@NotNull
 	private String firstName;
 	
+	@NotNull
 	private String lastName;
 	
 	private Date dateOfBirth;
@@ -42,10 +47,13 @@ public class CustomerDetails {
 	
 	private String secondaryEmail;
 	
+	@NotNull
 	private Date insertTime;
 	
+	@NotNull
 	private Date updateTime;
 	
+	@NotNull
 	private String updatedBy;
 
 	

@@ -8,7 +8,6 @@ import com.projectx.rest.util.annotation.FreightRequestByCustomerValid;
 
 
 
-
 public class FreightRequestByCustomerValidator implements ConstraintValidator<FreightRequestByCustomerValid, FreightRequestByCustomer>{
 
 	@Override

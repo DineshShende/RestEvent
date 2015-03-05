@@ -1,15 +1,22 @@
 package com.projectx.mvc.domain.quickregister;
 
+import javax.validation.constraints.NotNull;
+
 public class VerifyMobilePinDTO {
 	
+	@NotNull
 	private Long customerId;
 	
+	@NotNull
 	private Integer customerType;
 	
+	@NotNull
 	private Integer mobileType;
 	
+	@NotNull
 	private Integer mobilePin;
 	
+	@NotNull
 	private String requestBy;
 	
 

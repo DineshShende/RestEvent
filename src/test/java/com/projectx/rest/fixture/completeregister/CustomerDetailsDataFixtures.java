@@ -10,7 +10,9 @@ import com.google.gson.Gson;
 import com.projectx.data.domain.completeregister.UpdateAddressDTO;
 import com.projectx.data.domain.completeregister.UpdateMobileVerificationStatusUpdatedByDTO;
 import com.projectx.data.domain.quickregister.CustomerIdTypeEmailTypeDTO;
+import com.projectx.data.domain.quickregister.CustomerIdTypeEmailTypeUpdatedByDTO;
 import com.projectx.data.domain.quickregister.CustomerIdTypeMobileTypeDTO;
+import com.projectx.data.domain.quickregister.CustomerIdTypeMobileTypeUpdatedByDTO;
 import com.projectx.mvc.domain.completeregister.VerifyEmailDTO;
 import com.projectx.mvc.domain.completeregister.VerifyMobileDTO;
 import com.projectx.rest.domain.completeregister.Address;
@@ -256,7 +258,21 @@ public class CustomerDetailsDataFixtures {
 		return gson.toJson(idTypeMobileDTO);
 	}
 	
+	public static String standardJsonCustomerIdTypeMobileUpdatedBy(CustomerIdTypeMobileTypeUpdatedByDTO idTypeMobileDTO)
+	{
+		System.out.println(gson.toJson(idTypeMobileDTO));
+		
+		return gson.toJson(idTypeMobileDTO);
+	}
+	
 	public static String standardJsonCustomerIdTypeEmailDTO(CustomerIdTypeEmailTypeDTO idTypeEmailDTO)
+	{
+		System.out.println(gson.toJson(idTypeEmailDTO));
+		
+		return gson.toJson(idTypeEmailDTO);
+	}
+	
+	public static String standardJsonCustomerIdTypeEmailUpdatedBy(CustomerIdTypeEmailTypeUpdatedByDTO idTypeEmailDTO)
 	{
 		System.out.println(gson.toJson(idTypeEmailDTO));
 		
