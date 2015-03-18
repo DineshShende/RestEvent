@@ -28,7 +28,7 @@ import com.projectx.rest.exception.repository.quickregister.ResourceAlreadyPrese
 import com.projectx.rest.repository.quickregister.MobileVerificationDetailsRepository;
 
 @Component
-@Profile(value="Dev")
+@Profile(value={"Dev","Prod"})
 @PropertySource(value="classpath:/application.properties")
 public class MobileVerificationDetailsRepositoryImpl implements MobileVerificationDetailsRepository{
 

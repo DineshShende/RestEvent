@@ -2,7 +2,7 @@ package com.projectx.rest.repository.async;
 
 
 import static org.junit.Assert.*;
-import static com.projectx.rest.config.Constants.SPRING_PROFILE_ACTIVE;
+import static com.projectx.rest.config.Constants.SPRING_PROFILE_ACTIVE_TEST;
 import static com.projectx.rest.fixtures.async.RetriggerDetailsDataFixtures.*;
 
 import java.util.List;
@@ -17,11 +17,10 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.projectx.rest.config.Application;
 import com.projectx.rest.domain.async.RetriggerDetails;
-import com.projectx.rest.exception.repository.async.RetriggerDetailsRepository;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes=Application.class)
-@ActiveProfiles(SPRING_PROFILE_ACTIVE)
+@ActiveProfiles(SPRING_PROFILE_ACTIVE_TEST)
 public class RetriggerDetailsRepositoryTest {
 
 	@Autowired

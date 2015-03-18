@@ -30,6 +30,8 @@ public class AuthenticationDetails {
 	private Date UpdateTime;
 	
 	private String updatedBy;
+	
+	
 
 	public AuthenticationDetails() {
 

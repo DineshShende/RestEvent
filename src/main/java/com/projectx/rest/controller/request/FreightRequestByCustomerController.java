@@ -1,6 +1,7 @@
 package com.projectx.rest.controller.request;
 
 import java.util.List;
+import java.util.UUID;
 
 import javax.validation.Valid;
 
@@ -14,11 +15,22 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.projectx.rest.domain.completeregister.CustomerDetails;
+import com.projectx.rest.domain.ivr.FreightRequestByCustomerStatusDTO;
+import com.projectx.rest.domain.ivr.IVRCallInfoDTO;
+import com.projectx.rest.domain.ivr.KooKooRequestEntity;
+import com.projectx.rest.domain.ivr.QuestionListWithCounter;
+import com.projectx.rest.domain.ivr.QuestionPossibleAnswersSelectedAnswer;
+import com.projectx.rest.domain.ivr.TrackKookooResponseDTO;
 import com.projectx.rest.domain.request.FreightRequestByCustomer;
 import com.projectx.rest.domain.request.FreightRequestByVendor;
 import com.projectx.rest.exception.repository.completeregister.ValidationFailedException;
 import com.projectx.rest.exception.repository.quickregister.ResourceAlreadyPresentException;
 import com.projectx.rest.exception.repository.quickregister.ResourceNotFoundException;
+import com.projectx.rest.handlers.ivr.QuestionHandler;
+import com.projectx.rest.service.ivr.OutBoundCallService;
+import com.projectx.rest.service.ivr.QuestionHandlingService;
+import com.projectx.rest.services.completeregister.CustomerDetailsService;
 import com.projectx.rest.services.request.FreightRequestByCustomerService;
 
 @RestController
@@ -26,7 +38,22 @@ import com.projectx.rest.services.request.FreightRequestByCustomerService;
 public class FreightRequestByCustomerController {
 
 	@Autowired
+	FreightRequestByCustomerStatusDTO freightRequestByCustomerStatusDTO;
+	
+	@Autowired
+	TrackKookooResponseDTO trackKookooResponseDTO;
+	
+	@Autowired
 	FreightRequestByCustomerService freightRequestByCustomerService;
+	
+	@Autowired
+	CustomerDetailsService customerDetailsService;
+	
+	@Autowired
+	QuestionHandlingService questionHandlingService;
+	
+	@Autowired
+	OutBoundCallService outBoundCallService;
 	
 	@RequestMapping(method=RequestMethod.POST)
 	public ResponseEntity<FreightRequestByCustomer> newRequest(@Valid @RequestBody FreightRequestByCustomer freightRequestByCustomer,
@@ -73,7 +100,8 @@ public class FreightRequestByCustomerController {
 		return new ResponseEntity<List<FreightRequestByCustomer>>(savedEntity, HttpStatus.OK);
 		
 	}
-	
+
+	/*
 	@RequestMapping(value="/getMatchingCustomerReqForVendorReq",method=RequestMethod.POST)
 	public ResponseEntity<List<FreightRequestByCustomer>> getMatchingCustomerReqForVendorReq(@Valid @RequestBody FreightRequestByVendor freightRequestByVendor,
 			BindingResult bindingResult)
@@ -86,6 +114,39 @@ public class FreightRequestByCustomerController {
 		return new ResponseEntity<List<FreightRequestByCustomer>>(savedEntity, HttpStatus.OK);
 		
 	}
+	*/
+	
+	@RequestMapping(value="/getMatchingCustomerReqForVendorReq",method=RequestMethod.POST)
+	public void getMatchingCustomerReqForVendorReq(@Valid @RequestBody FreightRequestByVendor freightRequestByVendor,
+			BindingResult bindingResult)
+	{
+		
+		List<FreightRequestByCustomer> list=freightRequestByCustomerService.getMatchingCustReqForVendorReq(freightRequestByVendor);
+		
+		List<QuestionPossibleAnswersSelectedAnswer> questionList=questionHandlingService.getAll();
+		
+		if(questionList==null || questionList.size()==0)
+			throw new RuntimeException();
+		
+		list.forEach(e->{
+			
+			 CustomerDetails customerDetails=customerDetailsService.findById(e.getCustomerId());
+			 
+			 QuestionListWithCounter questionListWithCounter=new QuestionListWithCounter(customerDetails.getMobile(), 0, questionList);
+			 
+			 freightRequestByCustomerStatusDTO.add(e.getRequestId(), questionListWithCounter);
+			 
+			 IVRCallInfoDTO ivrCallInfoDTO=new IVRCallInfoDTO(customerDetails.getMobile(), questionListWithCounter.getQuestionList().get(questionListWithCounter.getCounter()));	 
+			 
+			 String sid=outBoundCallService.makeOutBoundCall(ivrCallInfoDTO);
+			 
+			 trackKookooResponseDTO.add(sid, new KooKooRequestEntity(e.getRequestId(), freightRequestByVendor.getRequestId()));
+			 
+			 
+		});
+		
+	}
+
 	
 	@RequestMapping(value="/deleteById/{requestId}")
 	public ResponseEntity<Boolean> deleteRequestById(@PathVariable Long requestId)
@@ -111,4 +172,22 @@ public class FreightRequestByCustomerController {
 		return result;
 	}
 	
+	/*
+	@RequestMapping(value="/addtrackresponseentity")
+	public void addtrackresponseentity()
+	{
+		 trackKookooResponseDTO.add(UUID.randomUUID().toString(), new KooKooRequestEntity(123L, 123L));
+	}
+	
+	@RequestMapping(value="/addfreightRequestByCustomerStatusDTO")
+	public void addfreightRequestByCustomerStatusDTO()
+	{
+		List<QuestionPossibleAnswersSelectedAnswer> questionList=questionHandlingService.getAll();
+		
+		 QuestionListWithCounter questionListWithCounter=new QuestionListWithCounter(9960821869L, 0, questionList);
+		 
+		 freightRequestByCustomerStatusDTO.add((long)(Math.random()*123456), questionListWithCounter);
+	
+	}
+	*/
 }

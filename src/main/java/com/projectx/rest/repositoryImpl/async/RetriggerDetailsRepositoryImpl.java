@@ -14,10 +14,10 @@ import org.springframework.web.client.RestTemplate;
 
 import com.projectx.data.domain.async.RetriggerList;
 import com.projectx.rest.domain.async.RetriggerDetails;
-import com.projectx.rest.exception.repository.async.RetriggerDetailsRepository;
+import com.projectx.rest.repository.async.RetriggerDetailsRepository;
 
 @Component
-@Profile(value={"Dev"})
+@Profile(value={"Dev","Prod"})
 @PropertySource(value="classpath:/application.properties")
 public class RetriggerDetailsRepositoryImpl implements
 		RetriggerDetailsRepository {

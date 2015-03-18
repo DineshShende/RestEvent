@@ -30,7 +30,7 @@ import com.projectx.rest.repository.completeregister.DriverDetailsRepository;
 
 
 @Component
-@Profile(value={"Dev"})
+@Profile(value={"Dev","Prod"})
 @PropertySource(value="classpath:/application.properties")
 
 public class DriverDetailsRepositoryImpl implements DriverDetailsRepository {

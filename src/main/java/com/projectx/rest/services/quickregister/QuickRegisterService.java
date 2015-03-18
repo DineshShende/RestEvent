@@ -2,7 +2,9 @@ package com.projectx.rest.services.quickregister;
 
 
 import java.util.Date;
+import java.util.List;
 
+import com.projectx.data.domain.quickregister.MobilePinPasswordDTO;
 import com.projectx.data.domain.quickregister.UpdatePasswordEmailPasswordAndPasswordTypeDTO;
 import com.projectx.mvc.domain.quickregister.CustomerIdTypeDTO;
 import com.projectx.mvc.domain.quickregister.CustomerQuickRegisterEntityDTO;
@@ -48,6 +50,8 @@ public interface QuickRegisterService {
 	Integer updateMobileVerificationStatus(Long customerId,Boolean status,Date updateTime,String updatedBy);
 	
 	Integer updateEmailVerificationStatus(Long customerId,Boolean status,Date updateTime,String updatedBy);
+
+	List<MobilePinPasswordDTO> getTestData();
 	
 	//Testing
 	void clearDataForTesting();

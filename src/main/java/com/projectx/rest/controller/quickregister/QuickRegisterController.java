@@ -1,6 +1,10 @@
 package com.projectx.rest.controller.quickregister;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 import javax.validation.Valid;
 
@@ -11,11 +15,13 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestClientException;
 
 import com.projectx.data.domain.quickregister.CustomerIdTypeEmailTypeDTO;
 import com.projectx.data.domain.quickregister.CustomerIdTypeMobileTypeDTO;
+import com.projectx.data.domain.quickregister.MobilePinPasswordDTO;
 import com.projectx.data.domain.quickregister.UpdatePasswordEmailPasswordAndPasswordTypeDTO;
 import com.projectx.mvc.domain.quickregister.CustomerIdTypeDTO;
 import com.projectx.mvc.domain.quickregister.CustomerQuickRegisterEntityDTO;
@@ -47,7 +53,8 @@ public class QuickRegisterController {
 	
 	@Autowired
 	QuickRegisterService customerQuickRegisterService;
-	
+
+		
 	@RequestMapping(value="/checkifexist",method=RequestMethod.POST)
 	public ResponseEntity<CustomerQuickRegisterStringStatusEntity> checkIfCustomerAlreadyExist(@Valid @RequestBody CustomerQuickRegisterEntityDTO customer,
 			BindingResult bindingResult) throws Exception
@@ -105,6 +112,11 @@ public class QuickRegisterController {
 		return result;
 	}
 
+	@RequestMapping(value="/getTestData",method=RequestMethod.GET)
+	List<MobilePinPasswordDTO> getTestData()
+	{
+		return customerQuickRegisterService.getTestData();
+	}
 	
 	@RequestMapping(value="/cleartestdata")
 	public Boolean clearTestData()

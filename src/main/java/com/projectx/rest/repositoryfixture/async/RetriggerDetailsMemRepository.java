@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 
 import com.projectx.rest.domain.async.RetriggerDetails;
 import com.projectx.rest.domain.quickregister.QuickRegisterEntity;
-import com.projectx.rest.exception.repository.async.RetriggerDetailsRepository;
+import com.projectx.rest.repository.async.RetriggerDetailsRepository;
 
 @Component
 @Profile(value="Test")

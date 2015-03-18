@@ -71,6 +71,9 @@ public class AuthenticationHandler implements AuthenticationService {
 	
 	private static final Integer UPDATE_SUCESS=new Integer(1);
 	
+	private Integer EMAIL_REQ=1;
+	
+	private Integer MOBILE_REQ=2;
 
 
 	@Override
@@ -150,7 +153,7 @@ public class AuthenticationHandler implements AuthenticationService {
 	
 	@Override
 	public Boolean sendOrResendOrResetDefaultPassword(Long entityId,
-			Integer entityType, Boolean resetFlag, Boolean resendFlag,String requestedBy)throws AuthenticationDetailsNotFoundException,
+			Integer entityType, Boolean resetFlag, Boolean resendFlag,Integer emailOrMobile,String requestedBy)throws AuthenticationDetailsNotFoundException,
 			QuickRegisterEntityNotFoundException,CustomerDetailsNotFoundException,VendorDetailsNotFoundException {
 		
 		
@@ -204,13 +207,13 @@ public class AuthenticationHandler implements AuthenticationService {
 			 
 		}
 									
-		if(email!=null && isEmailVerified)
+		if(email!=null && isEmailVerified && emailOrMobile.equals(EMAIL_REQ))
 		{
 			messagerSender.sendPasswordEmail(entityId,entityType, firstName, lastName,
 					email, customerAuthenticationDetails.getEmailPassword());
 		}	
 		
-		if(mobile!=null && isMobileVerified)
+		if(mobile!=null && isMobileVerified && emailOrMobile.equals(MOBILE_REQ))
 		{
 			
 			messagerSender.sendPasswordSMS(firstName, lastName, mobile,
@@ -231,10 +234,10 @@ public class AuthenticationHandler implements AuthenticationService {
 	
 
 	@Override
-	public Boolean sendDefaultPassword(QuickRegisterEntity customer,Boolean resetFlag,String requestedBy) throws AuthenticationDetailsNotFoundException,
+	public Boolean sendDefaultPassword(QuickRegisterEntity customer,Boolean resetFlag,Integer emailOrMobile,String requestedBy) throws AuthenticationDetailsNotFoundException,
 		QuickRegisterEntityNotFoundException,CustomerDetailsNotFoundException,VendorDetailsNotFoundException
 	{
-		Boolean status=sendOrResendOrResetDefaultPassword(customer.getCustomerId(), customer.getCustomerType(), resetFlag, false,requestedBy);
+		Boolean status=sendOrResendOrResetDefaultPassword(customer.getCustomerId(), customer.getCustomerType(), resetFlag, false,emailOrMobile,requestedBy);
 		
 		return status;		
 		
@@ -243,32 +246,32 @@ public class AuthenticationHandler implements AuthenticationService {
 	
 	@Override
 	public Boolean resendDefaultPassword(
-			QuickRegisterEntity customer,String requestedBy) throws AuthenticationDetailsNotFoundException,
+			QuickRegisterEntity customer,Integer emailOrMobile,String requestedBy) throws AuthenticationDetailsNotFoundException,
 				QuickRegisterEntityNotFoundException,CustomerDetailsNotFoundException,VendorDetailsNotFoundException{
 
-		Boolean status=sendOrResendOrResetDefaultPassword(customer.getCustomerId(), customer.getCustomerType(), false, true,requestedBy);
+		Boolean status=sendOrResendOrResetDefaultPassword(customer.getCustomerId(), customer.getCustomerType(), false, true,emailOrMobile,requestedBy);
 		
 		return status;
 	}
 
 	@Override
-	public Boolean resetPassword(CustomerIdTypeUpdatedByDTO customerIdDTO) throws AuthenticationDetailsNotFoundException,
+	public Boolean resetPassword(CustomerIdTypeUpdatedByDTO customerIdDTO,Integer emailOrMobile) throws AuthenticationDetailsNotFoundException,
 	QuickRegisterEntityNotFoundException,CustomerDetailsNotFoundException,VendorDetailsNotFoundException 
 	{
 		QuickRegisterEntity customer=customerQuickRegisterService
 				.getByEntityId(customerIdDTO.getCustomerId());
 		
-		return sendDefaultPassword(customer,true,customerIdDTO.getUpdatedBy());
+		return sendDefaultPassword(customer,true,emailOrMobile,customerIdDTO.getUpdatedBy());
 	}
 	
 	@Override
-	public Boolean resendPassword(CustomerIdTypeUpdatedByDTO customerIdDTO) throws AuthenticationDetailsNotFoundException,
+	public Boolean resendPassword(CustomerIdTypeUpdatedByDTO customerIdDTO,Integer emailOrMobile) throws AuthenticationDetailsNotFoundException,
 		QuickRegisterEntityNotFoundException,CustomerDetailsNotFoundException,VendorDetailsNotFoundException{
 
 		QuickRegisterEntity customer=customerQuickRegisterService
 				.getByEntityId(customerIdDTO.getCustomerId());
 		
-		return resendDefaultPassword(customer,customerIdDTO.getUpdatedBy());
+		return resendDefaultPassword(customer,emailOrMobile,customerIdDTO.getUpdatedBy());
 	}
 
 
@@ -299,29 +302,6 @@ public class AuthenticationHandler implements AuthenticationService {
 		return customerAuthenticationDetails;
 	}
 
-
-	
-	
-	@Override
-	public QuickRegisterEntity resetPasswordByEmailOrMobileRedirect(String entity) throws QuickRegisterEntityNotFoundException {
-		
-		//TODO
-		
-		QuickRegisterEntity quickRegisterEntity=new QuickRegisterEntity();
-		
-		if(isMobileNumber(entity))
-		{
-			quickRegisterEntity=customerQuickRegisterService.getByMobile(Long.parseLong(entity));
-		}
-		else
-		{
-			quickRegisterEntity=customerQuickRegisterService.getByEmail(entity);
-		}
-				
-		return quickRegisterEntity;
-	}
-
-	
 	
 	private Boolean isMobileNumber(String entity)
 	{

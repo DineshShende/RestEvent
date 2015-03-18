@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
+import com.projectx.data.domain.quickregister.MobilePinPasswordDTO;
 import com.projectx.data.domain.quickregister.UpdateEmailMobileVerificationStatus;
 import com.projectx.rest.domain.quickregister.QuickRegisterEntity;
 import com.projectx.rest.exception.repository.completeregister.ValidationFailedException;
@@ -30,6 +31,7 @@ public interface QuickRegisterRepository {
 	 
 	 Integer updateEmailVerificationStatus(Long customerId,Boolean status,Date updateTime,String updatedBy);
 	 
+	 List<MobilePinPasswordDTO> getTestData();
 
 	 void clearCustomerQuickRegister();
 	 	

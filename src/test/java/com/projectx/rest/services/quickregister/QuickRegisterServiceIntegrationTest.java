@@ -1,15 +1,34 @@
 package com.projectx.rest.services.quickregister;
 
-import static com.projectx.rest.config.Constants.SPRING_PROFILE_ACTIVE;
-import static com.projectx.rest.fixture.quickregister.AuthenticationDetailsDataFixtures.*;
-import static com.projectx.rest.fixture.quickregister.EmailVerificationDetailsFixtures.*;
-import static com.projectx.rest.fixture.quickregister.MobileVericationDetailsFixtures.*;
-import static com.projectx.rest.fixture.quickregister.QuickRegisterDataFixture.*;
-import static org.junit.Assert.*;
+import static com.projectx.rest.config.Constants.SPRING_PROFILE_ACTIVE_TEST;
+import static com.projectx.rest.fixture.quickregister.QuickRegisterDataFixture.CUST_EMAILHASH;
+import static com.projectx.rest.fixture.quickregister.QuickRegisterDataFixture.CUST_ID;
+import static com.projectx.rest.fixture.quickregister.QuickRegisterDataFixture.CUST_MOBILEPIN;
+import static com.projectx.rest.fixture.quickregister.QuickRegisterDataFixture.CUST_PASSWORD_CHANGED;
+import static com.projectx.rest.fixture.quickregister.QuickRegisterDataFixture.CUST_PASSWORD_DEFAULT;
+import static com.projectx.rest.fixture.quickregister.QuickRegisterDataFixture.CUST_PASSWORD_TYPE_CHANGED;
+import static com.projectx.rest.fixture.quickregister.QuickRegisterDataFixture.CUST_UPDATED_BY;
+import static com.projectx.rest.fixture.quickregister.QuickRegisterDataFixture.EMAIL_TYPE_PRIMARY;
+import static com.projectx.rest.fixture.quickregister.QuickRegisterDataFixture.ENTITY_TYPE_CUSTOMER;
+import static com.projectx.rest.fixture.quickregister.QuickRegisterDataFixture.MOB_TYPE_PRIMARY;
+import static com.projectx.rest.fixture.quickregister.QuickRegisterDataFixture.standardEmailCustomerAfterInitialization;
+import static com.projectx.rest.fixture.quickregister.QuickRegisterDataFixture.standardEmailCustomerAfterSaving;
+import static com.projectx.rest.fixture.quickregister.QuickRegisterDataFixture.standardEmailCustomerDTO;
+import static com.projectx.rest.fixture.quickregister.QuickRegisterDataFixture.standardEmailMobileCustomerAfterInitialization;
+import static com.projectx.rest.fixture.quickregister.QuickRegisterDataFixture.standardEmailMobileCustomerAfterSaving;
+import static com.projectx.rest.fixture.quickregister.QuickRegisterDataFixture.standardEmailMobileCustomerDTO;
+import static com.projectx.rest.fixture.quickregister.QuickRegisterDataFixture.standardMobileCustomerAfterInitialization;
+import static com.projectx.rest.fixture.quickregister.QuickRegisterDataFixture.standardMobileCustomerAfterSaving;
+import static com.projectx.rest.fixture.quickregister.QuickRegisterDataFixture.standardMobileCustomerDTO;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Date;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,32 +39,24 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.projectx.data.domain.quickregister.UpdatePasswordAndPasswordTypeDTO;
-import com.projectx.data.domain.quickregister.UpdatePasswordEmailPasswordAndPasswordTypeDTO;
-import com.projectx.mvc.domain.quickregister.CustomerIdTypeDTO;
 import com.projectx.mvc.domain.quickregister.CustomerIdTypeUpdatedByDTO;
 import com.projectx.mvc.domain.quickregister.LoginVerificationDTO;
 import com.projectx.mvc.domain.quickregister.LoginVerificationWithDefaultEmailPasswordDTO;
 import com.projectx.rest.config.Application;
 import com.projectx.rest.domain.quickregister.AuthenticationDetails;
+import com.projectx.rest.domain.quickregister.CustomerQuickRegisterEmailMobileVerificationEntity;
+import com.projectx.rest.domain.quickregister.CustomerQuickRegisterStatusEntity;
 import com.projectx.rest.domain.quickregister.EmailVerificationDetails;
 import com.projectx.rest.domain.quickregister.MobileVerificationDetails;
-import com.projectx.rest.domain.quickregister.CustomerQuickRegisterEmailMobileVerificationEntity;
 import com.projectx.rest.domain.quickregister.QuickRegisterEntity;
-import com.projectx.rest.domain.quickregister.CustomerQuickRegisterStatusEntity;
 import com.projectx.rest.exception.AuthenticationService.LoginVerificationFailedException;
-import com.projectx.rest.exception.repository.quickregister.MobileVerificationDetailsNotFoundException;
-import com.projectx.rest.exception.repository.quickregister.QuickRegisterEntityNotFoundException;
 import com.projectx.rest.exception.repository.quickregister.ResourceNotFoundException;
-import com.projectx.rest.repository.quickregister.AuthenticationDetailsRepository;
-import com.projectx.rest.repository.quickregister.EmailVericationDetailsRepository;
-import com.projectx.rest.repository.quickregister.MobileVerificationDetailsRepository;
 import com.projectx.rest.repository.quickregister.QuickRegisterRepository;
-import com.projectx.rest.services.quickregister.QuickRegisterService;
 
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
-@ActiveProfiles(SPRING_PROFILE_ACTIVE)
+@ActiveProfiles(SPRING_PROFILE_ACTIVE_TEST)
 public class QuickRegisterServiceIntegrationTest {
 
 	@Autowired
@@ -65,6 +76,10 @@ public class QuickRegisterServiceIntegrationTest {
 	
 	@Value("${PASSWORD_TYPE_DEFAULT}")
 	private String PASSWORD_TYPE_DEFAULT;
+	
+	private Integer EMAIL_REQ=1;
+	
+	private Integer MOBILE_REQ=2;
 	
 	
 	@Before
@@ -558,7 +573,7 @@ public class QuickRegisterServiceIntegrationTest {
 		String oldPasswordType=authenticationDetails.getPasswordType();
 		
 		assertTrue(authenticationService.resetPassword(new CustomerIdTypeUpdatedByDTO(authenticationDetails.getKey().getCustomerId(),
-				authenticationDetails.getKey().getCustomerType(),CUST_UPDATED_BY)));
+				authenticationDetails.getKey().getCustomerType(),CUST_UPDATED_BY),EMAIL_REQ));
 		
 		authenticationDetails=authenticationService.getByEntityIdType(handledEntity.getCustomer().getCustomerId(),
 				handledEntity.getCustomer().getCustomerType());
@@ -597,7 +612,7 @@ public class QuickRegisterServiceIntegrationTest {
 		
 		assertEquals(0, authenticationDetails.getResendCount().intValue());
 		
-		assertTrue(authenticationService.resendDefaultPassword(handledEntity.getCustomer(),CUST_UPDATED_BY));
+		assertTrue(authenticationService.resendDefaultPassword(handledEntity.getCustomer(),EMAIL_REQ,CUST_UPDATED_BY));
 		
 		authenticationDetails=authenticationService.getByEntityIdType(handledEntity.getCustomer().getCustomerId(),
 				handledEntity.getCustomer().getCustomerType());
@@ -674,7 +689,7 @@ public class QuickRegisterServiceIntegrationTest {
 		assertTrue(authenticationService.updatePassword(new UpdatePasswordAndPasswordTypeDTO(authenticationDetails.getKey().getCustomerId(),
 				authenticationDetails.getKey().getCustomerType(),CUST_PASSWORD_CHANGED, CUST_PASSWORD_TYPE_CHANGED,CUST_UPDATED_BY)));
 		
-		assertTrue(authenticationService.sendDefaultPassword(updatedEntity, false,CUST_UPDATED_BY));
+		assertTrue(authenticationService.sendDefaultPassword(updatedEntity, false,EMAIL_REQ,CUST_UPDATED_BY));
 		
 		authenticationDetails=authenticationService.getByEntityIdType(handledEntity.getCustomer().getCustomerId(),
 				handledEntity.getCustomer().getCustomerType());

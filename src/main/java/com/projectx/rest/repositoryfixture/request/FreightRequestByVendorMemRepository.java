@@ -90,4 +90,12 @@ public class FreightRequestByVendorMemRepository implements
 		return returnList;
 	}
 
+	@Override
+	public Integer updateReservationStatusWithReservedFor(
+			Long freightRequestByVendorId, String oldStatus,
+			String reservationStatus, Long reservedFor) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

@@ -23,7 +23,7 @@ import com.projectx.rest.exception.repository.completeregister.VehicleDetailsNot
 import com.projectx.rest.repository.completeregister.VehicleDetailsRepository;
 
 @Component
-@Profile(value={"Dev"})
+@Profile(value={"Dev","Prod"})
 @PropertySource(value="classpath:/application.properties")
 
 public class VehicleDetailsRepositoryImpl implements VehicleDetailsRepository {

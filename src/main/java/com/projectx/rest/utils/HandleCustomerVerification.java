@@ -39,7 +39,7 @@ import com.projectx.mvc.domain.completeregister.MobileMessageDTO;
 import com.projectx.rest.domain.async.RetriggerDTO;
 import com.projectx.rest.domain.async.RetriggerDetails;
 import com.projectx.rest.domain.request.FreightRequestByCustomer;
-import com.projectx.rest.exception.repository.async.RetriggerDetailsRepository;
+import com.projectx.rest.repository.async.RetriggerDetailsRepository;
 import com.projectx.rest.services.async.RetriggerService;
 
 @Component
@@ -173,10 +173,12 @@ public class HandleCustomerVerification implements HandleVerificationService {
 		Boolean status=false;
 		
 		try{
-			//mailSender.send(mailMessage);
-			Thread.sleep(800);
+			mailSender.send(mailMessage);
+			//Thread.sleep(800);
 			status=true;
-		}catch(MailException | InterruptedException e)
+			//throw new Exception();
+			
+		}catch(MailException  e)
 		{
 			status=false;
 		}
@@ -270,11 +272,11 @@ public class HandleCustomerVerification implements HandleVerificationService {
 		
 		try{
 		
-			//String result=restTemplate.getForObject(requestBuilder.toString(), String.class);	
+			String result=restTemplate.getForObject(requestBuilder.toString(), String.class);	
 			
-			//System.out.println(result);
+			System.out.println(result);
 			
-			Thread.sleep(800);
+			//Thread.sleep(800);
 			
 			status=true;
 		}catch(Exception e)

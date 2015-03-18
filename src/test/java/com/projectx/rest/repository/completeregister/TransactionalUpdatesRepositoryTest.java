@@ -3,7 +3,7 @@ package com.projectx.rest.repository.completeregister;
 
 
 
-import static com.projectx.rest.config.Constants.SPRING_PROFILE_ACTIVE;
+import static com.projectx.rest.config.Constants.SPRING_PROFILE_ACTIVE_TEST;
 import static com.projectx.rest.fixture.completeregister.CustomerDetailsDataFixtures.*;
 import static com.projectx.rest.fixture.quickregister.QuickRegisterDataFixture.*;
 import static com.projectx.rest.fixture.completeregister.VendorDetailsDataFixture.*;
@@ -52,7 +52,7 @@ import static com.projectx.rest.fixture.quickregister. AuthenticationDetailsData
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes=Application.class)
-@ActiveProfiles(SPRING_PROFILE_ACTIVE)
+@ActiveProfiles(SPRING_PROFILE_ACTIVE_TEST)
 public class TransactionalUpdatesRepositoryTest {
 
 	@Autowired

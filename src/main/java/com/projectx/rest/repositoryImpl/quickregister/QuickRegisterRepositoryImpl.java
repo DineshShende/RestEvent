@@ -19,6 +19,8 @@ import com.projectx.data.domain.quickregister.CustomerIdDTO;
 import com.projectx.data.domain.quickregister.CustomerQuickEntitySaveDTO;
 import com.projectx.data.domain.quickregister.EmailDTO;
 import com.projectx.data.domain.quickregister.MobileDTO;
+import com.projectx.data.domain.quickregister.MobilePinPasswordDTO;
+import com.projectx.data.domain.quickregister.MobilePinPasswordList;
 import com.projectx.data.domain.quickregister.ResponseCustomerList;
 import com.projectx.data.domain.quickregister.UpdateEmailHashAndMobilePinSentTimeDTO;
 import com.projectx.data.domain.quickregister.UpdateEmailHashDTO;
@@ -34,7 +36,7 @@ import com.projectx.rest.exception.repository.quickregister.ResourceNotFoundExce
 import com.projectx.rest.repository.quickregister.QuickRegisterRepository;
 
 @Component
-@Profile("Dev")
+@Profile(value={"Dev","Prod"})
 @PropertySource(value="classpath:/application.properties")
 public class QuickRegisterRepositoryImpl implements
 		QuickRegisterRepository {
@@ -158,8 +160,20 @@ public class QuickRegisterRepositoryImpl implements
 		return updateStatus.getBody();
 		
 	}
+	
+	
 
 	
+	@Override
+	public List<MobilePinPasswordDTO> getTestData() {
+		
+		ResponseEntity<MobilePinPasswordList> updateStatus=restTemplate.exchange(env.getProperty("data.url")+"/customer/quickregister/getTestData", 
+				HttpMethod.GET,null, MobilePinPasswordList.class);
+		
+		return updateStatus.getBody().getList();
+		
+	}
+
 	@Override
 	public void clearCustomerQuickRegister() {
 		restTemplate.getForObject(env.getProperty("data.url")+"/customer/quickregister/clearForTesting", Boolean.class);

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 import static com.projectx.rest.fixtures.quickregister.CustomerQuickRegisterDataFixture.*;
 
+import com.projectx.data.domain.quickregister.MobilePinPasswordDTO;
 import com.projectx.data.domain.quickregister.UpdateEmailMobileVerificationStatus;
 import com.projectx.rest.domain.quickregister.QuickRegisterEntity;
 import com.projectx.rest.repository.quickregister.QuickRegisterRepository;
@@ -139,6 +140,12 @@ public class QuickRegisterMemRepository implements
 		}
 		else
 			return 0;
+	}
+
+	@Override
+	public List<MobilePinPasswordDTO> getTestData() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

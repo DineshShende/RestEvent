@@ -15,7 +15,6 @@ public class CustomerQuickRegisterEntityDTO {
 	@NotNull
 	private String lastName;
 
-	
 	private String email;
 	
 	private Long mobile;

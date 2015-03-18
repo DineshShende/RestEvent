@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.projectx.data.domain.quickregister.CustomerIdTypeEmailTypeDTO;
+import com.projectx.data.domain.quickregister.CustomerIdTypeEmailTypeUpdatedByDTO;
 import com.projectx.mvc.domain.quickregister.UpdateEmailHashDTO;
 import com.projectx.mvc.domain.quickregister.VerifyEmailHashDTO;
 import com.projectx.rest.domain.quickregister.EmailVerificationDetails;
@@ -58,14 +59,14 @@ public class EmailVerificationController {
 	}
 	
 	@RequestMapping(value="/resetEmailHash",method=RequestMethod.POST)
-	public ResponseEntity<Boolean> updateEmailHash(@Valid @RequestBody UpdateEmailHashDTO updateEmailHash,BindingResult  bindingResult)
+	public ResponseEntity<Boolean> updateEmailHash(@Valid @RequestBody CustomerIdTypeEmailTypeUpdatedByDTO updateEmailHash,BindingResult  bindingResult)
 	{
 		if(bindingResult.hasErrors())
 			return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
 		
 		try{
 			Boolean result=emailVerificationService
-					.reSetEmailHash(updateEmailHash.getCustomerId(),updateEmailHash.getCustomerType(),updateEmailHash.getEmailType(),updateEmailHash.getRequestedBy());
+					.reSetEmailHash(updateEmailHash.getCustomerId(),updateEmailHash.getCustomerType(),updateEmailHash.getEmailType(),updateEmailHash.getUpdatedBy());
 			return new ResponseEntity<Boolean>(result, HttpStatus.OK);
 			
 		}catch(ResourceNotFoundException e)
@@ -76,7 +77,7 @@ public class EmailVerificationController {
 	}
 	
 	@RequestMapping(value="/resendEmailHash",method=RequestMethod.POST)
-	public ResponseEntity<Boolean> reSendEmailHash(@Valid @RequestBody UpdateEmailHashDTO updateEmailHash,BindingResult bindingResult)
+	public ResponseEntity<Boolean> reSendEmailHash(@Valid @RequestBody CustomerIdTypeEmailTypeUpdatedByDTO updateEmailHash,BindingResult bindingResult)
 	{
 		if(bindingResult.hasErrors())	
 			return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
@@ -84,7 +85,7 @@ public class EmailVerificationController {
 		
 		try{
 			Boolean result= emailVerificationService.reSendEmailHash(updateEmailHash.getCustomerId(),updateEmailHash.getCustomerType(),
-					updateEmailHash.getEmailType(),updateEmailHash.getRequestedBy());
+					updateEmailHash.getEmailType(),updateEmailHash.getUpdatedBy());
 			
 			return new ResponseEntity<Boolean>(result, HttpStatus.OK);
 		}catch(ResourceNotFoundException e)

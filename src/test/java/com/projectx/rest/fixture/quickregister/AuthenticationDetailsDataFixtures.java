@@ -12,11 +12,13 @@ import com.projectx.data.domain.quickregister.UpdatePasswordAndPasswordTypeDTO;
 import com.projectx.data.domain.quickregister.UpdatePasswordEmailPasswordAndPasswordTypeDTO;
 import com.projectx.data.domain.quickregister.VerifyLoginDetailsDataDTO;
 import com.projectx.mvc.domain.quickregister.CustomerIdTypeDTO;
+import com.projectx.mvc.domain.quickregister.CustomerIdTypeEmailOrMobileOptionUpdatedBy;
 import com.projectx.mvc.domain.quickregister.CustomerIdTypeUpdatedByDTO;
 import com.projectx.mvc.domain.quickregister.LoginVerificationDTO;
 import com.projectx.mvc.domain.quickregister.LoginVerificationWithDefaultEmailPasswordDTO;
 import com.projectx.mvc.domain.quickregister.UpdatePasswordDTO;
 import com.projectx.rest.domain.quickregister.AuthenticationDetails;
+import com.projectx.rest.domain.quickregister.AuthenticationDetailsAng;
 import com.projectx.rest.domain.quickregister.AuthenticationDetailsKey;
 
 
@@ -49,7 +51,11 @@ public class AuthenticationDetailsDataFixtures {
 		return new AuthenticationDetails(standardAuthenticationDetailsKey(), CUST_EMAIL, CUST_MOBILE, CUST_PASSWORD_DEFAULT, CUST_PASSWORD_TYPE_DEFAULT, CUST_EMAILHASH, CUST_RESEND_COUNT, CUST_LOGIN_VERIFICATION_ATTEMPTS,CUST_DATE,CUST_DATE,CUST_UPDATED_BY);
 	}
 	
-	
+	public static AuthenticationDetailsAng standardCustomerEmailMobileAuthenticationDetailsAng()
+	{
+		
+		return new AuthenticationDetailsAng(standardAuthenticationDetailsKey(), CUST_EMAIL, CUST_MOBILE, CUST_PASSWORD_DEFAULT, CUST_PASSWORD_TYPE_DEFAULT, CUST_EMAILHASH, CUST_RESEND_COUNT, CUST_LOGIN_VERIFICATION_ATTEMPTS,CUST_DATE,CUST_DATE,CUST_UPDATED_BY,false);
+	}
 
 	public static AuthenticationDetails standardCustomerEmailAuthenticationDetailsWithOutPassword()
 	{
@@ -153,6 +159,16 @@ public class AuthenticationDetailsDataFixtures {
 	public static CustomerIdTypeUpdatedByDTO standardCustomerIdTypeUpdatedByDTO()
 	{
 		return new CustomerIdTypeUpdatedByDTO(CUST_ID,ENTITY_TYPE_CUSTOMER,CUST_UPDATED_BY);
+	}
+	
+	public static CustomerIdTypeEmailOrMobileOptionUpdatedBy standardCustomerIdTypeEmailOrMobileOptionUpdatedBy()
+	{
+		return new CustomerIdTypeEmailOrMobileOptionUpdatedBy(CUST_ID,ENTITY_TYPE_CUSTOMER,EMAIL_REQ,CUST_UPDATED_BY);
+	}
+	
+	public static String standardJsonCustomerIdTypeEmailOrMobileOptionUpdatedBy(CustomerIdTypeEmailOrMobileOptionUpdatedBy dto)
+	{
+		return gson.toJson(dto);
 	}
 	
 	public static String standardJsonCustomerIdDTO(CustomerIdTypeDTO customerIdDTO)

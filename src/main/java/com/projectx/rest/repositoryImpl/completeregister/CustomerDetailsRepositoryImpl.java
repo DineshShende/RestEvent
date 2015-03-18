@@ -25,7 +25,7 @@ import com.projectx.rest.exception.repository.completeregister.ValidationFailedE
 import com.projectx.rest.repository.completeregister.CustomerDetailsRepository;
 
 @Component
-@Profile(value={"Dev"})
+@Profile(value={"Dev","Prod"})
 @PropertySource(value="classpath:/application.properties")
 public class CustomerDetailsRepositoryImpl implements CustomerDetailsRepository {
 

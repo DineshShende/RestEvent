@@ -20,7 +20,7 @@ import com.projectx.mvc.domain.completeregister.EmailMessageDTO;
 import com.projectx.mvc.domain.completeregister.MobileMessageDTO;
 import com.projectx.rest.domain.async.RetriggerDTO;
 @Component
-@Profile("Dev")
+@Profile(value={"Dev","Test"})
 public class HandleVerificationServiceFixture implements
 		HandleVerificationService {
 

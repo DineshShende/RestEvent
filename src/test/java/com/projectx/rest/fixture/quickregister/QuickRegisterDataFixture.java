@@ -9,6 +9,7 @@ import com.projectx.data.domain.quickregister.UpdateMobilePinDTO;
 import com.projectx.mvc.domain.quickregister.CustomerIdTypeDTO;
 import com.projectx.mvc.domain.quickregister.CustomerIdTypeUpdatedByDTO;
 import com.projectx.mvc.domain.quickregister.CustomerQuickRegisterEntityDTO;
+import com.projectx.mvc.domain.quickregister.ResetPasswordRedirectDTO;
 import com.projectx.rest.domain.quickregister.EmailVerificationDetails;
 import com.projectx.rest.domain.quickregister.QuickRegisterEntity;
 
@@ -87,7 +88,9 @@ public class QuickRegisterDataFixture {
 
 	public static Integer MOB_TYPE_SECONDARY=2;
 	
+	public static Integer EMAIL_REQ=1;
 	
+	public static Integer MOBILE_REQ=2;
 
 	
 	public static QuickRegisterEntity standardEmailMobileCustomer()
@@ -310,5 +313,10 @@ public class QuickRegisterDataFixture {
 		System.out.println(gson.toJson(quickRegisterEntity));
 		
 		return gson.toJson(quickRegisterEntity);
+	}
+	
+	public static String standardJsonResetPasswordRedirectDTO()
+	{
+		return gson.toJson(new ResetPasswordRedirectDTO(CUST_EMAIL,CUST_UPDATED_BY));
 	}
 }

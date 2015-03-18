@@ -27,13 +27,13 @@ import com.projectx.rest.services.quickregister.EmailVerificationService;
 import com.projectx.rest.services.quickregister.MobileVerificationService;
 import com.projectx.rest.services.quickregister.QuickRegisterService;
 
-import static com.projectx.rest.config.Constants.SPRING_PROFILE_ACTIVE;
+import static com.projectx.rest.config.Constants.SPRING_PROFILE_ACTIVE_TEST;
 import static com.projectx.rest.fixture.quickregister.QuickRegisterDataFixture.*;
 import static com.projectx.rest.fixture.completeregister.CustomerDetailsDataFixtures.*; 
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
-@ActiveProfiles(SPRING_PROFILE_ACTIVE)
+@ActiveProfiles(SPRING_PROFILE_ACTIVE_TEST)
 //@Transactional
 public class CustomerDetailsServiceTest {
 

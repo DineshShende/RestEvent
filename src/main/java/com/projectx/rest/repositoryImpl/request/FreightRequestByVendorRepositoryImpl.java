@@ -15,6 +15,7 @@ import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import com.projectx.data.domain.request.FreightRequestByVendorList;
+import com.projectx.data.domain.request.UpdateReservationStatus;
 import com.projectx.rest.domain.completeregister.CustomerDetails;
 import com.projectx.rest.domain.request.FreightRequestByCustomer;
 import com.projectx.rest.domain.request.FreightRequestByVendor;
@@ -24,7 +25,7 @@ import com.projectx.rest.exception.repository.quickregister.ResourceNotFoundExce
 import com.projectx.rest.repository.request.FreightRequestByVendorRepository;
 
 @Component
-@Profile(value={"Dev"})
+@Profile(value={"Dev","Prod"})
 @PropertySource(value="classpath:/application.properties")
 public class FreightRequestByVendorRepositoryImpl implements
 		FreightRequestByVendorRepository {
@@ -137,6 +138,33 @@ public class FreightRequestByVendorRepositoryImpl implements
 		return result;
 		
 		
+	}
+
+	@Override
+	public Integer updateReservationStatusWithReservedFor(
+			Long freightRequestByVendorId, String oldStatus,
+			String reservationStatus, Long reservedFor) {
+
+		UpdateReservationStatus updateReservationStatus=new UpdateReservationStatus(freightRequestByVendorId,
+				oldStatus, reservationStatus, reservedFor);
+		
+		HttpEntity<UpdateReservationStatus> entity=new HttpEntity<UpdateReservationStatus>(updateReservationStatus);
+		
+		ResponseEntity<Integer> result=null;
+		
+		try{
+			result=restTemplate.exchange(env.getProperty("data.url")+"/request/freightRequestByVendor/updateReservationStatus",
+					HttpMethod.POST, entity, Integer.class);
+		}catch(RestClientException e)
+		{
+			throw new ValidationFailedException();
+		}
+		
+		if(result.getStatusCode()==HttpStatus.OK)
+			return result.getBody();
+		
+		throw new ResourceNotFoundException();
+	
 	}
 
 }

@@ -7,6 +7,8 @@ import java.util.Date;
 
 
 
+import java.util.List;
+
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -72,6 +74,9 @@ public class VehicleDetails {
 	@NotNull
 	private Long vendorId;
 	
+	
+	private List<String> commodityList;
+	
 	@NotNull
 	private Date insertTime;
 	
@@ -87,6 +92,8 @@ public class VehicleDetails {
 
 
 
+
+
 	public VehicleDetails(Long vehicleId, String ownerFirstName,
 			String ownerMiddleName, String ownerLastName,
 			VehicleTypeDetails vehicleTypeId,
@@ -95,8 +102,8 @@ public class VehicleDetails {
 			String chassisNumber, Integer loadCapacityInTons, Integer length,
 			Integer width, Integer height, Integer numberOfWheels,
 			String permitType, Boolean insuranceStatus, String insuranceNumber,
-			String insuranceCompany, Long vendorId, Date insertTime,
-			Date updateTime, String updatedBy) {
+			String insuranceCompany, Long vendorId, List<String> commodityList,
+			Date insertTime, Date updateTime, String updatedBy) {
 		super();
 		this.vehicleId = vehicleId;
 		this.ownerFirstName = ownerFirstName;
@@ -118,10 +125,13 @@ public class VehicleDetails {
 		this.insuranceNumber = insuranceNumber;
 		this.insuranceCompany = insuranceCompany;
 		this.vendorId = vendorId;
+		this.commodityList = commodityList;
 		this.insertTime = insertTime;
 		this.updateTime = updateTime;
 		this.updatedBy = updatedBy;
 	}
+
+
 
 
 
@@ -399,14 +409,25 @@ public class VehicleDetails {
 	}
 
 
+		public List<String> getCommodityList() {
+		return commodityList;
+	}
+
+	public void setCommodityList(List<String> commodityList) {
+		this.commodityList = commodityList;
+	}
+
+
+
+
 
 	@Override
 	public String toString() {
-		return "VehicleDetailsDTO [vehicleId=" + vehicleId
-				+ ", ownerFirstName=" + ownerFirstName + ", ownerMiddleName="
-				+ ownerMiddleName + ", ownerLastName=" + ownerLastName
-				+ ", vehicleTypeId=" + vehicleTypeId + ", vehicleBrandId="
-				+ vehicleBrandId + ", vehicleBodyType=" + vehicleBodyType
+		return "VehicleDetails [vehicleId=" + vehicleId + ", ownerFirstName="
+				+ ownerFirstName + ", ownerMiddleName=" + ownerMiddleName
+				+ ", ownerLastName=" + ownerLastName + ", vehicleTypeId="
+				+ vehicleTypeId + ", vehicleBrandId=" + vehicleBrandId
+				+ ", vehicleBodyType=" + vehicleBodyType
 				+ ", isBodyTypeFlexible=" + isBodyTypeFlexible
 				+ ", registrationNumber=" + registrationNumber
 				+ ", chassisNumber=" + chassisNumber + ", loadCapacityInTons="
@@ -415,10 +436,12 @@ public class VehicleDetails {
 				+ numberOfWheels + ", permitType=" + permitType
 				+ ", insuranceStatus=" + insuranceStatus + ", insuranceNumber="
 				+ insuranceNumber + ", insuranceCompany=" + insuranceCompany
-				+ ", vendorId=" + vendorId + ", insertTime=" + insertTime
-				+ ", updateTime=" + updateTime + ", updatedBy=" + updatedBy
-				+ "]";
+				+ ", vendorId=" + vendorId + ", commodityList=" + commodityList
+				+ ", insertTime=" + insertTime + ", updateTime=" + updateTime
+				+ ", updatedBy=" + updatedBy + "]";
 	}
+
+
 
 
 
@@ -428,6 +451,8 @@ public class VehicleDetails {
 		int result = 1;
 		result = prime * result
 				+ ((chassisNumber == null) ? 0 : chassisNumber.hashCode());
+		result = prime * result
+				+ ((commodityList == null) ? 0 : commodityList.hashCode());
 		result = prime * result + ((height == null) ? 0 : height.hashCode());
 		result = prime * result
 				+ ((insertTime == null) ? 0 : insertTime.hashCode());
@@ -481,6 +506,8 @@ public class VehicleDetails {
 
 
 
+
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -494,6 +521,11 @@ public class VehicleDetails {
 			if (other.chassisNumber != null)
 				return false;
 		} else if (!chassisNumber.equals(other.chassisNumber))
+			return false;
+		if (commodityList == null) {
+			if (other.commodityList != null)
+				return false;
+		} else if (!commodityList.equals(other.commodityList))
 			return false;
 		if (height == null) {
 			if (other.height != null)
@@ -565,6 +597,11 @@ public class VehicleDetails {
 				return false;
 		} else if (!registrationNumber.equals(other.registrationNumber))
 			return false;
+		if (updateTime == null) {
+			if (other.updateTime != null)
+				return false;
+		} else if (!updateTime.equals(other.updateTime))
+			return false;
 		if (updatedBy == null) {
 			if (other.updatedBy != null)
 				return false;
@@ -580,11 +617,11 @@ public class VehicleDetails {
 				return false;
 		} else if (!vehicleBrandId.equals(other.vehicleBrandId))
 			return false;
-		/*if (vehicleId == null) {
+		if (vehicleId == null) {
 			if (other.vehicleId != null)
 				return false;
 		} else if (!vehicleId.equals(other.vehicleId))
-			return false;*/
+			return false;
 		if (vehicleTypeId == null) {
 			if (other.vehicleTypeId != null)
 				return false;
@@ -602,6 +639,8 @@ public class VehicleDetails {
 			return false;
 		return true;
 	}
+
+
 
 
 	

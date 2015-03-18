@@ -20,14 +20,14 @@ import org.springframework.web.context.WebApplicationContext;
 
 import com.projectx.rest.config.Application;
 
-import static com.projectx.rest.config.Constants.SPRING_PROFILE_ACTIVE;
+import static com.projectx.rest.config.Constants.SPRING_PROFILE_ACTIVE_TEST;
 import static com.projectx.rest.fixture.quickregister.QuickRegisterDataFixture.standardJsonQuickRegister;
 import static com.projectx.rest.fixtures.async.RetriggerDetailsDataFixtures.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
 @WebAppConfiguration
-@ActiveProfiles(SPRING_PROFILE_ACTIVE)
+@ActiveProfiles(SPRING_PROFILE_ACTIVE_TEST)
 public class AsyncControllerWACTest {
 
 	@Autowired

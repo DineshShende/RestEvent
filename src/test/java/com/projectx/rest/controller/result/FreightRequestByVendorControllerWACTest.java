@@ -1,6 +1,6 @@
 package com.projectx.rest.controller.result;
 
-import static com.projectx.rest.config.Constants.SPRING_PROFILE_ACTIVE;
+import static com.projectx.rest.config.Constants.SPRING_PROFILE_ACTIVE_TEST;
 import static com.projectx.rest.fixture.request.FreightRequestByCustomerDataFixture.*;
 import static com.projectx.rest.fixture.request.FreightRequestByVendorDataFixture.*;
 import static org.junit.Assert.*;
@@ -10,19 +10,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-
-
-
-
-
-
-
-
-
-
-
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -50,7 +37,7 @@ import static com.projectx.rest.fixture.completeregister.VehicleDetailsDataFixtu
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
 @WebAppConfiguration
-@ActiveProfiles(SPRING_PROFILE_ACTIVE)
+@ActiveProfiles(SPRING_PROFILE_ACTIVE_TEST)
 public class FreightRequestByVendorControllerWACTest {
 
 	@Autowired
@@ -71,7 +58,6 @@ public class FreightRequestByVendorControllerWACTest {
 	public void setUp() throws Exception
 	{
 		this.mockMvc=MockMvcBuilders.webAppContextSetup(wac).build();
-		
 	
 	}
 

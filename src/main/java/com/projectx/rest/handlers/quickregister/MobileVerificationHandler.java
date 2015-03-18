@@ -77,6 +77,8 @@ public class MobileVerificationHandler implements MobileVerificationService {
 	
 	private static final Integer ENTITY_TYPE_DRIVER=3;
 	
+	private Integer MOBILE_REQ=2;
+	
 	
 	private static final Integer MAX_MOBILE_VERIFICATION_ATTEMPTS=3;
 	
@@ -130,7 +132,7 @@ public class MobileVerificationHandler implements MobileVerificationService {
 						fetchedEntity.getIsMobileVerified(), fetchedEntity.getUpdateTime(), fetchedEntity.getUpdatedBy());
 				
 				if(UpdateStatus.equals(UPDATE_SUCESS))
-					sendPasswordStatus=authenticationHandler.sendDefaultPassword(fetchedEntity, false,requestedBy);
+					sendPasswordStatus=authenticationHandler.sendDefaultPassword(fetchedEntity, false,MOBILE_REQ,requestedBy);
 			
 				
 			}catch(ResourceNotFoundException e)

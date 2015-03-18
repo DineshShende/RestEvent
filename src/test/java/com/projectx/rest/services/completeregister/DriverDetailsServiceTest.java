@@ -15,13 +15,13 @@ import com.projectx.rest.domain.completeregister.DriverDetails;
 import com.projectx.rest.domain.quickregister.MobileVerificationDetails;
 import com.projectx.rest.services.quickregister.MobileVerificationService;
 
-import static com.projectx.rest.config.Constants.SPRING_PROFILE_ACTIVE;
+import static com.projectx.rest.config.Constants.SPRING_PROFILE_ACTIVE_TEST;
 import static com.projectx.rest.fixture.completeregister.DriverDetailsDataFixtures.*;
 import static com.projectx.rest.fixture.quickregister.QuickRegisterDataFixture.CUST_UPDATED_BY;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
-@ActiveProfiles(SPRING_PROFILE_ACTIVE)
+@ActiveProfiles(SPRING_PROFILE_ACTIVE_TEST)
 public class DriverDetailsServiceTest {
 
 	@Autowired

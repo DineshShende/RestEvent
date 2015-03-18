@@ -73,6 +73,8 @@ public class EmailVerificationHandler implements EmailVerificationService {
 	
 	private static final Integer ENTITY_TYPE_VENDOR=new Integer(2);
 	
+	private Integer EMAIL_REQ=1;
+	
 	
 	@Override
 	public EmailVerificationDetails createEntity(
@@ -136,7 +138,7 @@ public class EmailVerificationHandler implements EmailVerificationService {
 				updateStatus=customerQuickRegisterService.updateEmailVerificationStatus(fetchedEntity.getCustomerId(), fetchedEntity.getIsEmailVerified(),
 					fetchedEntity.getUpdateTime(), fetchedEntity.getUpdatedBy());										
 			
-				sendPasswordStatus=authenticationHandler.sendDefaultPassword(fetchedEntity, false,requestBy);
+				sendPasswordStatus=authenticationHandler.sendDefaultPassword(fetchedEntity, false,EMAIL_REQ,requestBy);
 			
 			}catch(ResourceNotFoundException e)
 			{

@@ -6,12 +6,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
+import com.google.gson.Gson;
+import com.projectx.rest.domain.async.RetriggerDTO;
 import com.projectx.rest.domain.request.FreightRequestByCustomer;
 import com.projectx.rest.domain.request.FreightRequestByVendor;
 import com.projectx.rest.exception.repository.completeregister.ValidationFailedException;
 import com.projectx.rest.exception.repository.quickregister.ResourceAlreadyPresentException;
 import com.projectx.rest.exception.repository.quickregister.ResourceNotFoundException;
 import com.projectx.rest.repository.request.FreightRequestByCustomerRepository;
+import com.projectx.rest.services.async.RetriggerService;
 import com.projectx.rest.services.request.FreightRequestByCustomerService;
 
 @Component
@@ -20,6 +23,12 @@ public class FreightRequestByCustomerHandler implements
 
 	@Autowired
 	FreightRequestByCustomerRepository freightRequestByCustomerRepository;
+	
+	@Autowired
+	RetriggerService retriggerService; 
+	
+	@Autowired
+	Gson gson;
 	
 	@Override
 	public FreightRequestByCustomer newRequest(
@@ -63,7 +72,16 @@ public class FreightRequestByCustomerHandler implements
 	public List<FreightRequestByCustomer> getMatchingCustReqForVendorReq(
 			FreightRequestByVendor freightRequestByVendor) {
 		
-		return freightRequestByCustomerRepository.getMatchingCustReqForVendorReq(freightRequestByVendor);
+		List<FreightRequestByCustomer> result= freightRequestByCustomerRepository.getMatchingCustReqForVendorReq(freightRequestByVendor);
+		
+		/*
+		if(result.size()==0)
+		{
+			retriggerService.requestRetry(new RetriggerDTO("env.getProperty(\"data.url\")+\"/request/freightByRequestCustomer/getMatchingCustReqForVendorReq\"",
+												gson.toJson(freightRequestByVendor)));
+		}
+		*/
+		return result;
 	}
 
 }

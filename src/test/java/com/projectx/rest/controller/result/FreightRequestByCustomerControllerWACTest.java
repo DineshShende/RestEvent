@@ -1,6 +1,6 @@
 package com.projectx.rest.controller.result;
 
-import static com.projectx.rest.config.Constants.SPRING_PROFILE_ACTIVE;
+import static com.projectx.rest.config.Constants.SPRING_PROFILE_ACTIVE_TEST;
 import static com.projectx.rest.fixture.completeregister.VehicleDetailsDataFixtures.standardVehicleDetails;
 import static com.projectx.rest.fixture.request.FreightRequestByCustomerDataFixture.*;
 import static com.projectx.rest.fixture.request.FreightRequestByVendorDataFixture.*;
@@ -11,16 +11,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-
-
-
-
-
-
-
-
-
 
 import org.junit.Before;
 import org.junit.Test;
@@ -36,17 +26,20 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import com.projectx.rest.config.Application;
+import com.projectx.rest.domain.completeregister.CustomerDetails;
 import com.projectx.rest.domain.request.FreightRequestByCustomer;
 import com.projectx.rest.domain.request.FreightRequestByVendor;
+import com.projectx.rest.services.completeregister.CustomerDetailsService;
 import com.projectx.rest.services.completeregister.VehicleDetailsService;
 import com.projectx.rest.services.request.FreightRequestByCustomerService;
 import com.projectx.rest.services.request.FreightRequestByVendorService;
 
+import static com.projectx.rest.fixture.completeregister.CustomerDetailsDataFixtures.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
 @WebAppConfiguration
-@ActiveProfiles(SPRING_PROFILE_ACTIVE)
+@ActiveProfiles(SPRING_PROFILE_ACTIVE_TEST)
 public class FreightRequestByCustomerControllerWACTest {
 
 	@Autowired
@@ -62,6 +55,9 @@ public class FreightRequestByCustomerControllerWACTest {
 	
 	@Autowired
 	VehicleDetailsService vehicleDetailsService; 
+	
+	@Autowired
+	CustomerDetailsService customerDetailsService; 
 	
 	@Before
 	public void setUp() throws Exception
@@ -229,26 +225,27 @@ public class FreightRequestByCustomerControllerWACTest {
 	public void getMatchingCustomerReqForVendorReq() throws Exception
 	{
 		
+		CustomerDetails customerDetails=customerDetailsService.mergeCustomerDetails(standardCustomerDetailsAlreadyPresent());
 		
 		freightRequestByCustomerService.clearTestData();
 		
-		FreightRequestByCustomer savedEntity=freightRequestByCustomerService.newRequest(standardFreightRequestByCustomerFullTruckLoad110());
+		FreightRequestByCustomer savedEntity=freightRequestByCustomerService.newRequest(standardFreightRequestByCustomerFullTruckLoad110(customerDetails.getCustomerId()));
 		
-		savedEntity=freightRequestByCustomerService.newRequest(standardFreightRequestByCustomerFullTruckLoadClosedAcerReq());
+		savedEntity=freightRequestByCustomerService.newRequest(standardFreightRequestByCustomerFullTruckLoadClosedAcerReq(customerDetails.getCustomerId()));
 		
-		savedEntity=freightRequestByCustomerService.newRequest(standardFreightRequestByCustomerFullTruckLoadOpenTataReq());
+		savedEntity=freightRequestByCustomerService.newRequest(standardFreightRequestByCustomerFullTruckLoadOpenTataReq(customerDetails.getCustomerId()));
 		
-		savedEntity=freightRequestByCustomerService.newRequest(standardFreightRequestByCustomerLessThanTruckLoad15());
+		savedEntity=freightRequestByCustomerService.newRequest(standardFreightRequestByCustomerLessThanTruckLoad15(customerDetails.getCustomerId()));
 		
-		savedEntity=freightRequestByCustomerService.newRequest(standardFreightRequestByCustomerLessThanTruckLoadOpenAcer());
+		savedEntity=freightRequestByCustomerService.newRequest(standardFreightRequestByCustomerLessThanTruckLoadOpenAcer(customerDetails.getCustomerId()));
 		
-		savedEntity=freightRequestByCustomerService.newRequest(standardFreightRequestByCustomerLessThanTruckLoadOpenTata());
+		savedEntity=freightRequestByCustomerService.newRequest(standardFreightRequestByCustomerLessThanTruckLoadOpenTata(customerDetails.getCustomerId()));
 		
-		savedEntity=freightRequestByCustomerService.newRequest(standardFreightRequestByCustomerLessThanTruckLoadOpenNoBrand());
+		savedEntity=freightRequestByCustomerService.newRequest(standardFreightRequestByCustomerLessThanTruckLoadOpenNoBrand(customerDetails.getCustomerId()));
 		
-		savedEntity=freightRequestByCustomerService.newRequest(standardFreightRequestByCustomerLessThanTruckLoadOpenNoBrandAndNoModel());
+		savedEntity=freightRequestByCustomerService.newRequest(standardFreightRequestByCustomerLessThanTruckLoadOpenNoBrandAndNoModel(customerDetails.getCustomerId()));
 		
-		savedEntity=freightRequestByCustomerService.newRequest(standardFreightRequestByCustomerLessThanTruckLoadOpenNoModel());
+		savedEntity=freightRequestByCustomerService.newRequest(standardFreightRequestByCustomerLessThanTruckLoadOpenNoModel(customerDetails.getCustomerId()));
 		
 		//FreightRequestByVendor vendorRequest=freightRequestByVendorRepository.save(standardFreightRequestByVendor());
 		

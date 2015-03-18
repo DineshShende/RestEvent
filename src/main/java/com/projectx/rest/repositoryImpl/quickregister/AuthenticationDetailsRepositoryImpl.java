@@ -29,7 +29,7 @@ import com.projectx.rest.exception.repository.quickregister.ResourceNotFoundExce
 import com.projectx.rest.repository.quickregister.AuthenticationDetailsRepository;
 
 @Component
-@Profile("Dev")
+@Profile(value={"Dev","Prod"})
 @PropertySource(value="classpath:/application.properties")
 public class AuthenticationDetailsRepositoryImpl implements AuthenticationDetailsRepository{
 

@@ -1,10 +1,10 @@
 package com.projectx.rest.controller.quickregister;
 
-import static com.projectx.rest.config.Constants.SPRING_PROFILE_ACTIVE;
+import static com.projectx.rest.config.Constants.SPRING_PROFILE_ACTIVE_TEST;
 import static com.projectx.rest.fixture.quickregister.QuickRegisterDataFixture.CUST_ID;
 import static com.projectx.rest.fixture.quickregister.EmailVerificationDetailsFixtures.*;
 import static com.projectx.rest.fixture.quickregister.QuickRegisterDataFixture.standardEmailCustomerDTO;
-import static com.projectx.rest.fixture.quickregister.QuickRegisterDataFixture.standardJsonEmailMobileCustomer;
+import static com.projectx.rest.fixture.quickregister.QuickRegisterDataFixture.*;
 import static org.junit.Assert.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -36,7 +36,7 @@ import com.projectx.rest.handlers.quickregister.QuickRegisterHandler;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
 @WebAppConfiguration
-@ActiveProfiles(SPRING_PROFILE_ACTIVE)
+@ActiveProfiles(SPRING_PROFILE_ACTIVE_TEST)
 public class MobileVerificationControllerWACTest {
 
 	@Autowired
@@ -79,7 +79,7 @@ public class MobileVerificationControllerWACTest {
 
 		this.mockMvc.perform(
 	            post("/customer/quickregister/resendEmailHash")
-	                    .content(standardJsonUpdateEmailHashDTOMVC(standardUpdateEmailHashDTO(handledEntity.getCustomerId())))
+	                    .content(standardJsonCustomerIdTypeEmailTypeUpdatedByDTO((handledEntity.getCustomerId())))
 	                    .contentType(MediaType.APPLICATION_JSON)
 	                    .accept(MediaType.APPLICATION_JSON))
 	            .andDo(print())

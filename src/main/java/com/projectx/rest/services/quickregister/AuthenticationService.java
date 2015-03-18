@@ -28,18 +28,16 @@ public interface AuthenticationService {
 	AuthenticationDetails verifyDefaultEmailLoginDetails(LoginVerificationWithDefaultEmailPasswordDTO emailPasswordDTO)
 			throws AuthenticationDetailsNotFoundException,LoginVerificationFailedException;
 
-	Boolean sendOrResendOrResetDefaultPassword(Long entityId,Integer entityType,Boolean resetFlag,Boolean resendFlag,String requestedBy) throws ResourceAlreadyPresentException;
+	Boolean sendOrResendOrResetDefaultPassword(Long entityId,Integer entityType,Boolean resetFlag,Boolean resendFlag,
+			Integer emailOrMobile,String requestedBy) throws ResourceAlreadyPresentException;
 	
-	//TODO
-	QuickRegisterEntity resetPasswordByEmailOrMobileRedirect(String entity) throws ResourceAlreadyPresentException;
+	Boolean sendDefaultPassword(QuickRegisterEntity customer,Boolean resetFlag,Integer emailOrMobile,String requestedBy) throws ResourceAlreadyPresentException;
 	
-	Boolean sendDefaultPassword(QuickRegisterEntity customer,Boolean resetFlag,String requestedBy) throws ResourceAlreadyPresentException;
+	Boolean resendDefaultPassword(QuickRegisterEntity customerQuickRegisterEntity,Integer emailOrMobile,String requestedBy) throws ResourceAlreadyPresentException;
 	
-	Boolean resendDefaultPassword(QuickRegisterEntity customerQuickRegisterEntity,String requestedBy) throws ResourceAlreadyPresentException;
+	Boolean resetPassword(CustomerIdTypeUpdatedByDTO customerIdDTO,Integer emailOrMobile) throws ResourceAlreadyPresentException;
 	
-	Boolean resetPassword(CustomerIdTypeUpdatedByDTO customerIdDTO) throws ResourceAlreadyPresentException;
-	
-	Boolean resendPassword(CustomerIdTypeUpdatedByDTO customerIdDTO) throws ResourceAlreadyPresentException;
+	Boolean resendPassword(CustomerIdTypeUpdatedByDTO customerIdDTO,Integer emailOrMobile) throws ResourceAlreadyPresentException;
 	
 	
 	

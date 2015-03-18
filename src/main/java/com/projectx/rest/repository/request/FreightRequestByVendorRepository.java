@@ -26,6 +26,8 @@ public interface FreightRequestByVendorRepository {
 	
 	Integer count();
 	
+	Integer updateReservationStatusWithReservedFor(Long freightRequestByVendorId,String oldStatus,String reservationStatus,Long reservedFor);
+	
 	List<FreightRequestByVendor> findByVendor(Long vendorId) ;
 	
 	List<FreightRequestByVendor> getMatchingVendorReqFromCustomerReq(FreightRequestByCustomer freightRequestByCustomer); 

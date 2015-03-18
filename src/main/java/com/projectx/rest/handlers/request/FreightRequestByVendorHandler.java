@@ -5,9 +5,14 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
+import com.google.gson.Gson;
+import com.projectx.data.domain.request.UpdateReservationStatus;
 import com.projectx.mvc.domain.request.FreightRequestByVendorDTO;
+import com.projectx.rest.domain.async.RetriggerDTO;
 import com.projectx.rest.domain.completeregister.VehicleDetails;
 import com.projectx.rest.domain.request.FreightRequestByCustomer;
 import com.projectx.rest.domain.request.FreightRequestByVendor;
@@ -16,6 +21,7 @@ import com.projectx.rest.exception.repository.quickregister.ResourceAlreadyPrese
 import com.projectx.rest.exception.repository.quickregister.ResourceNotFoundException;
 import com.projectx.rest.repository.completeregister.VehicleDetailsRepository;
 import com.projectx.rest.repository.request.FreightRequestByVendorRepository;
+import com.projectx.rest.services.async.RetriggerService;
 import com.projectx.rest.services.completeregister.VehicleDetailsService;
 import com.projectx.rest.services.request.FreightRequestByVendorService;
 
@@ -29,6 +35,11 @@ public class FreightRequestByVendorHandler implements
 	@Autowired
 	VehicleDetailsService vehicleDetailsService;
 	
+	@Autowired
+	RetriggerService retriggerService;
+	
+	@Autowired
+	Gson gson;
 	
 	@Override
 	public FreightRequestByVendor newRequest(
@@ -71,7 +82,24 @@ public class FreightRequestByVendorHandler implements
 	public List<FreightRequestByVendor> getMatchingVendorReqFromCustomerReq(
 			FreightRequestByCustomer freightRequestByCustomer) {
 		
-		return freightRequestByVendorRepository.getMatchingVendorReqFromCustomerReq(freightRequestByCustomer);
+		List<FreightRequestByVendor> result= freightRequestByVendorRepository.getMatchingVendorReqFromCustomerReq(freightRequestByCustomer);
+		
+		if(result.size()==0)
+		{
+			retriggerService.requestRetry(new RetriggerDTO("/request/freightRequestByVendor/getMatchingVendorReqFromCustomerReq",
+					gson.toJson(freightRequestByCustomer)));
+		}
+			
+		return result;	
+	}
+
+	@Override
+	public Integer updateReservationStatusWithReservedFor(
+			Long freightRequestByVendorId,String oldStatus, String reservationStatus,
+			Long reservedFor) {
+
+		
+		return freightRequestByVendorRepository.updateReservationStatusWithReservedFor(freightRequestByVendorId, oldStatus, reservationStatus, reservedFor);
 	}
 
 	/*

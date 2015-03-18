@@ -12,7 +12,7 @@ import com.projectx.rest.domain.quickregister.MobileVerificationDetails;
 import com.projectx.rest.domain.quickregister.QuickRegisterEntity;
 
 @Component
-@Profile(value={"Dev","Test"})
+@Profile(value={"Dev","Test","Prod"})
 @PropertySource(value="classpath:/application.properties")
 public class MessageBuilder {
 

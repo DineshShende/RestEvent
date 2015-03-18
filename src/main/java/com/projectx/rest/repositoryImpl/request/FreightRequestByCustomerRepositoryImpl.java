@@ -24,7 +24,7 @@ import com.projectx.rest.exception.repository.quickregister.ResourceNotFoundExce
 import com.projectx.rest.repository.request.FreightRequestByCustomerRepository;
 
 @Component
-@Profile(value={"Dev"})
+@Profile(value={"Dev","Prod"})
 @PropertySource(value="classpath:/application.properties")
 public class FreightRequestByCustomerRepositoryImpl implements
 		FreightRequestByCustomerRepository {

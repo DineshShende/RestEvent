@@ -31,7 +31,7 @@ import static com.projectx.rest.config.Constants.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
-@ActiveProfiles(SPRING_PROFILE_ACTIVE)
+@ActiveProfiles(SPRING_PROFILE_ACTIVE_TEST)
 
 public class VendorDetailsServiceTest {
 

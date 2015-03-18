@@ -32,7 +32,7 @@ import com.projectx.rest.exception.repository.quickregister.QuickRegisterDetails
 import com.projectx.rest.repository.completeregister.TransactionalUpdatesRepository;
 
 @Component
-@Profile(value="Dev")
+@Profile(value={"Dev","Prod"})
 @PropertySource(value="classpath:/application.properties")
 public class TransactionalDetailsRepositoryImpl implements
 		TransactionalUpdatesRepository {

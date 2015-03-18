@@ -29,7 +29,7 @@ import com.projectx.rest.repository.quickregister.EmailVericationDetailsReposito
 
 
 @Component
-@Profile(value="Dev")
+@Profile(value={"Dev","Prod"})
 @PropertySource(value="classpath:/application.properties") 
 public class EmailVerificationDetailsRepositoryImpl implements EmailVericationDetailsRepository {
 

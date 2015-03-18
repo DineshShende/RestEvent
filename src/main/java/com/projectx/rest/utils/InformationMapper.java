@@ -19,7 +19,7 @@ import com.projectx.rest.services.completeregister.CustomerDetailsService;
 import com.projectx.rest.services.completeregister.VendorDetailsService;
 import com.projectx.rest.services.quickregister.QuickRegisterService;
 @Component
-@Profile(value={"Test","Dev"})
+@Profile(value={"Dev","Test","Prod"})
 public class InformationMapper {
 	
 	@Autowired

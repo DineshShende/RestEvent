@@ -1,4 +1,4 @@
-package com.projectx.rest.exception.repository.async;
+package com.projectx.rest.repository.async;
 
 import java.util.List;
 

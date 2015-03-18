@@ -22,13 +22,13 @@ import com.projectx.rest.exception.repository.completeregister.CustomerDetailsAl
 import com.projectx.rest.exception.repository.completeregister.CustomerDetailsNotFoundException;
 import com.projectx.rest.exception.repository.completeregister.ValidationFailedException;
 
-import static com.projectx.rest.config.Constants.SPRING_PROFILE_ACTIVE;
+import static com.projectx.rest.config.Constants.SPRING_PROFILE_ACTIVE_TEST;
 import static com.projectx.rest.fixture.completeregister.CustomerDetailsDataFixtures.*;
 import static com.projectx.rest.fixture.completeregister.AddressDataFixture.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes=Application.class)
-@ActiveProfiles(SPRING_PROFILE_ACTIVE)
+@ActiveProfiles(SPRING_PROFILE_ACTIVE_TEST)
 public class CustomerDetailsRepositoryTest {
 
 	@Autowired

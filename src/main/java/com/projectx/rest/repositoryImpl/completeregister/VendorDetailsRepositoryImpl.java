@@ -22,7 +22,7 @@ import com.projectx.rest.exception.repository.completeregister.VendorDetailsNotF
 import com.projectx.rest.repository.completeregister.VendorDetailsRepository;
 
 @Component
-@Profile(value="Dev")
+@Profile(value={"Dev","Prod"})
 @PropertySource(value="classpath:/application.properties")
 public class VendorDetailsRepositoryImpl implements VendorDetailsRepository {
 

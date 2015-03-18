@@ -1,10 +1,11 @@
 package com.projectx.rest.services.quickregister;
 
 
-import static com.projectx.rest.config.Constants.SPRING_PROFILE_ACTIVE;
-import static com.projectx.rest.fixture.quickregister.MobileVericationDetailsFixtures.*;
-import static com.projectx.rest.fixture.quickregister.QuickRegisterDataFixture.*;
-import static org.junit.Assert.*;
+import static com.projectx.rest.config.Constants.SPRING_PROFILE_ACTIVE_TEST;
+import static com.projectx.rest.fixture.quickregister.MobileVericationDetailsFixtures.standardCustomerMobileVerificationDetails;
+import static com.projectx.rest.fixture.quickregister.QuickRegisterDataFixture.standardEmailMobileCustomer;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -16,13 +17,11 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.projectx.rest.config.Application;
 import com.projectx.rest.domain.quickregister.MobileVerificationDetails;
-import com.projectx.rest.domain.quickregister.MobileVerificationDetailsKey;
-import com.projectx.rest.domain.quickregister.QuickRegisterEntity;
 
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
-@ActiveProfiles(SPRING_PROFILE_ACTIVE)
+@ActiveProfiles(SPRING_PROFILE_ACTIVE_TEST)
 public class MobileVerificationServiceTest {
 
 	@Autowired

@@ -43,11 +43,13 @@ public class FreightRequestByVendor {
 
 	private String status;
 
-
+	@NotNull
 	private Date insertTime;
 	
+	@NotNull
 	private Date updateTime;
 	
+	@NotNull
 	private String updatedBy;
 	
 

@@ -3,12 +3,14 @@ package com.projectx.rest.handlers.quickregister;
 import static com.projectx.rest.fixtures.quickregister.CustomerQuickRegisterDataFixture.*;
 
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
+import com.projectx.data.domain.quickregister.MobilePinPasswordDTO;
 import com.projectx.mvc.domain.quickregister.CustomerQuickRegisterEntityDTO;
 import com.projectx.mvc.domain.quickregister.CustomerQuickRegisterStringStatusEntity;
 import com.projectx.rest.domain.quickregister.AuthenticationDetails;
@@ -348,6 +350,12 @@ public class QuickRegisterHandler implements
 		mobileVerificationService.clearTestData();
 		emailVerificationService.clearTestData();
 		
+	}
+
+	@Override
+	public List<MobilePinPasswordDTO> getTestData() {
+
+		return customerQuickRegisterRepository.getTestData();
 	}
 
 

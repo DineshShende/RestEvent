@@ -1,7 +1,7 @@
 package com.projectx.rest.repository.request;
 
 import static org.junit.Assert.*;
-import static com.projectx.rest.config.Constants.SPRING_PROFILE_ACTIVE;
+import static com.projectx.rest.config.Constants.SPRING_PROFILE_ACTIVE_TEST;
 import static com.projectx.rest.fixture.completeregister.VehicleDetailsDataFixtures.standardVehicleDetails;
 import static com.projectx.rest.fixture.request.FreightRequestByCustomerDataFixture.*;
 import static com.projectx.rest.fixture.request.FreightRequestByVendorDataFixture.*;
@@ -25,7 +25,7 @@ import com.projectx.rest.repository.completeregister.VendorDetailsRepository;
 
 @RunWith(SpringJUnit4ClassRunner.class)   
 @SpringApplicationConfiguration(classes = Application.class)   
-@ActiveProfiles(SPRING_PROFILE_ACTIVE)
+@ActiveProfiles(SPRING_PROFILE_ACTIVE_TEST)
 
 public class FreightRequestByCustomerRepositoryTest {
  
@@ -171,7 +171,7 @@ public class FreightRequestByCustomerRepositoryTest {
 		
 		//System.out.println(list.size());
 		
-//		assertEquals(3, list.size());
+		assertEquals(3, list.size());
 	}
 
 	

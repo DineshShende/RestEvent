@@ -2,7 +2,7 @@ package com.projectx.rest.utils;
 
 
 import static org.junit.Assert.*;
-import static com.projectx.rest.config.Constants.SPRING_PROFILE_ACTIVE;
+import static com.projectx.rest.config.Constants.SPRING_PROFILE_ACTIVE_TEST;
 import static com.projectx.rest.fixture.quickregister.QuickRegisterDataFixture.*;
 
 import java.util.concurrent.ExecutionException;
@@ -19,7 +19,7 @@ import com.projectx.rest.domain.quickregister.QuickRegisterEntity;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
-@ActiveProfiles(SPRING_PROFILE_ACTIVE)
+@ActiveProfiles(SPRING_PROFILE_ACTIVE_TEST)
 public class HandleCustomerVerificationTest {
 
 	@Autowired

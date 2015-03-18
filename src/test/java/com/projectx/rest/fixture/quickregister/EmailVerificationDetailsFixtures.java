@@ -75,6 +75,16 @@ public class EmailVerificationDetailsFixtures {
 		return new com.projectx.mvc.domain.quickregister.UpdateEmailHashDTO(customerId,ENTITY_TYPE_CUSTOMER,EMAIL_TYPE_PRIMARY, CUST_UPDATED_BY);
 	}
 	
+	public static CustomerIdTypeEmailTypeUpdatedByDTO standardCustomerIdTypeEmailTypeUpdatedByDTO(Long customerId)
+	{
+		return new CustomerIdTypeEmailTypeUpdatedByDTO(customerId, ENTITY_TYPE_CUSTOMER,EMAIL_TYPE_PRIMARY, CUST_UPDATED_BY);
+	}
+	
+	public static String standardJsonCustomerIdTypeEmailTypeUpdatedByDTO(Long customerId)
+	{
+		return gson.toJson(standardCustomerIdTypeEmailTypeUpdatedByDTO(customerId));
+	}
+	
 	public static String standardJsonUpdateEmailHashDTOMVC(com.projectx.mvc.domain.quickregister.UpdateEmailHashDTO customerId)
 	{
 		
