@@ -59,11 +59,13 @@ public class InformationMapper {
 			{
 				
 				infoMap.put("firstName", quickRegisterEntity.getFirstName());
+				infoMap.put("middleName", "");
 				infoMap.put("lastName", quickRegisterEntity.getLastName());
 				infoMap.put("email", quickRegisterEntity.getEmail());
 				infoMap.put("isEmailVerified", quickRegisterEntity.getIsEmailVerified());
 				infoMap.put("mobile", quickRegisterEntity.getMobile());
 				infoMap.put("isMobileVerified", quickRegisterEntity.getIsMobileVerified());
+				infoMap.put("isCompleteRegisterCompleted", "false");
 				
 		   }
 			else
@@ -71,11 +73,13 @@ public class InformationMapper {
 				CustomerDetails customerDetails=customerDetailsService.findById(entityId);
 				
 				infoMap.put("firstName", customerDetails.getFirstName());
+				infoMap.put("middleName", customerDetails.getMiddleName());
 				infoMap.put("lastName", customerDetails.getLastName());
 				infoMap.put("email", customerDetails.getEmail());
 				infoMap.put("isEmailVerified", customerDetails.getIsEmailVerified());
 				infoMap.put("mobile", customerDetails.getMobile());
 				infoMap.put("isMobileVerified", customerDetails.getIsMobileVerified());
+				infoMap.put("isCompleteRegisterCompleted", "true");
 				
 			}
 			
@@ -85,22 +89,26 @@ public class InformationMapper {
 			if(quickRegisterEntity!=null)
 			{
 				infoMap.put("firstName", quickRegisterEntity.getFirstName());
+				infoMap.put("middleName", "");
 				infoMap.put("lastName", quickRegisterEntity.getLastName());
 				infoMap.put("email", quickRegisterEntity.getEmail());
 				infoMap.put("isEmailVerified", quickRegisterEntity.getIsEmailVerified());
 				infoMap.put("mobile", quickRegisterEntity.getMobile());
 				infoMap.put("isMobileVerified", quickRegisterEntity.getIsMobileVerified());
+				infoMap.put("isCompleteRegisterCompleted", "false");
 			}
 			else
 			{
 				VendorDetails vendorDetails=vendorDetailsService.findById(entityId);
 				
 				infoMap.put("firstName", vendorDetails.getFirstName());
+				infoMap.put("middleName",vendorDetails.getMiddleName());
 				infoMap.put("lastName", vendorDetails.getLastName());
 				infoMap.put("email", vendorDetails.getEmail());
 				infoMap.put("isEmailVerified", vendorDetails.getIsEmailVerified());
 				infoMap.put("mobile", vendorDetails.getMobile());
 				infoMap.put("isMobileVerified", vendorDetails.getIsMobileVerified());
+				infoMap.put("isCompleteRegisterCompleted", "true");
 			}
 		}		
 

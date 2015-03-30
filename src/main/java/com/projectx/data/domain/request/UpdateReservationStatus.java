@@ -2,13 +2,14 @@ package com.projectx.data.domain.request;
 
 public class UpdateReservationStatus {
 	
-	private Long freightRequestByVendorId;
+	private Long entityIdTobeReserved;
 	
 	private String oldStatus;
 	
 	private String newStatus;
 	
-	private Long freightRequestByCustomerId;
+	private Long entityIdTobeReservedFor;
+
 
 	
 	
@@ -18,26 +19,30 @@ public class UpdateReservationStatus {
 
 
 
-	public UpdateReservationStatus(Long freightRequestByVendorId,
-			String oldStatus, String newStatus, Long freightRequestByCustomerId) {
 
-		this.freightRequestByVendorId = freightRequestByVendorId;
+	public UpdateReservationStatus(Long entityIdTobeReserved, String oldStatus,
+			String newStatus, Long entityIdTobeReservedFor) {
+
+		this.entityIdTobeReserved = entityIdTobeReserved;
 		this.oldStatus = oldStatus;
 		this.newStatus = newStatus;
-		this.freightRequestByCustomerId = freightRequestByCustomerId;
+		this.entityIdTobeReservedFor = entityIdTobeReservedFor;
 	}
 
 
 
-	public Long getFreightRequestByVendorId() {
-		return freightRequestByVendorId;
+
+	public Long getEntityIdTobeReserved() {
+		return entityIdTobeReserved;
 	}
 
 
 
-	public void setFreightRequestByVendorId(Long freightRequestByVendorId) {
-		this.freightRequestByVendorId = freightRequestByVendorId;
+
+	public void setEntityIdTobeReserved(Long entityIdTobeReserved) {
+		this.entityIdTobeReserved = entityIdTobeReserved;
 	}
+
 
 
 
@@ -47,9 +52,11 @@ public class UpdateReservationStatus {
 
 
 
+
 	public void setOldStatus(String oldStatus) {
 		this.oldStatus = oldStatus;
 	}
+
 
 
 
@@ -59,31 +66,36 @@ public class UpdateReservationStatus {
 
 
 
+
 	public void setNewStatus(String newStatus) {
 		this.newStatus = newStatus;
 	}
 
 
 
-	public Long getFreightRequestByCustomerId() {
-		return freightRequestByCustomerId;
+
+	public Long getEntityIdTobeReservedFor() {
+		return entityIdTobeReservedFor;
 	}
 
 
 
-	public void setFreightRequestByCustomerId(Long freightRequestByCustomerId) {
-		this.freightRequestByCustomerId = freightRequestByCustomerId;
+
+	public void setEntityIdTobeReservedFor(Long entityIdTobeReservedFor) {
+		this.entityIdTobeReservedFor = entityIdTobeReservedFor;
 	}
+
 
 
 
 	@Override
 	public String toString() {
-		return "UpdateReservationStatus [freightRequestByVendorId="
-				+ freightRequestByVendorId + ", oldStatus=" + oldStatus
-				+ ", newStatus=" + newStatus + ", freightRequestByCustomerId="
-				+ freightRequestByCustomerId + "]";
+		return "UpdateReservationStatus [entityIdTobeReserved="
+				+ entityIdTobeReserved + ", oldStatus=" + oldStatus
+				+ ", newStatus=" + newStatus + ", entityIdTobeReservedFor="
+				+ entityIdTobeReservedFor + "]";
 	}
+
 
 
 
@@ -93,18 +105,19 @@ public class UpdateReservationStatus {
 		int result = 1;
 		result = prime
 				* result
-				+ ((freightRequestByCustomerId == null) ? 0
-						: freightRequestByCustomerId.hashCode());
+				+ ((entityIdTobeReserved == null) ? 0 : entityIdTobeReserved
+						.hashCode());
 		result = prime
 				* result
-				+ ((freightRequestByVendorId == null) ? 0
-						: freightRequestByVendorId.hashCode());
+				+ ((entityIdTobeReservedFor == null) ? 0
+						: entityIdTobeReservedFor.hashCode());
 		result = prime * result
 				+ ((newStatus == null) ? 0 : newStatus.hashCode());
 		result = prime * result
 				+ ((oldStatus == null) ? 0 : oldStatus.hashCode());
 		return result;
 	}
+
 
 
 
@@ -117,17 +130,16 @@ public class UpdateReservationStatus {
 		if (getClass() != obj.getClass())
 			return false;
 		UpdateReservationStatus other = (UpdateReservationStatus) obj;
-		if (freightRequestByCustomerId == null) {
-			if (other.freightRequestByCustomerId != null)
+		if (entityIdTobeReserved == null) {
+			if (other.entityIdTobeReserved != null)
 				return false;
-		} else if (!freightRequestByCustomerId
-				.equals(other.freightRequestByCustomerId))
+		} else if (!entityIdTobeReserved.equals(other.entityIdTobeReserved))
 			return false;
-		if (freightRequestByVendorId == null) {
-			if (other.freightRequestByVendorId != null)
+		if (entityIdTobeReservedFor == null) {
+			if (other.entityIdTobeReservedFor != null)
 				return false;
-		} else if (!freightRequestByVendorId
-				.equals(other.freightRequestByVendorId))
+		} else if (!entityIdTobeReservedFor
+				.equals(other.entityIdTobeReservedFor))
 			return false;
 		if (newStatus == null) {
 			if (other.newStatus != null)
@@ -141,7 +153,10 @@ public class UpdateReservationStatus {
 			return false;
 		return true;
 	}
+
+
 	
+		
 	
 
 }

@@ -67,6 +67,7 @@ public class DriverDetailsRepositoryImpl implements DriverDetailsRepository {
 		
 	}
 
+	/*
 	@Override
 	public DriverDetails update(DriverDetails driverDetails) throws DriverDetailsUpdateFailedException,ValidationFailedException{
 
@@ -88,6 +89,7 @@ public class DriverDetailsRepositoryImpl implements DriverDetailsRepository {
 		else
 			throw new DriverDetailsUpdateFailedException();
 	}
+	*/
 
 	@Override
 	public Integer updateMobileAndMobileVerificationStatus(Long driverId,

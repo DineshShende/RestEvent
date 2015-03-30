@@ -12,6 +12,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -37,6 +38,16 @@ public class FreightRequestByCustomerRepositoryTest {
 	
 	@Autowired
 	VehicleDetailsRepository vehicleDetailsRepository;
+	
+	@Value("${FREIGHTALLOCATIONSTATUS_RESPONDED}")
+	private String FREIGHTALLOCATIONSTATUS_RESPONDED;
+	
+	@Value("${FREIGHTALLOCATIONSTATUS_NEW}")
+	private String FREIGHTALLOCATIONSTATUS_NEW;
+			
+	@Value("${FREIGHTALLOCATIONSTATUS_BOOKED}")
+	private String FREIGHTALLOCATIONSTATUS_BOOKED;
+			
 
 	@Before
 	public void clearData()
@@ -167,12 +178,25 @@ public class FreightRequestByCustomerRepositoryTest {
 		
 		
 		
-		List<FreightRequestByCustomer> list=freightRequestByCustomerRepository.getMatchingCustReqForVendorReq(testRequest);
+		List<FreightRequestByCustomer> list=freightRequestByCustomerRepository.getMatchingCustReqForVendorReq(testRequest,REQ_STATUS);
 		
 		//System.out.println(list.size());
 		
 		assertEquals(3, list.size());
 	}
 
-	
+	@Test
+	public void updateAllocationStatus()
+	{
+		
+		assertEquals(0, freightRequestByCustomerRepository.count().intValue());
+		
+		FreightRequestByCustomer savedEntity=freightRequestByCustomerRepository.save(standardFreightRequestByCustomerFullTruckLoad110());
+		
+		assertEquals(1, freightRequestByCustomerRepository.updateReservationStatusWithReservedFor(savedEntity.getRequestId(), 
+			FREIGHTALLOCATIONSTATUS_NEW, FREIGHTALLOCATIONSTATUS_RESPONDED, 2345L).intValue());
+		
+		assertEquals(1, freightRequestByCustomerRepository.updateReservationStatusWithReservedFor(savedEntity.getRequestId(), 
+				FREIGHTALLOCATIONSTATUS_RESPONDED, FREIGHTALLOCATIONSTATUS_BOOKED, 2345L).intValue());
+	}
 }

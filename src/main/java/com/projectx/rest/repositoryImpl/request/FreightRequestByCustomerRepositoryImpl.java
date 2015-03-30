@@ -15,6 +15,8 @@ import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import com.projectx.data.domain.request.FreightRequestByCustomerList;
+import com.projectx.data.domain.request.FreightRequestByVendorWithRequiredAllocationStatus;
+import com.projectx.data.domain.request.UpdateReservationStatus;
 import com.projectx.rest.domain.completeregister.CustomerDetails;
 import com.projectx.rest.domain.request.FreightRequestByCustomer;
 import com.projectx.rest.domain.request.FreightRequestByVendor;
@@ -101,10 +103,13 @@ public class FreightRequestByCustomerRepositoryImpl implements
 
 	@Override
 	public List<FreightRequestByCustomer> getMatchingCustReqForVendorReq(
-			FreightRequestByVendor freightRequestByVendor) {
+			FreightRequestByVendor freightRequestByVendor,String allocationStatus) {
+		
+		FreightRequestByVendorWithRequiredAllocationStatus statusDTO=
+				new FreightRequestByVendorWithRequiredAllocationStatus(allocationStatus, freightRequestByVendor);
 
 		FreightRequestByCustomerList result=restTemplate.postForObject(env.getProperty("data.url")+"/request/freightByRequestCustomer/getMatchingCustReqForVendorReq",
-				freightRequestByVendor, FreightRequestByCustomerList.class);
+				statusDTO, FreightRequestByCustomerList.class);
 				
 				
 		return result.getRequestList();
@@ -128,6 +133,32 @@ public class FreightRequestByCustomerRepositoryImpl implements
 		
 		return result;
 		
+	}
+
+	@Override
+	public Integer updateReservationStatusWithReservedFor(
+			Long freightRequestByCustomerId, String oldStatus,
+			String reservationStatus, Long reservedBy) {
+		
+		UpdateReservationStatus updateReservationStatus=new UpdateReservationStatus(freightRequestByCustomerId,
+				oldStatus, reservationStatus, reservedBy);
+		
+		HttpEntity<UpdateReservationStatus> entity=new HttpEntity<UpdateReservationStatus>(updateReservationStatus);
+		
+		ResponseEntity<Integer> result=null;
+		
+		try{
+			result=restTemplate.exchange(env.getProperty("data.url")+"/request/freightByRequestCustomer/updateReservationStatus",
+					HttpMethod.POST, entity, Integer.class);
+		}catch(RestClientException e)
+		{
+			throw new ValidationFailedException();
+		}
+		
+		if(result.getStatusCode()==HttpStatus.OK)
+			return result.getBody();
+		
+		throw new ResourceNotFoundException();
 	}
 	
 }

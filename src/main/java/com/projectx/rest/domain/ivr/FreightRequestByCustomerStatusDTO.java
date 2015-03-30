@@ -45,6 +45,10 @@ public class FreightRequestByCustomerStatusDTO {
 		
 	}
 	
+	public Boolean contains(Long freightRequestByCustomerId)
+	{
+		return this.questionStatus.containsKey(freightRequestByCustomerId);
+	}
 	
 	public QuestionListWithCounter getQuestionList(Long freightRequestByCustomerId)
 	{

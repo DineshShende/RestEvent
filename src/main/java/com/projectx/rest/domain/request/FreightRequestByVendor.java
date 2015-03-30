@@ -7,6 +7,9 @@ import java.util.Date;
 
 
 
+
+
+
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -42,6 +45,8 @@ public class FreightRequestByVendor {
 
 
 	private String status;
+	
+	private Long reservedBy;
 
 	@NotNull
 	private Date insertTime;
@@ -58,9 +63,13 @@ public class FreightRequestByVendor {
 
 	}
 
-	public FreightRequestByVendor(String vehicleRegistrationNumber, Integer source,
-			Integer destination, Long driverId, Date availableDate,
-			String availableTime, Integer pickupRangeInKm,Long vendorId,String status, Date insertTime,
+	
+
+
+	public FreightRequestByVendor(String vehicleRegistrationNumber,
+			Integer source, Integer destination, Long driverId,
+			Date availableDate, String availableTime, Integer pickupRangeInKm,
+			Long vendorId, String status, Long reservedBy, Date insertTime,
 			Date updateTime, String updatedBy) {
 		super();
 		this.vehicleRegistrationNumber = vehicleRegistrationNumber;
@@ -70,12 +79,15 @@ public class FreightRequestByVendor {
 		this.availableDate = availableDate;
 		this.availableTime = availableTime;
 		this.pickupRangeInKm = pickupRangeInKm;
-		this.vendorId=vendorId;
-		this.status=status;
+		this.vendorId = vendorId;
+		this.status = status;
+		this.reservedBy = reservedBy;
 		this.insertTime = insertTime;
 		this.updateTime = updateTime;
 		this.updatedBy = updatedBy;
 	}
+
+
 
 
 	public Long getRequestId() {
@@ -191,6 +203,18 @@ public class FreightRequestByVendor {
 		this.status = status;
 	}
 
+	public Long getReservedBy() {
+		return reservedBy;
+	}
+
+	public void setReservedBy(Long reservedBy) {
+		this.reservedBy = reservedBy;
+	}
+
+
+	
+
+
 	@Override
 	public String toString() {
 		return "FreightRequestByVendor [requestId=" + requestId
@@ -199,9 +223,13 @@ public class FreightRequestByVendor {
 				+ ", driverId=" + driverId + ", availableDate=" + availableDate
 				+ ", availableTime=" + availableTime + ", pickupRangeInKm="
 				+ pickupRangeInKm + ", vendorId=" + vendorId + ", status="
-				+ status + ", insertTime=" + insertTime + ", updateTime="
-				+ updateTime + ", updatedBy=" + updatedBy + "]";
+				+ status + ", reservedBy=" + reservedBy + ", insertTime="
+				+ insertTime + ", updateTime=" + updateTime + ", updatedBy="
+				+ updatedBy + "]";
 	}
+
+
+
 
 	@Override
 	public int hashCode() {
@@ -221,6 +249,8 @@ public class FreightRequestByVendor {
 				+ ((pickupRangeInKm == null) ? 0 : pickupRangeInKm.hashCode());
 		result = prime * result
 				+ ((requestId == null) ? 0 : requestId.hashCode());
+		result = prime * result
+				+ ((reservedBy == null) ? 0 : reservedBy.hashCode());
 		result = prime * result + ((source == null) ? 0 : source.hashCode());
 		result = prime * result + ((status == null) ? 0 : status.hashCode());
 		result = prime * result
@@ -235,6 +265,9 @@ public class FreightRequestByVendor {
 				+ ((vendorId == null) ? 0 : vendorId.hashCode());
 		return result;
 	}
+
+
+
 
 	@Override
 	public boolean equals(Object obj) {
@@ -280,6 +313,11 @@ public class FreightRequestByVendor {
 				return false;
 		} else if (!requestId.equals(other.requestId))
 			return false;
+		if (reservedBy == null) {
+			if (other.reservedBy != null)
+				return false;
+		} else if (!reservedBy.equals(other.reservedBy))
+			return false;
 		if (source == null) {
 			if (other.source != null)
 				return false;
@@ -313,6 +351,9 @@ public class FreightRequestByVendor {
 			return false;
 		return true;
 	}
+
+
+
 
 		
 	

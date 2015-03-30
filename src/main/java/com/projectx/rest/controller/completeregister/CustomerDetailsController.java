@@ -32,6 +32,7 @@ public class CustomerDetailsController {
 	@Autowired
 	CustomerDetailsService customerDetailsService;
 	
+	
 	@RequestMapping(value="/createFromQuickRegister",method=RequestMethod.POST)
 	public ResponseEntity<CustomerDetails> createCustomerDetailsFromQuickRegisterEntity(@Valid @RequestBody QuickRegisterEntity quickRegisterEntity,
 			BindingResult bindingResult)
@@ -50,6 +51,8 @@ public class CustomerDetailsController {
 		}
 		return result;
 	}
+	
+	
 	
 	@RequestMapping(method=RequestMethod.POST)
 	public ResponseEntity<CustomerDetails> merge(@Valid @RequestBody CustomerDetails customerDetails,BindingResult  bindingResult)
@@ -86,6 +89,23 @@ public class CustomerDetailsController {
 		return result;
 	}
 	
+	
+
+	@RequestMapping(value="/count",method=RequestMethod.GET)
+	public  Integer getCount()
+	{
+		return customerDetailsService.count();
+	}
+	
+	@RequestMapping(value="/clearTestData",method=RequestMethod.GET)
+	public Boolean clearTestData()
+	{
+		customerDetailsService.clearTestData();
+		
+		return true;
+	}
+	
+	/*
 	@RequestMapping(value="/verifyMobileDetails",method=RequestMethod.POST)
 	public ResponseEntity<Boolean> verifyMobileDetails(@Valid @RequestBody VerifyMobileDTO verifyMobileDTO,BindingResult bindingResult)
 	{
@@ -171,19 +191,8 @@ public class CustomerDetailsController {
 		
 						
 	}
+	*/
 	
-	@RequestMapping(value="/count",method=RequestMethod.GET)
-	public  Integer getCount()
-	{
-		return customerDetailsService.count();
-	}
 	
-	@RequestMapping(value="/clearTestData",method=RequestMethod.GET)
-	public Boolean clearTestData()
-	{
-		customerDetailsService.clearTestData();
-		
-		return true;
-	}
 	
 }

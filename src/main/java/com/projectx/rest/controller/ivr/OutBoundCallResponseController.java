@@ -5,18 +5,22 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.projectx.rest.domain.ivr.FreightRequestByCustomerStatusDTO;
+import com.projectx.rest.domain.ivr.IVRCallInfoDTO;
 import com.projectx.rest.domain.ivr.KooKooRequestEntity;
 import com.projectx.rest.domain.ivr.PreBookEntity;
 import com.projectx.rest.domain.ivr.QuestionListWithCounter;
 import com.projectx.rest.domain.ivr.TrackKookooResponseDTO;
 import com.projectx.rest.exception.repository.quickregister.ResourceAlreadyPresentException;
+import com.projectx.rest.service.ivr.OutBoundCallService;
 import com.projectx.rest.service.ivr.PreBookService;
+import com.projectx.rest.services.handshake.DealService;
 import com.projectx.rest.services.request.FreightRequestByCustomerService;
 import com.projectx.rest.services.request.FreightRequestByVendorService;
 
@@ -39,9 +43,51 @@ public class OutBoundCallResponseController {
 	@Autowired
 	PreBookService preBookService;
 	
-	private Integer ONE_COUNT=new Integer(1);
+	@Autowired
+	OutBoundCallService outBoundCallService;
 	
-	private Integer ZERO_COUNT=new Integer(0);
+	@Autowired
+	DealService dealService;
+	
+	@Value("${POSITIVE_RESPONSE}")
+	private Integer POSITIVE_RESPONSE;
+	
+	@Value("${NEGATIVE_RESPONSE}")
+	private Integer NEGATIVE_RESPONSE;
+	
+	@Value("${ZERO_COUNT}")
+	private Integer ZERO_COUNT;
+	
+	@Value("${ONE_COUNT}")
+	private Integer ONE_COUNT;
+	
+	@Value("${FREIGHTSTATUS_BLOCKED}")
+	private String FREIGHTSTATUS_BLOCKED;
+	
+	@Value("${FREIGHTSTATUS_NEW}")
+	private String FREIGHTSTATUS_NEW;
+	
+	@Value("${FREIGHTSTATUS_BOOKED}")
+	private String FREIGHTSTATUS_BOOKED;
+	
+	@Value("${FREIGHTALLOCATIONSTATUS_RESPONDED}")
+	private String FREIGHTALLOCATIONSTATUS_RESPONDED;
+	
+	@Value("${FREIGHTALLOCATIONSTATUS_NEW}")
+	private String FREIGHTALLOCATIONSTATUS_NEW;
+	
+	@Value("${FREIGHTALLOCATIONSTATUS_BOOKED}")
+	private String FREIGHTALLOCATIONSTATUS_BOOKED;
+	
+	@Value("${FREIGHTALLOCATIONSTATUS_BLOCKED}")
+	private String FREIGHTALLOCATIONSTATUS_BLOCKED;
+	
+	@Value("${FREIGHTALLOCATIONSTATUS_NEGFIRSTSTAGE}")
+	private String FREIGHTALLOCATIONSTATUS_NEGFIRSTSTAGE;
+	
+	@Value("${FREIGHTALLOCATIONSTATUS_NEGSECONDSTAGE}")
+	private String FREIGHTALLOCATIONSTATUS_NEGSECONDSTAGE;
+	
 	
 	@RequestMapping(value="/receiveResponse/{sid}/{mobile}/{option}")
 	public void receiveResponse(@PathVariable("sid") String sid,@PathVariable("mobile") Long mobile,@PathVariable("option") Integer option)
@@ -52,48 +98,91 @@ public class OutBoundCallResponseController {
 		QuestionListWithCounter questionListWithCounter=
 				freightRequestByCustomerStatusDTO.getQuestionList(kooKooRequestEntity.getFreightRequestByCustomerId());
 		
-		if(option.equals(ONE_COUNT))
+		if(option.equals(POSITIVE_RESPONSE))
 		{
 			if(questionListWithCounter.getCounter().equals(ZERO_COUNT))
 			{
+
 				Integer updateStatus=freightRequestByVendorService
-						.updateReservationStatusWithReservedFor(kooKooRequestEntity.getFreightRequestByVendorId(),"NEW", "BLOCK",
+						.updateReservationStatusWithReservedFor(kooKooRequestEntity.getFreightRequestByVendorId(),FREIGHTSTATUS_NEW, FREIGHTSTATUS_BLOCKED,
 								kooKooRequestEntity.getFreightRequestByCustomerId());
 				
-				if(updateStatus.equals(ONE_COUNT))
+				if(updateStatus.equals(POSITIVE_RESPONSE))
 				{
-					questionListWithCounter.setCounter(questionListWithCounter.getCounter()+1);
-					freightRequestByCustomerStatusDTO.update(kooKooRequestEntity.getFreightRequestByCustomerId(), questionListWithCounter);
+					Integer customerRequestUpdateStatus=freightRequestByCustomerService
+							.updateAllocationStatus(kooKooRequestEntity.getFreightRequestByCustomerId(), FREIGHTALLOCATIONSTATUS_NEW,
+									FREIGHTALLOCATIONSTATUS_BLOCKED,kooKooRequestEntity.getFreightRequestByVendorId());
+							
+					if(customerRequestUpdateStatus.equals(POSITIVE_RESPONSE))
+					{	
+						questionListWithCounter.setCounter(questionListWithCounter.getCounter()+1);
+						
+						freightRequestByCustomerStatusDTO.update(kooKooRequestEntity.getFreightRequestByCustomerId(), questionListWithCounter);
+						
+						IVRCallInfoDTO ivrCallInfoDTO=new IVRCallInfoDTO(questionListWithCounter.getMobile(), 
+								questionListWithCounter.getQuestionList().get(questionListWithCounter.getCounter()));	 
+						 
+						 String sidNew=outBoundCallService.makeOutBoundCall(ivrCallInfoDTO);
+						 
+						 trackKookooResponseDTO.add(sidNew, new KooKooRequestEntity(kooKooRequestEntity.getFreightRequestByCustomerId(),
+								 kooKooRequestEntity.getFreightRequestByVendorId()));
+						
+					}
+					
 				}
 				else
 				{
-					//Not feasible but we never know
-					try
-					{
-						preBookService.save(new PreBookEntity( kooKooRequestEntity.getFreightRequestByCustomerId(),kooKooRequestEntity.getFreightRequestByVendorId(), 
-									new Date(), new Date(), "CUST_ONLINE"));
-						
-					}catch(ResourceAlreadyPresentException e)
-					{
-						
-					}
+					Integer customerRequestUpdateStatus=freightRequestByCustomerService
+								.updateAllocationStatus(kooKooRequestEntity.getFreightRequestByCustomerId(), FREIGHTALLOCATIONSTATUS_NEW,
+										FREIGHTALLOCATIONSTATUS_RESPONDED, kooKooRequestEntity.getFreightRequestByVendorId());
 				}
 			}
-			else
+			else if(questionListWithCounter.getCounter().equals(ONE_COUNT))
 			{
-				//Customer positively responded for second question---->exchange contacts
+				Integer updateVendorRequest=freightRequestByVendorService
+						.updateReservationStatusWithReservedFor(kooKooRequestEntity.getFreightRequestByVendorId(), FREIGHTSTATUS_BLOCKED,
+								FREIGHTSTATUS_BOOKED, kooKooRequestEntity.getFreightRequestByCustomerId());
+						
+						
+				Integer updateCustomerRequestStatus=freightRequestByCustomerService.
+						updateAllocationStatus(kooKooRequestEntity.getFreightRequestByCustomerId(), FREIGHTALLOCATIONSTATUS_BLOCKED,
+								FREIGHTALLOCATIONSTATUS_BOOKED, kooKooRequestEntity.getFreightRequestByVendorId());		
 				
+				
+				if(updateCustomerRequestStatus.equals(POSITIVE_RESPONSE) && updateVendorRequest.equals(POSITIVE_RESPONSE))
+				{
+					
+					dealService.triggerDealAndExchangeContact(kooKooRequestEntity.getFreightRequestByCustomerId(),
+							kooKooRequestEntity.getFreightRequestByVendorId(), "ONLINE", 100, "triggeredBy");
+					
+				}	
 				
 			}
 		}
-		else
+		else if(option.equals(NEGATIVE_RESPONSE))
 		{
-			//Customer Not said Yes
+			
+			if(questionListWithCounter.getCounter().equals(ZERO_COUNT))
+			{
+				freightRequestByCustomerService
+				.updateAllocationStatus(kooKooRequestEntity.getFreightRequestByCustomerId(), FREIGHTALLOCATIONSTATUS_NEW,
+						FREIGHTALLOCATIONSTATUS_NEGFIRSTSTAGE, kooKooRequestEntity.getFreightRequestByVendorId());
+			}
+			else if(questionListWithCounter.getCounter().equals(ONE_COUNT))
+			{
+				freightRequestByVendorService
+				.updateReservationStatusWithReservedFor(kooKooRequestEntity.getFreightRequestByVendorId(),
+						FREIGHTSTATUS_BLOCKED, FREIGHTSTATUS_NEW, null);
+				
+				freightRequestByCustomerService
+				.updateAllocationStatus(kooKooRequestEntity.getFreightRequestByCustomerId(), FREIGHTALLOCATIONSTATUS_BLOCKED,
+						FREIGHTALLOCATIONSTATUS_NEGSECONDSTAGE, kooKooRequestEntity.getFreightRequestByVendorId());
+				
+			}
+
 			
 		}
-		
-		
-	//	freightRequestByCustomerStatusDTO.delete(kooKooRequestEntity.getFreightRequestByCustomerId());
+				
 		trackKookooResponseDTO.delete(sid);
 		
 		

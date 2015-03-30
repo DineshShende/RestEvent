@@ -20,13 +20,14 @@ public class DriverDetailsHandler implements DriverDetailsService {
 	DriverDetailsRepository driverDetailsRepository;
 	
 	@Override
-	public DriverDetails addDriver(DriverDetails driverDetails) throws DriverDetailsAlreadyPresentException,ValidationFailedException{
+	public DriverDetails save(DriverDetails driverDetails) throws DriverDetailsAlreadyPresentException,ValidationFailedException{
 		
 		DriverDetails addedDriver=driverDetailsRepository.save(driverDetails);
 		
 		return addedDriver;
 	}
 
+	/*
 	@Override
 	public DriverDetails updateDriver(DriverDetails driverDetails) {
 
@@ -35,6 +36,7 @@ public class DriverDetailsHandler implements DriverDetailsService {
 		return updatedDriver;
 
 	}
+	*/
 
 	@Override
 	public DriverDetails getDriverById(Long driverId) {

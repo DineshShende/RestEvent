@@ -24,7 +24,7 @@ import com.projectx.rest.exception.repository.quickregister.ResourceNotFoundExce
 public interface QuickRegisterService {
 	
 
-	CustomerQuickRegisterStringStatusEntity checkIfAlreadyRegistered(CustomerQuickRegisterEntityDTO customer) throws Exception;
+	CustomerQuickRegisterStatusEntity checkIfAlreadyRegistered(CustomerQuickRegisterEntityDTO customer) throws Exception;
 	
 	QuickRegisterEntity populateVerificationFields(CustomerQuickRegisterEntityDTO customer) throws Exception;
 	

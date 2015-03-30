@@ -65,7 +65,7 @@ public class QuickRegisterControllerWACTest {
 	                    .accept(MediaType.APPLICATION_JSON))
 	            .andDo(print())
 	            .andExpect(status().isCreated())
-	            .andExpect(jsonPath("status").value(true))
+	            .andExpect(jsonPath("status").value(REGISTER_REGISTERED_SUCESSFULLY))
 	            .andExpect(jsonPath("$.customer.firstName").value(standardEmailMobileCustomer().getFirstName()))
 	            .andExpect(jsonPath("$.customer.lastName").value(standardEmailMobileCustomer().getLastName()))
 	            .andExpect(jsonPath("$.customer.mobile").value(standardEmailMobileCustomer().getMobile()))
@@ -90,12 +90,12 @@ public class QuickRegisterControllerWACTest {
 	                    .accept(MediaType.APPLICATION_JSON));
 	            	
 		this.mockMvc.perform(
-	            post("/customer/quickregister/checkifexist")
+	            post("/customer/quickregister")
 	                    .content(standardJsonEmailMobileCustomer())
 	                    .contentType(MediaType.APPLICATION_JSON)
 	                    .accept(MediaType.APPLICATION_JSON))
 	            .andDo(print())
-	            .andExpect(status().isOk())
+	            .andExpect(status().isAlreadyReported())
 	            
 	             .andExpect(jsonPath("status").value("EMAIL_MOBILE_ALREADY_REGISTERED_EMAIL_MOBILE_UNVERIFIED"))
 	            .andExpect(jsonPath("$.customer.firstName").value(standardEmailMobileCustomer().getFirstName()))
@@ -123,7 +123,7 @@ public class QuickRegisterControllerWACTest {
 	                    .accept(MediaType.APPLICATION_JSON))
 	            .andDo(print())
 	            .andExpect(status().isCreated())
-	            .andExpect(jsonPath("status").value(true))
+	            .andExpect(jsonPath("status").value(REGISTER_REGISTERED_SUCESSFULLY))
 	            .andExpect(jsonPath("$.customer.firstName").value(standardMobileCustomer().getFirstName()))
 	            .andExpect(jsonPath("$.customer.lastName").value(standardMobileCustomer().getLastName()))
 	            .andExpect(jsonPath("$.customer.mobile").value(standardMobileCustomer().getMobile()))

@@ -56,7 +56,10 @@ public class AuthenticationControllerStandAloneTest {
 		
 	}
 	
-
+/*
+ * 
+ 
+ //TODO
 	@Test
 	public void verifyLoginDetails() throws Exception
 	{
@@ -81,7 +84,7 @@ public class AuthenticationControllerStandAloneTest {
 				.andExpect(jsonPath("$.emailPassword").value(standardCustomerEmailMobileAuthenticationDetails().getEmailPassword()));
 	}
 	
-	
+*/	
 	
 	@Test
 	public void verifyLoginDefaultEmailPassword() throws Exception

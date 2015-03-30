@@ -31,6 +31,7 @@ public class DriverDetailsMemRepository implements DriverDetailsRepository {
 		return driverDetails;
 	}
 
+	/*
 	@Override
 	public DriverDetails update(DriverDetails driverDetails) {
 
@@ -38,6 +39,7 @@ public class DriverDetailsMemRepository implements DriverDetailsRepository {
 		
 		return driverDetails;
 	}
+	*/
 
 	@Override
 	public List<DriverDetails> getDriversByVendorId(Long vendorId) {

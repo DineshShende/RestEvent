@@ -9,9 +9,9 @@ import com.projectx.rest.domain.completeregister.DriverDetails;
 @Service
 public interface DriverDetailsService {
 	
-	DriverDetails addDriver(DriverDetails driverDetails);
+	DriverDetails save(DriverDetails driverDetails);
 	
-	DriverDetails updateDriver(DriverDetails driverDetails);
+	//DriverDetails updateDriver(DriverDetails driverDetails);
 	
 	DriverDetails getDriverById(Long driverId);
 	

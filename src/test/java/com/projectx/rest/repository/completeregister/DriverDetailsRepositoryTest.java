@@ -201,7 +201,7 @@ public class DriverDetailsRepositoryTest {
 			assertNull(mobileVerificationDetails);
 		}
 
-		savedEntity=driverDetailsRepository.update(standardDriverDetailsNewMobileAndFirstName(savedEntity.getDriverId()));
+		savedEntity=driverDetailsRepository.save(standardDriverDetailsNewMobileAndFirstName(savedEntity.getDriverId()));
 		
 		assertNotNull(mobileVerificationDetailsRepository.getByMobile(standardDriverDetailsNewMobileAndFirstName(savedEntity.getDriverId()).getMobile()));
 		
@@ -248,7 +248,7 @@ public class DriverDetailsRepositoryTest {
 		DriverDetails updatedEntity=null;
 		
 		try{
-			updatedEntity=driverDetailsRepository.update(standardDriverDetailsNewMobileAndFirstName(savedEntity.getDriverId()));
+			updatedEntity=driverDetailsRepository.save(standardDriverDetailsNewMobileAndFirstName(savedEntity.getDriverId()));
 		}
 		catch(DriverDetailsUpdateFailedException e)
 		{

@@ -35,8 +35,7 @@ public class FreightRequestByVendorHandler implements
 	@Autowired
 	VehicleDetailsService vehicleDetailsService;
 	
-	@Autowired
-	RetriggerService retriggerService;
+	
 	
 	@Autowired
 	Gson gson;
@@ -83,13 +82,14 @@ public class FreightRequestByVendorHandler implements
 			FreightRequestByCustomer freightRequestByCustomer) {
 		
 		List<FreightRequestByVendor> result= freightRequestByVendorRepository.getMatchingVendorReqFromCustomerReq(freightRequestByCustomer);
-		
+
+		/*
 		if(result.size()==0)
 		{
 			retriggerService.requestRetry(new RetriggerDTO("/request/freightRequestByVendor/getMatchingVendorReqFromCustomerReq",
 					gson.toJson(freightRequestByCustomer)));
 		}
-			
+		*/	
 		return result;	
 	}
 

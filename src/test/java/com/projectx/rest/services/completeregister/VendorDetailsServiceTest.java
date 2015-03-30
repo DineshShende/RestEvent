@@ -109,6 +109,7 @@ public class VendorDetailsServiceTest {
 		savedEntity.setDateOfBirth(new Date());
 		savedEntity.setFirstName("Ted");
 		savedEntity.setLastName("Mosby");
+		savedEntity.setIsSecondaryMobileVerified(false);
 		
 		assertEquals(savedEntity, vendorDetailsService.updateVendorDetails(savedEntity));
 		

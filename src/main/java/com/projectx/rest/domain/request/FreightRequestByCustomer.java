@@ -10,6 +10,7 @@ import java.util.Date;
 
 
 
+
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -62,7 +63,10 @@ public class FreightRequestByCustomer {
 	@NotNull
 	private Long customerId;
 	
-	private String status;
+	@NotNull
+	private String allocationStatus;
+	
+	private Long allocatedFor;
 	
 	@NotNull
 	private Date insertTime;
@@ -78,14 +82,17 @@ public class FreightRequestByCustomer {
 	}
 
 
-	public FreightRequestByCustomer(Integer source, Integer destination,
-			Date pickupDate, Integer noOfVehicles, Boolean isFullTruckLoad,
-			Boolean isLessThanTruckLoad, Integer capacity, String bodyType,
-			Integer grossWeight, Integer length, Integer width, Integer height,
-			String vehicleBrand, String model, String commodity,Long customerId,String status,
-			String pickupTime, Date insertTime, Date updateTime,
-			String updatedBy) {
+	
+	public FreightRequestByCustomer(Integer source,
+			Integer destination, Date pickupDate, Integer noOfVehicles,
+			Boolean isFullTruckLoad, Boolean isLessThanTruckLoad,
+			Integer capacity, String bodyType, Integer grossWeight,
+			Integer length, Integer width, Integer height, String vehicleBrand,
+			String model, String commodity, String pickupTime, Long customerId,
+			String allocationStatus, Long allocatedFor, Date insertTime,
+			Date updateTime, String updatedBy) {
 		super();
+		
 		this.source = source;
 		this.destination = destination;
 		this.pickupDate = pickupDate;
@@ -101,13 +108,16 @@ public class FreightRequestByCustomer {
 		this.vehicleBrand = vehicleBrand;
 		this.model = model;
 		this.commodity = commodity;
-		this.customerId=customerId;
-		this.status=status;
 		this.pickupTime = pickupTime;
+		this.customerId = customerId;
+		this.allocationStatus = allocationStatus;
+		this.allocatedFor = allocatedFor;
 		this.insertTime = insertTime;
 		this.updateTime = updateTime;
 		this.updatedBy = updatedBy;
 	}
+
+
 
 	public Long getRequestId() {
 		return requestId;
@@ -284,15 +294,31 @@ public class FreightRequestByCustomer {
 	}
 
 	
-	
-	public String getStatus() {
-		return status;
+
+
+	public String getAllocationStatus() {
+		return allocationStatus;
 	}
 
 
-	public void setStatus(String status) {
-		this.status = status;
+
+	public void setAllocationStatus(String allocationStatus) {
+		this.allocationStatus = allocationStatus;
 	}
+
+
+
+	public Long getAllocatedFor() {
+		return allocatedFor;
+	}
+
+
+
+	public void setAllocatedFor(Long allocatedFor) {
+		this.allocatedFor = allocatedFor;
+	}
+
+
 
 
 	@Override
@@ -307,10 +333,12 @@ public class FreightRequestByCustomer {
 				+ ", width=" + width + ", height=" + height + ", vehicleBrand="
 				+ vehicleBrand + ", model=" + model + ", commodity="
 				+ commodity + ", pickupTime=" + pickupTime + ", customerId="
-				+ customerId + ", status=" + status + ", insertTime="
+				+ customerId + ", allocationStatus=" + allocationStatus
+				+ ", allocatedFor=" + allocatedFor + ", insertTime="
 				+ insertTime + ", updateTime=" + updateTime + ", updatedBy="
 				+ updatedBy + "]";
 	}
+
 
 
 	@Override
@@ -349,7 +377,7 @@ public class FreightRequestByCustomer {
 		result = prime * result
 				+ ((requestId == null) ? 0 : requestId.hashCode());
 		result = prime * result + ((source == null) ? 0 : source.hashCode());
-		result = prime * result + ((status == null) ? 0 : status.hashCode());
+		result = prime * result + ((allocationStatus == null) ? 0 : allocationStatus.hashCode());
 		result = prime * result
 				+ ((updateTime == null) ? 0 : updateTime.hashCode());
 		result = prime * result
@@ -455,11 +483,17 @@ public class FreightRequestByCustomer {
 				return false;
 		} else if (!source.equals(other.source))
 			return false;
-		if (status == null) {
-			if (other.status != null)
+		if (allocationStatus == null) {
+			if (other.allocationStatus != null)
 				return false;
-		} else if (!status.equals(other.status))
+		} else if (!allocationStatus.equals(other.allocationStatus))
 			return false;
+		if (allocatedFor == null) {
+			if (other.allocatedFor != null)
+				return false;
+		} else if (!allocatedFor.equals(other.allocatedFor))
+			return false;
+		
 		if (updateTime == null) {
 			if (other.updateTime != null)
 				return false;

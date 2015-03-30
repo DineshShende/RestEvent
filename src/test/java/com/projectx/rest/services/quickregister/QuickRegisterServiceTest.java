@@ -16,6 +16,7 @@ import static com.projectx.rest.fixture.quickregister.QuickRegisterDataFixture.R
 import static com.projectx.rest.fixture.quickregister.QuickRegisterDataFixture.REGISTER_MOBILE_ALREADY_REGISTERED_NOT_VERIFIED;
 import static com.projectx.rest.fixture.quickregister.QuickRegisterDataFixture.REGISTER_MOBILE_ALREADY_REGISTERED_VERIFIED;
 import static com.projectx.rest.fixture.quickregister.QuickRegisterDataFixture.REGISTER_NOT_REGISTERED;
+import static com.projectx.rest.fixture.quickregister.QuickRegisterDataFixture.REGISTER_REGISTERED_SUCESSFULLY;
 import static com.projectx.rest.fixture.quickregister.QuickRegisterDataFixture.standardEmailCustomerAfterInitialization;
 import static com.projectx.rest.fixture.quickregister.QuickRegisterDataFixture.standardEmailCustomerAfterSaving;
 import static com.projectx.rest.fixture.quickregister.QuickRegisterDataFixture.standardEmailCustomerAfterStatusPopulation;
@@ -592,7 +593,7 @@ public class QuickRegisterServiceTest {
 		CustomerQuickRegisterStatusEntity handledEntity=quickRegisterService
 						.handleNewCustomerQuickRegister(standardEmailMobileCustomerDTO());
 		
-		assertTrue(handledEntity.getStatus());
+		assertEquals(REGISTER_REGISTERED_SUCESSFULLY,handledEntity.getStatus());
 		
 		assertEquals(standardEmailMobileCustomerAfterSaving().getCustomerType(), handledEntity.getCustomer().getCustomerType());
 		assertEquals(standardEmailMobileCustomerAfterSaving().getEmail(), handledEntity.getCustomer().getEmail());
@@ -621,7 +622,7 @@ public class QuickRegisterServiceTest {
 		CustomerQuickRegisterStatusEntity handledEntity=quickRegisterService
 				.handleNewCustomerQuickRegister(standardEmailCustomerDTO());
 		
-		assertTrue(handledEntity.getStatus());
+		assertEquals(REGISTER_REGISTERED_SUCESSFULLY,handledEntity.getStatus());
 		
 		assertEquals(standardEmailCustomerAfterSaving().getCustomerType(), handledEntity.getCustomer().getCustomerType());
 		assertEquals(standardEmailCustomerAfterSaving().getEmail(), handledEntity.getCustomer().getEmail());
@@ -649,7 +650,7 @@ public class QuickRegisterServiceTest {
 		CustomerQuickRegisterStatusEntity handledEntity=quickRegisterService
 				.handleNewCustomerQuickRegister(standardMobileCustomerDTO());
 		
-		assertTrue(handledEntity.getStatus());
+		assertEquals(REGISTER_REGISTERED_SUCESSFULLY,handledEntity.getStatus());
 		
 		assertEquals(standardMobileCustomerAfterSaving().getCustomerType(), handledEntity.getCustomer().getCustomerType());
 		assertEquals(standardMobileCustomerAfterSaving().getEmail(), handledEntity.getCustomer().getEmail());

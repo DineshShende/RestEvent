@@ -54,7 +54,7 @@ public class QuickRegisterController {
 	@Autowired
 	QuickRegisterService customerQuickRegisterService;
 
-		
+	/*	
 	@RequestMapping(value="/checkifexist",method=RequestMethod.POST)
 	public ResponseEntity<CustomerQuickRegisterStringStatusEntity> checkIfCustomerAlreadyExist(@Valid @RequestBody CustomerQuickRegisterEntityDTO customer,
 			BindingResult bindingResult) throws Exception
@@ -65,6 +65,7 @@ public class QuickRegisterController {
 		return new ResponseEntity<CustomerQuickRegisterStringStatusEntity>(customerQuickRegisterService.checkIfAlreadyRegistered(customer),
 				HttpStatus.OK);
 	}
+	*/
 	
 	@RequestMapping(method=RequestMethod.POST)
 	public ResponseEntity<CustomerQuickRegisterStatusEntity> addNewCustomerQuickRegister(@Valid @RequestBody CustomerQuickRegisterEntityDTO newCustomer,
@@ -73,22 +74,31 @@ public class QuickRegisterController {
 		if(bindingResult.hasErrors())
 			return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
 		
+		CustomerQuickRegisterStatusEntity preCheck=customerQuickRegisterService.checkIfAlreadyRegistered(newCustomer);
+		
 		ResponseEntity<CustomerQuickRegisterStatusEntity> result=null;
 		
-		try{
-			CustomerQuickRegisterStatusEntity newCustomerEntity=customerQuickRegisterService.handleNewCustomerQuickRegister(newCustomer);
-			result=new ResponseEntity<CustomerQuickRegisterStatusEntity>(newCustomerEntity, HttpStatus.CREATED);
-		}catch(RestClientException e)
+		if(preCheck.getStatus().equals(REGISTER_NOT_REGISTERED) )
 		{
-			result=new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
-		}
-		catch(ResourceAlreadyPresentException e)
-		{
-			result=new ResponseEntity<>(HttpStatus.ALREADY_REPORTED);
-		}catch (ResourceNotFoundException e) {
-			result=new ResponseEntity<>(HttpStatus.NO_CONTENT);
-		}
 						
+			try{
+				CustomerQuickRegisterStatusEntity newCustomerEntity=customerQuickRegisterService.handleNewCustomerQuickRegister(newCustomer);
+				result=new ResponseEntity<CustomerQuickRegisterStatusEntity>(newCustomerEntity, HttpStatus.CREATED);
+			}catch(RestClientException e)
+			{
+				result=new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+			}
+			catch(ResourceAlreadyPresentException e)
+			{
+				result=new ResponseEntity<>(HttpStatus.ALREADY_REPORTED);
+			}catch (ResourceNotFoundException e) {
+				result=new ResponseEntity<>(HttpStatus.NO_CONTENT);
+			}
+		}else
+		{
+			result=new ResponseEntity<>(preCheck, HttpStatus.ALREADY_REPORTED);
+		}
+							
 		return result;
 	}
 

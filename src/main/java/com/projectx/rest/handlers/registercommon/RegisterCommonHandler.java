@@ -140,9 +140,6 @@ public class RegisterCommonHandler implements RegisterCommonService {
 		}
 		
 		
-		
-		
-		
 		if(emailFlag && forgetPasswordEntity.getIsEmailVerified())
 		{
 			Boolean status=authenticationService.resetPassword(new CustomerIdTypeUpdatedByDTO(forgetPasswordEntity.getCustomerId(),

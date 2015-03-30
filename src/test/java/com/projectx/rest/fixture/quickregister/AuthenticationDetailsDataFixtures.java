@@ -54,7 +54,7 @@ public class AuthenticationDetailsDataFixtures {
 	public static AuthenticationDetailsAng standardCustomerEmailMobileAuthenticationDetailsAng()
 	{
 		
-		return new AuthenticationDetailsAng(standardAuthenticationDetailsKey(), CUST_EMAIL, CUST_MOBILE, CUST_PASSWORD_DEFAULT, CUST_PASSWORD_TYPE_DEFAULT, CUST_EMAILHASH, CUST_RESEND_COUNT, CUST_LOGIN_VERIFICATION_ATTEMPTS,CUST_DATE,CUST_DATE,CUST_UPDATED_BY,false);
+		return new AuthenticationDetailsAng(standardAuthenticationDetailsKey(), "completeName", "Default", false);
 	}
 
 	public static AuthenticationDetails standardCustomerEmailAuthenticationDetailsWithOutPassword()

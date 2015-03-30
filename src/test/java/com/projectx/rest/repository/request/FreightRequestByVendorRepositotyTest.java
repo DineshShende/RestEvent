@@ -12,6 +12,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -36,6 +37,15 @@ public class FreightRequestByVendorRepositotyTest {
 
 	@Autowired
 	VehicleDetailsRepository vehicleDetailsRepository;
+	
+	@Value("${FREIGHTSTATUS_BLOCKED}")
+	private String FREIGHTSTATUS_BLOCKED;
+	
+	@Value("${FREIGHTSTATUS_NEW}")
+	private String FREIGHTSTATUS_NEW;
+			
+	@Value("${FREIGHTSTATUS_BOOKED}")
+	private String FREIGHTSTATUS_BOOKED;		
 	
 	@Before
 	public void clearData()
@@ -166,6 +176,25 @@ public class FreightRequestByVendorRepositotyTest {
 		List<FreightRequestByVendor> matchList=freightRequestByVendorRepository.getMatchingVendorReqFromCustomerReq(freightRequestByCustomer);
 		
 //		assertEquals(1, matchList.size());
+	}
+	
+	@Test
+	public void updateReservationStatus()
+	{
+		assertEquals(0, freightRequestByVendorRepository.count().intValue());
+		
+		vehicleDetailsRepository.save(standardVehicleDetails());
+		
+		FreightRequestByVendor savedEntity=freightRequestByVendorRepository.save(standardFreightRequestByVendor());
+		
+		assertEquals(1, freightRequestByVendorRepository.count().intValue());
+		
+		assertEquals(1, freightRequestByVendorRepository.updateReservationStatusWithReservedFor(savedEntity.getRequestId(),
+				FREIGHTSTATUS_NEW, FREIGHTSTATUS_BLOCKED, 543L).intValue());
+		
+		assertEquals(1, freightRequestByVendorRepository.updateReservationStatusWithReservedFor(savedEntity.getRequestId(),
+				FREIGHTSTATUS_BLOCKED, FREIGHTSTATUS_BOOKED, 543L).intValue());
+		
 	}
 
 }

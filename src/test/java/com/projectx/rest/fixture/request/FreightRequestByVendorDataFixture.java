@@ -39,6 +39,8 @@ public class FreightRequestByVendorDataFixture {
 	
 	public static Long REQ_VENDOR_ID=213L;
 	
+	public static Long REQ_VENDOR_RESERVEDBY=333L;
+	
 	public static String REQ_STATUS="NEW";
 	
 	private static Gson gson=new Gson();
@@ -53,7 +55,15 @@ public class FreightRequestByVendorDataFixture {
 	public static FreightRequestByVendor standardFreightRequestByVendor()
 	{
 		return new FreightRequestByVendor(REQ_VEHICLE.getRegistrationNumber(), REQ_SOURCE, REQ_DESTINATION, REQ_DRIVER, REQ_AVAIL_DATE, REQ_AVAIL_TIME,
-				REQ_PICK_UP_RANGE,REQ_VENDOR_ID,REQ_STATUS, REQ_DATE, REQ_DATE, REQ_UPDATED_BY);
+				REQ_PICK_UP_RANGE,REQ_VENDOR_ID,REQ_STATUS,null, REQ_DATE, REQ_DATE, REQ_UPDATED_BY);
+	}
+	
+	
+	
+	public static FreightRequestByVendor standardFreightRequestByVendor(Long vendorId)
+	{
+		return new FreightRequestByVendor(REQ_VEHICLE.getRegistrationNumber(), REQ_SOURCE, REQ_DESTINATION, REQ_DRIVER, REQ_AVAIL_DATE, REQ_AVAIL_TIME,
+				REQ_PICK_UP_RANGE,vendorId,REQ_STATUS,REQ_VENDOR_RESERVEDBY, REQ_DATE, REQ_DATE, REQ_UPDATED_BY);
 		
 		
 		
@@ -62,7 +72,7 @@ public class FreightRequestByVendorDataFixture {
 	public static FreightRequestByVendor standardFreightRequestByVendorOpen307()
 	{
 		return new FreightRequestByVendor(standardVehicleDetailsOpen307().getRegistrationNumber(), REQ_SOURCE, REQ_DESTINATION, REQ_DRIVER, REQ_AVAIL_DATE, REQ_AVAIL_TIME,
-				REQ_PICK_UP_RANGE,REQ_VENDOR_ID,REQ_STATUS, REQ_DATE, REQ_DATE, REQ_UPDATED_BY);
+				REQ_PICK_UP_RANGE,REQ_VENDOR_ID,REQ_STATUS,REQ_VENDOR_RESERVEDBY, REQ_DATE, REQ_DATE, REQ_UPDATED_BY);
 		
 		
 		
@@ -71,7 +81,7 @@ public class FreightRequestByVendorDataFixture {
 	public static FreightRequestByVendor standardFreightRequestByVendorClosed()
 	{
 		return new FreightRequestByVendor(standardVehicleDetailsClosed().getRegistrationNumber(), REQ_SOURCE, REQ_DESTINATION, REQ_DRIVER, REQ_AVAIL_DATE, REQ_AVAIL_TIME,
-				REQ_PICK_UP_RANGE,REQ_VENDOR_ID,REQ_STATUS, REQ_DATE, REQ_DATE, REQ_UPDATED_BY);
+				REQ_PICK_UP_RANGE,REQ_VENDOR_ID,REQ_STATUS,REQ_VENDOR_RESERVEDBY, REQ_DATE, REQ_DATE, REQ_UPDATED_BY);
 		
 		
 		
@@ -80,7 +90,7 @@ public class FreightRequestByVendorDataFixture {
 	public static FreightRequestByVendor standardFreightRequestByVendorFlexible()
 	{
 		return new FreightRequestByVendor(standardVehicleDetailsFlexible().getRegistrationNumber(), REQ_SOURCE, REQ_DESTINATION, REQ_DRIVER, REQ_AVAIL_DATE, REQ_AVAIL_TIME,
-				REQ_PICK_UP_RANGE,REQ_VENDOR_ID,REQ_STATUS, REQ_DATE, REQ_DATE, REQ_UPDATED_BY);
+				REQ_PICK_UP_RANGE,REQ_VENDOR_ID,REQ_STATUS,REQ_VENDOR_RESERVEDBY, REQ_DATE, REQ_DATE, REQ_UPDATED_BY);
 		
 		
 	}
@@ -89,7 +99,7 @@ public class FreightRequestByVendorDataFixture {
 	public static FreightRequestByVendor standardFreightRequestByVendorUpdated()
 	{
 		return new FreightRequestByVendor(REQ_VEHICLE.getRegistrationNumber(), REQ_SOURCE, REQ_DESTINATION_UPDATED, REQ_DRIVER, REQ_AVAIL_DATE, REQ_AVAIL_TIME_UPDATED,
-				REQ_PICK_UP_RANGE_UPDATED,REQ_VENDOR_ID,REQ_STATUS, REQ_DATE, REQ_DATE, REQ_UPDATED_BY);
+				REQ_PICK_UP_RANGE_UPDATED,REQ_VENDOR_ID,REQ_STATUS,REQ_VENDOR_RESERVEDBY, REQ_DATE, REQ_DATE, REQ_UPDATED_BY);
 		
 	}
 	

@@ -70,9 +70,9 @@ public class FreightRequestByCustomerHandler implements
 
 	@Override
 	public List<FreightRequestByCustomer> getMatchingCustReqForVendorReq(
-			FreightRequestByVendor freightRequestByVendor) {
+			FreightRequestByVendor freightRequestByVendor,String allocationStatus) {
 		
-		List<FreightRequestByCustomer> result= freightRequestByCustomerRepository.getMatchingCustReqForVendorReq(freightRequestByVendor);
+		List<FreightRequestByCustomer> result= freightRequestByCustomerRepository.getMatchingCustReqForVendorReq(freightRequestByVendor,allocationStatus);
 		
 		/*
 		if(result.size()==0)
@@ -82,6 +82,14 @@ public class FreightRequestByCustomerHandler implements
 		}
 		*/
 		return result;
+	}
+
+	@Override
+	public Integer updateAllocationStatus(Long freightRequestByCustomerId,
+			String oldStatus, String allocationStatus, Long allocatedFor) {
+		
+		return freightRequestByCustomerRepository
+				.updateReservationStatusWithReservedFor(freightRequestByCustomerId, oldStatus, allocationStatus, allocatedFor);
 	}
 
 }

@@ -18,6 +18,8 @@ public class CustomerDetails {
 	@NotNull
 	private String firstName;
 	
+	private String middleName;
+	
 	@NotNull
 	private String lastName;
 	
@@ -26,6 +28,8 @@ public class CustomerDetails {
 	private Address homeAddressId;
 	
 	private Long mobile;
+	
+	private Long phoneNumber;
 	
 	private Boolean isMobileVerified ;
 	
@@ -62,8 +66,10 @@ public class CustomerDetails {
 	}
 
 
-	public CustomerDetails(Long customerId, String firstName, String lastName,
-			Date dateOfBirth, Address homeAddressId, Long mobile,
+
+	public CustomerDetails(Long customerId, String firstName,
+			String middleName, String lastName, Date dateOfBirth,
+			Address homeAddressId, Long mobile, Long phoneNumber,
 			Boolean isMobileVerified, String email, Boolean isEmailVerified,
 			String language, String businessDomain, String nameOfFirm,
 			Address firmAddressId, Long secondaryMobile,
@@ -72,10 +78,12 @@ public class CustomerDetails {
 		super();
 		this.customerId = customerId;
 		this.firstName = firstName;
+		this.middleName = middleName;
 		this.lastName = lastName;
 		this.dateOfBirth = dateOfBirth;
 		this.homeAddressId = homeAddressId;
 		this.mobile = mobile;
+		this.phoneNumber = phoneNumber;
 		this.isMobileVerified = isMobileVerified;
 		this.email = email;
 		this.isEmailVerified = isEmailVerified;
@@ -90,6 +98,10 @@ public class CustomerDetails {
 		this.updateTime = updateTime;
 		this.updatedBy = updatedBy;
 	}
+
+
+
+
 
 
 	public Long getCustomerId() {
@@ -281,13 +293,39 @@ public class CustomerDetails {
 		this.updatedBy = updatedBy;
 	}
 
+	public String getMiddleName() {
+		return middleName;
+	}
+
+
+
+	public void setMiddleName(String middleName) {
+		this.middleName = middleName;
+	}
+
+
+	public Long getPhoneNumber() {
+		return phoneNumber;
+	}
+
+
+
+	public void setPhoneNumber(Long phoneNumber) {
+		this.phoneNumber = phoneNumber;
+	}
+
+
+
+	
+
 
 	@Override
 	public String toString() {
 		return "CustomerDetails [customerId=" + customerId + ", firstName="
-				+ firstName + ", lastName=" + lastName + ", dateOfBirth="
-				+ dateOfBirth + ", homeAddressId=" + homeAddressId
-				+ ", mobile=" + mobile + ", isMobileVerified="
+				+ firstName + ", middleName=" + middleName + ", lastName="
+				+ lastName + ", dateOfBirth=" + dateOfBirth
+				+ ", homeAddressId=" + homeAddressId + ", mobile=" + mobile
+				+ ", phoneNumber=" + phoneNumber + ", isMobileVerified="
 				+ isMobileVerified + ", email=" + email + ", isEmailVerified="
 				+ isEmailVerified + ", language=" + language
 				+ ", businessDomain=" + businessDomain + ", nameOfFirm="
@@ -298,6 +336,7 @@ public class CustomerDetails {
 				+ insertTime + ", updateTime=" + updateTime + ", updatedBy="
 				+ updatedBy + "]";
 	}
+
 
 
 	@Override
@@ -332,6 +371,8 @@ public class CustomerDetails {
 				+ ((language == null) ? 0 : language.hashCode());
 		result = prime * result
 				+ ((lastName == null) ? 0 : lastName.hashCode());
+		result = prime * result
+				+ ((middleName == null) ? 0 : middleName.hashCode());
 		result = prime * result + ((mobile == null) ? 0 : mobile.hashCode());
 		result = prime * result
 				+ ((nameOfFirm == null) ? 0 : nameOfFirm.hashCode());
@@ -347,6 +388,10 @@ public class CustomerDetails {
 	}
 
 
+
+
+
+	
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -361,13 +406,17 @@ public class CustomerDetails {
 				return false;
 		} else if (!businessDomain.equals(other.businessDomain))
 			return false;
-		/*
-		if (customerId == null) {
-			if (other.customerId != null)
+		if (phoneNumber == null) {
+			if (other.phoneNumber != null)
 				return false;
-		} else if (!customerId.equals(other.customerId))
-			return false;
-		*/	
+		} else if (!phoneNumber.equals(other.phoneNumber))
+			return false;	
+		
+		if (middleName == null) {
+			if (other.middleName != null)
+				return false;
+		} else if (!middleName.equals(other.middleName))
+			return false;	
 		if (dateOfBirth == null) {
 			if (other.dateOfBirth != null)
 				return false;

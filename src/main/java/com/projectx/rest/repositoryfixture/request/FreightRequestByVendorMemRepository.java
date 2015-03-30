@@ -85,7 +85,7 @@ public class FreightRequestByVendorMemRepository implements
 		
 		List<FreightRequestByVendor> returnList=new ArrayList<FreightRequestByVendor>();
 		
-		returnList.add(new FreightRequestByVendor("122", 124, 435, 32L, new Date(), "6:00AM", 10, 12L, "NEW", new Date(), new Date(), "updatedBy"));
+		returnList.add(new FreightRequestByVendor("122", 124, 435, 32L, new Date(), "6:00AM", 10, 12L, "NEW",234L, new Date(), new Date(), "updatedBy"));
 		
 		return returnList;
 	}

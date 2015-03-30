@@ -57,4 +57,13 @@ public class MessagerSender {
 		return handleCustomerVerification.sendEmail(email, message);
 	}
 	
+	public Boolean exchangeContactAferDeal(Long mobile,Long requestId,Long dealId,Long  contactNumber,String contactName)
+	{
+		String message=messageBuilder.composeSMSWithDealAndExchaneContact(requestId, dealId, contactNumber, contactName);
+		
+		System.out.println("ExchangeContact:"+message);
+		
+		return handleCustomerVerification.sendSMS(mobile, message);
+	}
+	
 }

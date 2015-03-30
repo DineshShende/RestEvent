@@ -75,7 +75,7 @@ public class QuickRegisterHandler implements
 	private  Integer ENTITY_TYPE_SECONDARY=2;
 	
 	@Override
-	public CustomerQuickRegisterStringStatusEntity checkIfAlreadyRegistered(
+	public CustomerQuickRegisterStatusEntity checkIfAlreadyRegistered(
 			CustomerQuickRegisterEntityDTO customer)  {
 
 		String status=null;
@@ -118,7 +118,7 @@ public class QuickRegisterHandler implements
 
 		if(entityByEmail.getKey()!=null && entityByMobile.getKey()!=null && !entityByEmail.getKey().getCustomerId().equals(entityByMobile.getKey().getCustomerId())&&!entityByEmail.getKey().getCustomerType().equals(entityByMobile.getKey().getCustomerType()))
 		{
-			return new CustomerQuickRegisterStringStatusEntity(REGISTER_FISHY, new QuickRegisterEntity());
+			return new CustomerQuickRegisterStatusEntity(REGISTER_FISHY, new QuickRegisterEntity());
 		}
 		
 		
@@ -171,7 +171,7 @@ public class QuickRegisterHandler implements
 				status=REGISTER_MOBILE_ALREADY_REGISTERED_NOT_VERIFIED;
 		}
 		
-		return new CustomerQuickRegisterStringStatusEntity(status, returnEntity);
+		return new CustomerQuickRegisterStatusEntity(status, returnEntity);
 	}
 
 	@Override
@@ -254,7 +254,7 @@ public class QuickRegisterHandler implements
 		Boolean emailSentStatus=true;
 		Boolean mobileSentStatus=true;
 		
-		Boolean finalStatus=false;
+		String finalStatus=null;
 		
 		if(customer.getEmail()!=null && emailVerificationDetails.getEmailHash()==null)
 			emailVerificationDetails=emailVerificationService.getByEntityIdTypeAndEmailType(customer.getCustomerId(), customer.getCustomerType(),
@@ -281,9 +281,9 @@ public class QuickRegisterHandler implements
 		
 				
 		if(emailSentStatus && mobileSentStatus)
-			finalStatus= true;
+			finalStatus= REGISTER_REGISTERED_SUCESSFULLY;
 		else
-			finalStatus=false;
+			finalStatus=REGISTER_REGISTERED_SUCESSFULLY_UNABLE_TO_SEND_VERIFICATION_DETAILS;
 	
 		return new CustomerQuickRegisterStatusEntity(finalStatus,customer);
 	}

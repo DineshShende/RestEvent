@@ -46,7 +46,7 @@ public class DriverDetailsServiceTest {
 	{
 		assertEquals(0, driverDetailsService.count().intValue());
 		
-		DriverDetails savedEntity=driverDetailsService.addDriver(standardDriverDetails());
+		DriverDetails savedEntity=driverDetailsService.save(standardDriverDetails());
 		
 		assertEquals(savedEntity, driverDetailsService.getDriverById(savedEntity.getDriverId()));
 		
@@ -59,9 +59,9 @@ public class DriverDetailsServiceTest {
 	{
 		assertEquals(0, driverDetailsService.count().intValue());
 		
-		DriverDetails savedEntity=driverDetailsService.addDriver(standardDriverDetails());
+		DriverDetails savedEntity=driverDetailsService.save(standardDriverDetails());
 		
-		DriverDetails updatedEntity=driverDetailsService.updateDriver(standardDriverDetailsNewMobileAndFirstName(savedEntity.getDriverId()));
+		DriverDetails updatedEntity=driverDetailsService.save(standardDriverDetailsNewMobileAndFirstName(savedEntity.getDriverId()));
 		
 		assertNotEquals(standardDriverDetailsNewMobileAndFirstName(savedEntity.getDriverId()).getMobile(),
 				updatedEntity.getMobile());

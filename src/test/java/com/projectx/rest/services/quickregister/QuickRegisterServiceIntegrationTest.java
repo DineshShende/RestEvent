@@ -1,7 +1,7 @@
 package com.projectx.rest.services.quickregister;
 
 import static com.projectx.rest.config.Constants.SPRING_PROFILE_ACTIVE_TEST;
-import static com.projectx.rest.fixture.quickregister.QuickRegisterDataFixture.CUST_EMAILHASH;
+import static com.projectx.rest.fixture.quickregister.QuickRegisterDataFixture.*;
 import static com.projectx.rest.fixture.quickregister.QuickRegisterDataFixture.CUST_ID;
 import static com.projectx.rest.fixture.quickregister.QuickRegisterDataFixture.CUST_MOBILEPIN;
 import static com.projectx.rest.fixture.quickregister.QuickRegisterDataFixture.CUST_PASSWORD_CHANGED;
@@ -101,7 +101,7 @@ public class QuickRegisterServiceIntegrationTest {
 		
 		CustomerQuickRegisterStatusEntity customerStatusEntity=customerQuickRegisterHandler.sendVerificationDetails(savedEntity.getCustomerQuickRegisterEntity(),savedEntity.getCustomerEmailVerificationDetails(),savedEntity.getCustomerMobileVerificationDetails());
 		
-		assertTrue(customerStatusEntity.getStatus());
+		assertEquals(REGISTER_REGISTERED_SUCESSFULLY,customerStatusEntity.getStatus());
 		
 		assertEquals(standardEmailMobileCustomerAfterSaving().getCustomerType(), customerStatusEntity.getCustomer().getCustomerType());
 		assertEquals(standardEmailMobileCustomerAfterSaving().getEmail(), customerStatusEntity.getCustomer().getEmail());
@@ -121,7 +121,7 @@ public class QuickRegisterServiceIntegrationTest {
 		
 		CustomerQuickRegisterStatusEntity customerStatusEntity=customerQuickRegisterHandler.sendVerificationDetails(savedEntity.getCustomerQuickRegisterEntity(),savedEntity.getCustomerEmailVerificationDetails(),savedEntity.getCustomerMobileVerificationDetails());
 		
-		assertTrue(customerStatusEntity.getStatus());
+		assertEquals(REGISTER_REGISTERED_SUCESSFULLY,customerStatusEntity.getStatus());
 		
 		assertEquals(standardEmailCustomerAfterSaving().getCustomerType(), customerStatusEntity.getCustomer().getCustomerType());
 		assertEquals(standardEmailCustomerAfterSaving().getEmail(), customerStatusEntity.getCustomer().getEmail());
@@ -141,7 +141,7 @@ public class QuickRegisterServiceIntegrationTest {
 		
 		CustomerQuickRegisterStatusEntity customerStatusEntity=customerQuickRegisterHandler.sendVerificationDetails(savedEntity.getCustomerQuickRegisterEntity(),savedEntity.getCustomerEmailVerificationDetails(),savedEntity.getCustomerMobileVerificationDetails());
 		
-		assertTrue(customerStatusEntity.getStatus());
+		assertEquals(REGISTER_REGISTERED_SUCESSFULLY,customerStatusEntity.getStatus());
 		
 		assertEquals(standardMobileCustomerAfterSaving().getCustomerType(), customerStatusEntity.getCustomer().getCustomerType());
 		assertEquals(standardMobileCustomerAfterSaving().getEmail(), customerStatusEntity.getCustomer().getEmail());

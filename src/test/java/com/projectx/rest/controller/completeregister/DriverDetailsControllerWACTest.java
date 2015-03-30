@@ -105,7 +105,7 @@ public class DriverDetailsControllerWACTest {
 	@Test
 	public void update() throws Exception
 	{
-		DriverDetails driverDetails=driverDetailsService.addDriver(standardDriverDetails());
+		DriverDetails driverDetails=driverDetailsService.save(standardDriverDetails());
 		
 		this.mockMvc.perform(
 	            post("/vendor/driver/update")
@@ -144,7 +144,7 @@ public class DriverDetailsControllerWACTest {
 	public void getByDriverId() throws Exception
 	{
 		
-		DriverDetails driverDetails=driverDetailsService.addDriver(standardDriverDetails());
+		DriverDetails driverDetails=driverDetailsService.save(standardDriverDetails());
 		
 		this.mockMvc.perform(
 	            get("/vendor/driver/getByDriverId/"+driverDetails.getDriverId())
@@ -179,7 +179,7 @@ public class DriverDetailsControllerWACTest {
 	@Test
 	public void deleteByDriverId() throws Exception
 	{
-		DriverDetails driverDetails=driverDetailsService.addDriver(standardDriverDetails());
+		DriverDetails driverDetails=driverDetailsService.save(standardDriverDetails());
 		
 		assertEquals(1, driverDetailsService.count().intValue());
 		
@@ -198,9 +198,9 @@ public class DriverDetailsControllerWACTest {
 	@Test
 	public void getDriversByVendor() throws Exception
 	{
-		DriverDetails driverDetails=driverDetailsService.addDriver(standardDriverDetails());
+		DriverDetails driverDetails=driverDetailsService.save(standardDriverDetails());
 		
-		DriverDetails driverDetailsOther=driverDetailsService.addDriver(standardDriverDetailsOther());
+		DriverDetails driverDetailsOther=driverDetailsService.save(standardDriverDetailsOther());
 		
 		this.mockMvc.perform(
 	            get("/vendor/driver/getDriversByVendor/"+standardDriverDetails().getVendorId())

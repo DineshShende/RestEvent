@@ -32,6 +32,7 @@ public class VendorDetailsController {
 
 	@Autowired
 	VendorDetailsService vendorDetailsService;
+
 	
 	@RequestMapping(value="/createFromQuickRegister",method=RequestMethod.POST)
 	public ResponseEntity<VendorDetails> createCustomerDetailsFromQuickRegisterEntity(@Valid @RequestBody QuickRegisterEntity quickRegisterEntity,
@@ -92,91 +93,7 @@ public class VendorDetailsController {
 		
 	}
 	
-	@RequestMapping(value="/verifyMobileDetails",method=RequestMethod.POST)
-	public ResponseEntity<Boolean> verifyMobileDetails(@Valid @RequestBody VerifyMobileDTO verifyMobileDTO,BindingResult bindingResult)
-	{
-		if(bindingResult.hasErrors())
-			return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
-		
-		try{
-			Boolean result=vendorDetailsService
-					.verifyMobileDetails(verifyMobileDTO.getEntityId(), verifyMobileDTO.getEntityType(), 
-							verifyMobileDTO.getMobileType(), verifyMobileDTO.getMobilePin(),verifyMobileDTO.getRequestBy());
-			
-			return new ResponseEntity<Boolean>(result, HttpStatus.OK);
-		}catch(ValidationFailedException e)
-		{
-			return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
-			
-		}catch (ResourceNotFoundException e) {
-			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-		}
-		
-		
-	}
 	
-	@RequestMapping(value="/verifyEmailDetails",method=RequestMethod.POST)
-	public ResponseEntity<Boolean> verifyEmailDetails(@Valid @RequestBody VerifyEmailDTO verifyEmailDTO,BindingResult bindingResult)
-	{
-		if(bindingResult.hasErrors())
-			return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
-		
-		try{
-			Boolean result=vendorDetailsService
-					.verifyEmailDetails(verifyEmailDTO.getCustomerId(), verifyEmailDTO.getCustomerType(),
-							verifyEmailDTO.getEmailType(),  verifyEmailDTO.getEmailHash(),verifyEmailDTO.getUpdatedBy());
-			return new ResponseEntity<Boolean>(result, HttpStatus.OK);
-		}catch(ResourceNotFoundException e)
-		{
-			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-		}
-		
-		
-	}
-	
-	@RequestMapping(value="/sendMobileVerificationDetails",method=RequestMethod.POST)
-	public ResponseEntity<Boolean> sendMobileVerificationDetails(@Valid @RequestBody CustomerIdTypeMobileTypeUpdatedByDTO customerIdTypeMobileDTO,
-			BindingResult bindingResult)
-	{
-		if(bindingResult.hasErrors())
-			return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
-		
-		try{
-			Boolean result=vendorDetailsService
-					.sendMobileVerificationDetails(customerIdTypeMobileDTO.getCustomerId(), customerIdTypeMobileDTO.getCustomerType(),
-							customerIdTypeMobileDTO.getMobileType(),customerIdTypeMobileDTO.getUpdatedBy());
-			
-			return new ResponseEntity<Boolean>(result, HttpStatus.OK);
-			
-		}catch(ResourceNotFoundException e)
-		{
-			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-		}
-		
-				
-	}
-	
-	@RequestMapping(value="/sendEmailVerificationDetails",method=RequestMethod.POST)
-	public ResponseEntity<Boolean> sendEmailVerificationDetails(@Valid @RequestBody CustomerIdTypeEmailTypeUpdatedByDTO customerIdTypeEmailDTO,
-			BindingResult bindingResult)
-	{
-		if(bindingResult.hasErrors())
-			return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
-		
-		try{
-			Boolean result=vendorDetailsService
-					.sendEmailVerificationDetails(customerIdTypeEmailDTO.getCustomerId(), customerIdTypeEmailDTO.getCustomerType(),
-							customerIdTypeEmailDTO.getEmailType(),customerIdTypeEmailDTO.getUpdatedBy());
-			
-			return new ResponseEntity<Boolean>(result, HttpStatus.OK);
-		}catch(ResourceNotFoundException e)
-		{
-			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-		}
-		
-		
-				
-	}
 	
 	@RequestMapping(value="/count",method=RequestMethod.GET)
 	public  Integer getCount()
@@ -196,3 +113,91 @@ public class VendorDetailsController {
 	
 	
 }
+
+/*
+@RequestMapping(value="/verifyMobileDetails",method=RequestMethod.POST)
+public ResponseEntity<Boolean> verifyMobileDetails(@Valid @RequestBody VerifyMobileDTO verifyMobileDTO,BindingResult bindingResult)
+{
+	if(bindingResult.hasErrors())
+		return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+	
+	try{
+		Boolean result=vendorDetailsService
+				.verifyMobileDetails(verifyMobileDTO.getEntityId(), verifyMobileDTO.getEntityType(), 
+						verifyMobileDTO.getMobileType(), verifyMobileDTO.getMobilePin(),verifyMobileDTO.getRequestBy());
+		
+		return new ResponseEntity<Boolean>(result, HttpStatus.OK);
+	}catch(ValidationFailedException e)
+	{
+		return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+		
+	}catch (ResourceNotFoundException e) {
+		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+	}
+	
+	
+}
+
+@RequestMapping(value="/verifyEmailDetails",method=RequestMethod.POST)
+public ResponseEntity<Boolean> verifyEmailDetails(@Valid @RequestBody VerifyEmailDTO verifyEmailDTO,BindingResult bindingResult)
+{
+	if(bindingResult.hasErrors())
+		return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+	
+	try{
+		Boolean result=vendorDetailsService
+				.verifyEmailDetails(verifyEmailDTO.getCustomerId(), verifyEmailDTO.getCustomerType(),
+						verifyEmailDTO.getEmailType(),  verifyEmailDTO.getEmailHash(),verifyEmailDTO.getUpdatedBy());
+		return new ResponseEntity<Boolean>(result, HttpStatus.OK);
+	}catch(ResourceNotFoundException e)
+	{
+		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+	}
+	
+	
+}
+
+@RequestMapping(value="/sendMobileVerificationDetails",method=RequestMethod.POST)
+public ResponseEntity<Boolean> sendMobileVerificationDetails(@Valid @RequestBody CustomerIdTypeMobileTypeUpdatedByDTO customerIdTypeMobileDTO,
+		BindingResult bindingResult)
+{
+	if(bindingResult.hasErrors())
+		return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+	
+	try{
+		Boolean result=vendorDetailsService
+				.sendMobileVerificationDetails(customerIdTypeMobileDTO.getCustomerId(), customerIdTypeMobileDTO.getCustomerType(),
+						customerIdTypeMobileDTO.getMobileType(),customerIdTypeMobileDTO.getUpdatedBy());
+		
+		return new ResponseEntity<Boolean>(result, HttpStatus.OK);
+		
+	}catch(ResourceNotFoundException e)
+	{
+		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+	}
+	
+			
+}
+
+@RequestMapping(value="/sendEmailVerificationDetails",method=RequestMethod.POST)
+public ResponseEntity<Boolean> sendEmailVerificationDetails(@Valid @RequestBody CustomerIdTypeEmailTypeUpdatedByDTO customerIdTypeEmailDTO,
+		BindingResult bindingResult)
+{
+	if(bindingResult.hasErrors())
+		return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+	
+	try{
+		Boolean result=vendorDetailsService
+				.sendEmailVerificationDetails(customerIdTypeEmailDTO.getCustomerId(), customerIdTypeEmailDTO.getCustomerType(),
+						customerIdTypeEmailDTO.getEmailType(),customerIdTypeEmailDTO.getUpdatedBy());
+		
+		return new ResponseEntity<Boolean>(result, HttpStatus.OK);
+	}catch(ResourceNotFoundException e)
+	{
+		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+	}
+	
+	
+			
+}
+*/

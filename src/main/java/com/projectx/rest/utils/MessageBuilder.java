@@ -24,7 +24,7 @@ public class MessageBuilder {
 	{
 		StringBuilder messageBuilder=new StringBuilder();
 		
-		//messageBuilder.append("Hi "+firstName+" "+lastName+"\n");
+		messageBuilder.append("Hi "+firstName+" "+lastName+"\n");
 		messageBuilder.append("Your login password is="+password);
 		
 		return messageBuilder.toString();
@@ -35,8 +35,8 @@ public class MessageBuilder {
 		
 		StringBuilder messageBuilder=new StringBuilder();
 		
-//		messageBuilder.append("Hi "+firstName+" "+lastName+"\n");
-	//	messageBuilder.append("As per your new password Request!!\n Click here to login with new password\n");
+		messageBuilder.append("Hi "+firstName+" "+lastName+"\n");
+		messageBuilder.append("As per your new password Request!!\n Click here to login with new password\n");
 		messageBuilder.append(env.getProperty("mvc.url")+"/quickregister/emailPasswordVerification/"+customerId+"/"+customerType+"/"+emailPassword);
 		
 		//System.out.println(messageBuilder.toString());
@@ -50,8 +50,8 @@ public class MessageBuilder {
 	{
 		StringBuilder messageBuilder=new StringBuilder();
 		
-		//messageBuilder.append("Hi "+firstName+" "+lastName+"\n");
-		//messageBuilder.append("Thanks for connecting with us!!\n Enter given ");
+		messageBuilder.append("Hi "+firstName+" "+lastName+"\n");
+		messageBuilder.append("Thanks for connecting with us!!\n Enter given ");
 		messageBuilder.append("OTP in provided textbox.OTP="+mobilePin);
 		
 		//System.out.println(messageBuilder.toString());
@@ -65,13 +65,27 @@ public class MessageBuilder {
 	{
 		StringBuilder messageBuilder=new StringBuilder();
 		
-		//messageBuilder.append("Hi "+firstName+" "+lastName+"\n");
-		//messageBuilder.append("Thanks for connecting with us!!\n Please Click Below link to activate your account\n");
+		messageBuilder.append("Hi "+firstName+" "+lastName+"\n");
+		messageBuilder.append("Thanks for connecting with us!!\n Please Click Below link to activate your account\n");
 		messageBuilder.append(env.getProperty("mvc.url")+"/quickregister/verifyEmailHash/"+customerId+"/"+customerType+"/"+entityType+"/"+requestedBy+"/"+emailHash);
 		
 
 		
 		return messageBuilder.toString();
+	}
+	
+	public String composeSMSWithDealAndExchaneContact(Long requestId,Long dealId,Long contactNumber,String contactName)
+	{
+	
+		StringBuilder builder=new StringBuilder();
+		
+		builder.append("Hi ").append(contactName).append(" ");
+		builder.append("Deal has been closed for request:"+requestId);
+		builder.append("The contact Number of other party is:"+contactNumber);
+		builder.append("The deal Id is:"+dealId);
+		
+		return builder.toString();
+		
 	}
 	
 }

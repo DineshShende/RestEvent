@@ -2,6 +2,7 @@ package com.projectx.rest.services.request;
 
 import java.util.List;
 
+
 import org.springframework.stereotype.Service;
 
 import com.projectx.rest.domain.request.FreightRequestByCustomer;
@@ -20,7 +21,9 @@ public interface FreightRequestByCustomerService {
 	
 	List<FreightRequestByCustomer> getAllRequestForCustomer(Long customerId);
 	
-	List<FreightRequestByCustomer> getMatchingCustReqForVendorReq(FreightRequestByVendor freightRequestByVendor);
+	Integer updateAllocationStatus(Long freightRequestByCustomerId,String oldStatus,String allocationStatus,Long allocatedFor);
+	
+	List<FreightRequestByCustomer> getMatchingCustReqForVendorReq(FreightRequestByVendor freightRequestByVendor,String allocationStatus);
 	
 	Boolean deleteRequestById(Long requestId);
 	

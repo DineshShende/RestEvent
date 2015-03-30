@@ -37,7 +37,7 @@ public class DriverDetailsController {
 		ResponseEntity<DriverDetails> result=null;
 		
 		try{
-			DriverDetails savedDriver=driverDetailsService.addDriver(driverDetails);
+			DriverDetails savedDriver=driverDetailsService.save(driverDetails);
 			result=new ResponseEntity<DriverDetails>(savedDriver, HttpStatus.CREATED);
 		}catch(ValidationFailedException e)
 		{
@@ -52,24 +52,7 @@ public class DriverDetailsController {
 		
 	}
 	
-	@RequestMapping(value="/update",method=RequestMethod.POST)
-	public ResponseEntity<DriverDetails> updateDriver(@Valid @RequestBody DriverDetails driverDetails,BindingResult bindingResult)
-	{
-		if(bindingResult.hasErrors())
-			return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
-		
-		ResponseEntity<DriverDetails> result=null;
-		
-		try{
-			DriverDetails savedDriver=driverDetailsService.updateDriver(driverDetails);
-			result=new ResponseEntity<DriverDetails>(savedDriver, HttpStatus.OK);
-		}catch(DriverDetailsUpdateFailedException e)
-		{
-			result=new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
-		}
-		return result;
-		
-	}
+	
 	
 	@RequestMapping(value="/getByDriverId/{driverId}")
 	public ResponseEntity<DriverDetails> getByDriverId(@PathVariable Long driverId)
@@ -118,4 +101,25 @@ public class DriverDetailsController {
 	{
 		return driverDetailsService.clearTestData();
 	}
+	
+	/*
+	@RequestMapping(value="/update",method=RequestMethod.POST)
+	public ResponseEntity<DriverDetails> updateDriver(@Valid @RequestBody DriverDetails driverDetails,BindingResult bindingResult)
+	{
+		if(bindingResult.hasErrors())
+			return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+		
+		ResponseEntity<DriverDetails> result=null;
+		
+		try{
+			DriverDetails savedDriver=driverDetailsService.updateDriver(driverDetails);
+			result=new ResponseEntity<DriverDetails>(savedDriver, HttpStatus.OK);
+		}catch(DriverDetailsUpdateFailedException e)
+		{
+			result=new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
+		}
+		return result;
+		
+	}
+	*/
 }

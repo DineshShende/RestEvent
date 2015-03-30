@@ -20,13 +20,21 @@ public class VendorDetailsDataFixture {
 	
 	public static String VENDER_FIRSTNAME="Ted";
 	
+	public static String VENDER_MIDDLENAME="A.";
+	
 	public static String VENDER_LASTNAME="Mosby";
+	
+	public static String VENDER_FIRMNAME="Mosby Architect";
+	
+	
 	
 	public static Date VENDOR_DATE=new Date();
 	
 	public static Address VENDOR_ADDRESS=standardAddress();
 	
 	public static Long VENDOR_MOBILE=8625867370L;
+	
+	public static Long VENDOR_SEC_MOBILE=8625867000L;
 	
 	public static String VENDOR_EMAIL="tedmosby@gmail.com";
 	
@@ -47,45 +55,46 @@ public class VendorDetailsDataFixture {
 	
 	public static VendorDetails standardVendor()
 	{
-		return new VendorDetails(VENDOR_ID, VENDER_FIRSTNAME, VENDER_LASTNAME, VENDOR_DATE, VENDOR_ADDRESS, VENDOR_MOBILE, VENDOR_STATUS_FALSE,
-				VENDOR_EMAIL,VENDOR_STATUS_FALSE, VENDOR_LANGUAGE, VENDOR_DATE, VENDOR_DATE, VENDOR_UPDATEDBY);
+		return new VendorDetails(VENDOR_ID, VENDER_FIRSTNAME,VENDER_MIDDLENAME, VENDER_LASTNAME, VENDOR_DATE,VENDER_FIRMNAME,VENDOR_ADDRESS, VENDOR_ADDRESS, VENDOR_MOBILE, null,VENDOR_STATUS_FALSE,
+				VENDOR_EMAIL,VENDOR_STATUS_FALSE, VENDOR_LANGUAGE,VENDOR_SEC_MOBILE,VENDOR_STATUS_FALSE, VENDOR_DATE, VENDOR_DATE, VENDOR_UPDATEDBY);
 	}
 	
 	public static VendorDetails standardVendor(Long vendorId)
 	{
-		return new VendorDetails(vendorId, VENDER_FIRSTNAME, VENDER_LASTNAME, VENDOR_DATE, VENDOR_ADDRESS, VENDOR_MOBILE, VENDOR_STATUS_FALSE,
-				VENDOR_EMAIL,VENDOR_STATUS_FALSE, VENDOR_LANGUAGE, VENDOR_DATE, VENDOR_DATE, VENDOR_UPDATEDBY);
+		return new VendorDetails(vendorId, VENDER_FIRSTNAME,VENDER_MIDDLENAME, VENDER_LASTNAME, VENDOR_DATE, VENDER_FIRMNAME,VENDOR_ADDRESS,VENDOR_ADDRESS, VENDOR_MOBILE,null, VENDOR_STATUS_FALSE,
+				VENDOR_EMAIL,VENDOR_STATUS_FALSE, VENDOR_LANGUAGE,VENDOR_SEC_MOBILE,VENDOR_STATUS_FALSE, VENDOR_DATE, VENDOR_DATE, VENDOR_UPDATEDBY);
 	}
 	
 	public static VendorDetails standardVendorCreatedFromQuickRegister()
 	{
 		return new VendorDetails(standardEmailMobileVendor().getCustomerId(), standardEmailMobileVendor().getFirstName(),
-				standardEmailMobileVendor().getLastName(), null, null, standardEmailMobileVendor().getMobile(), 
+				VENDER_MIDDLENAME,standardEmailMobileVendor().getLastName(),null,null, null, null, standardEmailMobileVendor().getMobile(),null, 
 				standardEmailMobileVendor().getIsMobileVerified(),standardEmailMobileVendor().getEmail(),standardEmailMobileVendor().getIsEmailVerified(),
-				null, standardEmailMobileVendor().getInsertTime(), new Date(), standardEmailMobileVendor().getUpdatedBy());
+				null,null,null, standardEmailMobileVendor().getInsertTime(), new Date(), standardEmailMobileVendor().getUpdatedBy());
 	}
 	
 	public static VendorDetails standardVendorCreatedFromQuickRegister(Long vendorId)
 	{
-		return new VendorDetails(vendorId, standardEmailMobileVendor().getFirstName(),
-				standardEmailMobileVendor().getLastName(), null, null, standardEmailMobileVendor().getMobile(), 
+		return new VendorDetails(vendorId, standardEmailMobileVendor().getFirstName(),null,
+				standardEmailMobileVendor().getLastName(), null,null,null, null, standardEmailMobileVendor().getMobile(),null, 
 				standardEmailMobileVendor().getIsMobileVerified(),standardEmailMobileVendor().getEmail(),standardEmailMobileVendor().getIsEmailVerified(),
-				null, standardEmailMobileVendor().getInsertTime(), new Date(), standardEmailMobileVendor().getUpdatedBy());
+				null,null,null, standardEmailMobileVendor().getInsertTime(), new Date(), standardEmailMobileVendor().getUpdatedBy());
 	}
 	
 	
 	public static VendorDetails standardVendor(VendorDetails vendorDetails)
 	{
-		return new VendorDetails(vendorDetails.getVendorId(), vendorDetails.getFirstName(),vendorDetails.getLastName(),
-				new Date(), standardAddress(), vendorDetails.getMobile(),vendorDetails.getIsMobileVerified(),vendorDetails.getEmail(),
-				vendorDetails.getIsEmailVerified(),VENDOR_LANGUAGE, vendorDetails.getInsertTime(), new Date(), vendorDetails.getUpdatedBy());
+		return new VendorDetails(vendorDetails.getVendorId(), vendorDetails.getFirstName(),vendorDetails.getMiddleName(),vendorDetails.getLastName(),
+				new Date(),vendorDetails.getFirmName(),vendorDetails.getFirmAddress(),vendorDetails.getHomeAddress(), vendorDetails.getMobile(),null,
+				vendorDetails.getIsMobileVerified(),vendorDetails.getEmail(),vendorDetails.getIsEmailVerified(),VENDOR_LANGUAGE,
+				vendorDetails.getSecondaryMobile(),false,vendorDetails.getInsertTime(), new Date(), vendorDetails.getUpdatedBy());
 	}
 	
 	
 	public static VendorDetails standardVendorUpdatedFirstLastName()
 	{
-		return new VendorDetails(VENDOR_ID, "Updated", "Updated", VENDOR_DATE, VENDOR_ADDRESS, VENDOR_MOBILE, VENDOR_STATUS_FALSE,
-				VENDOR_EMAIL,VENDOR_STATUS_FALSE, VENDOR_LANGUAGE, VENDOR_DATE, VENDOR_DATE, VENDOR_UPDATEDBY);
+		return new VendorDetails(VENDOR_ID, "Updated",VENDER_MIDDLENAME, "Updated", VENDOR_DATE,VENDER_FIRMNAME,VENDOR_ADDRESS, VENDOR_ADDRESS, VENDOR_MOBILE,null, VENDOR_STATUS_FALSE,
+				VENDOR_EMAIL,VENDOR_STATUS_FALSE, VENDOR_LANGUAGE,VENDOR_SEC_MOBILE,VENDOR_STATUS_FALSE, VENDOR_DATE, VENDOR_DATE, VENDOR_UPDATEDBY);
 	}
 	
 	public static AuthenticationDetailsKey standardAuthenticationDetailsKeyVendor()

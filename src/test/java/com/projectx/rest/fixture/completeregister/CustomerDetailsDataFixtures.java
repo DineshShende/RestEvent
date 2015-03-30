@@ -25,6 +25,8 @@ public class CustomerDetailsDataFixtures {
 	
 	public static Date CUST_DOB =new Date();
 	
+	public static String CUST_MIDDLENAME="A.";
+	
 	public static String CUST_LANG="Marathi";
 	public static String CUST_BUSINESS_DOMAIN="TRANSPORT";
 	
@@ -55,8 +57,8 @@ public class CustomerDetailsDataFixtures {
 	
 	public static CustomerDetails standardCustomerFromQuickEntity()
 	{
-		return new CustomerDetails(standardEmailMobileCustomer().getCustomerId(), standardEmailMobileCustomer().getFirstName(),
-				standardEmailMobileCustomer().getLastName(), null, null, standardEmailMobileCustomer().getMobile(), 
+		return new CustomerDetails(standardEmailMobileCustomer().getCustomerId(), standardEmailMobileCustomer().getFirstName(),null,
+				standardEmailMobileCustomer().getLastName(), null, null, standardEmailMobileCustomer().getMobile(),null, 
 				standardEmailMobileCustomer().getIsEmailVerified(),standardEmailMobileCustomer().getEmail(),
 				standardEmailMobileCustomer().getIsEmailVerified(), null, null, null, null, null, false,
 				null, CUST_DATE, CUST_DATE, CUST_UPDATED_BY);
@@ -64,8 +66,8 @@ public class CustomerDetailsDataFixtures {
 	
 	public static CustomerDetails standardCustomerFromQuickEntityDuplicate()
 	{
-		return new CustomerDetails(435L, standardEmailMobileCustomer().getFirstName(),
-				standardEmailMobileCustomer().getLastName(), null, null, standardEmailMobileCustomer().getMobile(), 
+		return new CustomerDetails(435L, standardEmailMobileCustomer().getFirstName(),CUST_MIDDLENAME,
+				standardEmailMobileCustomer().getLastName(), null, null, standardEmailMobileCustomer().getMobile(), null,
 				standardEmailMobileCustomer().getIsEmailVerified(),standardEmailMobileCustomer().getEmail(),
 				standardEmailMobileCustomer().getIsEmailVerified(), null, null, null, null, null, false,
 				null, CUST_DATE, CUST_DATE, CUST_UPDATED_BY);
@@ -73,8 +75,8 @@ public class CustomerDetailsDataFixtures {
 	
 	public static CustomerDetails standardCustomerFromQuickEntity(Long customerId)
 	{
-		return new CustomerDetails(customerId, standardEmailMobileCustomer().getFirstName(),
-				standardEmailMobileCustomer().getLastName(), null, null, standardEmailMobileCustomer().getMobile(), 
+		return new CustomerDetails(customerId, standardEmailMobileCustomer().getFirstName(),null,
+				standardEmailMobileCustomer().getLastName(), null, null, standardEmailMobileCustomer().getMobile(),null, 
 				standardEmailMobileCustomer().getIsEmailVerified(),standardEmailMobileCustomer().getEmail(),
 				standardEmailMobileCustomer().getIsEmailVerified(), null, null, null, null, null, false,
 				null, CUST_DATE, CUST_DATE, CUST_UPDATED_BY);
@@ -82,8 +84,8 @@ public class CustomerDetailsDataFixtures {
 	
 	public static CustomerDetails standardCustomerDetailsFirstPart()
 	{
-		return new CustomerDetails(standardEmailMobileCustomer().getCustomerId(), standardEmailMobileCustomer().getFirstName(),
-				standardEmailMobileCustomer().getLastName(), CUST_DATE, standardAddress(), standardEmailMobileCustomer().getMobile(), 
+		return new CustomerDetails(standardEmailMobileCustomer().getCustomerId(), standardEmailMobileCustomer().getFirstName(),CUST_MIDDLENAME,
+				standardEmailMobileCustomer().getLastName(), CUST_DATE, standardAddress(), standardEmailMobileCustomer().getMobile(),null, 
 				standardEmailMobileCustomer().getIsEmailVerified(),standardEmailMobileCustomer().getEmail(),
 				standardEmailMobileCustomer().getIsEmailVerified(), CUST_LANG, null, null, null, null, null,
 				null, CUST_DATE, CUST_DATE, CUST_UPDATED_BY);
@@ -92,8 +94,8 @@ public class CustomerDetailsDataFixtures {
 	
 	public static CustomerDetails standardCustomerDetails(CustomerDetails customerDetails)
 	{
-		return new CustomerDetails(customerDetails.getCustomerId(), customerDetails.getFirstName(),
-				customerDetails.getLastName(), CUST_DATE, standardAddress(), customerDetails.getMobile(), 
+		return new CustomerDetails(customerDetails.getCustomerId(), customerDetails.getFirstName(),CUST_MIDDLENAME,
+				customerDetails.getLastName(), CUST_DATE, standardAddress(), customerDetails.getMobile(),null, 
 				customerDetails.getIsEmailVerified(),customerDetails.getEmail(),
 				customerDetails.getIsEmailVerified(), CUST_LANG, CUST_BUSINESS_DOMAIN, CUST_NAME_OF_FIRM, standardAddress(),
 				CUST_SEC_MOBILE, false,	CUST_SEC_EMAIL, CUST_DATE, CUST_DATE, CUST_UPDATED_BY);
@@ -102,8 +104,8 @@ public class CustomerDetailsDataFixtures {
 	
 	public static CustomerDetails standardCustomerDetailsAlreadyPresent()
 	{
-		return new CustomerDetails(323L, CUST_FIRSTNAME,CUST_LASTNAME, CUST_DATE, standardAddress(),
-				CUST_MOBILE,CUST_IS_MOBILE_VERIFIED_FALSE,CUST_EMAIL,CUST_IS_EMAIL_VERIFIED_FALSE, CUST_LANG, CUST_BUSINESS_DOMAIN, CUST_NAME_OF_FIRM, standardAddress(),
+		return new CustomerDetails(323L, CUST_FIRSTNAME,CUST_MIDDLENAME,CUST_LASTNAME, CUST_DATE, standardAddress(),
+				CUST_MOBILE,null,CUST_IS_MOBILE_VERIFIED_FALSE,CUST_EMAIL,CUST_IS_EMAIL_VERIFIED_FALSE, CUST_LANG, CUST_BUSINESS_DOMAIN, CUST_NAME_OF_FIRM, standardAddress(),
 				CUST_SEC_MOBILE, false,	CUST_SEC_EMAIL, CUST_DATE, CUST_DATE, CUST_UPDATED_BY);
 		
 	}
@@ -111,8 +113,8 @@ public class CustomerDetailsDataFixtures {
 	
 	public static CustomerDetails standardCustomerDetailsError(CustomerDetails customerDetails)
 	{
-		return new CustomerDetails(customerDetails.getCustomerId(), customerDetails.getFirstName(),
-				customerDetails.getLastName(), CUST_DATE, standardAddress(), null, 
+		return new CustomerDetails(customerDetails.getCustomerId(), customerDetails.getFirstName(),CUST_MIDDLENAME,
+				customerDetails.getLastName(), CUST_DATE, standardAddress(), null,null, 
 				customerDetails.getIsEmailVerified(),null,
 				customerDetails.getIsEmailVerified(), CUST_LANG, CUST_BUSINESS_DOMAIN, CUST_NAME_OF_FIRM, standardAddress(),
 				CUST_SEC_MOBILE, false,	CUST_SEC_EMAIL, CUST_DATE, CUST_DATE, CUST_UPDATED_BY);
@@ -121,8 +123,8 @@ public class CustomerDetailsDataFixtures {
 	
 	public static CustomerDetails standardCustomerDetailsWithOldMobileSceMobileEmail(CustomerDetails customerDetails,Long mobile,Long secMobolie,String email)
 	{
-		return new CustomerDetails(customerDetails.getCustomerId(), customerDetails.getFirstName(),
-				customerDetails.getLastName(), CUST_DATE, standardAddress(), mobile, 
+		return new CustomerDetails(customerDetails.getCustomerId(), customerDetails.getFirstName(),CUST_MIDDLENAME,
+				customerDetails.getLastName(), CUST_DATE, standardAddress(), mobile,null, 
 				customerDetails.getIsEmailVerified(),email,
 				customerDetails.getIsEmailVerified(), CUST_LANG, CUST_BUSINESS_DOMAIN, CUST_NAME_OF_FIRM, standardAddress(),
 				secMobolie, false,	CUST_SEC_EMAIL, CUST_DATE, CUST_DATE, CUST_UPDATED_BY);
@@ -131,9 +133,9 @@ public class CustomerDetailsDataFixtures {
 	
 	public static CustomerDetails standardCustomerDetailsWithNewSecondaryMobile(CustomerDetails customerDetails)
 	{
-		return new CustomerDetails(customerDetails.getCustomerId(), standardEmailMobileCustomer().getFirstName(),
-				standardEmailMobileCustomer().getLastName(), CUST_DATE, customerDetails.getHomeAddressId(), standardEmailMobileCustomer().getMobile(), 
-				standardEmailMobileCustomer().getIsEmailVerified(),standardEmailMobileCustomer().getEmail(),
+		return new CustomerDetails(customerDetails.getCustomerId(), standardEmailMobileCustomer().getFirstName(),CUST_MIDDLENAME,
+				standardEmailMobileCustomer().getLastName(), CUST_DATE, customerDetails.getHomeAddressId(), standardEmailMobileCustomer().getMobile(),
+				null,standardEmailMobileCustomer().getIsEmailVerified(),standardEmailMobileCustomer().getEmail(),
 				standardEmailMobileCustomer().getIsEmailVerified(), CUST_LANG, CUST_BUSINESS_DOMAIN, CUST_NAME_OF_FIRM, customerDetails.getFirmAddressId(),
 				CUST_SEC_MOBILE_NEW, null,	CUST_SEC_EMAIL, CUST_DATE, CUST_DATE, CUST_UPDATED_BY);
 		
@@ -141,8 +143,8 @@ public class CustomerDetailsDataFixtures {
 	
 	public static CustomerDetails standardCustomerDetailsWithNewMobile(CustomerDetails customerDetails)
 	{
-		return new CustomerDetails(customerDetails.getCustomerId(), customerDetails.getFirstName(),
-				customerDetails.getLastName(), CUST_DATE, customerDetails.getHomeAddressId(), CUST_MOBILE_NEW, 
+		return new CustomerDetails(customerDetails.getCustomerId(), customerDetails.getFirstName(),CUST_MIDDLENAME,
+				customerDetails.getLastName(), CUST_DATE, customerDetails.getHomeAddressId(), CUST_MOBILE_NEW,null, 
 				customerDetails.getIsEmailVerified(),customerDetails.getEmail(),
 				customerDetails.getIsEmailVerified(), CUST_LANG, CUST_BUSINESS_DOMAIN, CUST_NAME_OF_FIRM, customerDetails.getFirmAddressId(),
 				CUST_SEC_MOBILE_NEW, null,	CUST_SEC_EMAIL, CUST_DATE, CUST_DATE, CUST_UPDATED_BY);
@@ -152,8 +154,8 @@ public class CustomerDetailsDataFixtures {
 	
 	public static CustomerDetails standardCustomerDetailsWithNewEmail(CustomerDetails customerDetails)
 	{
-		return new CustomerDetails(customerDetails.getCustomerId(), customerDetails.getFirstName(),
-				customerDetails.getLastName(), CUST_DATE, customerDetails.getHomeAddressId(), CUST_MOBILE_NEW, 
+		return new CustomerDetails(customerDetails.getCustomerId(), customerDetails.getFirstName(),CUST_MIDDLENAME,
+				customerDetails.getLastName(), CUST_DATE, customerDetails.getHomeAddressId(), CUST_MOBILE_NEW,null, 
 				customerDetails.getIsEmailVerified(),CUST_EMAIL_NEW,
 				customerDetails.getIsEmailVerified(), CUST_LANG, CUST_BUSINESS_DOMAIN, CUST_NAME_OF_FIRM, customerDetails.getFirmAddressId(),
 				CUST_SEC_MOBILE_NEW, null,	CUST_SEC_EMAIL, CUST_DATE, CUST_DATE, CUST_UPDATED_BY);
@@ -162,8 +164,8 @@ public class CustomerDetailsDataFixtures {
 	
 	public static CustomerDetails standardCustomerDetailsWithNewHomeAddress(CustomerDetails customerDetails)
 	{
-		return new CustomerDetails(customerDetails.getCustomerId(), customerDetails.getFirstName(),
-				customerDetails.getLastName(), CUST_DATE, standardAddressUpdated(), CUST_MOBILE_NEW, 
+		return new CustomerDetails(customerDetails.getCustomerId(), customerDetails.getFirstName(),CUST_MIDDLENAME,
+				customerDetails.getLastName(), CUST_DATE, standardAddressUpdated(), CUST_MOBILE_NEW,null, 
 				customerDetails.getIsEmailVerified(),CUST_EMAIL_NEW,
 				customerDetails.getIsEmailVerified(), CUST_LANG, CUST_BUSINESS_DOMAIN, CUST_NAME_OF_FIRM, customerDetails.getFirmAddressId(),
 				CUST_SEC_MOBILE_NEW, null,	CUST_SEC_EMAIL, CUST_DATE, CUST_DATE, CUST_UPDATED_BY);
