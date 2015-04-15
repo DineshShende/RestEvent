@@ -2,8 +2,13 @@ package com.projectx.rest.domain.completeregister;
 
 import java.util.Date;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.projectx.rest.util.annotation.Pincode;
 import com.projectx.rest.util.serializer.JsonDateDeSerializer;
 import com.projectx.rest.util.serializer.JsonDateSerializer;
 
@@ -12,22 +17,32 @@ public class Address {
 
 	private Long addressId;
 	
+	@NotNull
 	private Integer customerType;
 	
+	@NotNull
 	private String addressLine;
 	
+	@NotNull
 	private String city;
 	
+	@NotNull
 	private String district;
 	
+	@NotNull
 	private String state;
 	
+	@Max(value=999999)
+	@Min(value=100000)
 	private Integer pincode;
 
+	@NotNull
 	private Date insertTime;
 	
+	@NotNull
 	private Date updateTime;
 	
+	@NotNull
 	private String updatedBy;
 
 	public Address() {

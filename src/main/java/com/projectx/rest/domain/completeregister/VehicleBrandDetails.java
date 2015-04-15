@@ -9,10 +9,8 @@ public class VehicleBrandDetails {
 	
 	private VehicleTypeDetails vehicleTypeId;
 	
-
 	private String vehicleBrandName;
 	
-
 	private String modelNumber;
 
 	public VehicleBrandDetails() {

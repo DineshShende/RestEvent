@@ -13,7 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestClientException;
 
 import com.projectx.data.domain.quickregister.CustomerIdTypeMobileTypeDTO;
-import com.projectx.data.domain.quickregister.CustomerIdTypeMobileTypeUpdatedByDTO;
+import com.projectx.data.domain.quickregister.CustomerIdTypeMobileTypeRequestedByDTO;
+
 import com.projectx.mvc.domain.quickregister.UpdateMobilePinDTO;
 import com.projectx.mvc.domain.quickregister.VerifyMobilePinDTO;
 import com.projectx.rest.domain.quickregister.MobileVerificationDetails;
@@ -55,8 +56,27 @@ public class MobileVerificationController {
 	}
 	
 	
+	@RequestMapping(value="/sendMobilePin",method=RequestMethod.POST)
+	public ResponseEntity<Boolean> sendMobilePin(@Valid @RequestBody CustomerIdTypeMobileTypeRequestedByDTO updateMobilePin,
+			BindingResult bindingResult)
+	{
+		if(bindingResult.hasErrors())
+			return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+		
+		try{
+			Boolean status=mobileVerificationService.sendMobilePin(updateMobilePin.getCustomerId(),updateMobilePin.getCustomerType(),
+					updateMobilePin.getMobileType(),updateMobilePin.getRequestedBy());
+			
+			return new ResponseEntity<Boolean>(status, HttpStatus.OK);
+		}catch(ResourceNotFoundException e)
+		{
+			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+		}
+		
+	}
+	
 	@RequestMapping(value="/resetMobilePin",method=RequestMethod.POST)
-	public ResponseEntity<Boolean> updateMobilePin(@Valid @RequestBody CustomerIdTypeMobileTypeUpdatedByDTO updateMobilePin,
+	public ResponseEntity<Boolean> updateMobilePin(@Valid @RequestBody CustomerIdTypeMobileTypeRequestedByDTO updateMobilePin,
 			BindingResult bindingResult)
 	{
 		if(bindingResult.hasErrors())
@@ -64,7 +84,7 @@ public class MobileVerificationController {
 		
 		try{
 			Boolean status=mobileVerificationService.reSetMobilePin(updateMobilePin.getCustomerId(),updateMobilePin.getCustomerType(),
-					updateMobilePin.getMobileType(),updateMobilePin.getUpdatedBy());
+					updateMobilePin.getMobileType(),updateMobilePin.getRequestedBy());
 			
 			return new ResponseEntity<Boolean>(status, HttpStatus.OK);
 		}catch(ResourceNotFoundException e)
@@ -76,7 +96,7 @@ public class MobileVerificationController {
 	
 	
 	@RequestMapping(value="/resendMobilePin",method=RequestMethod.POST)
-	public ResponseEntity<Boolean> reSendMobilePin(@Valid @RequestBody CustomerIdTypeMobileTypeUpdatedByDTO updateMobilePin,
+	public ResponseEntity<Boolean> reSendMobilePin(@Valid @RequestBody CustomerIdTypeMobileTypeRequestedByDTO updateMobilePin,
 			BindingResult bindingResult)
 	{
 		if(bindingResult.hasErrors())
@@ -85,7 +105,7 @@ public class MobileVerificationController {
 		try{
 		
 			Boolean result= mobileVerificationService.reSendMobilePin(updateMobilePin.getCustomerId(),updateMobilePin.getCustomerType(),
-					updateMobilePin.getMobileType(),updateMobilePin.getUpdatedBy());
+					updateMobilePin.getMobileType(),updateMobilePin.getRequestedBy());
 			return new ResponseEntity<Boolean>(result, HttpStatus.OK);
 		}catch(ResourceNotFoundException e)
 		{
@@ -117,6 +137,14 @@ public class MobileVerificationController {
 				
 		return result;
 	}
-
+	
+	/*
+	@RequestMapping(value="/checkIfMobileAlreadyExists",method=Request)
+	
+	{
+		
+		mobileVerificationService.getByMobile(mobile)
+	}
+*/
 	
 }

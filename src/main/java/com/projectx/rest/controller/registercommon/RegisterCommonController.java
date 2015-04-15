@@ -24,6 +24,12 @@ public class RegisterCommonController {
 	@Autowired
 	RegisterCommonService registerCommonService;
 	
+	@RequestMapping(value="/test/aws",method=RequestMethod.GET)
+	public String aws()
+	{
+		return "aws";
+	}
+	
 	@RequestMapping(value="/customer/quickregister/resetPasswordRedirect",method=RequestMethod.POST)
 	public ResponseEntity<ForgetPasswordEntity> resetPasswordRedirect(@Valid @RequestBody ResetPasswordRedirectDTO passwordRedirectDTO,
 			BindingResult bindingResult)

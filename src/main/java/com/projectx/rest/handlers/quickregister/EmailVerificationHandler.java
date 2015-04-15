@@ -138,7 +138,7 @@ public class EmailVerificationHandler implements EmailVerificationService {
 				updateStatus=customerQuickRegisterService.updateEmailVerificationStatus(fetchedEntity.getCustomerId(), fetchedEntity.getIsEmailVerified(),
 					fetchedEntity.getUpdateTime(), fetchedEntity.getUpdatedBy());										
 			
-				sendPasswordStatus=authenticationHandler.sendDefaultPassword(fetchedEntity, false,EMAIL_REQ,requestBy);
+				sendPasswordStatus=authenticationHandler.sendDefaultPassword(fetchedEntity.getCustomerId(),fetchedEntity.getCustomerType(), false,EMAIL_REQ,requestBy);
 			
 			}catch(ResourceNotFoundException e)
 			{

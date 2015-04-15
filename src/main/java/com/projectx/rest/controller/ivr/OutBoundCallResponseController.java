@@ -40,8 +40,6 @@ public class OutBoundCallResponseController {
 	@Autowired
 	FreightRequestByVendorService freightRequestByVendorService;
 	
-	@Autowired
-	PreBookService preBookService;
 	
 	@Autowired
 	OutBoundCallService outBoundCallService;
@@ -187,7 +185,8 @@ public class OutBoundCallResponseController {
 		
 		
 	}
-	
+
+	/*
 	@RequestMapping(value="/trackresponseentity",method=RequestMethod.GET)
 	public Map<String, KooKooRequestEntity> trackresponseentity()
 	{
@@ -199,5 +198,6 @@ public class OutBoundCallResponseController {
 	{
 		return freightRequestByCustomerStatusDTO.getQuestionStatus();
 	}
+	*/
 	
 }

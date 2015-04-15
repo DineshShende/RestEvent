@@ -106,20 +106,6 @@ public class FreightRequestByCustomerController {
 		
 	}
 
-	/*
-	@RequestMapping(value="/getMatchingCustomerReqForVendorReq",method=RequestMethod.POST)
-	public ResponseEntity<List<FreightRequestByCustomer>> getMatchingCustomerReqForVendorReq(@Valid @RequestBody FreightRequestByVendor freightRequestByVendor,
-			BindingResult bindingResult)
-	{
-		if(bindingResult.hasErrors())
-			return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
-		
-		List<FreightRequestByCustomer> savedEntity=freightRequestByCustomerService.getMatchingCustReqForVendorReq(freightRequestByVendor);
-		
-		return new ResponseEntity<List<FreightRequestByCustomer>>(savedEntity, HttpStatus.OK);
-		
-	}
-	*/
 	
 	@RequestMapping(value="/getMatchingCustomerReqForVendorReq",method=RequestMethod.POST)
 	public void getMatchingCustomerReqForVendorReq(@Valid @RequestBody FreightRequestByVendor freightRequestByVendor,
@@ -219,6 +205,22 @@ public class FreightRequestByCustomerController {
 		
 		return result;
 	}
+
+	/*
+	@RequestMapping(value="/getMatchingCustomerReqForVendorReq",method=RequestMethod.POST)
+	public ResponseEntity<List<FreightRequestByCustomer>> getMatchingCustomerReqForVendorReq(@Valid @RequestBody FreightRequestByVendor freightRequestByVendor,
+			BindingResult bindingResult)
+	{
+		if(bindingResult.hasErrors())
+			return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+		
+		List<FreightRequestByCustomer> savedEntity=freightRequestByCustomerService.getMatchingCustReqForVendorReq(freightRequestByVendor);
+		
+		return new ResponseEntity<List<FreightRequestByCustomer>>(savedEntity, HttpStatus.OK);
+		
+	}
+	*/
+
 	
 	/*
 	@RequestMapping(value="/addtrackresponseentity")

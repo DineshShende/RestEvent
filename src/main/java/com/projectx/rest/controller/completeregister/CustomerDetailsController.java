@@ -13,7 +13,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.projectx.data.domain.quickregister.CustomerIdTypeEmailTypeUpdatedByDTO;
-import com.projectx.data.domain.quickregister.CustomerIdTypeMobileTypeUpdatedByDTO;
+import com.projectx.data.domain.quickregister.CustomerIdTypeMobileTypeRequestedByDTO;
+import com.projectx.mvc.domain.completeregister.EntityIdDTO;
 import com.projectx.mvc.domain.completeregister.VerifyEmailDTO;
 import com.projectx.mvc.domain.completeregister.VerifyMobileDTO;
 import com.projectx.rest.domain.completeregister.CustomerDetails;
@@ -24,6 +25,7 @@ import com.projectx.rest.exception.repository.completeregister.ValidationFailedE
 import com.projectx.rest.exception.repository.quickregister.DeleteQuickCreateDetailsEntityFailedException;
 import com.projectx.rest.exception.repository.quickregister.ResourceNotFoundException;
 import com.projectx.rest.services.completeregister.CustomerDetailsService;
+import com.projectx.rest.services.quickregister.QuickRegisterService;
 
 @RestController
 @RequestMapping(value="/customer")
@@ -32,18 +34,30 @@ public class CustomerDetailsController {
 	@Autowired
 	CustomerDetailsService customerDetailsService;
 	
+	@Autowired
+	QuickRegisterService quickRegisterService;
+	
 	
 	@RequestMapping(value="/createFromQuickRegister",method=RequestMethod.POST)
-	public ResponseEntity<CustomerDetails> createCustomerDetailsFromQuickRegisterEntity(@Valid @RequestBody QuickRegisterEntity quickRegisterEntity,
+	public ResponseEntity<CustomerDetails> createCustomerDetailsFromQuickRegisterEntity(@Valid @RequestBody EntityIdDTO entityIdDTO,
 			BindingResult bindingResult)
 	{
 		if(bindingResult.hasErrors())
 			return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
 		
 		ResponseEntity<CustomerDetails> result=null;
+		QuickRegisterEntity entity=null;
 		
 		try{
-			CustomerDetails savedEntity=customerDetailsService.createCustomerDetailsFromQuickRegisterEntity(quickRegisterEntity);
+			entity=quickRegisterService.getByEntityId(entityIdDTO.getEntityId());
+			
+		}catch(ResourceNotFoundException e)
+		{
+			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+		}
+		
+		try{
+			CustomerDetails savedEntity=customerDetailsService.createCustomerDetailsFromQuickRegisterEntity(entity);
 			result=new ResponseEntity<CustomerDetails>(savedEntity, HttpStatus.OK);
 		}catch(DeleteQuickCreateDetailsEntityFailedException e)
 		{
@@ -105,93 +119,6 @@ public class CustomerDetailsController {
 		return true;
 	}
 	
-	/*
-	@RequestMapping(value="/verifyMobileDetails",method=RequestMethod.POST)
-	public ResponseEntity<Boolean> verifyMobileDetails(@Valid @RequestBody VerifyMobileDTO verifyMobileDTO,BindingResult bindingResult)
-	{
-		if(bindingResult.hasErrors())
-			return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
-		
-		try{
-		
-			Boolean result=customerDetailsService
-					.verifyMobileDetails(verifyMobileDTO.getEntityId(), verifyMobileDTO.getEntityType(), 
-							verifyMobileDTO.getMobileType(), verifyMobileDTO.getMobilePin(),verifyMobileDTO.getRequestBy());
-			return new ResponseEntity<Boolean>(result, HttpStatus.OK);
-			
-		}catch(ValidationFailedException e)
-		{
-			return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
-		}catch (ResourceNotFoundException e) {
-			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-		}
-		
-		
-	}
-	
-	@RequestMapping(value="/verifyEmailDetails",method=RequestMethod.POST)
-	public ResponseEntity<Boolean> verifyEmailDetails(@Valid @RequestBody VerifyEmailDTO verifyEmailDTO,BindingResult bindingResult)
-	{
-		if(bindingResult.hasErrors())
-			return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
-		
-		try{
-		
-			Boolean result=customerDetailsService
-					.verifyEmailDetails(verifyEmailDTO.getCustomerId(), verifyEmailDTO.getCustomerType(),
-							verifyEmailDTO.getEmailType(),  verifyEmailDTO.getEmailHash(),verifyEmailDTO.getUpdatedBy());
-			return new ResponseEntity<Boolean>(result, HttpStatus.OK);
-		}catch(ResourceNotFoundException e)
-		{
-			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-		}
-		
-	}
-	
-	@RequestMapping(value="/sendMobileVerificationDetails",method=RequestMethod.POST)
-	public ResponseEntity<Boolean> sendMobileVerificationDetails(@Valid @RequestBody CustomerIdTypeMobileTypeUpdatedByDTO customerIdTypeMobileDTO,
-			BindingResult bindingResult)
-	{
-		if(bindingResult.hasErrors())
-			return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
-		
-		
-		try{
-			Boolean result=customerDetailsService
-					.sendMobileVerificationDetails(customerIdTypeMobileDTO.getCustomerId(), customerIdTypeMobileDTO.getCustomerType(), 
-							customerIdTypeMobileDTO.getMobileType(),customerIdTypeMobileDTO.getUpdatedBy());
-			return new ResponseEntity<Boolean>(result, HttpStatus.OK);
-			
-		}catch(ResourceNotFoundException e)
-		{
-			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-		}
-		
-				
-	}
-	
-	@RequestMapping(value="/sendEmailVerificationDetails",method=RequestMethod.POST)
-	public ResponseEntity<Boolean> sendEmailVerificationDetails(@Valid @RequestBody CustomerIdTypeEmailTypeUpdatedByDTO customerIdTypeEmailDTO,
-			BindingResult bindingResult)
-	{
-		if(bindingResult.hasErrors())
-			return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
-		
-		try{
-			Boolean result=customerDetailsService
-					.sendEmailVerificationDetails(customerIdTypeEmailDTO.getCustomerId(), customerIdTypeEmailDTO.getCustomerType(),
-							customerIdTypeEmailDTO.getEmailType(),customerIdTypeEmailDTO.getUpdatedBy());
-			
-			return new ResponseEntity<Boolean>(result, HttpStatus.OK);
-			
-		}catch(ResourceNotFoundException e)
-		{
-			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-		}
-		
-						
-	}
-	*/
 	
 	
 	

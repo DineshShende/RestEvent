@@ -1,5 +1,7 @@
 package com.projectx.data.domain.quickregister;
 
+import javax.validation.constraints.NotNull;
+
 public class UpdatePasswordAndPasswordTypeDTO {
 	
 	private Long customerId;
@@ -9,23 +11,30 @@ public class UpdatePasswordAndPasswordTypeDTO {
 	private String password;
 	
 	private String passwordType;
+
+	private Boolean isForcefulChangePassword;
 	
 	private String updatedBy;
+	
 
 	public UpdatePasswordAndPasswordTypeDTO() {
 	
 	}
 
+
+
 	public UpdatePasswordAndPasswordTypeDTO(Long customerId,
 			Integer customerType, String password, String passwordType,
-			String updatedBy) {
+			Boolean isForcefulChangePassword, String updatedBy) {
 		super();
 		this.customerId = customerId;
 		this.customerType = customerType;
 		this.password = password;
 		this.passwordType = passwordType;
+		this.isForcefulChangePassword = isForcefulChangePassword;
 		this.updatedBy = updatedBy;
 	}
+
 
 
 	public Long getCustomerId() {
@@ -72,6 +81,20 @@ public class UpdatePasswordAndPasswordTypeDTO {
 	public void setUpdatedBy(String updatedBy) {
 		this.updatedBy = updatedBy;
 	}
+
+	
+	
+	public Boolean getIsForcefulChangePassword() {
+		return isForcefulChangePassword;
+	}
+
+
+
+	public void setIsForcefulChangePassword(Boolean isForcefulChangePassword) {
+		this.isForcefulChangePassword = isForcefulChangePassword;
+	}
+
+
 
 	@Override
 	public String toString() {

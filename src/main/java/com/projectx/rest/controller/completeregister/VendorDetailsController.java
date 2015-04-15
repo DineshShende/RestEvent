@@ -13,7 +13,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.projectx.data.domain.quickregister.CustomerIdTypeEmailTypeUpdatedByDTO;
-import com.projectx.data.domain.quickregister.CustomerIdTypeMobileTypeUpdatedByDTO;
+import com.projectx.data.domain.quickregister.CustomerIdTypeMobileTypeRequestedByDTO;
+import com.projectx.mvc.domain.completeregister.EntityIdDTO;
 import com.projectx.mvc.domain.completeregister.VerifyEmailDTO;
 import com.projectx.mvc.domain.completeregister.VerifyMobileDTO;
 import com.projectx.rest.domain.completeregister.VendorDetails;
@@ -24,6 +25,7 @@ import com.projectx.rest.exception.repository.completeregister.VendorDetailsTran
 import com.projectx.rest.exception.repository.quickregister.DeleteQuickCreateDetailsEntityFailedException;
 import com.projectx.rest.exception.repository.quickregister.ResourceNotFoundException;
 import com.projectx.rest.services.completeregister.VendorDetailsService;
+import com.projectx.rest.services.quickregister.QuickRegisterService;
 
 
 @RestController
@@ -33,15 +35,27 @@ public class VendorDetailsController {
 	@Autowired
 	VendorDetailsService vendorDetailsService;
 
+	@Autowired
+	QuickRegisterService quickRegisterService;
 	
 	@RequestMapping(value="/createFromQuickRegister",method=RequestMethod.POST)
-	public ResponseEntity<VendorDetails> createCustomerDetailsFromQuickRegisterEntity(@Valid @RequestBody QuickRegisterEntity quickRegisterEntity,
+	public ResponseEntity<VendorDetails> createCustomerDetailsFromQuickRegisterEntity(@Valid @RequestBody EntityIdDTO entityIdDTO,
 			BindingResult bindingResult)
 	{
 		if(bindingResult.hasErrors())
 			return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
 		
 		ResponseEntity<VendorDetails> result=null;
+		QuickRegisterEntity quickRegisterEntity=null;
+		
+		try{
+			quickRegisterEntity=quickRegisterService.getByEntityId(entityIdDTO.getEntityId());
+		}catch(ResourceNotFoundException e)
+		{
+			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+		}
+		
+		
 		try{
 			VendorDetails savedEntity=vendorDetailsService.createCustomerDetailsFromQuickRegisterEntity(quickRegisterEntity);
 			result=new ResponseEntity<VendorDetails>(savedEntity, HttpStatus.OK);

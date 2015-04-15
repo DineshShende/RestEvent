@@ -26,7 +26,7 @@ import org.springframework.web.context.WebApplicationContext;
 import com.projectx.data.domain.quickregister.CustomerIdTypeEmailTypeDTO;
 import com.projectx.data.domain.quickregister.CustomerIdTypeEmailTypeUpdatedByDTO;
 import com.projectx.data.domain.quickregister.CustomerIdTypeMobileTypeDTO;
-import com.projectx.data.domain.quickregister.CustomerIdTypeMobileTypeUpdatedByDTO;
+import com.projectx.data.domain.quickregister.CustomerIdTypeMobileTypeRequestedByDTO;
 import com.projectx.mvc.domain.completeregister.VerifyEmailDTO;
 import com.projectx.mvc.domain.completeregister.VerifyMobileDTO;
 import com.projectx.rest.config.Application;
@@ -103,7 +103,7 @@ public class CustomerDetailsWACTest {
 		
 		this.mockMvc.perform(
 				post("/customer/createFromQuickRegister")
-				.content(standardJsonQuickRegister(quickRegisterEntity))
+				.content(standardJsonEntityIdDTO(standardEntityIdDTO(quickRegisterEntity.getCustomerId())))
 				.contentType(MediaType.APPLICATION_JSON)
 				.accept(MediaType.APPLICATION_JSON))
 	.andDo(print())
@@ -174,6 +174,18 @@ public class CustomerDetailsWACTest {
 	}
 	
 	@Test
+	public void saveCompleteEntityWithInvalidAddress() throws Exception
+	{
+		this.mockMvc.perform(
+				post("/customer")
+				.content(standardJsonCustomerDetails(standardCustomerDetailsInvalidPincode(standardCustomerFromQuickEntity())))
+				.contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON))
+	.andDo(print())
+	.andExpect(status().isOk());
+	}
+	
+	@Test
 	public void merge() throws Exception
 	{
 		this.mockMvc.perform(
@@ -221,7 +233,7 @@ public class CustomerDetailsWACTest {
 	
 	}
 	
-	
+	/*
 	@Test
 	public void verifySecondaryMobileDetails() throws Exception
 	{
@@ -239,11 +251,7 @@ public class CustomerDetailsWACTest {
 		
 		mobileVerificationDetails=mobileVerificationService.saveDetails(mobileVerificationDetails);
 		
-		/*
-		MobileVerificationDetails mobileVerificationDetails=
-				mobileVerificationService
-				.getByEntityIdTypeAndMobileType(customerDetails.getCustomerId(), 1, MOB_TYPE_SECONDARY);
-		*/		
+				
 		
 		VerifyMobileDTO verifyMobileDTO=new VerifyMobileDTO(customerDetails.getCustomerId(), 1,
 				mobileVerificationDetails.getKey().getMobileType(), mobileVerificationDetails.getMobilePin(),CUST_UPDATED_BY);
@@ -372,5 +380,6 @@ public class CustomerDetailsWACTest {
 		
 		
 	}
+	*/
 
 }

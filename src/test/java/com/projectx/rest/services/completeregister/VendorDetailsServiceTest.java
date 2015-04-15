@@ -154,7 +154,7 @@ public class VendorDetailsServiceTest {
 		
 		assertFalse(savedEntity.getIsMobileVerified());
 		
-		assertTrue(vendorDetailsService.verifyMobileDetails(savedEntity.getVendorId(), ENTITY_TYPE_VENDOR, MOB_TYPE_PRIMARY, 
+		assertTrue(mobileVerificationService.verifyMobilePinUpdateStatusAndSendPassword(savedEntity.getVendorId(), ENTITY_TYPE_VENDOR, MOB_TYPE_PRIMARY, 
 				mobileVerificationDetails.getMobilePin(),CUST_UPDATED_BY));
 		
 		assertTrue(vendorDetailsService.findById(savedEntity.getVendorId()).getIsMobileVerified());
@@ -180,7 +180,7 @@ public class VendorDetailsServiceTest {
 		
 		assertFalse(savedEntity.getIsEmailVerified());
 		
-		assertTrue(vendorDetailsService.verifyEmailDetails(savedEntity.getVendorId(), ENTITY_TYPE_VENDOR, EMAIL_TYPE_PRIMARY, 
+		assertTrue(emailVerificationService.verifyEmailHashUpdateStatusAndSendPassword(savedEntity.getVendorId(), ENTITY_TYPE_VENDOR, EMAIL_TYPE_PRIMARY, 
 				emailVerificationDetails.getEmailHash(),CUST_UPDATED_BY));
 		
 		assertTrue(vendorDetailsService.findById(savedEntity.getVendorId()).getIsEmailVerified());
@@ -198,7 +198,7 @@ public class VendorDetailsServiceTest {
 		
 		VendorDetails savedEntity=vendorDetailsService.createCustomerDetailsFromQuickRegisterEntity(quickRegisterEntity);
 		
-		assertTrue(vendorDetailsService.sendMobileVerificationDetails(savedEntity.getVendorId(), ENTITY_TYPE_VENDOR, MOB_TYPE_PRIMARY,CUST_UPDATED_BY));
+		assertTrue(mobileVerificationService.sendMobilePin(savedEntity.getVendorId(), ENTITY_TYPE_VENDOR, MOB_TYPE_PRIMARY,CUST_UPDATED_BY));
 	}
 	
 	@Test
@@ -211,7 +211,7 @@ public class VendorDetailsServiceTest {
 		
 		VendorDetails savedEntity=vendorDetailsService.createCustomerDetailsFromQuickRegisterEntity(quickRegisterEntity);
 		
-		assertTrue(vendorDetailsService.sendEmailVerificationDetails(savedEntity.getVendorId(), ENTITY_TYPE_VENDOR, EMAIL_TYPE_PRIMARY,CUST_UPDATED_BY));
+		assertTrue(emailVerificationService.sendEmailHash(savedEntity.getVendorId(), ENTITY_TYPE_VENDOR, EMAIL_TYPE_PRIMARY,CUST_UPDATED_BY));
 	}
 	
 	@Test

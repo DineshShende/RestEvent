@@ -250,7 +250,7 @@ public class DriverDetailsRepositoryTest {
 		try{
 			updatedEntity=driverDetailsRepository.save(standardDriverDetailsNewMobileAndFirstName(savedEntity.getDriverId()));
 		}
-		catch(DriverDetailsUpdateFailedException e)
+		catch(DriverDetailsAlreadyPresentException e)
 		{
 			assertNull(updatedEntity);
 		}

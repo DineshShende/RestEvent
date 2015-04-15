@@ -115,7 +115,6 @@ public class QuickRegisterHandler implements
 			
 		}
 		
-
 		if(entityByEmail.getKey()!=null && entityByMobile.getKey()!=null && !entityByEmail.getKey().getCustomerId().equals(entityByMobile.getKey().getCustomerId())&&!entityByEmail.getKey().getCustomerType().equals(entityByMobile.getKey().getCustomerType()))
 		{
 			return new CustomerQuickRegisterStatusEntity(REGISTER_FISHY, new QuickRegisterEntity());
@@ -174,6 +173,8 @@ public class QuickRegisterHandler implements
 		return new CustomerQuickRegisterStatusEntity(status, returnEntity);
 	}
 
+	
+	
 	@Override
 	public QuickRegisterEntity populateVerificationFields(
 			CustomerQuickRegisterEntityDTO customer) {

@@ -16,7 +16,7 @@ import com.projectx.data.domain.completeregister.CustomerOrVendorDetailsDTO;
 import com.projectx.data.domain.quickregister.CustomerIdTypeEmailTypeDTO;
 import com.projectx.data.domain.quickregister.CustomerIdTypeEmailTypeUpdatedByDTO;
 import com.projectx.data.domain.quickregister.CustomerIdTypeMobileTypeDTO;
-import com.projectx.data.domain.quickregister.CustomerIdTypeMobileTypeUpdatedByDTO;
+import com.projectx.data.domain.quickregister.CustomerIdTypeMobileTypeRequestedByDTO;
 import com.projectx.rest.domain.completeregister.CustomerDetails;
 import com.projectx.rest.domain.completeregister.VendorDetails;
 import com.projectx.rest.domain.quickregister.CustomerQuickRegisterEmailMobileVerificationEntity;
@@ -100,10 +100,10 @@ public class TransactionalDetailsRepositoryImpl implements
 			Long entityId, Integer entityType, Integer mobileType,String updatedBy) 
 					throws UpdateMobileInDetailsAndAuthentionDetailsFailedException,ValidationFailedException{
 
-		CustomerIdTypeMobileTypeUpdatedByDTO customerIdTypeMobileTypeDTO=
-				new CustomerIdTypeMobileTypeUpdatedByDTO(entityId, entityType, mobileType,updatedBy);
+		CustomerIdTypeMobileTypeRequestedByDTO customerIdTypeMobileTypeDTO=
+				new CustomerIdTypeMobileTypeRequestedByDTO(entityId, entityType, mobileType,updatedBy);
 		
-		HttpEntity<CustomerIdTypeMobileTypeUpdatedByDTO> entity=new HttpEntity<CustomerIdTypeMobileTypeUpdatedByDTO>(customerIdTypeMobileTypeDTO);
+		HttpEntity<CustomerIdTypeMobileTypeRequestedByDTO> entity=new HttpEntity<CustomerIdTypeMobileTypeRequestedByDTO>(customerIdTypeMobileTypeDTO);
 		
 		ResponseEntity<Boolean> result=null;
 		

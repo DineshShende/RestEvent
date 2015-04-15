@@ -58,6 +58,25 @@ public class EmailVerificationController {
 		return result;
 	}
 	
+	@RequestMapping(value="/sendEmailHash",method=RequestMethod.POST)
+	public ResponseEntity<Boolean> sendEmailHash(@Valid @RequestBody CustomerIdTypeEmailTypeUpdatedByDTO updateEmailHash,BindingResult  bindingResult)
+	{
+		if(bindingResult.hasErrors())
+			return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+		
+		try{
+			Boolean result=emailVerificationService
+					.sendEmailHash(updateEmailHash.getCustomerId(),updateEmailHash.getCustomerType(),updateEmailHash.getEmailType(),updateEmailHash.getRequestedBy());
+			return new ResponseEntity<Boolean>(result, HttpStatus.OK);
+			
+		}catch(ResourceNotFoundException e)
+		{
+			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+		}
+		
+	}
+
+	
 	@RequestMapping(value="/resetEmailHash",method=RequestMethod.POST)
 	public ResponseEntity<Boolean> updateEmailHash(@Valid @RequestBody CustomerIdTypeEmailTypeUpdatedByDTO updateEmailHash,BindingResult  bindingResult)
 	{
@@ -66,7 +85,7 @@ public class EmailVerificationController {
 		
 		try{
 			Boolean result=emailVerificationService
-					.reSetEmailHash(updateEmailHash.getCustomerId(),updateEmailHash.getCustomerType(),updateEmailHash.getEmailType(),updateEmailHash.getUpdatedBy());
+					.reSetEmailHash(updateEmailHash.getCustomerId(),updateEmailHash.getCustomerType(),updateEmailHash.getEmailType(),updateEmailHash.getRequestedBy());
 			return new ResponseEntity<Boolean>(result, HttpStatus.OK);
 			
 		}catch(ResourceNotFoundException e)
@@ -85,7 +104,7 @@ public class EmailVerificationController {
 		
 		try{
 			Boolean result= emailVerificationService.reSendEmailHash(updateEmailHash.getCustomerId(),updateEmailHash.getCustomerType(),
-					updateEmailHash.getEmailType(),updateEmailHash.getUpdatedBy());
+					updateEmailHash.getEmailType(),updateEmailHash.getRequestedBy());
 			
 			return new ResponseEntity<Boolean>(result, HttpStatus.OK);
 		}catch(ResourceNotFoundException e)

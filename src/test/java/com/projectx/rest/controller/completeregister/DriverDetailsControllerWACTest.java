@@ -108,12 +108,12 @@ public class DriverDetailsControllerWACTest {
 		DriverDetails driverDetails=driverDetailsService.save(standardDriverDetails());
 		
 		this.mockMvc.perform(
-	            post("/vendor/driver/update")
+	            post("/vendor/driver")
 	                    .content(standardDriverJson(standardDriverDetailsNewMobileAndFirstName(driverDetails.getDriverId())))
 	                    .contentType(MediaType.APPLICATION_JSON)
 	                    .accept(MediaType.APPLICATION_JSON))
 	            .andDo(print())
-	            .andExpect(status().isOk())
+	            .andExpect(status().isCreated())
 	            
 	         //   .andExpect(jsonPath("$.key.customerId").value(standardDocumentDetailsWithDummyDocument().getKey().getCustomerId()))
 		

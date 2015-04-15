@@ -98,7 +98,7 @@ public class MobileVerificationControllerStandAloneTest {
 		
 		this.mockMvc.perform(
 	            post("/customer/quickregister/resetMobilePin")
-	                    .content(standardJsonUpdateMobilePinUpdatedByDTOMVC())
+	                    .content(standardJsonUpdateMobilePinUpdatedByDTOMVC(standardCustomerIdTypeMobileTypeUpdatedByDTO()))
 	                    .contentType(MediaType.APPLICATION_JSON)
 	                    .accept(MediaType.APPLICATION_JSON))
 	            .andDo(print())
@@ -116,7 +116,7 @@ public class MobileVerificationControllerStandAloneTest {
 		
 		this.mockMvc.perform(
 	            post("/customer/quickregister/resendMobilePin")
-	                    .content(standardJsonUpdateMobilePinUpdatedByDTOMVC())
+	                    .content(standardJsonUpdateMobilePinUpdatedByDTOMVC(standardCustomerIdTypeMobileTypeUpdatedByDTO()))
 	                    .contentType(MediaType.APPLICATION_JSON)
 	                    .accept(MediaType.APPLICATION_JSON))
 	            .andDo(print())

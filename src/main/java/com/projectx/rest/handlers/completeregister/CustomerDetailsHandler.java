@@ -80,7 +80,7 @@ public class CustomerDetailsHandler implements CustomerDetailsService {
 	}
 
 	
-
+/*
 	@Override
 	public Boolean verifyMobileDetails(Long customerId, Integer customerType,
 			 Integer mobileType,Integer mobilePin,String updatedBy)throws ResourceNotFoundException,ValidationFailedException {
@@ -120,7 +120,7 @@ public class CustomerDetailsHandler implements CustomerDetailsService {
 		
 		return sendStatus;
 	}
-
+*/
 	@Override
 	public CustomerDetails setMetaData(CustomerDetails customerDetails,CustomerDetails oldEntity) {
 	

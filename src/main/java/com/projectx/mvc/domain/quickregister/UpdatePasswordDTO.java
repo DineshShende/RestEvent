@@ -11,10 +11,13 @@ public class UpdatePasswordDTO {
 	
 	@NotNull
 	private Integer customerType;
-	
+
 	@NotNull
 	private String password;
 	
+	@NotNull
+	private Boolean isForcefulChangePassword;
+
 	@NotNull
 	private String requestedBy;
 
@@ -22,14 +25,20 @@ public class UpdatePasswordDTO {
 
 	}
 
+
+
+
 	public UpdatePasswordDTO(Long customerId, Integer customerType,
-			String password, String requestedBy) {
+			String password, Boolean isForcefulChangePassword,
+			String requestedBy) {
 		super();
 		this.customerId = customerId;
 		this.customerType = customerType;
 		this.password = password;
+		this.isForcefulChangePassword = isForcefulChangePassword;
 		this.requestedBy = requestedBy;
 	}
+
 
 
 
@@ -64,11 +73,24 @@ public class UpdatePasswordDTO {
 	public void setRequestedBy(String requestedBy) {
 		this.requestedBy = requestedBy;
 	}
+	
+	
 
+	public Boolean getIsForcefulChangePassword() {
+		return isForcefulChangePassword;
+	}
+
+	public void setIsForcefulChangePassword(Boolean isForcefulChangePassword) {
+		this.isForcefulChangePassword = isForcefulChangePassword;
+	}
+
+	
+	
 	@Override
 	public String toString() {
 		return "UpdatePasswordDTO [customerId=" + customerId
 				+ ", customerType=" + customerType + ", password=" + password
+				+ ", isForcefulChangePassword=" + isForcefulChangePassword
 				+ ", requestedBy=" + requestedBy + "]";
 	}
 
@@ -80,6 +102,10 @@ public class UpdatePasswordDTO {
 				+ ((customerId == null) ? 0 : customerId.hashCode());
 		result = prime * result
 				+ ((customerType == null) ? 0 : customerType.hashCode());
+		result = prime
+				* result
+				+ ((isForcefulChangePassword == null) ? 0
+						: isForcefulChangePassword.hashCode());
 		result = prime * result
 				+ ((password == null) ? 0 : password.hashCode());
 		result = prime * result
@@ -106,6 +132,12 @@ public class UpdatePasswordDTO {
 				return false;
 		} else if (!customerType.equals(other.customerType))
 			return false;
+		if (isForcefulChangePassword == null) {
+			if (other.isForcefulChangePassword != null)
+				return false;
+		} else if (!isForcefulChangePassword
+				.equals(other.isForcefulChangePassword))
+			return false;
 		if (password == null) {
 			if (other.password != null)
 				return false;
@@ -119,6 +151,6 @@ public class UpdatePasswordDTO {
 		return true;
 	}
 
-	
+		
 	
 }

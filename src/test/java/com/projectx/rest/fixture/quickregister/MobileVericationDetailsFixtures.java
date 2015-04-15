@@ -4,8 +4,9 @@ import static com.projectx.rest.fixture.quickregister.QuickRegisterDataFixture.*
 
 import java.util.Date;
 
+import com.google.gson.Gson;
 import com.projectx.data.domain.quickregister.CustomerIdTypeMobileTypeDTO;
-import com.projectx.data.domain.quickregister.CustomerIdTypeMobileTypeUpdatedByDTO;
+import com.projectx.data.domain.quickregister.CustomerIdTypeMobileTypeRequestedByDTO;
 import com.projectx.data.domain.quickregister.CustomerMobileVerificationDetailsByCustomerIdTypeAndMobileTypeDTO;
 import com.projectx.data.domain.quickregister.MobileDTO;
 import com.projectx.data.domain.quickregister.UpdateMobilePinAndMobileVerificationAttemptsAndResetCountDTO;
@@ -24,6 +25,8 @@ public class MobileVericationDetailsFixtures {
 	public static Date CUST_DATE=new Date();
 	//public static Integer CUST_TYPE_CUSTOMER=1;
 	//public static Integer CUST_TYPE_VENDOR=2;
+	
+	static Gson gson=new Gson();
 	
 				
 	public static MobileVerificationDetailsKey standardMobileVerificationDetailsKey()
@@ -59,9 +62,9 @@ public class MobileVericationDetailsFixtures {
 		return new CustomerIdTypeMobileTypeDTO(CUST_ID,ENTITY_TYPE_CUSTOMER, CUST_MOBILE_TYPE_PRIMARY);
 	}
 	
-	public static CustomerIdTypeMobileTypeUpdatedByDTO standardCustomerIdTypeMobileTypeUpdatedByDTO()
+	public static CustomerIdTypeMobileTypeRequestedByDTO standardCustomerIdTypeMobileTypeUpdatedByDTO()
 	{
-		return new CustomerIdTypeMobileTypeUpdatedByDTO(CUST_ID,ENTITY_TYPE_CUSTOMER, CUST_MOBILE_TYPE_PRIMARY,CUST_UPDATED_BY);
+		return new CustomerIdTypeMobileTypeRequestedByDTO(CUST_ID,ENTITY_TYPE_CUSTOMER, CUST_MOBILE_TYPE_PRIMARY,CUST_UPDATED_BY);
 	}
 	
 	public static String standardJsonUpdateMobilePinDTOMVC()
@@ -69,17 +72,21 @@ public class MobileVericationDetailsFixtures {
 		return "{\"customerId\":"+CUST_ID+",\"customerType\":"+ENTITY_TYPE_CUSTOMER+",\"mobileType\":"+CUST_MOBILE_TYPE_PRIMARY+"}";
 	}
 	
-	public static String standardJsonUpdateMobilePinUpdatedByDTOMVC()
+	
+	
+	public static String standardJsonUpdateMobilePinUpdatedByDTOMVC(CustomerIdTypeMobileTypeRequestedByDTO dto)
 	{
-		return "{\"customerId\":"+CUST_ID+",\"customerType\":"+ENTITY_TYPE_CUSTOMER+",\"mobileType\":"+CUST_MOBILE_TYPE_PRIMARY+",\"updatedBy\":\""+CUST_UPDATED_BY+"\"}";
+		//return "{\"customerId\":"+CUST_ID+",\"customerType\":"+ENTITY_TYPE_CUSTOMER+",\"mobileType\":"+CUST_MOBILE_TYPE_PRIMARY+",\"updatedBy\":\""+CUST_UPDATED_BY+"\"}";
+		
+		return gson.toJson(dto);
 	}
 	
 	
 	public static String standardJsonVerifyMobilePinDTO()
 	{
-		return "{\"customerId\":"+CUST_ID+",\"customerType\":"+ENTITY_TYPE_CUSTOMER+",\"mobileType\":"+MOB_TYPE_PRIMARY+",\"mobilePin\":"+CUST_MOBILEPIN+"}";
+		//return "{\"customerId\":"+CUST_ID+",\"customerType\":"+ENTITY_TYPE_CUSTOMER+",\"mobileType\":"+MOB_TYPE_PRIMARY+",\"mobilePin\":"+CUST_MOBILEPIN+"}";
 		   
-		//return gson.toJson(standardJsonVerifyMobilePinDTO()); 
+		return gson.toJson(standardJsonVerifyMobilePinDTO()); 
 	}
 
 	

@@ -14,7 +14,7 @@ import org.springframework.web.client.RestTemplate;
 
 import com.projectx.data.domain.quickregister.CustomerIdDTO;
 import com.projectx.data.domain.quickregister.CustomerIdTypeMobileTypeDTO;
-import com.projectx.data.domain.quickregister.CustomerIdTypeMobileTypeUpdatedByDTO;
+import com.projectx.data.domain.quickregister.CustomerIdTypeMobileTypeRequestedByDTO;
 import com.projectx.data.domain.quickregister.EmailDTO;
 import com.projectx.data.domain.quickregister.MobileDTO;
 import com.projectx.data.domain.quickregister.UpdateMobilePinAndMobileVerificationAttemptsAndResetCountDTO;
@@ -106,13 +106,13 @@ public class MobileVerificationDetailsRepositoryImpl implements MobileVerificati
 	public Integer incrementMobileVerificationAttempts(Long customerId,Integer customerType,
 			Integer mobileType,String updatedBy) {
 			
-		CustomerIdTypeMobileTypeUpdatedByDTO mobileDTO=new CustomerIdTypeMobileTypeUpdatedByDTO(customerId,customerType, mobileType,updatedBy);
+		CustomerIdTypeMobileTypeRequestedByDTO mobileDTO=new CustomerIdTypeMobileTypeRequestedByDTO(customerId,customerType, mobileType,updatedBy);
 		
 		ResponseEntity<Integer> updateStatus=null;
 		
 		try{
 			updateStatus=restTemplate.exchange(env.getProperty("data.url")+"/customer/quickregister/mobileVerification/incrementMobileVerificationAttempts",
-					HttpMethod.POST,new HttpEntity<CustomerIdTypeMobileTypeUpdatedByDTO>(mobileDTO), Integer.class);
+					HttpMethod.POST,new HttpEntity<CustomerIdTypeMobileTypeRequestedByDTO>(mobileDTO), Integer.class);
 			
 		}catch(RestClientException e)
 		{
@@ -126,13 +126,13 @@ public class MobileVerificationDetailsRepositoryImpl implements MobileVerificati
 	@Override
 	public Integer incrementResendCount(Long customerId,Integer customerType, Integer mobileType,String updatedBy) {
 
-		CustomerIdTypeMobileTypeUpdatedByDTO mobileDTO=new CustomerIdTypeMobileTypeUpdatedByDTO(customerId,customerType, mobileType,updatedBy);
+		CustomerIdTypeMobileTypeRequestedByDTO mobileDTO=new CustomerIdTypeMobileTypeRequestedByDTO(customerId,customerType, mobileType,updatedBy);
 		
 		ResponseEntity<Integer> updateStatus=null;
 		
 		try{
 			updateStatus=restTemplate.exchange(env.getProperty("data.url")+"/customer/quickregister/mobileVerification/incrementResendCount",
-					HttpMethod.POST,new HttpEntity<CustomerIdTypeMobileTypeUpdatedByDTO>(mobileDTO), Integer.class);
+					HttpMethod.POST,new HttpEntity<CustomerIdTypeMobileTypeRequestedByDTO>(mobileDTO), Integer.class);
 			
 		}catch(RestClientException e)
 		{

@@ -6,6 +6,7 @@ import com.google.gson.Gson;
 import com.projectx.data.domain.quickregister.UpdateEmailHashDTO;
 import com.projectx.data.domain.quickregister.UpdateEmailMobileVerificationStatus;
 import com.projectx.data.domain.quickregister.UpdateMobilePinDTO;
+import com.projectx.mvc.domain.completeregister.EntityIdDTO;
 import com.projectx.mvc.domain.quickregister.CustomerIdTypeDTO;
 import com.projectx.mvc.domain.quickregister.CustomerIdTypeUpdatedByDTO;
 import com.projectx.mvc.domain.quickregister.CustomerQuickRegisterEntityDTO;
@@ -241,7 +242,15 @@ public class QuickRegisterDataFixture {
 		return new com.projectx.mvc.domain.quickregister.UpdateMobilePinDTO(CUST_ID,ENTITY_TYPE_CUSTOMER, ENTITY_TYPE_CUSTOMER);
 	}
 	
+	public static EntityIdDTO standardEntityIdDTO(Long entityId)
+	{
+		return new EntityIdDTO(entityId);
+	}
 	
+	public static String standardJsonEntityIdDTO(EntityIdDTO entityIdDTO)
+	{
+		return gson.toJson(entityIdDTO);
+	}
 	
 	public static String standardJsonEmailMobileCustomer()
 	{
@@ -302,6 +311,8 @@ public class QuickRegisterDataFixture {
 		
 		return gson.toJson(quickRegisterEntity);
 	}
+	
+	
 	
 	public static String standardJsonQuickRegisterVendor()
 	{

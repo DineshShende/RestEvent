@@ -255,7 +255,7 @@ public class CustomerDetailsServiceTest {
 		MobileVerificationDetails mobileVerificationDetails=
 				mobileVerificationService.getByEntityIdTypeAndMobileType(mergeEntity.getCustomerId(), ENTITY_TYPE_CUSTOMER, ENTITY_TYPE_SECONDARY);
 		
-		assertTrue(customerDetailsService.verifyMobileDetails(mergeEntity.getCustomerId(), ENTITY_TYPE_CUSTOMER, ENTITY_TYPE_SECONDARY, mobileVerificationDetails.getMobilePin(),CUST_UPDATED_BY));
+		assertTrue(mobileVerificationService.verifyMobilePinUpdateStatusAndSendPassword(mergeEntity.getCustomerId(), ENTITY_TYPE_CUSTOMER, ENTITY_TYPE_SECONDARY, mobileVerificationDetails.getMobilePin(),CUST_UPDATED_BY));
 
 		assertEquals(standardCustomerDetails(savedEntity).getSecondaryMobile(),customerDetailsService.findById(mergeEntity.getCustomerId()).getSecondaryMobile());
 		
@@ -282,7 +282,7 @@ public class CustomerDetailsServiceTest {
 		
 		assertNotEquals(standardCustomerDetailsWithNewSecondaryMobile(mergeEntity).getSecondaryMobile(),customerDetailsService.findById(mergeEntity.getCustomerId()).getSecondaryMobile());
 		
-		assertTrue(customerDetailsService.verifyMobileDetails(mergeEntity.getCustomerId(), ENTITY_TYPE_CUSTOMER, ENTITY_TYPE_SECONDARY, mobileVerificationDetails.getMobilePin(),CUST_UPDATED_BY));
+		assertTrue(mobileVerificationService.verifyMobilePinUpdateStatusAndSendPassword(mergeEntity.getCustomerId(), ENTITY_TYPE_CUSTOMER, ENTITY_TYPE_SECONDARY, mobileVerificationDetails.getMobilePin(),CUST_UPDATED_BY));
 
 		assertNotEquals(standardCustomerDetails(savedEntity).getSecondaryMobile(),customerDetailsService.findById(mergeEntity.getCustomerId()).getSecondaryMobile());
 		
@@ -335,7 +335,7 @@ public class CustomerDetailsServiceTest {
 		
 		assertNotEquals(standardCustomerDetailsWithNewMobile(mergeEntity).getMobile(),customerDetailsService.findById(mergeEntity.getCustomerId()).getMobile());
 		
-		assertTrue(customerDetailsService.verifyMobileDetails(mergeEntity.getCustomerId(), ENTITY_TYPE_CUSTOMER, ENTITY_TYPE_PRIMARY, mobileVerificationDetails.getMobilePin(),CUST_UPDATED_BY));
+		assertTrue(mobileVerificationService.verifyMobilePinUpdateStatusAndSendPassword(mergeEntity.getCustomerId(), ENTITY_TYPE_CUSTOMER, ENTITY_TYPE_PRIMARY, mobileVerificationDetails.getMobilePin(),CUST_UPDATED_BY));
 
 		assertNotEquals(standardCustomerDetails(savedEntity).getMobile(),customerDetailsService.findById(mergeEntity.getCustomerId()).getMobile());
 		
@@ -402,7 +402,7 @@ public class CustomerDetailsServiceTest {
 				emailVerificationService.getByEntityIdTypeAndEmailType(mergeEntity.getCustomerId(), ENTITY_TYPE_CUSTOMER, ENTITY_TYPE_PRIMARY);
 		
 		
-		assertTrue(customerDetailsService.verifyEmailDetails(mergeEntity.getCustomerId(), ENTITY_TYPE_CUSTOMER, ENTITY_TYPE_PRIMARY, emailVerificationDetails.getEmailHash(),CUST_UPDATED_BY));
+		assertTrue(emailVerificationService.verifyEmailHashUpdateStatusAndSendPassword(mergeEntity.getCustomerId(), ENTITY_TYPE_CUSTOMER, ENTITY_TYPE_PRIMARY, emailVerificationDetails.getEmailHash(),CUST_UPDATED_BY));
 
 		assertNotEquals(standardCustomerDetails(savedEntity).getEmail(),customerDetailsService.findById(mergeEntity.getCustomerId()).getEmail());
 		
@@ -507,10 +507,10 @@ public class CustomerDetailsServiceTest {
 		
 		assertEquals(false, customerDetailsService.findById(savedEntity.getCustomerId()).getIsMobileVerified());
 		
-		assertEquals(false, customerDetailsService.verifyMobileDetails(savedEntity.getCustomerId(),
+		assertEquals(false, mobileVerificationService.verifyMobilePinUpdateStatusAndSendPassword(savedEntity.getCustomerId(),
 				 MOB_TYPE_PRIMARY, ENTITY_TYPE_CUSTOMER, 101010,CUST_UPDATED_BY));
 		
-		assertEquals(true, customerDetailsService.verifyMobileDetails(savedEntity.getCustomerId(),
+		assertEquals(true, mobileVerificationService.verifyMobilePinUpdateStatusAndSendPassword(savedEntity.getCustomerId(),
 				ENTITY_TYPE_CUSTOMER, MOB_TYPE_PRIMARY, mobileVerificationDetails.getMobilePin(),CUST_UPDATED_BY));
 		
 		assertEquals(true, customerDetailsService.findById(savedEntity.getCustomerId()).getIsMobileVerified());
@@ -535,10 +535,10 @@ public class CustomerDetailsServiceTest {
 		assertEquals(false, customerDetailsService.findById(mergeEntity.getCustomerId()).getIsEmailVerified());
 		
 		
-		assertEquals(false, customerDetailsService.verifyEmailDetails(mergeEntity.getCustomerId(),
+		assertEquals(false, emailVerificationService.verifyEmailHashUpdateStatusAndSendPassword(mergeEntity.getCustomerId(),
 				ENTITY_TYPE_CUSTOMER,EMAIL_TYPE_PRIMARY, "101010",CUST_UPDATED_BY));
 		
-		assertEquals(true, customerDetailsService.verifyEmailDetails(mergeEntity.getCustomerId(),
+		assertEquals(true, emailVerificationService.verifyEmailHashUpdateStatusAndSendPassword(mergeEntity.getCustomerId(),
 				ENTITY_TYPE_CUSTOMER, EMAIL_TYPE_PRIMARY, emailVerificationDetails.getEmailHash(),CUST_UPDATED_BY));
 		
 		
@@ -559,9 +559,9 @@ public class CustomerDetailsServiceTest {
 	
 		assertEquals(false, customerDetailsService.findById(mergeEntity.getCustomerId()).getIsSecondaryMobileVerified());
 		
-		assertTrue( customerDetailsService.sendMobileVerificationDetails(mergeEntity.getCustomerId(), ENTITY_TYPE_CUSTOMER, 2,CUST_UPDATED_BY));
+		assertTrue( mobileVerificationService.sendMobilePin(mergeEntity.getCustomerId(), ENTITY_TYPE_CUSTOMER, 2,CUST_UPDATED_BY));
 		
-		assertEquals(false, customerDetailsService.verifyMobileDetails(mergeEntity.getCustomerId(),
+		assertEquals(false, mobileVerificationService.verifyMobilePinUpdateStatusAndSendPassword(mergeEntity.getCustomerId(),
 				ENTITY_TYPE_CUSTOMER, MOB_TYPE_SECONDARY, 101010,CUST_UPDATED_BY));
 		
 		assertNotEquals(standardCustomerDetails(savedEntity).getSecondaryMobile(), customerDetailsService.findById(savedEntity.getCustomerId()).getSecondaryMobile());
@@ -570,7 +570,7 @@ public class CustomerDetailsServiceTest {
 				mobileVerificationService
 				.getByEntityIdTypeAndMobileType(mergeEntity.getCustomerId(), ENTITY_TYPE_CUSTOMER, MOB_TYPE_SECONDARY);
 		
-		assertEquals(true, customerDetailsService.verifyMobileDetails(mergeEntity.getCustomerId(),
+		assertEquals(true, mobileVerificationService.verifyMobilePinUpdateStatusAndSendPassword(mergeEntity.getCustomerId(),
 				ENTITY_TYPE_CUSTOMER, MOB_TYPE_SECONDARY, mobileVerificationDetails.getMobilePin(),CUST_UPDATED_BY));
 		
 		
@@ -591,11 +591,11 @@ public class CustomerDetailsServiceTest {
 		CustomerDetails mergeEntity=customerDetailsService.mergeCustomerDetails(standardCustomerDetails(savedEntity));
 	
 			
-		assertTrue(customerDetailsService
-				.sendMobileVerificationDetails(mergeEntity.getCustomerId(), ENTITY_TYPE_CUSTOMER, MOB_TYPE_PRIMARY,CUST_UPDATED_BY));
+		assertTrue(mobileVerificationService
+				.sendMobilePin(mergeEntity.getCustomerId(), ENTITY_TYPE_CUSTOMER, MOB_TYPE_PRIMARY,CUST_UPDATED_BY));
 		
-		assertTrue(customerDetailsService
-				.sendMobileVerificationDetails(mergeEntity.getCustomerId(), ENTITY_TYPE_CUSTOMER, MOB_TYPE_PRIMARY,CUST_UPDATED_BY));
+		assertTrue(mobileVerificationService
+				.sendMobilePin(mergeEntity.getCustomerId(), ENTITY_TYPE_CUSTOMER, MOB_TYPE_PRIMARY,CUST_UPDATED_BY));
 		
 	}
 	
@@ -611,8 +611,8 @@ public class CustomerDetailsServiceTest {
 		CustomerDetails mergeEntity=customerDetailsService.mergeCustomerDetails(standardCustomerDetails(savedEntity));
 	
 			
-		assertTrue(customerDetailsService
-				.sendEmailVerificationDetails(mergeEntity.getCustomerId(), ENTITY_TYPE_CUSTOMER, EMAIL_TYPE_PRIMARY,CUST_UPDATED_BY));
+		assertTrue(emailVerificationService
+				.sendEmailHash(mergeEntity.getCustomerId(), ENTITY_TYPE_CUSTOMER, EMAIL_TYPE_PRIMARY,CUST_UPDATED_BY));
 		
 			
 	}

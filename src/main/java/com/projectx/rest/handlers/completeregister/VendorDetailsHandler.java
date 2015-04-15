@@ -75,6 +75,7 @@ public class VendorDetailsHandler implements VendorDetailsService {
 		
 	}
 
+	/*
 	@Override
 	public Boolean verifyMobileDetails(Long customerId, Integer customerType,
 			 Integer mobileType,Integer mobilePin,String updatedBy)throws ResourceNotFoundException,ValidationFailedException {
@@ -113,6 +114,7 @@ public class VendorDetailsHandler implements VendorDetailsService {
 		return sendStatus;
 	
 	}
+	*/
 
 	@Override
 	public void clearTestData() {

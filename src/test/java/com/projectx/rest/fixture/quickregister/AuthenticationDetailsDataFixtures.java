@@ -45,6 +45,7 @@ public class AuthenticationDetailsDataFixtures {
 	
 	
 	
+	
 	public static AuthenticationDetails standardCustomerEmailMobileAuthenticationDetails()
 	{
 		
@@ -106,12 +107,12 @@ public class AuthenticationDetailsDataFixtures {
 	
 	public static UpdatePasswordDTO standardUpdatePasswordDTO()
 	{
-		return new UpdatePasswordDTO(CUST_ID,ENTITY_TYPE_CUSTOMER, CUST_PASSWORD_CHANGED,CUST_UPDATED_BY);
+		return new UpdatePasswordDTO(CUST_ID,ENTITY_TYPE_CUSTOMER, CUST_PASSWORD_CHANGED,false,CUST_UPDATED_BY);
 	}
 	
 	public static UpdatePasswordAndPasswordTypeDTO standardUpdatePasswordAndPasswordTypeDTO()
 	{
-		return new UpdatePasswordAndPasswordTypeDTO(CUST_ID,ENTITY_TYPE_CUSTOMER, CUST_PASSWORD_CHANGED,CUST_PASSWORD_TYPE_CHANGED,CUST_UPDATED_BY);
+		return new UpdatePasswordAndPasswordTypeDTO(CUST_ID,ENTITY_TYPE_CUSTOMER, CUST_PASSWORD_CHANGED,CUST_PASSWORD_TYPE_CHANGED,false,CUST_UPDATED_BY);
 	}
 	
 	public static LoginVerificationDTO standardLoginVerificationWithEmail()
@@ -178,6 +179,11 @@ public class AuthenticationDetailsDataFixtures {
 		return "{\"customerId\":"+customerIdDTO.getCustomerId()+",\"customerType\":"+customerIdDTO.getCustomerType()+"}";
 	}
 	
+	public static String standardJsonUpdatePasswordAndPasswordTypeDTO(UpdatePasswordAndPasswordTypeDTO dto)
+	{
+		return gson.toJson(dto);
+	}
+	
 	
 	public static String standardJsonCustomerAuthenticationDetails(AuthenticationDetails standardCustomer)
 	{
@@ -242,7 +248,7 @@ public class AuthenticationDetailsDataFixtures {
 		return gson.toJson(dto);
 	}
 	
-	public static String standJsonEmailPasswordLoginVerification()
+	public static String standJsonEmailPasswordLoginVerification(LoginVerificationWithDefaultEmailPasswordDTO dto)
 	{
 		StringBuilder jsonBuilder=new StringBuilder();
 
@@ -255,7 +261,9 @@ public class AuthenticationDetailsDataFixtures {
 		
 		System.out.println(jsonBuilder.toString());
 		
-		return jsonBuilder.toString();
+		//return jsonBuilder.toString();
+		
+		return gson.toJson(dto);
 
 	}
 	

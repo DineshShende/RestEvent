@@ -14,6 +14,7 @@ public interface VendorDetailsService {
 	
 	VendorDetails findById(Long vendorId);
 	
+	/*
 	Boolean verifyMobileDetails(Long vendorId,Integer entityType,Integer mobileType,Integer mobilePin,String updatedBy);
 	
 	Boolean verifyEmailDetails(Long vendorId,Integer entityType,Integer emailType,String emailHash,String requestedBy);
@@ -21,6 +22,7 @@ public interface VendorDetailsService {
 	Boolean sendMobileVerificationDetails(Long vendorId,Integer entityType,Integer mobileType,String updatedBy);
 	
 	Boolean sendEmailVerificationDetails(Long vendorId,Integer entityType,Integer emailType,String requestedBy);
+	*/
 	
 	void clearTestData();
 	

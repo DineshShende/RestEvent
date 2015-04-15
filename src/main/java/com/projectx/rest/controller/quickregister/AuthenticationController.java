@@ -8,6 +8,7 @@ import java.util.Map;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -55,6 +56,9 @@ public class AuthenticationController {
 	@Autowired
 	InformationMapper informationMapper; 
 	
+	@Value("${PASSWORD_TYPE_CHANGED}")
+	private String PASSWORD_TYPE_CHANGED;
+	
 	@RequestMapping(value="/verifyLoginDetails",method=RequestMethod.POST)
 	public ResponseEntity<AuthenticationDetailsAng> verifyLoginDetails(@Valid @RequestBody LoginVerificationDTO loginVerificationDTO,
 			BindingResult bindingResult)
@@ -85,17 +89,26 @@ public class AuthenticationController {
 	}
 	
 	@RequestMapping(value="/verifyLoginDefaultEmailPassword")
-	public ResponseEntity<AuthenticationDetails> verifyLoginDefaultEmailPassword(@Valid @RequestBody LoginVerificationWithDefaultEmailPasswordDTO emailPasswordDTO,
+			public ResponseEntity<AuthenticationDetailsAng> verifyLoginDefaultEmailPassword(@Valid @RequestBody LoginVerificationWithDefaultEmailPasswordDTO emailPasswordDTO,
 			BindingResult bindingResult)
 	{
 		if(bindingResult.hasErrors())
 			return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
 		
-		ResponseEntity<AuthenticationDetails> result=null;
+		ResponseEntity<AuthenticationDetailsAng> result=null;
 		
 		try{
 			AuthenticationDetails verifiedEntity= authenticationService.verifyDefaultEmailLoginDetails(emailPasswordDTO);
-			result=new ResponseEntity<AuthenticationDetails>(verifiedEntity, HttpStatus.OK);
+			
+			Map<String,Object> resultData=informationMapper.getBasicInfoByEntityIdType(verifiedEntity.getKey().getCustomerId(),
+					verifiedEntity.getKey().getCustomerType());
+			
+			
+			AuthenticationDetailsAng authenticationDetailsAng=new AuthenticationDetailsAng(verifiedEntity.getKey(), 
+					resultData.get("firstName")+" "+((resultData.get("middleName")!=null)?resultData.get("middleName"):"")+" "+resultData.get("lastName"),
+					verifiedEntity.getPasswordType(), resultData.get("isCompleteRegisterCompleted")=="true");
+			
+			result=new ResponseEntity<AuthenticationDetailsAng>(authenticationDetailsAng, HttpStatus.OK);
 		}catch(AuthenticationDetailsNotFoundException e)
 		{
 			result=new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -155,11 +168,18 @@ public class AuthenticationController {
 		if(bindingResult.hasErrors())
 			return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
 		
-		//TODO change forceful password twice after email verification and mobile verification
+		
+		
+		AuthenticationDetails authenticationDetails=
+				authenticationService.getByEntityIdType(updatePasswordDTO.getCustomerId(), updatePasswordDTO.getCustomerType());
+		
+		if(authenticationDetails.getPasswordType().equals(PASSWORD_TYPE_CHANGED) && updatePasswordDTO.getIsForcefulChangePassword())
+			return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+		
 		
 		UpdatePasswordAndPasswordTypeDTO updatePassword=new UpdatePasswordAndPasswordTypeDTO(
 				updatePasswordDTO.getCustomerId(),updatePasswordDTO.getCustomerType(),updatePasswordDTO.getPassword(), 
-				CUST_PASSWORD_TYPE_CHANGED,updatePasswordDTO.getRequestedBy());	
+				CUST_PASSWORD_TYPE_CHANGED,updatePasswordDTO.getIsForcefulChangePassword(),updatePasswordDTO.getRequestedBy());	
 		
 		try{
 			Boolean result=authenticationService.updatePassword(updatePassword);
@@ -175,19 +195,19 @@ public class AuthenticationController {
 	}
 
 	@RequestMapping(value="/getAuthenticationDetailsById",method=RequestMethod.POST)
-	public ResponseEntity<AuthenticationDetailsAng> getAuthenticationDetailsByCustomerId(@Valid @RequestBody CustomerIdTypeDTO customerId,
+	public ResponseEntity<AuthenticationDetails> getAuthenticationDetailsByCustomerId(@Valid @RequestBody CustomerIdTypeDTO customerId,
 			BindingResult bindingResult)
 	{
 		if(bindingResult.hasErrors())
 			return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
 		
-		ResponseEntity<AuthenticationDetailsAng> result=null;
+		ResponseEntity<AuthenticationDetails> result=null;
 		
 		try{
 			AuthenticationDetails verifiedEntity= authenticationService
 					.getByEntityIdType(customerId.getCustomerId(),customerId.getCustomerType());
 			
-			
+			/*
 			Map<String,Object> resultData=informationMapper.getBasicInfoByEntityIdType(verifiedEntity.getKey().getCustomerId(),
 					verifiedEntity.getKey().getCustomerType());
 			
@@ -196,8 +216,8 @@ public class AuthenticationController {
 					resultData.get("firstName")+" "+((resultData.get("middleName")!=null)?resultData.get("middleName"):"")+" "+resultData.get("lastName"),
 					verifiedEntity.getPasswordType(), resultData.get("isCompleteRegisterCompleted")=="true");
 			
-			
-			result=new ResponseEntity<AuthenticationDetailsAng>(authenticationDetailsAng, HttpStatus.FOUND);
+			*/
+			result=new ResponseEntity<AuthenticationDetails>(verifiedEntity, HttpStatus.FOUND);
 		}catch(AuthenticationDetailsNotFoundException e)
 		{
 			result=new ResponseEntity<>(HttpStatus.NO_CONTENT);

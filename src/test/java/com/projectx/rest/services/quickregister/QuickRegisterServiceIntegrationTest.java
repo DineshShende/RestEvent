@@ -612,7 +612,8 @@ public class QuickRegisterServiceIntegrationTest {
 		
 		assertEquals(0, authenticationDetails.getResendCount().intValue());
 		
-		assertTrue(authenticationService.resendDefaultPassword(handledEntity.getCustomer(),EMAIL_REQ,CUST_UPDATED_BY));
+		assertTrue(authenticationService.resendDefaultPassword(handledEntity.getCustomer().getCustomerId(),
+				handledEntity.getCustomer().getCustomerType(),EMAIL_REQ,CUST_UPDATED_BY));
 		
 		authenticationDetails=authenticationService.getByEntityIdType(handledEntity.getCustomer().getCustomerId(),
 				handledEntity.getCustomer().getCustomerType());
@@ -652,7 +653,7 @@ public class QuickRegisterServiceIntegrationTest {
 		
 		assertTrue(authenticationService
 				.updatePassword(new UpdatePasswordAndPasswordTypeDTO(authenticationDetails.getKey().getCustomerId(),
-						authenticationDetails.getKey().getCustomerType(),CUST_PASSWORD_CHANGED, CUST_PASSWORD_TYPE_CHANGED,CUST_UPDATED_BY)));
+						authenticationDetails.getKey().getCustomerType(),CUST_PASSWORD_CHANGED, CUST_PASSWORD_TYPE_CHANGED,true,CUST_UPDATED_BY)));
 		
 		authenticationDetails=authenticationService.getByEntityIdType(handledEntity.getCustomer().getCustomerId(),
 				handledEntity.getCustomer().getCustomerType());
@@ -687,9 +688,9 @@ public class QuickRegisterServiceIntegrationTest {
 		assertNotNull( authenticationDetails.getPasswordType());
 		
 		assertTrue(authenticationService.updatePassword(new UpdatePasswordAndPasswordTypeDTO(authenticationDetails.getKey().getCustomerId(),
-				authenticationDetails.getKey().getCustomerType(),CUST_PASSWORD_CHANGED, CUST_PASSWORD_TYPE_CHANGED,CUST_UPDATED_BY)));
+				authenticationDetails.getKey().getCustomerType(),CUST_PASSWORD_CHANGED, CUST_PASSWORD_TYPE_CHANGED,true,CUST_UPDATED_BY)));
 		
-		assertTrue(authenticationService.sendDefaultPassword(updatedEntity, false,EMAIL_REQ,CUST_UPDATED_BY));
+		assertTrue(authenticationService.sendDefaultPassword(updatedEntity.getCustomerId(),updatedEntity.getCustomerType(), false,EMAIL_REQ,CUST_UPDATED_BY));
 		
 		authenticationDetails=authenticationService.getByEntityIdType(handledEntity.getCustomer().getCustomerId(),
 				handledEntity.getCustomer().getCustomerType());

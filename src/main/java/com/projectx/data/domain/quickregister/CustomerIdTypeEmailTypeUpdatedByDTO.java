@@ -14,20 +14,24 @@ public class CustomerIdTypeEmailTypeUpdatedByDTO {
 	private Integer emailType;
 	
 	@NotNull
-	private String updatedBy;
+	private String requestedBy;
 
 	public CustomerIdTypeEmailTypeUpdatedByDTO() {
 
 	}
 
+	
+
 	public CustomerIdTypeEmailTypeUpdatedByDTO(Long customerId,
-			Integer customerType, Integer emailType, String updatedBy) {
+			Integer customerType, Integer emailType, String requestedBy) {
 		super();
 		this.customerId = customerId;
 		this.customerType = customerType;
 		this.emailType = emailType;
-		this.updatedBy = updatedBy;
+		this.requestedBy = requestedBy;
 	}
+
+
 
 	public Long getCustomerId() {
 		return customerId;
@@ -53,20 +57,28 @@ public class CustomerIdTypeEmailTypeUpdatedByDTO {
 		this.emailType = emailType;
 	}
 
-	public String getUpdatedBy() {
-		return updatedBy;
+
+
+	public String getRequestedBy() {
+		return requestedBy;
 	}
 
-	public void setUpdatedBy(String updatedBy) {
-		this.updatedBy = updatedBy;
+
+
+	public void setRequestedBy(String requestedBy) {
+		this.requestedBy = requestedBy;
 	}
+
+
 
 	@Override
 	public String toString() {
 		return "CustomerIdTypeEmailTypeUpdatedByDTO [customerId=" + customerId
 				+ ", customerType=" + customerType + ", emailType=" + emailType
-				+ ", updatedBy=" + updatedBy + "]";
+				+ ", requestedBy=" + requestedBy + "]";
 	}
+
+
 
 	@Override
 	public int hashCode() {
@@ -79,9 +91,11 @@ public class CustomerIdTypeEmailTypeUpdatedByDTO {
 		result = prime * result
 				+ ((emailType == null) ? 0 : emailType.hashCode());
 		result = prime * result
-				+ ((updatedBy == null) ? 0 : updatedBy.hashCode());
+				+ ((requestedBy == null) ? 0 : requestedBy.hashCode());
 		return result;
 	}
+
+
 
 	@Override
 	public boolean equals(Object obj) {
@@ -107,10 +121,10 @@ public class CustomerIdTypeEmailTypeUpdatedByDTO {
 				return false;
 		} else if (!emailType.equals(other.emailType))
 			return false;
-		if (updatedBy == null) {
-			if (other.updatedBy != null)
+		if (requestedBy == null) {
+			if (other.requestedBy != null)
 				return false;
-		} else if (!updatedBy.equals(other.updatedBy))
+		} else if (!requestedBy.equals(other.requestedBy))
 			return false;
 		return true;
 	}

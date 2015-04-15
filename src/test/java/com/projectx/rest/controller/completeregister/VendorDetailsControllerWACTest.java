@@ -29,7 +29,7 @@ import org.springframework.web.context.WebApplicationContext;
 import com.projectx.data.domain.quickregister.CustomerIdTypeEmailTypeDTO;
 import com.projectx.data.domain.quickregister.CustomerIdTypeEmailTypeUpdatedByDTO;
 import com.projectx.data.domain.quickregister.CustomerIdTypeMobileTypeDTO;
-import com.projectx.data.domain.quickregister.CustomerIdTypeMobileTypeUpdatedByDTO;
+import com.projectx.data.domain.quickregister.CustomerIdTypeMobileTypeRequestedByDTO;
 import com.projectx.mvc.domain.completeregister.VerifyEmailDTO;
 import com.projectx.mvc.domain.completeregister.VerifyMobileDTO;
 import com.projectx.rest.config.Application;
@@ -95,7 +95,7 @@ public class VendorDetailsControllerWACTest {
 		
 		this.mockMvc.perform(
 				post("/vendor/createFromQuickRegister")
-				.content(standardJsonQuickRegisterVendor(quickRegisterEntity))
+				.content(standardJsonEntityIdDTO(standardEntityIdDTO(quickRegisterEntity.getCustomerId())))
 				.contentType(MediaType.APPLICATION_JSON)
 				.accept(MediaType.APPLICATION_JSON))
 		.andDo(print())
@@ -193,7 +193,7 @@ public class VendorDetailsControllerWACTest {
 	
 	}
 	
-	
+	/*
 	@Test
 	public void verifyMobileDetails() throws Exception
 	{
@@ -303,5 +303,5 @@ public class VendorDetailsControllerWACTest {
 		
 		
 	}
-
+*/
 }

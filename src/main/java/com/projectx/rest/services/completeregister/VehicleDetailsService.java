@@ -12,7 +12,6 @@ public interface VehicleDetailsService {
 	
 	VehicleDetails addVehicle(VehicleDetails vehicleDetails);
 	
-	
 	Boolean deleteVehicle(Long vehicleId);
 	
 	VehicleDetails getVehicleById(Long vehicleId);

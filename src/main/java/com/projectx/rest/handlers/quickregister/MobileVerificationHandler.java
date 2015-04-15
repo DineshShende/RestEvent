@@ -132,7 +132,7 @@ public class MobileVerificationHandler implements MobileVerificationService {
 						fetchedEntity.getIsMobileVerified(), fetchedEntity.getUpdateTime(), fetchedEntity.getUpdatedBy());
 				
 				if(UpdateStatus.equals(UPDATE_SUCESS))
-					sendPasswordStatus=authenticationHandler.sendDefaultPassword(fetchedEntity, false,MOBILE_REQ,requestedBy);
+					sendPasswordStatus=authenticationHandler.sendDefaultPassword(fetchedEntity.getCustomerId(),fetchedEntity.getCustomerType(), false,MOBILE_REQ,requestedBy);
 			
 				
 			}catch(ResourceNotFoundException e)

@@ -31,9 +31,9 @@ public interface AuthenticationService {
 	Boolean sendOrResendOrResetDefaultPassword(Long entityId,Integer entityType,Boolean resetFlag,Boolean resendFlag,
 			Integer emailOrMobile,String requestedBy) throws ResourceAlreadyPresentException;
 	
-	Boolean sendDefaultPassword(QuickRegisterEntity customer,Boolean resetFlag,Integer emailOrMobile,String requestedBy) throws ResourceAlreadyPresentException;
+	Boolean sendDefaultPassword(Long customerId,Integer customerType,Boolean resetFlag,Integer emailOrMobile,String requestedBy) throws ResourceAlreadyPresentException;
 	
-	Boolean resendDefaultPassword(QuickRegisterEntity customerQuickRegisterEntity,Integer emailOrMobile,String requestedBy) throws ResourceAlreadyPresentException;
+	Boolean resendDefaultPassword(Long customerId,Integer customerType,Integer emailOrMobile,String requestedBy) throws ResourceAlreadyPresentException;
 	
 	Boolean resetPassword(CustomerIdTypeUpdatedByDTO customerIdDTO,Integer emailOrMobile) throws ResourceAlreadyPresentException;
 	

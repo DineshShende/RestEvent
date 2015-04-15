@@ -20,7 +20,7 @@ public class CustomerQuickRegisterEntityDTO {
 	private Long mobile;
 
 	@NotNull
-	private Integer pin;
+	private Integer pincode;
 	
 	@NotNull
 	private Integer customerType;
@@ -42,7 +42,7 @@ public class CustomerQuickRegisterEntityDTO {
 		this.lastName = lastName;
 		this.email = email;
 		this.mobile = mobile;
-		this.pin = pin;
+		this.pincode = pin;
 		this.customerType = customerType;
 		this.requestBy = requestBy;
 	}
@@ -58,7 +58,7 @@ public class CustomerQuickRegisterEntityDTO {
 		newCustomer.setLastName(this.lastName);
 		newCustomer.setEmail(this.email);
 		newCustomer.setMobile(this.mobile);
-		newCustomer.setPincode(this.pin);
+		newCustomer.setPincode(this.pincode);
 		newCustomer.setCustomerType(this.customerType);
 		//newCustomer.setIsEmailVerified(false);
 		//newCustomer.setIsMobileVerified(false);
@@ -92,11 +92,16 @@ public class CustomerQuickRegisterEntityDTO {
 	public void setMobile(Long mobile) {
 		this.mobile = mobile;
 	}
-	public Integer getPin() {
-		return pin;
+	
+	
+	
+
+	public Integer getPincode() {
+		return pincode;
 	}
-	public void setPin(Integer pin) {
-		this.pin = pin;
+
+	public void setPincode(Integer pincode) {
+		this.pincode = pincode;
 	}
 
 	public Integer getCustomerType() {
@@ -121,8 +126,8 @@ public class CustomerQuickRegisterEntityDTO {
 	public String toString() {
 		return "CustomerQuickRegisterEntityDTO [firstName=" + firstName
 				+ ", lastName=" + lastName + ", email=" + email + ", mobile="
-				+ mobile + ", pin=" + pin + ", customerType=" + customerType
-				+ ", requestBy=" + requestBy + "]";
+				+ mobile + ", pincode=" + pincode + ", customerType="
+				+ customerType + ", requestBy=" + requestBy + "]";
 	}
 
 	@Override
@@ -137,7 +142,7 @@ public class CustomerQuickRegisterEntityDTO {
 		result = prime * result
 				+ ((lastName == null) ? 0 : lastName.hashCode());
 		result = prime * result + ((mobile == null) ? 0 : mobile.hashCode());
-		result = prime * result + ((pin == null) ? 0 : pin.hashCode());
+		result = prime * result + ((pincode == null) ? 0 : pincode.hashCode());
 		result = prime * result
 				+ ((requestBy == null) ? 0 : requestBy.hashCode());
 		return result;
@@ -177,10 +182,10 @@ public class CustomerQuickRegisterEntityDTO {
 				return false;
 		} else if (!mobile.equals(other.mobile))
 			return false;
-		if (pin == null) {
-			if (other.pin != null)
+		if (pincode == null) {
+			if (other.pincode != null)
 				return false;
-		} else if (!pin.equals(other.pin))
+		} else if (!pincode.equals(other.pincode))
 			return false;
 		if (requestBy == null) {
 			if (other.requestBy != null)
@@ -190,6 +195,5 @@ public class CustomerQuickRegisterEntityDTO {
 		return true;
 	}
 
-			
-
+	
 }

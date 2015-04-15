@@ -30,7 +30,7 @@ public class VehicleDetails {
 	@NotNull
 	private String ownerLastName;
 	
-	private VehicleTypeDetails vehicleTypeId;
+//	private VehicleTypeDetails vehicleTypeId;
 	
 	private VehicleBrandDetails vehicleBrandId;
 	
@@ -96,7 +96,6 @@ public class VehicleDetails {
 
 	public VehicleDetails(Long vehicleId, String ownerFirstName,
 			String ownerMiddleName, String ownerLastName,
-			VehicleTypeDetails vehicleTypeId,
 			VehicleBrandDetails vehicleBrandId, String vehicleBodyType,
 			Boolean isBodyTypeFlexible, String registrationNumber,
 			String chassisNumber, Integer loadCapacityInTons, Integer length,
@@ -109,7 +108,6 @@ public class VehicleDetails {
 		this.ownerFirstName = ownerFirstName;
 		this.ownerMiddleName = ownerMiddleName;
 		this.ownerLastName = ownerLastName;
-		this.vehicleTypeId = vehicleTypeId;
 		this.vehicleBrandId = vehicleBrandId;
 		this.vehicleBodyType = vehicleBodyType;
 		this.isBodyTypeFlexible = isBodyTypeFlexible;
@@ -179,18 +177,6 @@ public class VehicleDetails {
 
 	public void setOwnerLastName(String ownerLastName) {
 		this.ownerLastName = ownerLastName;
-	}
-
-
-
-	public VehicleTypeDetails getVehicleTypeId() {
-		return vehicleTypeId;
-	}
-
-
-
-	public void setVehicleTypeId(VehicleTypeDetails vehicleTypeId) {
-		this.vehicleTypeId = vehicleTypeId;
 	}
 
 
@@ -419,15 +405,12 @@ public class VehicleDetails {
 
 
 
-
-
 	@Override
 	public String toString() {
 		return "VehicleDetails [vehicleId=" + vehicleId + ", ownerFirstName="
 				+ ownerFirstName + ", ownerMiddleName=" + ownerMiddleName
-				+ ", ownerLastName=" + ownerLastName + ", vehicleTypeId="
-				+ vehicleTypeId + ", vehicleBrandId=" + vehicleBrandId
-				+ ", vehicleBodyType=" + vehicleBodyType
+				+ ", ownerLastName=" + ownerLastName + ", vehicleBrandId="
+				+ vehicleBrandId + ", vehicleBodyType=" + vehicleBodyType
 				+ ", isBodyTypeFlexible=" + isBodyTypeFlexible
 				+ ", registrationNumber=" + registrationNumber
 				+ ", chassisNumber=" + chassisNumber + ", loadCapacityInTons="
@@ -454,8 +437,6 @@ public class VehicleDetails {
 		result = prime * result
 				+ ((commodityList == null) ? 0 : commodityList.hashCode());
 		result = prime * result + ((height == null) ? 0 : height.hashCode());
-		result = prime * result
-				+ ((insertTime == null) ? 0 : insertTime.hashCode());
 		result = prime
 				* result
 				+ ((insuranceCompany == null) ? 0 : insuranceCompany.hashCode());
@@ -487,8 +468,6 @@ public class VehicleDetails {
 				+ ((registrationNumber == null) ? 0 : registrationNumber
 						.hashCode());
 		result = prime * result
-				+ ((updateTime == null) ? 0 : updateTime.hashCode());
-		result = prime * result
 				+ ((updatedBy == null) ? 0 : updatedBy.hashCode());
 		result = prime * result
 				+ ((vehicleBodyType == null) ? 0 : vehicleBodyType.hashCode());
@@ -496,8 +475,6 @@ public class VehicleDetails {
 				+ ((vehicleBrandId == null) ? 0 : vehicleBrandId.hashCode());
 		result = prime * result
 				+ ((vehicleId == null) ? 0 : vehicleId.hashCode());
-		result = prime * result
-				+ ((vehicleTypeId == null) ? 0 : vehicleTypeId.hashCode());
 		result = prime * result
 				+ ((vendorId == null) ? 0 : vendorId.hashCode());
 		result = prime * result + ((width == null) ? 0 : width.hashCode());
@@ -531,11 +508,6 @@ public class VehicleDetails {
 			if (other.height != null)
 				return false;
 		} else if (!height.equals(other.height))
-			return false;
-		if (insertTime == null) {
-			if (other.insertTime != null)
-				return false;
-		} else if (!insertTime.equals(other.insertTime))
 			return false;
 		if (insuranceCompany == null) {
 			if (other.insuranceCompany != null)
@@ -597,11 +569,6 @@ public class VehicleDetails {
 				return false;
 		} else if (!registrationNumber.equals(other.registrationNumber))
 			return false;
-		if (updateTime == null) {
-			if (other.updateTime != null)
-				return false;
-		} else if (!updateTime.equals(other.updateTime))
-			return false;
 		if (updatedBy == null) {
 			if (other.updatedBy != null)
 				return false;
@@ -622,11 +589,6 @@ public class VehicleDetails {
 				return false;
 		} else if (!vehicleId.equals(other.vehicleId))
 			return false;
-		if (vehicleTypeId == null) {
-			if (other.vehicleTypeId != null)
-				return false;
-		} else if (!vehicleTypeId.equals(other.vehicleTypeId))
-			return false;
 		if (vendorId == null) {
 			if (other.vendorId != null)
 				return false;
@@ -639,6 +601,9 @@ public class VehicleDetails {
 			return false;
 		return true;
 	}
+
+
+
 
 
 

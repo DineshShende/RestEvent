@@ -12,7 +12,7 @@ import com.projectx.data.domain.completeregister.UpdateMobileVerificationStatusU
 import com.projectx.data.domain.quickregister.CustomerIdTypeEmailTypeDTO;
 import com.projectx.data.domain.quickregister.CustomerIdTypeEmailTypeUpdatedByDTO;
 import com.projectx.data.domain.quickregister.CustomerIdTypeMobileTypeDTO;
-import com.projectx.data.domain.quickregister.CustomerIdTypeMobileTypeUpdatedByDTO;
+import com.projectx.data.domain.quickregister.CustomerIdTypeMobileTypeRequestedByDTO;
 import com.projectx.mvc.domain.completeregister.VerifyEmailDTO;
 import com.projectx.mvc.domain.completeregister.VerifyMobileDTO;
 import com.projectx.rest.domain.completeregister.Address;
@@ -101,6 +101,18 @@ public class CustomerDetailsDataFixtures {
 				CUST_SEC_MOBILE, false,	CUST_SEC_EMAIL, CUST_DATE, CUST_DATE, CUST_UPDATED_BY);
 		
 	}
+	
+	public static CustomerDetails standardCustomerDetailsInvalidPincode(CustomerDetails customerDetails)
+	{
+		return new CustomerDetails(customerDetails.getCustomerId(), customerDetails.getFirstName(),CUST_MIDDLENAME,
+				customerDetails.getLastName(), CUST_DATE, standardAddressInvalidPincode(), customerDetails.getMobile(),null, 
+				customerDetails.getIsEmailVerified(),customerDetails.getEmail(),
+				customerDetails.getIsEmailVerified(), CUST_LANG, CUST_BUSINESS_DOMAIN, CUST_NAME_OF_FIRM, standardAddress(),
+				CUST_SEC_MOBILE, false,	CUST_SEC_EMAIL, CUST_DATE, CUST_DATE, CUST_UPDATED_BY);
+		
+	}
+	
+	
 	
 	public static CustomerDetails standardCustomerDetailsAlreadyPresent()
 	{
@@ -260,7 +272,7 @@ public class CustomerDetailsDataFixtures {
 		return gson.toJson(idTypeMobileDTO);
 	}
 	
-	public static String standardJsonCustomerIdTypeMobileUpdatedBy(CustomerIdTypeMobileTypeUpdatedByDTO idTypeMobileDTO)
+	public static String standardJsonCustomerIdTypeMobileUpdatedBy(CustomerIdTypeMobileTypeRequestedByDTO idTypeMobileDTO)
 	{
 		System.out.println(gson.toJson(idTypeMobileDTO));
 		

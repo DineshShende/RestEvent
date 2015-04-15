@@ -56,64 +56,15 @@ public class AuthenticationControllerStandAloneTest {
 		
 	}
 	
-/*
- * 
- 
- //TODO
-	@Test
-	public void verifyLoginDetails() throws Exception
-	{
-		when(authenticationService.verifyLoginDetails(standardLoginVerificationWithEmail())).thenReturn(standardCustomerEmailMobileAuthenticationDetails());
 		
-		when(quickRegisterService.getByEntityId(standardCustomerEmailMobileAuthenticationDetails().getKey().getCustomerId())).thenReturn(standardEmailMobileCustomer());
-		
-		//System.out.println(standardLoginVerificationWithEmail());
-		
-		this.mockMvc.perform(
-	            post("/customer/quickregister/verifyLoginDetails")
-	                    .content(standardJsonLoginVerification(standardLoginVerificationWithEmail()))
-	                    .contentType(MediaType.APPLICATION_JSON)
-	                    .accept(MediaType.APPLICATION_JSON))
-
-	            .andDo(print())
-	            .andExpect(status().isOk())
-	            .andExpect(jsonPath("$.mobile").value(standardCustomerEmailMobileAuthenticationDetails().getMobile()))
-	            .andExpect(jsonPath("$.email").value(standardCustomerEmailMobileAuthenticationDetails().getEmail()))
-	            .andExpect(jsonPath("$.password").value(standardCustomerEmailMobileAuthenticationDetails().getPassword()))
-				.andExpect(jsonPath("$.passwordType").value(standardCustomerEmailMobileAuthenticationDetails().getPasswordType()))
-				.andExpect(jsonPath("$.emailPassword").value(standardCustomerEmailMobileAuthenticationDetails().getEmailPassword()));
-	}
-	
-*/	
-	
-	@Test
-	public void verifyLoginDefaultEmailPassword() throws Exception
-	{
-		
-		when(authenticationService.verifyDefaultEmailLoginDetails(standardEmailLoginVerification())).thenReturn(standardCustomerEmailMobileAuthenticationDetails());
-
-		this.mockMvc.perform(
-	            post("/customer/quickregister/verifyLoginDefaultEmailPassword")
-	                    .content(standJsonEmailPasswordLoginVerification())
-	                    .contentType(MediaType.APPLICATION_JSON)
-	                    .accept(MediaType.APPLICATION_JSON))
-
-	            .andDo(print())
-	            .andExpect(status().isOk())
-	            .andExpect(jsonPath("$.mobile").value(standardCustomerEmailMobileAuthenticationDetails().getMobile()))
-	            .andExpect(jsonPath("$.email").value(standardCustomerEmailMobileAuthenticationDetails().getEmail()))
-	            .andExpect(jsonPath("$.password").value(standardCustomerEmailMobileAuthenticationDetails().getPassword()))
-				.andExpect(jsonPath("$.passwordType").value(standardCustomerEmailMobileAuthenticationDetails().getPasswordType()))
-				.andExpect(jsonPath("$.emailPassword").value(standardCustomerEmailMobileAuthenticationDetails().getEmailPassword()));
-
-		
-	}
-	
 	
 	@Test
 	public void updatePassword() throws Exception
 	{
 		when(authenticationService.updatePassword(standardUpdatePasswordAndPasswordTypeDTO())).thenReturn(true);
+	
+		when(authenticationService.getByEntityIdType(standardUpdatePasswordAndPasswordTypeDTO().getCustomerId(),
+				standardUpdatePasswordAndPasswordTypeDTO().getCustomerType())).thenReturn(standardCustomerEmailAuthenticationDetails());
 		
 		this.mockMvc.perform(
 	            post("/customer/quickregister/updatePassword")
@@ -134,7 +85,7 @@ public class AuthenticationControllerStandAloneTest {
 	{
 		when(authenticationService.resetPassword(standardCustomerIdTypeUpdatedByDTO(),EMAIL_REQ)).thenReturn(true);
 		
-		this.mockMvc.perform(
+			this.mockMvc.perform(
 	            post("/customer/quickregister/resetPassword")
 	                    .content(standardJsonCustomerIdTypeEmailOrMobileOptionUpdatedBy(standardCustomerIdTypeEmailOrMobileOptionUpdatedBy()))
 	                    .contentType(MediaType.APPLICATION_JSON)
