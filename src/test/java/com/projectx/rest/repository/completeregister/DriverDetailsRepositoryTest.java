@@ -39,6 +39,14 @@ public class DriverDetailsRepositoryTest {
 	@Autowired
 	MobileVerificationDetailsRepository mobileVerificationDetailsRepository;
 	
+	private Integer UPDATED_BY=1;
+	
+	private Integer ENTITY_TYPE_PRIMARY=1;
+	
+	private Integer ENTITY_TYPE_CUSTOMER=1;
+	
+	private Integer ZERO_COUNT=0;
+	
 	@Before
 	public void clearTestData()
 	{
@@ -75,7 +83,9 @@ public class DriverDetailsRepositoryTest {
 		assertEquals(0, driverDetailsRepository.count().intValue());
 		
 		mobileVerificationDetailsRepository
-		.save(new MobileVerificationDetails(new MobileVerificationDetailsKey(234L, 1, 1), DRIVER_MOBILE, null, 0,0, new Date(), new Date(), "CUST_ONLINE"));
+		.save(new MobileVerificationDetails(new MobileVerificationDetailsKey(234L, ENTITY_TYPE_PRIMARY,ENTITY_TYPE_CUSTOMER), DRIVER_MOBILE,
+				null, ZERO_COUNT,ZERO_COUNT, new Date(), new Date(),
+				UPDATED_BY,UPDATED_BY,234L,234L));
 	
 		assertEquals(1, mobileVerificationDetailsRepository.count().intValue());
 		
@@ -167,7 +177,8 @@ public class DriverDetailsRepositoryTest {
 		assertEquals(1, driverDetailsRepository.count().intValue());
 		
 		assertEquals(1, driverDetailsRepository
-				.updateMobileAndMobileVerificationStatus(savedEntity.getDriverId(), 988776655443L, true,savedEntity.getUpdatedBy()).intValue());
+				.updateMobileAndMobileVerificationStatus(savedEntity.getDriverId(), 988776655443L,
+						true,savedEntity.getUpdatedBy(),savedEntity.getDriverId()).intValue());
 		
 		
 	}
@@ -239,7 +250,9 @@ public class DriverDetailsRepositoryTest {
 		
 		
 		mobileVerificationDetailsRepository
-			.save(new MobileVerificationDetails(new MobileVerificationDetailsKey(234L, 1, 1), DRIVER_MOBILE_UPDATED, null, 0,0, new Date(), new Date(), "CUST_ONLINE"));
+			.save(new MobileVerificationDetails(new MobileVerificationDetailsKey(234L, ENTITY_TYPE_PRIMARY, ENTITY_TYPE_CUSTOMER), 
+					DRIVER_MOBILE_UPDATED, null, ZERO_COUNT,ZERO_COUNT, new Date(), new Date(),
+					UPDATED_BY,UPDATED_BY,234L,234L));
 		
 		assertNotNull(mobileVerificationDetailsRepository.getByMobile(standardDriverDetails().getMobile()));
 		

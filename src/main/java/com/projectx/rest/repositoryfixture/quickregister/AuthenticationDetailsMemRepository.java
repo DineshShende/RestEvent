@@ -84,7 +84,7 @@ public class AuthenticationDetailsMemRepository implements AuthenticationDetails
 
 	@Override
 	public Integer updatePasswordEmailPasswordAndPasswordTypeAndCounts(Long customerId,Integer customerType,
-			String password,String emailPassword, String passwordType,String updatedBy) {
+			String password,String emailPassword, String passwordType,Integer updatedBy,Long updatedById) {
 		
 		AuthenticationDetailsKey key=new AuthenticationDetailsKey(customerId, customerType);
 		
@@ -100,7 +100,8 @@ public class AuthenticationDetailsMemRepository implements AuthenticationDetails
 			oldRecord.setLastUnsucessfullAttempts(0);
 			oldRecord.setResendCount(0);
 			oldRecord.setUpdatedBy(updatedBy);
-
+			oldRecord.setUpdatedById(updatedById);
+			
 			customerList.put(key, oldRecord);
 		
 			return 1;
@@ -111,7 +112,7 @@ public class AuthenticationDetailsMemRepository implements AuthenticationDetails
 
 
 	@Override
-	public Integer incrementResendCount(Long customerId,Integer customerType,String updatedBy) {
+	public Integer incrementResendCount(Long customerId,Integer customerType,Integer updatedBy,Long updatedById) {
 		
 		AuthenticationDetailsKey key=new AuthenticationDetailsKey(customerId, customerType);
 		
@@ -123,7 +124,8 @@ public class AuthenticationDetailsMemRepository implements AuthenticationDetails
 		
 			oldRecord.setResendCount(oldRecord.getResendCount()+1);
 			oldRecord.setUpdatedBy(updatedBy);
-
+			oldRecord.setUpdatedById(updatedById);
+			
 			customerList.put(key, oldRecord);
 		
 			return 1;
@@ -134,7 +136,7 @@ public class AuthenticationDetailsMemRepository implements AuthenticationDetails
 
 
 	@Override
-	public Integer incrementLastUnsucessfullAttempts(Long customerId,Integer customerType,String updatedBy) {
+	public Integer incrementLastUnsucessfullAttempts(Long customerId,Integer customerType,Integer updatedBy,Long updatedById) {
 		
 		AuthenticationDetailsKey key=new AuthenticationDetailsKey(customerId, customerType);
 		
@@ -146,7 +148,8 @@ public class AuthenticationDetailsMemRepository implements AuthenticationDetails
 		
 			oldRecord.setLastUnsucessfullAttempts(oldRecord.getLastUnsucessfullAttempts()+1);
 			oldRecord.setUpdatedBy(updatedBy);
-
+			oldRecord.setUpdatedById(updatedById);
+			
 			customerList.put(key, oldRecord);
 		
 			return 1;

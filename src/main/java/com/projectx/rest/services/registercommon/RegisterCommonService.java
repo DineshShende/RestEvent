@@ -4,7 +4,7 @@ import com.projectx.rest.domain.registercommon.ForgetPasswordEntity;
 
 public interface RegisterCommonService {
 
-	ForgetPasswordEntity forgetPassword(String entity,String requestedBy);
+	ForgetPasswordEntity forgetPassword(String entity,Integer requestedBy,Long requestedById);
 	
 	
 }

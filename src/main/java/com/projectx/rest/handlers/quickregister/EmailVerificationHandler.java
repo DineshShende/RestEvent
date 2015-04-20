@@ -78,7 +78,7 @@ public class EmailVerificationHandler implements EmailVerificationService {
 	
 	@Override
 	public EmailVerificationDetails createEntity(
-			Long customerId,Integer customerType,String email,Integer emailType,String updatedBy) {
+			Long customerId,Integer customerType,String email,Integer emailType,Integer updatedBy,Long updatedById) {
 		EmailVerificationDetails emailVerificationDetails=new EmailVerificationDetails();
 		
 		EmailVerificationDetailsKey  key=new EmailVerificationDetailsKey(customerId,customerType,emailType);
@@ -89,6 +89,9 @@ public class EmailVerificationHandler implements EmailVerificationService {
 		emailVerificationDetails.setEmail(email);
 		emailVerificationDetails.setResendCount(0);
 		emailVerificationDetails.setUpdatedBy(updatedBy);
+		emailVerificationDetails.setInsertedBy(updatedBy);
+		emailVerificationDetails.setUpdatedById(updatedById);
+		emailVerificationDetails.setInsertedById(updatedById);
 		emailVerificationDetails.setInsertTime(new Date());
 		emailVerificationDetails.setUpdateTime(new Date());
 		
@@ -116,7 +119,8 @@ public class EmailVerificationHandler implements EmailVerificationService {
 
 
 	@Override
-	public Boolean verifyEmailHashUpdateStatusAndSendPassword(Long customerId,Integer customerType,Integer emailType, String emailHash,String requestBy) 
+	public Boolean verifyEmailHashUpdateStatusAndSendPassword(Long customerId,Integer customerType,Integer emailType, String emailHash,
+			Integer requestBy,Long requestById) 
 							throws EmailVerificationDetailNotFoundException,QuickRegisterEntityNotFoundException
 	{
 		
@@ -133,17 +137,19 @@ public class EmailVerificationHandler implements EmailVerificationService {
 				fetchedEntity.setIsEmailVerified(true);
 				
 				fetchedEntity.setUpdateTime(new Date());
-				fetchedEntity.setUpdatedBy("ONLINE_CUST");
+				fetchedEntity.setUpdatedBy(requestBy);
+				fetchedEntity.setUpdatedById(requestById);
 			
 				updateStatus=customerQuickRegisterService.updateEmailVerificationStatus(fetchedEntity.getCustomerId(), fetchedEntity.getIsEmailVerified(),
-					fetchedEntity.getUpdateTime(), fetchedEntity.getUpdatedBy());										
+					fetchedEntity.getUpdateTime(), fetchedEntity.getUpdatedBy(),fetchedEntity.getUpdatedById());										
 			
-				sendPasswordStatus=authenticationHandler.sendDefaultPassword(fetchedEntity.getCustomerId(),fetchedEntity.getCustomerType(), false,EMAIL_REQ,requestBy);
+				sendPasswordStatus=authenticationHandler.sendDefaultPassword(fetchedEntity.getCustomerId(),fetchedEntity.getCustomerType(),
+						false,EMAIL_REQ,requestBy,requestById);
 			
 			}catch(ResourceNotFoundException e)
 			{
 				 updatedStatusDetails=transactionalUpdatesService
-							.updateEmailInDetailsEnityAndAuthenticationDetails(customerId, customerType, emailType,requestBy);
+							.updateEmailInDetailsEnityAndAuthenticationDetails(customerId, customerType, emailType,requestBy,requestById);
 				
 			}
 			
@@ -190,7 +196,7 @@ public class EmailVerificationHandler implements EmailVerificationService {
 
 	@Override
 	public Boolean sendOrResendOrResetEmailHash(Long customerId,Integer customerType,Integer emailType,Boolean resetFlag,Boolean resendFlag,
-			String requestedBy)throws ResourceNotFoundException
+			Integer requestedBy,Long requestedById)throws ResourceNotFoundException
 	{
 		
 		Integer updateStatus=new Integer(1);
@@ -203,7 +209,7 @@ public class EmailVerificationHandler implements EmailVerificationService {
 		
 		if(resetFlag || emailVerificationDetails.getEmailHash()==null)
 		{	
-			emailHashUpdateStatus= updateEmailHash(customerId,customerType, emailType,requestedBy);
+			emailHashUpdateStatus= updateEmailHash(customerId,customerType, emailType,requestedBy,requestedById);
 			resetFlag=true;
 		}
 		
@@ -218,12 +224,14 @@ public class EmailVerificationHandler implements EmailVerificationService {
 				.getByEntityIdTypeAndEmailType(customerId,customerType, emailType);
 		
 		if(resendFlag)
-			updateStatus=customerEmailVericationDetailsRepository.incrementResendCountByCustomerIdAndEmail(customerId, customerType, emailType,requestedBy);
+			updateStatus=customerEmailVericationDetailsRepository.incrementResendCountByCustomerIdAndEmail(customerId, customerType,
+					emailType,requestedBy,requestedById);
 
 		
 		if(updateStatus.equals(UPDATE_SUCESS) && emailHashUpdateStatus.equals(UPDATE_SUCESS))
 			sentStatus=messagerSender.sendHashEmail(customerId,customerType, emailType, firstName, lastName,
-						emailVerificationDetails.getEmail(), emailVerificationDetails.getEmailHash(),emailVerificationDetails.getUpdatedBy());
+						emailVerificationDetails.getEmail(), emailVerificationDetails.getEmailHash(),
+						requestedBy,requestedById);
 		
 		if(updateStatus.equals(UPDATE_SUCESS) && sentStatus && emailHashUpdateStatus.equals(UPDATE_SUCESS))
 			return true;
@@ -233,9 +241,9 @@ public class EmailVerificationHandler implements EmailVerificationService {
 
 	@Override
 	public Boolean sendEmailHash(Long customerId, Integer customerType,
-			Integer emailType,String requestedBy)throws ResourceNotFoundException {
+			Integer emailType,Integer requestedBy,Long requestedById)throws ResourceNotFoundException {
 	
-		Boolean result=sendOrResendOrResetEmailHash(customerId, customerType, emailType, false, false,requestedBy);
+		Boolean result=sendOrResendOrResetEmailHash(customerId, customerType, emailType, false, false,requestedBy,requestedById);
 		
 		return result;
 		
@@ -243,9 +251,9 @@ public class EmailVerificationHandler implements EmailVerificationService {
 
 	@Override
 	public Boolean reSendEmailHash(Long customerId, Integer customerType,
-			Integer emailType,String requestedBy) throws ResourceNotFoundException{
+			Integer emailType,Integer requestedBy,Long requestedById) throws ResourceNotFoundException{
 
-		Boolean result=sendOrResendOrResetEmailHash(customerId, customerType, emailType, false, true,requestedBy);
+		Boolean result=sendOrResendOrResetEmailHash(customerId, customerType, emailType, false, true,requestedBy,requestedById);
 		
 		return result;
 		
@@ -253,9 +261,9 @@ public class EmailVerificationHandler implements EmailVerificationService {
 	
 	@Override
 	public Boolean reSetEmailHash(Long customerId, Integer customerType,
-			Integer emailType,String requestedBy) throws ResourceNotFoundException{
+			Integer emailType,Integer requestedBy,Long requestedById) throws ResourceNotFoundException{
 
-		Boolean result=sendOrResendOrResetEmailHash(customerId, customerType, emailType, true, false,requestedBy);
+		Boolean result=sendOrResendOrResetEmailHash(customerId, customerType, emailType, true, false,requestedBy,requestedById);
 		
 		return result;
 		
@@ -264,12 +272,13 @@ public class EmailVerificationHandler implements EmailVerificationService {
 
 	
 	@Override
-	public Integer updateEmailHash(Long customerId,Integer customerType,Integer emailType,String requestedBy) {
+	public Integer updateEmailHash(Long customerId,Integer customerType,Integer emailType,
+			Integer requestedBy,Long requestedById) {
 		
 		String emailHash=handleCustomerVerification.generateEmailHash();
 		
 		return customerEmailVericationDetailsRepository.resetEmailHashAndEmailHashSentTime(customerId,customerType, emailType, emailHash,
-				new Date(), 0,requestedBy);
+				new Date(), 0,requestedBy,requestedById);
 		
 	}
 

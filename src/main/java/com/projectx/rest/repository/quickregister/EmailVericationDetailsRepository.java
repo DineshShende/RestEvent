@@ -22,9 +22,10 @@ public interface EmailVericationDetailsRepository {
 	EmailVerificationDetails getByEmail(String email) throws EmailVerificationDetailNotFoundException;
 	
 	Integer resetEmailHashAndEmailHashSentTime(Long customerId,Integer customerType,Integer emailType,String emailHash,Date emailHashSentTime,
-			Integer resetCount,String updatedBy);
+			Integer resetCount,Integer updatedBy,Long updatedById);
 	
-	Integer incrementResendCountByCustomerIdAndEmail(Long customerId,Integer customerType,Integer emailType,String updatedBy);
+	Integer incrementResendCountByCustomerIdAndEmail(Long customerId,Integer customerType,Integer emailType,
+			Integer updatedBy,Long updatedById);
 	
 	Long count();
 	

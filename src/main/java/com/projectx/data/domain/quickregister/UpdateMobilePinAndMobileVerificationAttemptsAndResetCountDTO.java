@@ -10,7 +10,8 @@ public class UpdateMobilePinAndMobileVerificationAttemptsAndResetCountDTO {
 	private Integer mobilePin;
 	private Integer mobileVerificationAttempts;
 	private Integer resendCount;
-	private String updatedBy;
+	private Integer updatedBy;
+	private Long updatedById;
 	
 	
 	public UpdateMobilePinAndMobileVerificationAttemptsAndResetCountDTO() {
@@ -21,7 +22,7 @@ public class UpdateMobilePinAndMobileVerificationAttemptsAndResetCountDTO {
 	public UpdateMobilePinAndMobileVerificationAttemptsAndResetCountDTO(
 			Long customerId, Integer customerType, Integer mobileType,
 			Integer mobilePin, Integer mobileVerificationAttempts,
-			Integer resendCount, String updatedBy) {
+			Integer resendCount, Integer updatedBy,Long updatedById) {
 		super();
 		this.customerId = customerId;
 		this.customerType = customerType;
@@ -30,15 +31,8 @@ public class UpdateMobilePinAndMobileVerificationAttemptsAndResetCountDTO {
 		this.mobileVerificationAttempts = mobileVerificationAttempts;
 		this.resendCount = resendCount;
 		this.updatedBy = updatedBy;
+		this.updatedById=updatedById;
 	}
-
-
-
-
-
-
-
-
 
 	public Long getCustomerId() {
 		return customerId;
@@ -107,15 +101,26 @@ public class UpdateMobilePinAndMobileVerificationAttemptsAndResetCountDTO {
 		this.customerType = customerType;
 	}
 
-	
 
-	public String getUpdatedBy() {
+	
+	
+	public Integer getUpdatedBy() {
 		return updatedBy;
 	}
 
 
-	public void setUpdatedBy(String updatedBy) {
+	public void setUpdatedBy(Integer updatedBy) {
 		this.updatedBy = updatedBy;
+	}
+
+
+	public Long getUpdatedById() {
+		return updatedById;
+	}
+
+
+	public void setUpdatedById(Long updatedById) {
+		this.updatedById = updatedById;
 	}
 
 
@@ -135,7 +140,7 @@ public class UpdateMobilePinAndMobileVerificationAttemptsAndResetCountDTO {
 				+ resendCount
 				+ ", updatedBy="
 				+ updatedBy
-				+ "]";
+				+ ", updatedById=" + updatedById + "]";
 	}
 
 
@@ -159,6 +164,8 @@ public class UpdateMobilePinAndMobileVerificationAttemptsAndResetCountDTO {
 				+ ((resendCount == null) ? 0 : resendCount.hashCode());
 		result = prime * result
 				+ ((updatedBy == null) ? 0 : updatedBy.hashCode());
+		result = prime * result
+				+ ((updatedById == null) ? 0 : updatedById.hashCode());
 		return result;
 	}
 
@@ -208,10 +215,16 @@ public class UpdateMobilePinAndMobileVerificationAttemptsAndResetCountDTO {
 				return false;
 		} else if (!updatedBy.equals(other.updatedBy))
 			return false;
+		if (updatedById == null) {
+			if (other.updatedById != null)
+				return false;
+		} else if (!updatedById.equals(other.updatedById))
+			return false;
 		return true;
 	}
 
 
+	
 	
 		
 }

@@ -15,19 +15,22 @@ public class UpdateEmailMobileVerificationStatus {
 	
 	private Date updateTime;
 	
-	private String updatedBy;
+	private Integer updatedBy;
+	
+	private Long updatedById;
 
 	public UpdateEmailMobileVerificationStatus() {
 
 	}
 
 	public UpdateEmailMobileVerificationStatus(Long customerId, Boolean status,
-			Date updateTime, String updatedBy) {
+			Date updateTime, Integer updatedBy,Long updatedById) {
 		super();
 		this.customerId = customerId;
 		this.status = status;
 		this.updateTime = updateTime;
 		this.updatedBy = updatedBy;
+		this.updatedById=updatedById;
 	}
 
 	public Long getCustomerId() {
@@ -56,19 +59,31 @@ public class UpdateEmailMobileVerificationStatus {
 		this.updateTime = updateTime;
 	}
 
-	public String getUpdatedBy() {
+
+	
+
+	public Integer getUpdatedBy() {
 		return updatedBy;
 	}
 
-	public void setUpdatedBy(String updatedBy) {
+	public void setUpdatedBy(Integer updatedBy) {
 		this.updatedBy = updatedBy;
+	}
+
+	public Long getUpdatedById() {
+		return updatedById;
+	}
+
+	public void setUpdatedById(Long updatedById) {
+		this.updatedById = updatedById;
 	}
 
 	@Override
 	public String toString() {
 		return "UpdateEmailMobileVerificationStatus [customerId=" + customerId
 				+ ", status=" + status + ", updateTime=" + updateTime
-				+ ", updatedBy=" + updatedBy + "]";
+				+ ", updatedBy=" + updatedBy + ", updatedById=" + updatedById
+				+ "]";
 	}
 
 	@Override
@@ -82,6 +97,8 @@ public class UpdateEmailMobileVerificationStatus {
 				+ ((updateTime == null) ? 0 : updateTime.hashCode());
 		result = prime * result
 				+ ((updatedBy == null) ? 0 : updatedBy.hashCode());
+		result = prime * result
+				+ ((updatedById == null) ? 0 : updatedById.hashCode());
 		return result;
 	}
 
@@ -114,9 +131,14 @@ public class UpdateEmailMobileVerificationStatus {
 				return false;
 		} else if (!updatedBy.equals(other.updatedBy))
 			return false;
+		if (updatedById == null) {
+			if (other.updatedById != null)
+				return false;
+		} else if (!updatedById.equals(other.updatedById))
+			return false;
 		return true;
 	}
 
-	
+		
 	
 }

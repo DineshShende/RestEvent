@@ -2,6 +2,7 @@ package com.projectx.rest.domain.completeregister;
 
 import java.util.Date;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -27,8 +28,10 @@ public class VendorDetails {
 	
 	private String firmName;
 	
+	@Valid
 	private Address firmAddress;
 	
+	@Valid
 	private Address homeAddress;
 	
 	
@@ -58,7 +61,16 @@ public class VendorDetails {
 	private Date updateTime;
 	
 	@NotNull
-	private String updatedBy;
+	private Integer updatedBy;
+	
+	@NotNull
+	private Integer insertedBy;
+	
+	@NotNull
+	private Long updatedById;
+	
+	@NotNull
+	private Long insertedById;
 
 	public VendorDetails() {
 
@@ -72,7 +84,8 @@ public class VendorDetails {
 			Long phoneNumber, Boolean isMobileVerified, String email,
 			Boolean isEmailVerified, String laguage, Long secondaryMobile,
 			Boolean isSecondaryMobileVerified, Date insertTime,
-			Date updateTime, String updatedBy) {
+			Date updateTime, 
+			Integer updatedBy,Integer insertedBy,Long updatedById,Long insertedById) {
 		super();
 		this.vendorId = vendorId;
 		this.firstName = firstName;
@@ -93,17 +106,10 @@ public class VendorDetails {
 		this.insertTime = insertTime;
 		this.updateTime = updateTime;
 		this.updatedBy = updatedBy;
+		this.insertedBy=insertedBy;
+		this.updatedById=updatedById;
+		this.insertedById=insertedById;
 	}
-
-
-
-
-
-
-
-
-
-
 
 
 	public Long getVendorId() {
@@ -208,14 +214,7 @@ public class VendorDetails {
 		this.updateTime = updateTime;
 	}
 
-	public String getUpdatedBy() {
-		return updatedBy;
-	}
 
-	public void setUpdatedBy(String updatedBy) {
-		this.updatedBy = updatedBy;
-	}
-	
 	public String getFirmName() {
 		return firmName;
 	}
@@ -280,6 +279,51 @@ public class VendorDetails {
 	}
 
 
+	public Integer getUpdatedBy() {
+		return updatedBy;
+	}
+
+
+
+	public void setUpdatedBy(Integer updatedBy) {
+		this.updatedBy = updatedBy;
+	}
+
+
+
+	public Integer getInsertedBy() {
+		return insertedBy;
+	}
+
+
+
+	public void setInsertedBy(Integer insertedBy) {
+		this.insertedBy = insertedBy;
+	}
+
+
+
+	public Long getUpdatedById() {
+		return updatedById;
+	}
+
+
+
+	public void setUpdatedById(Long updatedById) {
+		this.updatedById = updatedById;
+	}
+
+
+
+	public Long getInsertedById() {
+		return insertedById;
+	}
+
+
+
+	public void setInsertedById(Long insertedById) {
+		this.insertedById = insertedById;
+	}
 
 
 
@@ -296,7 +340,8 @@ public class VendorDetails {
 				+ secondaryMobile + ", isSecondaryMobileVerified="
 				+ isSecondaryMobileVerified + ", insertTime=" + insertTime
 				+ ", updateTime=" + updateTime + ", updatedBy=" + updatedBy
-				+ "]";
+				+ ", insertedBy=" + insertedBy + ", updatedById=" + updatedById
+				+ ", insertedById=" + insertedById + "]";
 	}
 
 
@@ -305,6 +350,8 @@ public class VendorDetails {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result
+				+ ((dateOfBirth == null) ? 0 : dateOfBirth.hashCode());
 		result = prime * result + ((email == null) ? 0 : email.hashCode());
 		result = prime * result
 				+ ((firmAddress == null) ? 0 : firmAddress.hashCode());
@@ -316,6 +363,10 @@ public class VendorDetails {
 				+ ((homeAddress == null) ? 0 : homeAddress.hashCode());
 		result = prime * result
 				+ ((insertTime == null) ? 0 : insertTime.hashCode());
+		result = prime * result
+				+ ((insertedBy == null) ? 0 : insertedBy.hashCode());
+		result = prime * result
+				+ ((insertedById == null) ? 0 : insertedById.hashCode());
 		result = prime * result
 				+ ((isEmailVerified == null) ? 0 : isEmailVerified.hashCode());
 		result = prime
@@ -336,7 +387,11 @@ public class VendorDetails {
 		result = prime * result
 				+ ((secondaryMobile == null) ? 0 : secondaryMobile.hashCode());
 		result = prime * result
+				+ ((updateTime == null) ? 0 : updateTime.hashCode());
+		result = prime * result
 				+ ((updatedBy == null) ? 0 : updatedBy.hashCode());
+		result = prime * result
+				+ ((updatedById == null) ? 0 : updatedById.hashCode());
 		result = prime * result
 				+ ((vendorId == null) ? 0 : vendorId.hashCode());
 		return result;
@@ -353,6 +408,10 @@ public class VendorDetails {
 		if (getClass() != obj.getClass())
 			return false;
 		VendorDetails other = (VendorDetails) obj;
+		if (dateOfBirth == null) {
+			if (other.dateOfBirth != null)
+				return false;
+		} 
 		if (email == null) {
 			if (other.email != null)
 				return false;
@@ -378,6 +437,19 @@ public class VendorDetails {
 				return false;
 		} else if (!homeAddress.equals(other.homeAddress))
 			return false;
+		if (insertTime == null) {
+			if (other.insertTime != null)
+				return false;
+		}
+		if (insertedBy == null) {
+			if (other.insertedBy != null)
+				return false;
+		} else if (!insertedBy.equals(other.insertedBy))
+			return false;
+		if (insertedById == null) {
+			if (other.insertedById != null)
+				return false;
+		}
 		if (isEmailVerified == null) {
 			if (other.isEmailVerified != null)
 				return false;
@@ -424,21 +496,26 @@ public class VendorDetails {
 				return false;
 		} else if (!secondaryMobile.equals(other.secondaryMobile))
 			return false;
+		if (updateTime == null) {
+			if (other.updateTime != null)
+				return false;
+		}
 		if (updatedBy == null) {
 			if (other.updatedBy != null)
 				return false;
 		} else if (!updatedBy.equals(other.updatedBy))
 			return false;
+		if (updatedById == null) {
+			if (other.updatedById != null)
+				return false;
+		}
 		if (vendorId == null) {
 			if (other.vendorId != null)
 				return false;
-		} else if (!vendorId.equals(other.vendorId))
-			return false;
+		}
 		return true;
 	}
 
 
 
-
-	
 }

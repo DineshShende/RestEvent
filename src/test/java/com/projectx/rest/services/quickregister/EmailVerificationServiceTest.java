@@ -65,7 +65,8 @@ public class EmailVerificationServiceTest {
 	{
 		EmailVerificationDetails emailVerificationDetails=emailVerificationService
 				.createEntity(standardEmailMobileCustomer().getCustomerId(),standardEmailMobileCustomer().getCustomerType(),
-						standardEmailMobileCustomer().getEmail(),CUST_EMAIL_TYPE_PRIMARY,standardEmailMobileCustomer().getUpdatedBy());
+						standardEmailMobileCustomer().getEmail(),CUST_EMAIL_TYPE_PRIMARY,standardEmailMobileCustomer().getUpdatedBy(),
+						standardEmailMobileCustomer().getUpdatedById());
 		
 		assertEquals(standardCustomerEmailVerificationDetailsWithOutPassword().getKey(), emailVerificationDetails.getKey());
 	}
@@ -114,7 +115,8 @@ public class EmailVerificationServiceTest {
 		assertNull(authenticationDetails.getEmailPassword());
 		
 		assertTrue(emailVerificationService.verifyEmailHashUpdateStatusAndSendPassword(handledEntity.getCustomer().getCustomerId(),
-				handledEntity.getCustomer().getCustomerType(),1, emailVerificationDetails.getEmailHash(),emailVerificationDetails.getUpdatedBy()));
+				handledEntity.getCustomer().getCustomerType(),1, emailVerificationDetails.getEmailHash(),emailVerificationDetails.getUpdatedBy(),
+				emailVerificationDetails.getInsertedById()));
 		
 		authenticationDetails=authenticationService.
 				getByEntityIdType(handledEntity.getCustomer().getCustomerId(),handledEntity.getCustomer().getCustomerType());
@@ -133,7 +135,7 @@ public class EmailVerificationServiceTest {
 		
 		assertTrue(mobileVerificationService
 				.verifyMobilePinUpdateStatusAndSendPassword(handledEntity.getCustomer().getCustomerId(),handledEntity.getCustomer().getCustomerType(),
-						1,mobileVerificationDetails.getMobilePin(),mobileVerificationDetails.getUpdatedBy()));
+						1,mobileVerificationDetails.getMobilePin(),mobileVerificationDetails.getUpdatedBy(),handledEntity.getCustomer().getCustomerId()));
 		
 		authenticationDetails=authenticationService
 				.getByEntityIdType(handledEntity.getCustomer().getCustomerId(),handledEntity.getCustomer().getCustomerType());
@@ -179,7 +181,8 @@ public class EmailVerificationServiceTest {
 	
 		
 		assertTrue(emailVerificationService.verifyEmailHashUpdateStatusAndSendPassword(handledEntity.getCustomerId(),
-				handledEntity.getCustomerType(),1 ,emailVerificationDetail.getEmailHash(),emailVerificationDetail.getUpdatedBy()));
+				handledEntity.getCustomerType(),1 ,emailVerificationDetail.getEmailHash(),emailVerificationDetail.getUpdatedBy(),
+				handledEntity.getCustomerId()));
 		
 		authenticationDetails=authenticationService.getByEntityIdType(handledEntity.getCustomerId(),handledEntity.getCustomerType());
 		
@@ -213,7 +216,8 @@ public class EmailVerificationServiceTest {
 		EmailVerificationDetails emailVerificationDetail=emailVerificationService.getByEntityIdTypeAndEmailType
 													(handledEntity.getCustomerId(),handledEntity.getCustomerType(), 1); 
 		
-		Boolean status=emailVerificationService.sendEmailHash(handledEntity.getCustomerId(), ENTITY_TYPE_CUSTOMER, ENTITY_TYPE_CUSTOMER,CUST_UPDATED_BY);
+		Boolean status=emailVerificationService.sendEmailHash(handledEntity.getCustomerId(), ENTITY_TYPE_CUSTOMER, 
+				ENTITY_TYPE_CUSTOMER,CUST_UPDATED_BY,handledEntity.getCustomerId());
 		
 		assertTrue(status);
 	

@@ -2,6 +2,7 @@ package com.projectx.rest.domain.completeregister;
 
 import java.util.Date;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -26,6 +27,7 @@ public class DriverDetails {
 	
 	private String bloodGroup;
 	
+	@Valid
 	private Address homeAddress;
 	
 	@NotNull
@@ -63,18 +65,21 @@ public class DriverDetails {
 	private Date updateTime;
 	
 	@NotNull
-	private String updatedBy;
+	private Integer updatedBy;
+	
+	@NotNull
+	private Integer insertedBy;
+	
+	@NotNull
+	private Long updatedById;
+	
+	@NotNull
+	private Long insertedById;
+
 
 	public DriverDetails() {
 
 	}
-
-
-
-
-
-
-
 
 
 	public DriverDetails(Long driverId, String firstName, String middleName,
@@ -83,7 +88,8 @@ public class DriverDetails {
 			Long homeContactNumber, String licenceNumber, Date drivingSince,
 			Date employedSince, Boolean isFreightRequestPermissionGiven,
 			Boolean isDealFinalizationPermissionGiven, String language,
-			Long vendorId, Date insertTime, Date updateTime, String updatedBy) {
+			Long vendorId, Date insertTime, Date updateTime,
+			Integer updatedBy,Integer insertedBy,Long updatedById,Long insertedById) {
 		super();
 		this.driverId = driverId;
 		this.firstName = firstName;
@@ -105,6 +111,9 @@ public class DriverDetails {
 		this.insertTime = insertTime;
 		this.updateTime = updateTime;
 		this.updatedBy = updatedBy;
+		this.insertedBy=insertedBy;
+		this.updatedById=updatedById;
+		this.insertedById=insertedById;
 	}
 
 
@@ -293,22 +302,44 @@ public class DriverDetails {
 
 
 
-
-	public String getUpdatedBy() {
+	public Integer getUpdatedBy() {
 		return updatedBy;
 	}
 
 
-
-
-	public void setUpdatedBy(String updatedBy) {
+	public void setUpdatedBy(Integer updatedBy) {
 		this.updatedBy = updatedBy;
 	}
 
 
+	public Integer getInsertedBy() {
+		return insertedBy;
+	}
 
 
+	public void setInsertedBy(Integer insertedBy) {
+		this.insertedBy = insertedBy;
+	}
 
+
+	public Long getUpdatedById() {
+		return updatedById;
+	}
+
+
+	public void setUpdatedById(Long updatedById) {
+		this.updatedById = updatedById;
+	}
+
+
+	public Long getInsertedById() {
+		return insertedById;
+	}
+
+
+	public void setInsertedById(Long insertedById) {
+		this.insertedById = insertedById;
+	}
 
 
 	@Override
@@ -327,9 +358,9 @@ public class DriverDetails {
 				+ isDealFinalizationPermissionGiven + ", language=" + language
 				+ ", vendorId=" + vendorId + ", insertTime=" + insertTime
 				+ ", updateTime=" + updateTime + ", updatedBy=" + updatedBy
-				+ "]";
+				+ ", insertedBy=" + insertedBy + ", updatedById=" + updatedById
+				+ ", insertedById=" + insertedById + "]";
 	}
-
 
 
 	@Override
@@ -356,6 +387,10 @@ public class DriverDetails {
 						.hashCode());
 		result = prime * result
 				+ ((insertTime == null) ? 0 : insertTime.hashCode());
+		result = prime * result
+				+ ((insertedBy == null) ? 0 : insertedBy.hashCode());
+		result = prime * result
+				+ ((insertedById == null) ? 0 : insertedById.hashCode());
 		result = prime
 				* result
 				+ ((isDealFinalizationPermissionGiven == null) ? 0
@@ -381,10 +416,11 @@ public class DriverDetails {
 		result = prime * result
 				+ ((updatedBy == null) ? 0 : updatedBy.hashCode());
 		result = prime * result
+				+ ((updatedById == null) ? 0 : updatedById.hashCode());
+		result = prime * result
 				+ ((vendorId == null) ? 0 : vendorId.hashCode());
 		return result;
 	}
-
 
 
 	@Override
@@ -404,8 +440,7 @@ public class DriverDetails {
 		if (dateOfBirth == null) {
 			if (other.dateOfBirth != null)
 				return false;
-		} else if (Math.abs(dateOfBirth.getTime()-other.dateOfBirth.getTime())>1000000)
-			return false;
+		}
 		if (driverId == null) {
 			if (other.driverId != null)
 				return false;
@@ -414,13 +449,11 @@ public class DriverDetails {
 		if (drivingSince == null) {
 			if (other.drivingSince != null)
 				return false;
-		} else if (Math.abs(drivingSince.getTime()-other.drivingSince.getTime())>1000000)
-			return false;
+		}
 		if (employedSince == null) {
 			if (other.employedSince != null)
 				return false;
-		} else if (Math.abs(employedSince.getTime()-other.employedSince.getTime())>1000000)
-			return false;
+		}
 		if (firstName == null) {
 			if (other.firstName != null)
 				return false;
@@ -439,7 +472,16 @@ public class DriverDetails {
 		if (insertTime == null) {
 			if (other.insertTime != null)
 				return false;
-		} else if (Math.abs(insertTime.getTime()-other.insertTime.getTime())>1000000)
+		}
+		if (insertedBy == null) {
+			if (other.insertedBy != null)
+				return false;
+		} else if (!insertedBy.equals(other.insertedBy))
+			return false;
+		if (insertedById == null) {
+			if (other.insertedById != null)
+				return false;
+		} else if (!insertedById.equals(other.insertedById))
 			return false;
 		if (isDealFinalizationPermissionGiven == null) {
 			if (other.isDealFinalizationPermissionGiven != null)
@@ -486,12 +528,16 @@ public class DriverDetails {
 		if (updateTime == null) {
 			if (other.updateTime != null)
 				return false;
-		} else if (Math.abs(updateTime.getTime()-other.updateTime.getTime())>1000000)
-			return false;
+		}
 		if (updatedBy == null) {
 			if (other.updatedBy != null)
 				return false;
 		} else if (!updatedBy.equals(other.updatedBy))
+			return false;
+		if (updatedById == null) {
+			if (other.updatedById != null)
+				return false;
+		} else if (!updatedById.equals(other.updatedById))
 			return false;
 		if (vendorId == null) {
 			if (other.vendorId != null)
@@ -500,9 +546,6 @@ public class DriverDetails {
 			return false;
 		return true;
 	}
-
-
-
 
 
 	

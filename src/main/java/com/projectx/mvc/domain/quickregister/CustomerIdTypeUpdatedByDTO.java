@@ -11,7 +11,10 @@ public class CustomerIdTypeUpdatedByDTO {
 	private Integer customerType;
 	
 	@NotNull
-	private String updatedBy;
+	private Integer updatedBy;
+	
+	@NotNull
+	private Long updatedById;
 
 	public CustomerIdTypeUpdatedByDTO() {
 
@@ -20,11 +23,12 @@ public class CustomerIdTypeUpdatedByDTO {
 	
 	
 	public CustomerIdTypeUpdatedByDTO(Long customerId, Integer customerType,
-			String updatedBy) {
+			Integer updatedBy,Long updatedById) {
 		super();
 		this.customerId = customerId;
 		this.customerType = customerType;
 		this.updatedBy = updatedBy;
+		this.updatedById=updatedById;
 	}
 
 	
@@ -53,23 +57,35 @@ public class CustomerIdTypeUpdatedByDTO {
 
 
 
-	public String getUpdatedBy() {
+	public Integer getUpdatedBy() {
 		return updatedBy;
 	}
 
 
 
-	public void setUpdatedBy(String updatedBy) {
+	public void setUpdatedBy(Integer updatedBy) {
 		this.updatedBy = updatedBy;
+	}
+
+
+
+	public Long getUpdatedById() {
+		return updatedById;
+	}
+
+
+
+	public void setUpdatedById(Long updatedById) {
+		this.updatedById = updatedById;
 	}
 
 
 
 	@Override
 	public String toString() {
-		return "CustomerIdTypeUpdatedBy [customerId=" + customerId
+		return "CustomerIdTypeUpdatedByDTO [customerId=" + customerId
 				+ ", customerType=" + customerType + ", updatedBy=" + updatedBy
-				+ "]";
+				+ ", updatedById=" + updatedById + "]";
 	}
 
 
@@ -84,6 +100,8 @@ public class CustomerIdTypeUpdatedByDTO {
 				+ ((customerType == null) ? 0 : customerType.hashCode());
 		result = prime * result
 				+ ((updatedBy == null) ? 0 : updatedBy.hashCode());
+		result = prime * result
+				+ ((updatedById == null) ? 0 : updatedById.hashCode());
 		return result;
 	}
 
@@ -113,9 +131,15 @@ public class CustomerIdTypeUpdatedByDTO {
 				return false;
 		} else if (!updatedBy.equals(other.updatedBy))
 			return false;
+		if (updatedById == null) {
+			if (other.updatedById != null)
+				return false;
+		} else if (!updatedById.equals(other.updatedById))
+			return false;
 		return true;
 	}
-	
+
+
 	
 
 }

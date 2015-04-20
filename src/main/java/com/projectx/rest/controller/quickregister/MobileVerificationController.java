@@ -40,7 +40,7 @@ public class MobileVerificationController {
 			
 		try{
 			Boolean status=mobileVerificationService.verifyMobilePinUpdateStatusAndSendPassword(verifyMobile.getCustomerId(),verifyMobile.getCustomerType(),
-					verifyMobile.getMobileType(), verifyMobile.getMobilePin(),verifyMobile.getRequestBy());
+					verifyMobile.getMobileType(), verifyMobile.getMobilePin(),verifyMobile.getRequestBy(),verifyMobile.getRequestById());
 			
 			return new ResponseEntity<Boolean>(status, HttpStatus.OK);
 			
@@ -65,7 +65,7 @@ public class MobileVerificationController {
 		
 		try{
 			Boolean status=mobileVerificationService.sendMobilePin(updateMobilePin.getCustomerId(),updateMobilePin.getCustomerType(),
-					updateMobilePin.getMobileType(),updateMobilePin.getRequestedBy());
+					updateMobilePin.getMobileType(),updateMobilePin.getRequestedBy(),updateMobilePin.getRequestedById());
 			
 			return new ResponseEntity<Boolean>(status, HttpStatus.OK);
 		}catch(ResourceNotFoundException e)
@@ -84,7 +84,7 @@ public class MobileVerificationController {
 		
 		try{
 			Boolean status=mobileVerificationService.reSetMobilePin(updateMobilePin.getCustomerId(),updateMobilePin.getCustomerType(),
-					updateMobilePin.getMobileType(),updateMobilePin.getRequestedBy());
+					updateMobilePin.getMobileType(),updateMobilePin.getRequestedBy(),updateMobilePin.getRequestedById());
 			
 			return new ResponseEntity<Boolean>(status, HttpStatus.OK);
 		}catch(ResourceNotFoundException e)
@@ -105,7 +105,7 @@ public class MobileVerificationController {
 		try{
 		
 			Boolean result= mobileVerificationService.reSendMobilePin(updateMobilePin.getCustomerId(),updateMobilePin.getCustomerType(),
-					updateMobilePin.getMobileType(),updateMobilePin.getRequestedBy());
+					updateMobilePin.getMobileType(),updateMobilePin.getRequestedBy(),updateMobilePin.getRequestedById());
 			return new ResponseEntity<Boolean>(result, HttpStatus.OK);
 		}catch(ResourceNotFoundException e)
 		{

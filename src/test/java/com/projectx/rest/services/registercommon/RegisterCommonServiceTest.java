@@ -7,6 +7,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -48,6 +49,9 @@ public class RegisterCommonServiceTest {
 	@Autowired
 	VendorDetailsService vendorDetailsService;
 	
+	@Value("${ACTOR_ENTITY_SELF_WEB}")
+	private Long ACTOR_ENTITY_SELF_WEB;
+	
 	@Before
 	public void setUp() {
 		
@@ -68,7 +72,7 @@ public class RegisterCommonServiceTest {
 		
 		try{
 		
-			registerCommonService.forgetPassword(CUST_EMAIL,CUST_UPDATED_BY);
+			registerCommonService.forgetPassword(CUST_EMAIL,CUST_UPDATED_BY,ACTOR_ENTITY_SELF_WEB);
 			
 			assertEquals(0, 1);
 		
@@ -83,7 +87,7 @@ public class RegisterCommonServiceTest {
 		
 		QuickRegisterEntity entity=quickRegisterEntity.getCustomerQuickRegisterEntity();
 		
-		ForgetPasswordEntity forgetPasswordEntity=registerCommonService.forgetPassword(entity.getEmail(),CUST_UPDATED_BY);
+		ForgetPasswordEntity forgetPasswordEntity=registerCommonService.forgetPassword(entity.getEmail(),CUST_UPDATED_BY,ACTOR_ENTITY_SELF_WEB);
 		
 		assertEquals(entity.getCustomerId(), forgetPasswordEntity.getCustomerId());
 		assertEquals(entity.getCustomerType(), forgetPasswordEntity.getCustomerType());
@@ -100,7 +104,7 @@ public class RegisterCommonServiceTest {
 		
 		try{
 		
-			registerCommonService.forgetPassword(Long.toString(CUST_MOBILE),CUST_UPDATED_BY);
+			registerCommonService.forgetPassword(Long.toString(CUST_MOBILE),CUST_UPDATED_BY,ACTOR_ENTITY_SELF_WEB);
 			
 			assertEquals(0, 1);
 		
@@ -115,7 +119,8 @@ public class RegisterCommonServiceTest {
 		
 		QuickRegisterEntity entity=quickRegisterEntity.getCustomerQuickRegisterEntity();
 		
-		ForgetPasswordEntity forgetPasswordEntity=registerCommonService.forgetPassword(Long.toString(entity.getMobile()),CUST_UPDATED_BY);
+		ForgetPasswordEntity forgetPasswordEntity=registerCommonService.forgetPassword(Long.toString(entity.getMobile()),CUST_UPDATED_BY,
+				ACTOR_ENTITY_SELF_WEB);
 		
 		assertEquals(entity.getCustomerId(), forgetPasswordEntity.getCustomerId());
 		assertEquals(entity.getCustomerType(), forgetPasswordEntity.getCustomerType());
@@ -132,7 +137,7 @@ public class RegisterCommonServiceTest {
 		
 		try{
 			
-			registerCommonService.forgetPassword(CUST_EMAIL,CUST_UPDATED_BY);
+			registerCommonService.forgetPassword(CUST_EMAIL,CUST_UPDATED_BY,ACTOR_ENTITY_SELF_WEB);
 			
 			assertEquals(0, 1);
 		
@@ -143,7 +148,7 @@ public class RegisterCommonServiceTest {
 		
 		try{
 		
-			registerCommonService.forgetPassword(Long.toString(CUST_MOBILE),CUST_UPDATED_BY);
+			registerCommonService.forgetPassword(Long.toString(CUST_MOBILE),CUST_UPDATED_BY,ACTOR_ENTITY_SELF_WEB);
 			
 			assertEquals(0, 1);
 		
@@ -158,7 +163,8 @@ public class RegisterCommonServiceTest {
 		
 		QuickRegisterEntity entity=quickRegisterEntity.getCustomerQuickRegisterEntity();
 		
-		ForgetPasswordEntity forgetPasswordEntity=registerCommonService.forgetPassword(Long.toString(entity.getMobile()),CUST_UPDATED_BY);
+		ForgetPasswordEntity forgetPasswordEntity=registerCommonService.forgetPassword(Long.toString(entity.getMobile()),CUST_UPDATED_BY,
+				ACTOR_ENTITY_SELF_WEB);
 		
 		assertEquals(entity.getCustomerId(), forgetPasswordEntity.getCustomerId());
 		assertEquals(entity.getCustomerType(), forgetPasswordEntity.getCustomerType());
@@ -167,7 +173,7 @@ public class RegisterCommonServiceTest {
 		assertEquals(entity.getIsEmailVerified(), forgetPasswordEntity.getIsEmailVerified());
 		assertEquals(entity.getIsMobileVerified(), forgetPasswordEntity.getIsMobileVerified());
 		
-		forgetPasswordEntity=registerCommonService.forgetPassword(entity.getEmail(),CUST_UPDATED_BY);
+		forgetPasswordEntity=registerCommonService.forgetPassword(entity.getEmail(),CUST_UPDATED_BY,ACTOR_ENTITY_SELF_WEB);
 		
 		assertEquals(entity.getCustomerId(), forgetPasswordEntity.getCustomerId());
 		assertEquals(entity.getCustomerType(), forgetPasswordEntity.getCustomerType());
@@ -183,7 +189,7 @@ public class RegisterCommonServiceTest {
 	{
 		try{
 			
-			registerCommonService.forgetPassword(CUST_EMAIL,CUST_UPDATED_BY);
+			registerCommonService.forgetPassword(CUST_EMAIL,CUST_UPDATED_BY,ACTOR_ENTITY_SELF_WEB);
 			
 			assertEquals(0, 1);
 		
@@ -194,7 +200,7 @@ public class RegisterCommonServiceTest {
 		
 		try{
 		
-			registerCommonService.forgetPassword(Long.toString(CUST_MOBILE),CUST_UPDATED_BY);
+			registerCommonService.forgetPassword(Long.toString(CUST_MOBILE),CUST_UPDATED_BY,ACTOR_ENTITY_SELF_WEB);
 			
 			assertEquals(0, 1);
 		
@@ -213,7 +219,7 @@ public class RegisterCommonServiceTest {
 		
 		ForgetPasswordEntity forgetPasswordEntity=null;
 		
-		forgetPasswordEntity=registerCommonService.forgetPassword(entity.getEmail(),CUST_UPDATED_BY);
+		forgetPasswordEntity=registerCommonService.forgetPassword(entity.getEmail(),CUST_UPDATED_BY,ACTOR_ENTITY_SELF_WEB);
 		
 		assertEquals(customerDetails.getCustomerId(), forgetPasswordEntity.getCustomerId());
 		assertEquals(ENTITY_TYPE_CUSTOMER, forgetPasswordEntity.getCustomerType());
@@ -222,7 +228,7 @@ public class RegisterCommonServiceTest {
 		assertEquals(customerDetails.getIsEmailVerified(), forgetPasswordEntity.getIsEmailVerified());
 		assertEquals(customerDetails.getIsMobileVerified(), forgetPasswordEntity.getIsMobileVerified());
 		
-		forgetPasswordEntity=registerCommonService.forgetPassword(Long.toString(entity.getMobile()),CUST_UPDATED_BY);
+		forgetPasswordEntity=registerCommonService.forgetPassword(Long.toString(entity.getMobile()),CUST_UPDATED_BY,ACTOR_ENTITY_SELF_WEB);
 		
 		assertEquals(customerDetails.getCustomerId(), forgetPasswordEntity.getCustomerId());
 		assertEquals(ENTITY_TYPE_CUSTOMER, forgetPasswordEntity.getCustomerType());
@@ -238,7 +244,7 @@ public class RegisterCommonServiceTest {
 	{
 		try{
 			
-			registerCommonService.forgetPassword(CUST_EMAIL,CUST_UPDATED_BY);
+			registerCommonService.forgetPassword(CUST_EMAIL,CUST_UPDATED_BY,ACTOR_ENTITY_SELF_WEB);
 			
 			assertEquals(0, 1);
 		
@@ -249,7 +255,7 @@ public class RegisterCommonServiceTest {
 		
 		try{
 		
-			registerCommonService.forgetPassword(Long.toString(CUST_MOBILE),CUST_UPDATED_BY);
+			registerCommonService.forgetPassword(Long.toString(CUST_MOBILE),CUST_UPDATED_BY,ACTOR_ENTITY_SELF_WEB);
 			
 			assertEquals(0, 1);
 		
@@ -268,7 +274,7 @@ public class RegisterCommonServiceTest {
 		
 		ForgetPasswordEntity forgetPasswordEntity=null;
 		
-		forgetPasswordEntity=registerCommonService.forgetPassword(entity.getEmail(),CUST_UPDATED_BY);
+		forgetPasswordEntity=registerCommonService.forgetPassword(entity.getEmail(),CUST_UPDATED_BY,ACTOR_ENTITY_SELF_WEB);
 		
 		assertEquals(vendorDetails.getVendorId(), forgetPasswordEntity.getCustomerId());
 		assertEquals(ENTITY_TYPE_VENDOR, forgetPasswordEntity.getCustomerType());
@@ -277,7 +283,7 @@ public class RegisterCommonServiceTest {
 		assertEquals(vendorDetails.getIsEmailVerified(), forgetPasswordEntity.getIsEmailVerified());
 		assertEquals(vendorDetails.getIsMobileVerified(), forgetPasswordEntity.getIsMobileVerified());
 		
-		forgetPasswordEntity=registerCommonService.forgetPassword(Long.toString(entity.getMobile()),CUST_UPDATED_BY);
+		forgetPasswordEntity=registerCommonService.forgetPassword(Long.toString(entity.getMobile()),CUST_UPDATED_BY,ACTOR_ENTITY_SELF_WEB);
 		
 		assertEquals(vendorDetails.getVendorId(), forgetPasswordEntity.getCustomerId());
 		assertEquals(ENTITY_TYPE_VENDOR, forgetPasswordEntity.getCustomerType());

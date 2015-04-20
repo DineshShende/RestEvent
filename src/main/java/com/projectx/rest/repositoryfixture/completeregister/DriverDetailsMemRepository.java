@@ -60,7 +60,7 @@ public class DriverDetailsMemRepository implements DriverDetailsRepository {
 
 	@Override
 	public Integer updateMobileAndMobileVerificationStatus(Long driverId,
-			Long mobile, Boolean status, String updatedBy) {
+			Long mobile, Boolean status, Integer updatedBy,Long updatedById) {
 		
 
 		
@@ -73,7 +73,7 @@ public class DriverDetailsMemRepository implements DriverDetailsRepository {
 			oldRecord.setMobile(mobile);
 			oldRecord.setIsMobileVerified(status);			
 			oldRecord.setUpdatedBy(updatedBy);
-					
+			oldRecord.setUpdatedById(updatedById);		
 			return 1;
 		}
 		else

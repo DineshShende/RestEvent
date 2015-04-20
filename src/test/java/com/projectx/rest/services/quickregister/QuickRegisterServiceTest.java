@@ -111,7 +111,8 @@ public class QuickRegisterServiceTest {
 
 		
 		assertTrue(emailVerificationService.verifyEmailHashUpdateStatusAndSendPassword(fetchedEntity.getCustomerId(),
-				fetchedEntity.getCustomerType(),1, emailVerificationDetails.getEmailHash(),emailVerificationDetails.getUpdatedBy()));
+				fetchedEntity.getCustomerType(),1, emailVerificationDetails.getEmailHash(),emailVerificationDetails.getUpdatedBy(),
+				fetchedEntity.getCustomerId()));
 
 
 		assertEquals(REGISTER_EMAIL_ALREADY_REGISTERED_VERIFIED,quickRegisterService
@@ -177,7 +178,7 @@ public class QuickRegisterServiceTest {
 		
 		assertTrue(emailVerificationService
 				.verifyEmailHashUpdateStatusAndSendPassword(fetchedEntity.getCustomerId(),fetchedEntity.getCustomerType(),EMAIL_TYPE_PRIMARY,emailVerificationDetails.getEmailHash(),
-						fetchedEntity.getUpdatedBy()));
+						fetchedEntity.getUpdatedBy(),fetchedEntity.getCustomerId()));
 		
 		assertEquals(REGISTER_EMAIL_MOBILE_ALREADY_REGISTERED_EMAIL_VERIFIED ,quickRegisterService
 				.checkIfAlreadyRegistered(standardEmailMobileCustomerDTO()).getStatus());
@@ -188,7 +189,8 @@ public class QuickRegisterServiceTest {
 		
 		
 		assertTrue(mobileVerificationService.verifyMobilePinUpdateStatusAndSendPassword(fetchedEntity.getCustomerId(),
-				fetchedEntity.getCustomerType(),MOB_TYPE_PRIMARY ,mobileVerificationDetails.getMobilePin(),mobileVerificationDetails.getUpdatedBy()));
+				fetchedEntity.getCustomerType(),MOB_TYPE_PRIMARY ,mobileVerificationDetails.getMobilePin(),
+				mobileVerificationDetails.getUpdatedBy(),fetchedEntity.getCustomerId()));
 		
 		assertEquals(REGISTER_EMAIL_MOBILE_ALREADY_REGISTERED_EMAIL_MOBILE_VERIFIED,quickRegisterService
 				.checkIfAlreadyRegistered(standardEmailMobileCustomerDTO()).getStatus());
@@ -228,7 +230,8 @@ public class QuickRegisterServiceTest {
 				(fetchedEntity.getCustomerId(),fetchedEntity.getCustomerType(), MOB_TYPE_PRIMARY);
 				
 		assertTrue(mobileVerificationService.verifyMobilePinUpdateStatusAndSendPassword(fetchedEntity.getCustomerId(),
-				fetchedEntity.getCustomerType(),MOB_TYPE_PRIMARY ,mobileVerificationDetails.getMobilePin(),mobileVerificationDetails.getUpdatedBy()));
+				fetchedEntity.getCustomerType(),MOB_TYPE_PRIMARY ,mobileVerificationDetails.getMobilePin(),
+				mobileVerificationDetails.getUpdatedBy(),fetchedEntity.getCustomerId()));
 		
 		assertEquals(REGISTER_EMAIL_MOBILE_ALREADY_REGISTERED_MOBILE_VERIFIED ,quickRegisterService
 				.checkIfAlreadyRegistered(standardEmailMobileCustomerDTO()).getStatus());
@@ -240,7 +243,8 @@ public class QuickRegisterServiceTest {
 		
 		
 		assertTrue(emailVerificationService.verifyEmailHashUpdateStatusAndSendPassword(fetchedEntity.getCustomerId(), 
-				fetchedEntity.getCustomerType(),EMAIL_TYPE_PRIMARY,emailVerificationDetails.getEmailHash(),emailVerificationDetails.getUpdatedBy()));
+				fetchedEntity.getCustomerType(),EMAIL_TYPE_PRIMARY,emailVerificationDetails.getEmailHash(),
+				emailVerificationDetails.getUpdatedBy(),fetchedEntity.getCustomerId()));
 		
 		assertEquals(REGISTER_EMAIL_MOBILE_ALREADY_REGISTERED_EMAIL_MOBILE_VERIFIED,quickRegisterService
 				.checkIfAlreadyRegistered(standardEmailMobileCustomerDTO()).getStatus());

@@ -104,7 +104,7 @@ public class QuickRegisterMemRepository implements
 	}
 
 	@Override
-	public Integer updateMobileVerificationStatus(Long customerId,Boolean status,Date updateTime,String updatedBy) {
+	public Integer updateMobileVerificationStatus(Long customerId,Boolean status,Date updateTime,Integer updatedBy,Long updatedById) {
 		QuickRegisterEntity oldRecord=customerList.get(customerId);
 		if(oldRecord!=null)
 		{	
@@ -113,7 +113,8 @@ public class QuickRegisterMemRepository implements
 			oldRecord.setIsMobileVerified(status);
 			oldRecord.setUpdateTime(updateTime);
 			oldRecord.setUpdatedBy(updatedBy);
-								
+			oldRecord.setUpdatedById(updatedById);
+			
 			customerList.put(customerId, oldRecord);
 		
 			return 1;
@@ -123,7 +124,7 @@ public class QuickRegisterMemRepository implements
 	}
 
 	@Override
-	public Integer updateEmailVerificationStatus(Long customerId,Boolean status,Date updateTime,String updatedBy) {
+	public Integer updateEmailVerificationStatus(Long customerId,Boolean status,Date updateTime,Integer updatedBy,Long updatedById) {
 		
 		QuickRegisterEntity oldRecord=customerList.get(customerId);
 		if(oldRecord!=null)
@@ -133,7 +134,8 @@ public class QuickRegisterMemRepository implements
 			oldRecord.setIsEmailVerified(status);
 			oldRecord.setUpdateTime(updateTime);
 			oldRecord.setUpdatedBy(updatedBy);
-								
+			oldRecord.setUpdatedById(updatedById);
+			
 			customerList.put(customerId, oldRecord);
 		
 			return 1;

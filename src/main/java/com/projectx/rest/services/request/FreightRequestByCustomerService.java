@@ -21,7 +21,8 @@ public interface FreightRequestByCustomerService {
 	
 	List<FreightRequestByCustomer> getAllRequestForCustomer(Long customerId);
 	
-	Integer updateAllocationStatus(Long freightRequestByCustomerId,String oldStatus,String allocationStatus,Long allocatedFor);
+	Integer updateAllocationStatus(Long freightRequestByCustomerId,String oldStatus,String allocationStatus,Long allocatedFor,
+			Integer updatedBy,Long updatedById);
 	
 	List<FreightRequestByCustomer> getMatchingCustReqForVendorReq(FreightRequestByVendor freightRequestByVendor,String allocationStatus);
 	

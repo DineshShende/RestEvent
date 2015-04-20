@@ -20,11 +20,11 @@ public interface MobileVerificationDetailsRepository {
 	MobileVerificationDetails getByMobile(Long mobile) throws MobileVerificationDetailsNotFoundException;
 	
 	Integer updateMobilePinAndMobileVerificationAttemptsAndResendCount(Long customerId,Integer customerType,Integer mobileType,
-			Integer mobilePin,Integer mobileVerificationAttempts,Integer resendCount,String updatedBy);
+			Integer mobilePin,Integer mobileVerificationAttempts,Integer resendCount,Integer updatedBy,Long updatedById);
 	
-	Integer incrementMobileVerificationAttempts(Long customerId,Integer customerType,Integer mobileType,String updatedBy);
+	Integer incrementMobileVerificationAttempts(Long customerId,Integer customerType,Integer mobileType,Integer updatedBy,Long updatedById);
 	
-	Integer incrementResendCount(Long customerId,Integer customerType,Integer mobileType,String updatedBy);
+	Integer incrementResendCount(Long customerId,Integer customerType,Integer mobileType,Integer updatedBy,Long updatedById);
 	
 	Long count();
 	

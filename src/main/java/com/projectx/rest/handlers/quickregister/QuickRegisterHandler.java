@@ -192,6 +192,10 @@ public class QuickRegisterHandler implements
 		customerToProcess.setCustomerType(customer.getCustomerType());
 		customerToProcess.setUpdateTime(new Date());
 		customerToProcess.setInsertTime(new Date());
+		customerToProcess.setInsertedBy(customer.getRequestBy());
+		customerToProcess.setUpdatedBy(customer.getRequestBy());
+		customerToProcess.setInsertedById(customer.getRequestById());
+		customerToProcess.setUpdatedById(customer.getRequestById());
 
 		return customerToProcess;
 	}
@@ -201,7 +205,10 @@ public class QuickRegisterHandler implements
 			QuickRegisterEntity customer) {
 
 		customer.setInsertTime(new Date());
-		customer.setUpdatedBy("CUST_ONLINE");
+		customer.setUpdatedBy(customer.getUpdatedBy());
+		customer.setInsertedBy(customer.getInsertedBy());
+		customer.setUpdatedById(customer.getUpdatedById());
+		customer.setInsertedById(customer.getInsertedById());
 		customer.setUpdateTime(new Date());
 		
 		return customer;
@@ -218,13 +225,13 @@ public class QuickRegisterHandler implements
 		if(resultEntity.getCustomerEmailVerificationDetails().getKey()!=null&&resultEntity.getCustomerEmailVerificationDetails().getEmailHash()==null)
 			emailVerificationService.updateEmailHash(resultEntity.getCustomerEmailVerificationDetails().getKey().getCustomerId(),
 					resultEntity.getCustomerEmailVerificationDetails().getKey().getCustomerType(),resultEntity.getCustomerEmailVerificationDetails().getKey().getEmailType(),
-					resultEntity.getCustomerEmailVerificationDetails().getUpdatedBy());
+					resultEntity.getCustomerEmailVerificationDetails().getUpdatedBy(),customer.getInsertedById());
 			
 			
 		if(resultEntity.getCustomerMobileVerificationDetails().getKey()!=null && resultEntity.getCustomerMobileVerificationDetails().getMobilePin()==null)	
 			mobileVerificationService.updateMobilePin(resultEntity.getCustomerMobileVerificationDetails().getKey().getCustomerId(),
 					resultEntity.getCustomerMobileVerificationDetails().getKey().getCustomerType(), resultEntity.getCustomerMobileVerificationDetails().getKey().getMobileType(),
-					resultEntity.getCustomerQuickRegisterEntity().getUpdatedBy());
+					resultEntity.getCustomerQuickRegisterEntity().getUpdatedBy(),resultEntity.getCustomerQuickRegisterEntity().getInsertedById());
 			
 		
 		return resultEntity;
@@ -269,7 +276,8 @@ public class QuickRegisterHandler implements
 		{
 			emailSentStatus=messagerSender
 					.sendHashEmail(customer.getCustomerId(),ENTITY_TYPE_CUSTOMER,ENTITY_TYPE_PRIMARY, customer.getFirstName(), customer.getLastName(), 
-							customer.getEmail(), emailVerificationDetails.getEmailHash(),emailVerificationDetails.getUpdatedBy());
+							customer.getEmail(), emailVerificationDetails.getEmailHash(),emailVerificationDetails.getUpdatedBy(),
+							emailVerificationDetails.getUpdatedById());
 		}
 		
 		if(customer.getMobile()!=null && !customer.getIsMobileVerified())
@@ -291,9 +299,9 @@ public class QuickRegisterHandler implements
 	
 	@Override
 	public Integer updateMobileVerificationStatus(Long customerId,
-			Boolean status, Date updateTime, String updatedBy) {
+			Boolean status, Date updateTime, Integer updatedBy,Long updatedById) {
 	
-		Integer updatedStatus=customerQuickRegisterRepository.updateMobileVerificationStatus(customerId, status, updateTime, updatedBy);
+		Integer updatedStatus=customerQuickRegisterRepository.updateMobileVerificationStatus(customerId, status, updateTime, updatedBy,updatedById);
 		
 		return updatedStatus;
 	}
@@ -301,10 +309,10 @@ public class QuickRegisterHandler implements
 
 	@Override
 	public Integer updateEmailVerificationStatus(Long customerId,
-			Boolean status, Date updateTime, String updatedBy) {
+			Boolean status, Date updateTime, Integer updatedBy,Long updatedById) {
 		
 
-		Integer updatedStatus=customerQuickRegisterRepository.updateEmailVerificationStatus(customerId, status, updateTime, updatedBy);
+		Integer updatedStatus=customerQuickRegisterRepository.updateEmailVerificationStatus(customerId, status, updateTime, updatedBy,updatedById);
 		
 		return updatedStatus;
 	}

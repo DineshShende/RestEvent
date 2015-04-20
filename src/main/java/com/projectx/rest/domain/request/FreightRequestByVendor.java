@@ -10,6 +10,7 @@ import java.util.Date;
 
 
 
+
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -55,7 +56,16 @@ public class FreightRequestByVendor {
 	private Date updateTime;
 	
 	@NotNull
-	private String updatedBy;
+	private Integer updatedBy;
+	
+	@NotNull
+	private Integer insertedBy;
+	
+	@NotNull
+	private Long updatedById;
+	
+	@NotNull
+	private Long insertedById;
 	
 
 	
@@ -70,7 +80,7 @@ public class FreightRequestByVendor {
 			Integer source, Integer destination, Long driverId,
 			Date availableDate, String availableTime, Integer pickupRangeInKm,
 			Long vendorId, String status, Long reservedBy, Date insertTime,
-			Date updateTime, String updatedBy) {
+			Date updateTime, Integer updatedBy,Integer insertedBy,Long updatedById,Long insertedById) {
 		super();
 		this.vehicleRegistrationNumber = vehicleRegistrationNumber;
 		this.source = source;
@@ -85,6 +95,9 @@ public class FreightRequestByVendor {
 		this.insertTime = insertTime;
 		this.updateTime = updateTime;
 		this.updatedBy = updatedBy;
+		this.insertedBy=insertedBy;
+		this.updatedById=updatedById;
+		this.insertedById=insertedById;
 	}
 
 
@@ -177,15 +190,6 @@ public class FreightRequestByVendor {
 		this.updateTime = updateTime;
 	}
 
-	public String getUpdatedBy() {
-		return updatedBy;
-	}
-
-	public void setUpdatedBy(String updatedBy) {
-		this.updatedBy = updatedBy;
-	}
-
-	
 	
 	public Long getVendorId() {
 		return vendorId;
@@ -215,6 +219,62 @@ public class FreightRequestByVendor {
 	
 
 
+	public Integer getUpdatedBy() {
+		return updatedBy;
+	}
+
+
+
+
+	public void setUpdatedBy(Integer updatedBy) {
+		this.updatedBy = updatedBy;
+	}
+
+
+
+
+	public Integer getInsertedBy() {
+		return insertedBy;
+	}
+
+
+
+
+	public void setInsertedBy(Integer insertedBy) {
+		this.insertedBy = insertedBy;
+	}
+
+
+
+
+	public Long getUpdatedById() {
+		return updatedById;
+	}
+
+
+
+
+	public void setUpdatedById(Long updatedById) {
+		this.updatedById = updatedById;
+	}
+
+
+
+
+	public Long getInsertedById() {
+		return insertedById;
+	}
+
+
+
+
+	public void setInsertedById(Long insertedById) {
+		this.insertedById = insertedById;
+	}
+
+
+
+
 	@Override
 	public String toString() {
 		return "FreightRequestByVendor [requestId=" + requestId
@@ -225,7 +285,8 @@ public class FreightRequestByVendor {
 				+ pickupRangeInKm + ", vendorId=" + vendorId + ", status="
 				+ status + ", reservedBy=" + reservedBy + ", insertTime="
 				+ insertTime + ", updateTime=" + updateTime + ", updatedBy="
-				+ updatedBy + "]";
+				+ updatedBy + ", insertedBy=" + insertedBy + ", updatedById="
+				+ updatedById + ", insertedById=" + insertedById + "]";
 	}
 
 
@@ -246,6 +307,10 @@ public class FreightRequestByVendor {
 		result = prime * result
 				+ ((insertTime == null) ? 0 : insertTime.hashCode());
 		result = prime * result
+				+ ((insertedBy == null) ? 0 : insertedBy.hashCode());
+		result = prime * result
+				+ ((insertedById == null) ? 0 : insertedById.hashCode());
+		result = prime * result
 				+ ((pickupRangeInKm == null) ? 0 : pickupRangeInKm.hashCode());
 		result = prime * result
 				+ ((requestId == null) ? 0 : requestId.hashCode());
@@ -257,6 +322,8 @@ public class FreightRequestByVendor {
 				+ ((updateTime == null) ? 0 : updateTime.hashCode());
 		result = prime * result
 				+ ((updatedBy == null) ? 0 : updatedBy.hashCode());
+		result = prime * result
+				+ ((updatedById == null) ? 0 : updatedById.hashCode());
 		result = prime
 				* result
 				+ ((vehicleRegistrationNumber == null) ? 0
@@ -281,8 +348,7 @@ public class FreightRequestByVendor {
 		if (availableDate == null) {
 			if (other.availableDate != null)
 				return false;
-		} else if (!availableDate.equals(other.availableDate))
-			return false;
+		}
 		if (availableTime == null) {
 			if (other.availableTime != null)
 				return false;
@@ -301,7 +367,16 @@ public class FreightRequestByVendor {
 		if (insertTime == null) {
 			if (other.insertTime != null)
 				return false;
-		} else if (!insertTime.equals(other.insertTime))
+		}
+		if (insertedBy == null) {
+			if (other.insertedBy != null)
+				return false;
+		} else if (!insertedBy.equals(other.insertedBy))
+			return false;
+		if (insertedById == null) {
+			if (other.insertedById != null)
+				return false;
+		} else if (!insertedById.equals(other.insertedById))
 			return false;
 		if (pickupRangeInKm == null) {
 			if (other.pickupRangeInKm != null)
@@ -331,12 +406,16 @@ public class FreightRequestByVendor {
 		if (updateTime == null) {
 			if (other.updateTime != null)
 				return false;
-		} else if (!updateTime.equals(other.updateTime))
-			return false;
+		}
 		if (updatedBy == null) {
 			if (other.updatedBy != null)
 				return false;
 		} else if (!updatedBy.equals(other.updatedBy))
+			return false;
+		if (updatedById == null) {
+			if (other.updatedById != null)
+				return false;
+		} else if (!updatedById.equals(other.updatedById))
 			return false;
 		if (vehicleRegistrationNumber == null) {
 			if (other.vehicleRegistrationNumber != null)
@@ -351,8 +430,6 @@ public class FreightRequestByVendor {
 			return false;
 		return true;
 	}
-
-
 
 
 		

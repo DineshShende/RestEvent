@@ -17,21 +17,24 @@ public class VerifyMobilePinDTO {
 	private Integer mobilePin;
 	
 	@NotNull
-	private String requestBy;
+	private Integer requestBy;
 	
+	@NotNull
+	private Long requestById;
 
 	public VerifyMobilePinDTO() {
 	
 	}
 
 	public VerifyMobilePinDTO(Long customerId, Integer customerType,
-			Integer mobileType, Integer mobilePin, String requestBy) {
+			Integer mobileType, Integer mobilePin, Integer requestBy,Long requestById) {
 		super();
 		this.customerId = customerId;
 		this.customerType = customerType;
 		this.mobileType = mobileType;
 		this.mobilePin = mobilePin;
 		this.requestBy = requestBy;
+		this.requestById=requestById;
 	}
 
 
@@ -78,13 +81,21 @@ public class VerifyMobilePinDTO {
 
 	
 	
-
-	public String getRequestBy() {
+	
+	public Integer getRequestBy() {
 		return requestBy;
 	}
 
-	public void setRequestBy(String requestBy) {
+	public void setRequestBy(Integer requestBy) {
 		this.requestBy = requestBy;
+	}
+
+	public Long getRequestById() {
+		return requestById;
+	}
+
+	public void setRequestById(Long requestById) {
+		this.requestById = requestById;
 	}
 
 	@Override
@@ -92,7 +103,7 @@ public class VerifyMobilePinDTO {
 		return "VerifyMobilePinDTO [customerId=" + customerId
 				+ ", customerType=" + customerType + ", mobileType="
 				+ mobileType + ", mobilePin=" + mobilePin + ", requestBy="
-				+ requestBy + "]";
+				+ requestBy + ", requestById=" + requestById + "]";
 	}
 
 	@Override
@@ -109,6 +120,8 @@ public class VerifyMobilePinDTO {
 				+ ((mobileType == null) ? 0 : mobileType.hashCode());
 		result = prime * result
 				+ ((requestBy == null) ? 0 : requestBy.hashCode());
+		result = prime * result
+				+ ((requestById == null) ? 0 : requestById.hashCode());
 		return result;
 	}
 
@@ -146,8 +159,13 @@ public class VerifyMobilePinDTO {
 				return false;
 		} else if (!requestBy.equals(other.requestBy))
 			return false;
+		if (requestById == null) {
+			if (other.requestById != null)
+				return false;
+		} else if (!requestById.equals(other.requestById))
+			return false;
 		return true;
 	}
 
-		
+			
 }

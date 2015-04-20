@@ -84,14 +84,20 @@ public class VehicleDetails {
 	private Date updateTime;
 	
 	@NotNull
-	private String updatedBy;
+	private Integer updatedBy;
+	
+	@NotNull
+	private Integer insertedBy;
+	
+	@NotNull
+	private Long updatedById;
+	
+	@NotNull
+	private Long insertedById;
 
 	public VehicleDetails() {
 
 	}
-
-
-
 
 
 	public VehicleDetails(Long vehicleId, String ownerFirstName,
@@ -102,7 +108,8 @@ public class VehicleDetails {
 			Integer width, Integer height, Integer numberOfWheels,
 			String permitType, Boolean insuranceStatus, String insuranceNumber,
 			String insuranceCompany, Long vendorId, List<String> commodityList,
-			Date insertTime, Date updateTime, String updatedBy) {
+			Date insertTime, Date updateTime, 
+			Integer updatedBy,Integer insertedBy,Long updatedById,Long insertedById) {
 		super();
 		this.vehicleId = vehicleId;
 		this.ownerFirstName = ownerFirstName;
@@ -127,6 +134,9 @@ public class VehicleDetails {
 		this.insertTime = insertTime;
 		this.updateTime = updateTime;
 		this.updatedBy = updatedBy;
+		this.insertedBy=insertedBy;
+		this.updatedById=updatedById;
+		this.insertedById=insertedById;
 	}
 
 
@@ -348,20 +358,6 @@ public class VehicleDetails {
 	}
 
 
-
-	public String getUpdatedBy() {
-		return updatedBy;
-	}
-
-
-
-	public void setUpdatedBy(String updatedBy) {
-		this.updatedBy = updatedBy;
-	}
-
-
-	
-
 	public Integer getLength() {
 		return length;
 	}
@@ -403,6 +399,47 @@ public class VehicleDetails {
 		this.commodityList = commodityList;
 	}
 
+	
+
+
+	public Integer getUpdatedBy() {
+		return updatedBy;
+	}
+
+
+	public void setUpdatedBy(Integer updatedBy) {
+		this.updatedBy = updatedBy;
+	}
+
+
+	public Integer getInsertedBy() {
+		return insertedBy;
+	}
+
+
+	public void setInsertedBy(Integer insertedBy) {
+		this.insertedBy = insertedBy;
+	}
+
+
+	public Long getUpdatedById() {
+		return updatedById;
+	}
+
+
+	public void setUpdatedById(Long updatedById) {
+		this.updatedById = updatedById;
+	}
+
+
+	public Long getInsertedById() {
+		return insertedById;
+	}
+
+
+	public void setInsertedById(Long insertedById) {
+		this.insertedById = insertedById;
+	}
 
 
 	@Override
@@ -421,11 +458,10 @@ public class VehicleDetails {
 				+ insuranceNumber + ", insuranceCompany=" + insuranceCompany
 				+ ", vendorId=" + vendorId + ", commodityList=" + commodityList
 				+ ", insertTime=" + insertTime + ", updateTime=" + updateTime
-				+ ", updatedBy=" + updatedBy + "]";
+				+ ", updatedBy=" + updatedBy + ", insertedBy=" + insertedBy
+				+ ", updatedById=" + updatedById + ", insertedById="
+				+ insertedById + "]";
 	}
-
-
-
 
 
 	@Override
@@ -437,6 +473,12 @@ public class VehicleDetails {
 		result = prime * result
 				+ ((commodityList == null) ? 0 : commodityList.hashCode());
 		result = prime * result + ((height == null) ? 0 : height.hashCode());
+		result = prime * result
+				+ ((insertTime == null) ? 0 : insertTime.hashCode());
+		result = prime * result
+				+ ((insertedBy == null) ? 0 : insertedBy.hashCode());
+		result = prime * result
+				+ ((insertedById == null) ? 0 : insertedById.hashCode());
 		result = prime
 				* result
 				+ ((insuranceCompany == null) ? 0 : insuranceCompany.hashCode());
@@ -468,7 +510,11 @@ public class VehicleDetails {
 				+ ((registrationNumber == null) ? 0 : registrationNumber
 						.hashCode());
 		result = prime * result
+				+ ((updateTime == null) ? 0 : updateTime.hashCode());
+		result = prime * result
 				+ ((updatedBy == null) ? 0 : updatedBy.hashCode());
+		result = prime * result
+				+ ((updatedById == null) ? 0 : updatedById.hashCode());
 		result = prime * result
 				+ ((vehicleBodyType == null) ? 0 : vehicleBodyType.hashCode());
 		result = prime * result
@@ -480,9 +526,6 @@ public class VehicleDetails {
 		result = prime * result + ((width == null) ? 0 : width.hashCode());
 		return result;
 	}
-
-
-
 
 
 	@Override
@@ -508,6 +551,20 @@ public class VehicleDetails {
 			if (other.height != null)
 				return false;
 		} else if (!height.equals(other.height))
+			return false;
+		if (insertTime == null) {
+			if (other.insertTime != null)
+				return false;
+		} 
+		if (insertedBy == null) {
+			if (other.insertedBy != null)
+				return false;
+		} else if (!insertedBy.equals(other.insertedBy))
+			return false;
+		if (insertedById == null) {
+			if (other.insertedById != null)
+				return false;
+		} else if (!insertedById.equals(other.insertedById))
 			return false;
 		if (insuranceCompany == null) {
 			if (other.insuranceCompany != null)
@@ -569,10 +626,19 @@ public class VehicleDetails {
 				return false;
 		} else if (!registrationNumber.equals(other.registrationNumber))
 			return false;
+		if (updateTime == null) {
+			if (other.updateTime != null)
+				return false;
+		}
 		if (updatedBy == null) {
 			if (other.updatedBy != null)
 				return false;
 		} else if (!updatedBy.equals(other.updatedBy))
+			return false;
+		if (updatedById == null) {
+			if (other.updatedById != null)
+				return false;
+		} else if (!updatedById.equals(other.updatedById))
 			return false;
 		if (vehicleBodyType == null) {
 			if (other.vehicleBodyType != null)
@@ -601,12 +667,6 @@ public class VehicleDetails {
 			return false;
 		return true;
 	}
-
-
-
-
-
-
 
 	
 	

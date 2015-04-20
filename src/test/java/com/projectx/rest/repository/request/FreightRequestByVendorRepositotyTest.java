@@ -190,10 +190,10 @@ public class FreightRequestByVendorRepositotyTest {
 		assertEquals(1, freightRequestByVendorRepository.count().intValue());
 		
 		assertEquals(1, freightRequestByVendorRepository.updateReservationStatusWithReservedFor(savedEntity.getRequestId(),
-				FREIGHTSTATUS_NEW, FREIGHTSTATUS_BLOCKED, 543L).intValue());
+				FREIGHTSTATUS_NEW, FREIGHTSTATUS_BLOCKED, 543L,1,savedEntity.getVendorId()).intValue());
 		
 		assertEquals(1, freightRequestByVendorRepository.updateReservationStatusWithReservedFor(savedEntity.getRequestId(),
-				FREIGHTSTATUS_BLOCKED, FREIGHTSTATUS_BOOKED, 543L).intValue());
+				FREIGHTSTATUS_BLOCKED, FREIGHTSTATUS_BOOKED, 543L,1,savedEntity.getVendorId()).intValue());
 		
 	}
 

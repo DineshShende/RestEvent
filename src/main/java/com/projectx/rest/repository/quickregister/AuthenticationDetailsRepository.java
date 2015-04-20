@@ -21,11 +21,12 @@ public interface AuthenticationDetailsRepository  {
 	
 	AuthenticationDetails getByMobile(Long mobile) throws AuthenticationDetailsNotFoundException;
 	
-	Integer updatePasswordEmailPasswordAndPasswordTypeAndCounts(Long customerId,Integer customerType,String password,String emailPassword,String passwordType,String updatedBy);
+	Integer updatePasswordEmailPasswordAndPasswordTypeAndCounts(Long customerId,Integer customerType,String password,String emailPassword,
+			String passwordType,Integer updatedBy,Long updatedById);
 	
-	Integer incrementResendCount(Long customerId,Integer customerType,String updatedBy);
+	Integer incrementResendCount(Long customerId,Integer customerType,Integer updatedBy,Long updatedById);
 	
-	Integer incrementLastUnsucessfullAttempts(Long customerId,Integer customerType,String updatedBy);
+	Integer incrementLastUnsucessfullAttempts(Long customerId,Integer customerType,Integer updatedBy,Long updatedById);
 	
 	Integer count();
 	

@@ -14,7 +14,10 @@ public class CustomerIdTypeEmailTypeUpdatedByDTO {
 	private Integer emailType;
 	
 	@NotNull
-	private String requestedBy;
+	private Integer requestedBy;
+	
+	@NotNull
+	private Long requestedById;
 
 	public CustomerIdTypeEmailTypeUpdatedByDTO() {
 
@@ -23,12 +26,13 @@ public class CustomerIdTypeEmailTypeUpdatedByDTO {
 	
 
 	public CustomerIdTypeEmailTypeUpdatedByDTO(Long customerId,
-			Integer customerType, Integer emailType, String requestedBy) {
+			Integer customerType, Integer emailType, Integer requestedBy,Long requestedById) {
 		super();
 		this.customerId = customerId;
 		this.customerType = customerType;
 		this.emailType = emailType;
 		this.requestedBy = requestedBy;
+		this.requestedById=requestedById;
 	}
 
 
@@ -59,24 +63,30 @@ public class CustomerIdTypeEmailTypeUpdatedByDTO {
 
 
 
-	public String getRequestedBy() {
+	public Integer getRequestedBy() {
 		return requestedBy;
 	}
 
 
 
-	public void setRequestedBy(String requestedBy) {
+	public void setRequestedBy(Integer requestedBy) {
 		this.requestedBy = requestedBy;
 	}
 
 
 
-	@Override
-	public String toString() {
-		return "CustomerIdTypeEmailTypeUpdatedByDTO [customerId=" + customerId
-				+ ", customerType=" + customerType + ", emailType=" + emailType
-				+ ", requestedBy=" + requestedBy + "]";
+	public Long getRequestedById() {
+		return requestedById;
 	}
+
+
+
+	public void setRequestedById(Long requestedById) {
+		this.requestedById = requestedById;
+	}
+
+
+
 
 
 
@@ -92,6 +102,8 @@ public class CustomerIdTypeEmailTypeUpdatedByDTO {
 				+ ((emailType == null) ? 0 : emailType.hashCode());
 		result = prime * result
 				+ ((requestedBy == null) ? 0 : requestedBy.hashCode());
+		result = prime * result
+				+ ((requestedById == null) ? 0 : requestedById.hashCode());
 		return result;
 	}
 
@@ -126,9 +138,14 @@ public class CustomerIdTypeEmailTypeUpdatedByDTO {
 				return false;
 		} else if (!requestedBy.equals(other.requestedBy))
 			return false;
+		if (requestedById == null) {
+			if (other.requestedById != null)
+				return false;
+		} else if (!requestedById.equals(other.requestedById))
+			return false;
 		return true;
 	}
 
-		
+
 	
 }

@@ -187,7 +187,8 @@ public class QuickRegisterServiceIntegrationTest {
 		assertNull(authenticationDetails.getEmailPassword());
 		
 		assertFalse(mobileVerificationService.verifyMobilePinUpdateStatusAndSendPassword(handledEntity.getCustomer().getCustomerId(),
-				handledEntity.getCustomer().getCustomerType(),MOB_TYPE_PRIMARY,CUST_MOBILEPIN,CUST_UPDATED_BY));
+				handledEntity.getCustomer().getCustomerType(),MOB_TYPE_PRIMARY,CUST_MOBILEPIN,CUST_UPDATED_BY,
+				handledEntity.getCustomer().getCustomerId()));
 		
 		assertNull(authenticationDetails.getPassword());
 		assertEquals(PASSWORD_TYPE_DEFAULT, authenticationDetails.getPasswordType());
@@ -201,7 +202,8 @@ public class QuickRegisterServiceIntegrationTest {
 		assertEquals(1, mobileVerificationDetails.getMobileVerificationAttempts().intValue());
 		
 		assertTrue(mobileVerificationService.verifyMobilePinUpdateStatusAndSendPassword(handledEntity.getCustomer().getCustomerId(),
-				handledEntity.getCustomer().getCustomerType(),MOB_TYPE_PRIMARY,mobileVerificationDetails.getMobilePin(),CUST_UPDATED_BY));
+				handledEntity.getCustomer().getCustomerType(),MOB_TYPE_PRIMARY,mobileVerificationDetails.getMobilePin(),CUST_UPDATED_BY,
+				handledEntity.getCustomer().getCustomerId()));
 	
 		authenticationDetails=authenticationService
 				.getByEntityIdType(handledEntity.getCustomer().getCustomerId(),handledEntity.getCustomer().getCustomerType());
@@ -252,7 +254,8 @@ public class QuickRegisterServiceIntegrationTest {
 	
 
 		assertTrue(mobileVerificationService.verifyMobilePinUpdateStatusAndSendPassword(handledEntity.getCustomer().getCustomerId(),
-				handledEntity.getCustomer().getCustomerType(),MOB_TYPE_PRIMARY,mobileVerificationDetails.getMobilePin(),CUST_UPDATED_BY));
+				handledEntity.getCustomer().getCustomerType(),MOB_TYPE_PRIMARY,mobileVerificationDetails.getMobilePin(),CUST_UPDATED_BY,
+				handledEntity.getCustomer().getCustomerId()));
 		
 		authenticationDetails=authenticationService
 				.getByEntityIdType(handledEntity.getCustomer().getCustomerId(),handledEntity.getCustomer().getCustomerType());
@@ -270,7 +273,8 @@ public class QuickRegisterServiceIntegrationTest {
 
 
 		assertTrue(emailVerificationService.verifyEmailHashUpdateStatusAndSendPassword(handledEntity.getCustomer().getCustomerId(),handledEntity.getCustomer().getCustomerType(),
-				EMAIL_TYPE_PRIMARY,emailVerificationDetails.getEmailHash(),CUST_UPDATED_BY));
+				EMAIL_TYPE_PRIMARY,emailVerificationDetails.getEmailHash(),CUST_UPDATED_BY,
+				handledEntity.getCustomer().getCustomerId()));
 		
 		authenticationDetails=authenticationService
 				.getByEntityIdType(handledEntity.getCustomer().getCustomerId(),handledEntity.getCustomer().getCustomerType());
@@ -292,7 +296,8 @@ public class QuickRegisterServiceIntegrationTest {
 	{
 		Boolean result=null;
 		try{
-			result=emailVerificationService.verifyEmailHashUpdateStatusAndSendPassword(CUST_ID,ENTITY_TYPE_CUSTOMER,EMAIL_TYPE_PRIMARY, CUST_EMAILHASH,CUST_UPDATED_BY);
+			result=emailVerificationService.verifyEmailHashUpdateStatusAndSendPassword(CUST_ID,ENTITY_TYPE_CUSTOMER,EMAIL_TYPE_PRIMARY,
+					CUST_EMAILHASH,CUST_UPDATED_BY,CUST_ID);
 		
 			assertEquals(0, 1);
 		}catch(ResourceNotFoundException e)
@@ -304,7 +309,8 @@ public class QuickRegisterServiceIntegrationTest {
 		
 		try{
 		
-			result=mobileVerificationService.verifyMobilePinUpdateStatusAndSendPassword(CUST_ID,ENTITY_TYPE_CUSTOMER,MOB_TYPE_PRIMARY, CUST_MOBILEPIN,CUST_UPDATED_BY);
+			result=mobileVerificationService.verifyMobilePinUpdateStatusAndSendPassword(CUST_ID,ENTITY_TYPE_CUSTOMER,MOB_TYPE_PRIMARY, 
+					CUST_MOBILEPIN,CUST_UPDATED_BY,CUST_ID);
 			assertEquals(0, 1);
 		}catch(ResourceNotFoundException e)
 		{
@@ -342,10 +348,10 @@ public class QuickRegisterServiceIntegrationTest {
 		assertNull(authenticationDetails.getEmailPassword());
 		
 		assertFalse(mobileVerificationService.verifyMobilePinUpdateStatusAndSendPassword(handledEntity.getCustomer().getCustomerId(),
-				handledEntity.getCustomer().getCustomerType(),MOB_TYPE_PRIMARY ,101010,CUST_UPDATED_BY));
+				handledEntity.getCustomer().getCustomerType(),MOB_TYPE_PRIMARY ,101010,CUST_UPDATED_BY,handledEntity.getCustomer().getCustomerId()));
 		
 		assertFalse(mobileVerificationService.verifyMobilePinUpdateStatusAndSendPassword(handledEntity.getCustomer().getCustomerId(),
-				handledEntity.getCustomer().getCustomerType(),MOB_TYPE_PRIMARY ,101010,CUST_UPDATED_BY));
+				handledEntity.getCustomer().getCustomerType(),MOB_TYPE_PRIMARY ,101010,CUST_UPDATED_BY,handledEntity.getCustomer().getCustomerId()));
 		
 		//assertFalse(customerQuickRegisterHandler.verifyMobilePin(handledEntity.getCustomer().getCustomerId(), 101010));
 
@@ -362,7 +368,7 @@ public class QuickRegisterServiceIntegrationTest {
 		
 		
 		assertTrue(mobileVerificationService.reSetMobilePin(handledEntity.getCustomer().getCustomerId(),
-				handledEntity.getCustomer().getCustomerType(),MOB_TYPE_PRIMARY,CUST_UPDATED_BY));
+				handledEntity.getCustomer().getCustomerType(),MOB_TYPE_PRIMARY,CUST_UPDATED_BY,handledEntity.getCustomer().getCustomerId()));
 		
 		QuickRegisterEntity fetchedEntity=customerQuickRegisterHandler.
 				getByEntityId(handledEntity.getCustomer().getCustomerId());
@@ -372,7 +378,8 @@ public class QuickRegisterServiceIntegrationTest {
 						handledEntity.getCustomer().getCustomerType(),MOB_TYPE_PRIMARY);
 		
 		assertTrue(mobileVerificationService.verifyMobilePinUpdateStatusAndSendPassword(handledEntity.getCustomer().getCustomerId(),
-				handledEntity.getCustomer().getCustomerType(),MOB_TYPE_PRIMARY,mobileVerificationDetails.getMobilePin(),CUST_UPDATED_BY));
+				handledEntity.getCustomer().getCustomerType(),MOB_TYPE_PRIMARY,mobileVerificationDetails.getMobilePin(),CUST_UPDATED_BY,
+				handledEntity.getCustomer().getCustomerId()));
 		
 		authenticationDetails=authenticationService.getByEntityIdType(handledEntity.getCustomer().getCustomerId(),
 				handledEntity.getCustomer().getCustomerType());
@@ -396,7 +403,8 @@ public class QuickRegisterServiceIntegrationTest {
 						handledEntity.getCustomer().getCustomerType(),MOB_TYPE_PRIMARY);
 		
 		assertTrue(mobileVerificationService.verifyMobilePinUpdateStatusAndSendPassword(handledEntity.getCustomer().getCustomerId(),
-				handledEntity.getCustomer().getCustomerType(),MOB_TYPE_PRIMARY,mobileVerificationDetails.getMobilePin(),CUST_UPDATED_BY));
+				handledEntity.getCustomer().getCustomerType(),MOB_TYPE_PRIMARY,mobileVerificationDetails.getMobilePin(),CUST_UPDATED_BY,
+				handledEntity.getCustomer().getCustomerId()));
 		
 		AuthenticationDetails authenticationDetails=authenticationService
 				.getByEntityIdType(handledEntity.getCustomer().getCustomerId(),handledEntity.getCustomer().getCustomerType());
@@ -460,7 +468,8 @@ public class QuickRegisterServiceIntegrationTest {
 						handledEntity.getCustomer().getCustomerId(),handledEntity.getCustomer().getCustomerType(), EMAIL_TYPE_PRIMARY);
 	
 		assertTrue(emailVerificationService.verifyEmailHashUpdateStatusAndSendPassword(handledEntity.getCustomer().getCustomerId(),
-				handledEntity.getCustomer().getCustomerType(),EMAIL_TYPE_PRIMARY,emailVerificationDetails.getEmailHash(),CUST_UPDATED_BY));
+				handledEntity.getCustomer().getCustomerType(),EMAIL_TYPE_PRIMARY,emailVerificationDetails.getEmailHash(),CUST_UPDATED_BY,
+				handledEntity.getCustomer().getCustomerId()));
 		
 		AuthenticationDetails authenticationDetails=authenticationService
 				.getByEntityIdType(handledEntity.getCustomer().getCustomerId(),handledEntity.getCustomer().getCustomerType());
@@ -486,7 +495,8 @@ public class QuickRegisterServiceIntegrationTest {
 						handledEntity.getCustomer().getCustomerId(),handledEntity.getCustomer().getCustomerType(),EMAIL_TYPE_PRIMARY);
 	
 		assertTrue(emailVerificationService.verifyEmailHashUpdateStatusAndSendPassword(handledEntity.getCustomer().getCustomerId(),
-				handledEntity.getCustomer().getCustomerType(),EMAIL_TYPE_PRIMARY,emailVerificationDetails.getEmailHash(),CUST_UPDATED_BY));
+				handledEntity.getCustomer().getCustomerType(),EMAIL_TYPE_PRIMARY,emailVerificationDetails.getEmailHash(),CUST_UPDATED_BY,
+				handledEntity.getCustomer().getCustomerId()));
 		
 		AuthenticationDetails authenticationDetails=authenticationService.
 				getByEntityIdType(handledEntity.getCustomer().getCustomerId(),handledEntity.getCustomer().getCustomerType());
@@ -537,7 +547,8 @@ public class QuickRegisterServiceIntegrationTest {
 		
 		assertTrue(emailVerificationService.verifyEmailHashUpdateStatusAndSendPassword(handledEntity.getCustomer().getCustomerId(),
 				handledEntity.getCustomer().getCustomerType(),EMAIL_TYPE_PRIMARY,
-				emailVerificationDetails.getEmailHash(),CUST_UPDATED_BY));
+				emailVerificationDetails.getEmailHash(),CUST_UPDATED_BY,
+				handledEntity.getCustomer().getCustomerId()));
 		
 		authenticationDetails=authenticationService
 				.getByEntityIdType(handledEntity.getCustomer().getCustomerId(),handledEntity.getCustomer().getCustomerType());
@@ -561,7 +572,7 @@ public class QuickRegisterServiceIntegrationTest {
 		
 		assertTrue(emailVerificationService.verifyEmailHashUpdateStatusAndSendPassword(handledEntity.getCustomer().getCustomerId(),
 				handledEntity.getCustomer().getCustomerType(),EMAIL_TYPE_PRIMARY, 
-				emailVerificationDetails.getEmailHash(),CUST_UPDATED_BY));
+				emailVerificationDetails.getEmailHash(),CUST_UPDATED_BY,handledEntity.getCustomer().getCustomerId()));
 		
 		AuthenticationDetails authenticationDetails=authenticationService
 				.getByEntityIdType(handledEntity.getCustomer().getCustomerId(),handledEntity.getCustomer().getCustomerType());
@@ -573,7 +584,7 @@ public class QuickRegisterServiceIntegrationTest {
 		String oldPasswordType=authenticationDetails.getPasswordType();
 		
 		assertTrue(authenticationService.resetPassword(new CustomerIdTypeUpdatedByDTO(authenticationDetails.getKey().getCustomerId(),
-				authenticationDetails.getKey().getCustomerType(),CUST_UPDATED_BY),EMAIL_REQ));
+				authenticationDetails.getKey().getCustomerType(),CUST_UPDATED_BY,handledEntity.getCustomer().getCustomerId()),EMAIL_REQ));
 		
 		authenticationDetails=authenticationService.getByEntityIdType(handledEntity.getCustomer().getCustomerId(),
 				handledEntity.getCustomer().getCustomerType());
@@ -598,7 +609,7 @@ public class QuickRegisterServiceIntegrationTest {
 		
 		assertTrue(emailVerificationService.verifyEmailHashUpdateStatusAndSendPassword(handledEntity.getCustomer().getCustomerId(),
 				handledEntity.getCustomer().getCustomerType(),EMAIL_TYPE_PRIMARY, 
-				emailVerificationDetails.getEmailHash(),CUST_UPDATED_BY));
+				emailVerificationDetails.getEmailHash(),CUST_UPDATED_BY,handledEntity.getCustomer().getCustomerId()));
 		
 		AuthenticationDetails authenticationDetails=authenticationService
 				.getByEntityIdType(handledEntity.getCustomer().getCustomerId(),handledEntity.getCustomer().getCustomerType());
@@ -613,7 +624,7 @@ public class QuickRegisterServiceIntegrationTest {
 		assertEquals(0, authenticationDetails.getResendCount().intValue());
 		
 		assertTrue(authenticationService.resendDefaultPassword(handledEntity.getCustomer().getCustomerId(),
-				handledEntity.getCustomer().getCustomerType(),EMAIL_REQ,CUST_UPDATED_BY));
+				handledEntity.getCustomer().getCustomerType(),EMAIL_REQ,CUST_UPDATED_BY,handledEntity.getCustomer().getCustomerId()));
 		
 		authenticationDetails=authenticationService.getByEntityIdType(handledEntity.getCustomer().getCustomerId(),
 				handledEntity.getCustomer().getCustomerType());
@@ -639,7 +650,8 @@ public class QuickRegisterServiceIntegrationTest {
 						handledEntity.getCustomer().getCustomerType(),EMAIL_TYPE_PRIMARY);
 		
 		assertTrue(emailVerificationService.verifyEmailHashUpdateStatusAndSendPassword(handledEntity.getCustomer().getCustomerId(),
-				handledEntity.getCustomer().getCustomerType(),EMAIL_TYPE_PRIMARY,emailVerificationDetails.getEmailHash(),CUST_UPDATED_BY));
+				handledEntity.getCustomer().getCustomerType(),EMAIL_TYPE_PRIMARY,emailVerificationDetails.getEmailHash(),CUST_UPDATED_BY,
+				handledEntity.getCustomer().getCustomerId()));
 		
 		
 		AuthenticationDetails authenticationDetails=authenticationService
@@ -653,7 +665,8 @@ public class QuickRegisterServiceIntegrationTest {
 		
 		assertTrue(authenticationService
 				.updatePassword(new UpdatePasswordAndPasswordTypeDTO(authenticationDetails.getKey().getCustomerId(),
-						authenticationDetails.getKey().getCustomerType(),CUST_PASSWORD_CHANGED, CUST_PASSWORD_TYPE_CHANGED,true,CUST_UPDATED_BY)));
+						authenticationDetails.getKey().getCustomerType(),CUST_PASSWORD_CHANGED, CUST_PASSWORD_TYPE_CHANGED,true,
+						CUST_UPDATED_BY,authenticationDetails.getKey().getCustomerId())));
 		
 		authenticationDetails=authenticationService.getByEntityIdType(handledEntity.getCustomer().getCustomerId(),
 				handledEntity.getCustomer().getCustomerType());
@@ -677,7 +690,8 @@ public class QuickRegisterServiceIntegrationTest {
 
 		
 		assertTrue(emailVerificationService.verifyEmailHashUpdateStatusAndSendPassword(handledEntity.getCustomer().getCustomerId(),
-				handledEntity.getCustomer().getCustomerType(),EMAIL_TYPE_PRIMARY,emailVerificationDetails.getEmailHash(),CUST_UPDATED_BY));
+				handledEntity.getCustomer().getCustomerType(),EMAIL_TYPE_PRIMARY,emailVerificationDetails.getEmailHash(),CUST_UPDATED_BY,
+				handledEntity.getCustomer().getCustomerId()));
 		
 		AuthenticationDetails authenticationDetails=authenticationService
 				.getByEntityIdType(handledEntity.getCustomer().getCustomerId(),handledEntity.getCustomer().getCustomerType());
@@ -688,9 +702,11 @@ public class QuickRegisterServiceIntegrationTest {
 		assertNotNull( authenticationDetails.getPasswordType());
 		
 		assertTrue(authenticationService.updatePassword(new UpdatePasswordAndPasswordTypeDTO(authenticationDetails.getKey().getCustomerId(),
-				authenticationDetails.getKey().getCustomerType(),CUST_PASSWORD_CHANGED, CUST_PASSWORD_TYPE_CHANGED,true,CUST_UPDATED_BY)));
+				authenticationDetails.getKey().getCustomerType(),CUST_PASSWORD_CHANGED, CUST_PASSWORD_TYPE_CHANGED,true,CUST_UPDATED_BY,
+				authenticationDetails.getKey().getCustomerId())));
 		
-		assertTrue(authenticationService.sendDefaultPassword(updatedEntity.getCustomerId(),updatedEntity.getCustomerType(), false,EMAIL_REQ,CUST_UPDATED_BY));
+		assertTrue(authenticationService.sendDefaultPassword(updatedEntity.getCustomerId(),updatedEntity.getCustomerType(),
+				false,EMAIL_REQ,CUST_UPDATED_BY,updatedEntity.getCustomerId()));
 		
 		authenticationDetails=authenticationService.getByEntityIdType(handledEntity.getCustomer().getCustomerId(),
 				handledEntity.getCustomer().getCustomerType());
@@ -732,7 +748,7 @@ public class QuickRegisterServiceIntegrationTest {
 		Date oldEmailHashSentTime=emailVerificationDetails.getEmailHashSentTime();
 		
 		assertEquals(1, emailVerificationService.updateEmailHash(handledEntity.getCustomer().getCustomerId(),
-				handledEntity.getCustomer().getCustomerType(),EMAIL_TYPE_PRIMARY,CUST_UPDATED_BY).intValue());
+				handledEntity.getCustomer().getCustomerType(),EMAIL_TYPE_PRIMARY,CUST_UPDATED_BY,handledEntity.getCustomer().getCustomerId()).intValue());
 		
 		emailVerificationDetails=emailVerificationService
 				.getByEntityIdTypeAndEmailType(handledEntity.getCustomer().getCustomerId(),
@@ -770,7 +786,7 @@ public class QuickRegisterServiceIntegrationTest {
 		Integer oldMobilePin=mobileVerificationDetails.getMobilePin();
 				
 		assertEquals(1, mobileVerificationService.updateMobilePin(handledEntity.getCustomer().getCustomerId(),
-				handledEntity.getCustomer().getCustomerType(),MOB_TYPE_PRIMARY,CUST_UPDATED_BY).intValue());
+				handledEntity.getCustomer().getCustomerType(),MOB_TYPE_PRIMARY,CUST_UPDATED_BY,handledEntity.getCustomer().getCustomerId()).intValue());
 		
 		mobileVerificationDetails=mobileVerificationService
 				.getByEntityIdTypeAndMobileType(handledEntity.getCustomer().getCustomerId(),
@@ -806,7 +822,7 @@ public class QuickRegisterServiceIntegrationTest {
 		String oldEmailHash=emailVerificationDetails.getEmailHash();
 		
 		assertEquals(true, emailVerificationService.reSendEmailHash(handledEntity.getCustomer().getCustomerId(),
-				handledEntity.getCustomer().getCustomerType(),EMAIL_TYPE_PRIMARY,CUST_UPDATED_BY));
+				handledEntity.getCustomer().getCustomerType(),EMAIL_TYPE_PRIMARY,CUST_UPDATED_BY,handledEntity.getCustomer().getCustomerId()));
 		
 		assertNotEquals(oldEmailHash,emailVerificationDetails=emailVerificationService
 				.getByEntityIdTypeAndEmailType(handledEntity.getCustomer().getCustomerId(),
@@ -839,7 +855,7 @@ public class QuickRegisterServiceIntegrationTest {
 		Integer oldMobilePin=mobileVerificationDetails.getMobilePin();
 		
 		assertEquals(true, mobileVerificationService.reSendMobilePin(handledEntity.getCustomer().getCustomerId(),
-				handledEntity.getCustomer().getCustomerType(),MOB_TYPE_PRIMARY,CUST_UPDATED_BY));
+				handledEntity.getCustomer().getCustomerType(),MOB_TYPE_PRIMARY,CUST_UPDATED_BY,handledEntity.getCustomer().getCustomerId()));
 		
 		
 		assertNotEquals(oldMobilePin,
@@ -875,7 +891,7 @@ public class QuickRegisterServiceIntegrationTest {
 		assertEquals(0, emailVerificationDetails.getResendCount().intValue());
 		
 		assertEquals(true, emailVerificationService.reSendEmailHash(handledEntity.getCustomer().getCustomerId(),
-				handledEntity.getCustomer().getCustomerType(),EMAIL_TYPE_PRIMARY,CUST_UPDATED_BY));
+				handledEntity.getCustomer().getCustomerType(),EMAIL_TYPE_PRIMARY,CUST_UPDATED_BY,handledEntity.getCustomer().getCustomerId()));
 		
 		assertEquals(1,emailVerificationService
 				.getByEntityIdTypeAndEmailType(handledEntity.getCustomer().getCustomerId(),
@@ -916,7 +932,7 @@ public class QuickRegisterServiceIntegrationTest {
 						handledEntity.getCustomer().getCustomerType(),MOB_TYPE_PRIMARY).getResendCount().intValue());
 		
 		assertEquals(true, mobileVerificationService.reSendMobilePin(handledEntity.getCustomer().getCustomerId(),
-				handledEntity.getCustomer().getCustomerType(),MOB_TYPE_PRIMARY,CUST_UPDATED_BY));
+				handledEntity.getCustomer().getCustomerType(),MOB_TYPE_PRIMARY,CUST_UPDATED_BY,handledEntity.getCustomer().getCustomerId()));
 		
 		assertEquals(oldMobilePin,
 				mobileVerificationService

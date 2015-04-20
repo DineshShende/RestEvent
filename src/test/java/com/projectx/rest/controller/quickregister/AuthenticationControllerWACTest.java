@@ -83,7 +83,7 @@ public class AuthenticationControllerWACTest {
 		
 		
 		mobileVerificationService.verifyMobilePinUpdateStatusAndSendPassword(handledEntity.getCustomerId(), handledEntity.getCustomerType(), ENTITY_TYPE_PRIMARY,
-				mobileVerificationDetails.getMobilePin(), handledEntity.getUpdatedBy());
+				mobileVerificationDetails.getMobilePin(), handledEntity.getUpdatedBy(),handledEntity.getCustomerId());
 		
 		AuthenticationDetails authenticationDetails=authenticationService.getByEntityIdType(handledEntity.getCustomerId(),
 				handledEntity.getCustomerType());
@@ -118,7 +118,7 @@ public class AuthenticationControllerWACTest {
 		
 		
 		mobileVerificationService.verifyMobilePinUpdateStatusAndSendPassword(handledEntity.getCustomerId(), handledEntity.getCustomerType(), ENTITY_TYPE_PRIMARY,
-				mobileVerificationDetails.getMobilePin(), handledEntity.getUpdatedBy());
+				mobileVerificationDetails.getMobilePin(), handledEntity.getUpdatedBy(),handledEntity.getCustomerId());
 		
 		AuthenticationDetails authenticationDetails=authenticationService.getByEntityIdType(handledEntity.getCustomerId(),
 				handledEntity.getCustomerType());

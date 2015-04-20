@@ -18,22 +18,23 @@ public interface EmailVerificationService {
     EmailVerificationDetails getByEmail(String email) throws ResourceNotFoundException;
     
     Boolean sendOrResendOrResetEmailHash(Long customerId,Integer customerType,Integer emailType,Boolean resetFlag,
-    		Boolean resendFlag,String requestedBy)throws ResourceNotFoundException;
+    		Boolean resendFlag,Integer requestedBy,Long requestedById)throws ResourceNotFoundException;
     
-    Boolean sendEmailHash(Long customerId,Integer customerType,Integer emailType,String requestedBy) throws ResourceNotFoundException;
+    Boolean sendEmailHash(Long customerId,Integer customerType,Integer emailType,Integer requestedBy,Long requestedById) throws ResourceNotFoundException;
     
-    Boolean reSendEmailHash(Long customerId,Integer customerType,Integer emailType,String requestedBy) throws ResourceNotFoundException;
+    Boolean reSendEmailHash(Long customerId,Integer customerType,Integer emailType,Integer requestedBy,Long requestedById) throws ResourceNotFoundException;
 	
-	Boolean reSetEmailHash(Long customerId,Integer customerType,Integer emailType,String requestedBy) throws ResourceNotFoundException;
+	Boolean reSetEmailHash(Long customerId,Integer customerType,Integer emailType,Integer requestedBy,Long requestedById) throws ResourceNotFoundException;
 	
 	Boolean verifyEmailHash(Long customerId,Integer customerType,Integer emailType,String emailHash);
 	
-	Boolean verifyEmailHashUpdateStatusAndSendPassword(Long customerId,Integer customerType,Integer emailType, String emailHash,String requestBy) 
+	Boolean verifyEmailHashUpdateStatusAndSendPassword(Long customerId,Integer customerType,Integer emailType,
+			String emailHash,Integer requestedBy,Long requestedById) 
 															throws ResourceNotFoundException;
 	
-	Integer updateEmailHash(Long customerId,Integer customerType,Integer emailType,String requestedBy);
+	Integer updateEmailHash(Long customerId,Integer customerType,Integer emailType,Integer requestedBy,Long requestedById);
 	
-	EmailVerificationDetails createEntity(Long customerId,Integer customerType,String email,Integer emailType,String updatedBy);
+	EmailVerificationDetails createEntity(Long customerId,Integer customerType,String email,Integer emailType,Integer requestedBy,Long requestedById);
 	
 	Boolean deleteByKey(EmailVerificationDetailsKey key);
 	

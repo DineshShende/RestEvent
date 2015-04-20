@@ -34,12 +34,14 @@ public class EmailVerificationDetailsFixtures {
 
 	public static EmailVerificationDetails standardCustomerEmailVerificationDetails()
 	{
-		return new EmailVerificationDetails(standardEmailVerificationDetailsKey(), CUST_EMAIL, CUST_EMAILHASH, CUST_DATE, CUST_RESEND_COUNT, CUST_DATE, CUST_UPDATE_TIME, CUST_UPDATED_BY);
+		return new EmailVerificationDetails(standardEmailVerificationDetailsKey(), CUST_EMAIL, CUST_EMAILHASH, CUST_DATE,
+				CUST_RESEND_COUNT, CUST_DATE, CUST_UPDATE_TIME, CUST_UPDATED_BY,CUST_UPDATED_BY,CUST_ID,CUST_ID);
 	}
 	
 	public static EmailVerificationDetails standardCustomerEmailVerificationDetailsWithOutPassword()
 	{
-		return new EmailVerificationDetails(standardEmailVerificationDetailsKey(), CUST_EMAIL, CUST_EMAILHASH, null, CUST_RESEND_COUNT, null, null, null);
+		return new EmailVerificationDetails(standardEmailVerificationDetailsKey(), CUST_EMAIL, CUST_EMAILHASH, null,
+				CUST_RESEND_COUNT, null, null, CUST_UPDATED_BY,CUST_UPDATED_BY,CUST_ID,CUST_ID);
 	}
 	
 	
@@ -51,7 +53,7 @@ public class EmailVerificationDetailsFixtures {
 	public static UpdateEmailHashAndEmailHashSentTimeAndResendCountDTO standardUpdateEmailHashAndEmailHashSentTimeDTO()
 	{
 		return new UpdateEmailHashAndEmailHashSentTimeAndResendCountDTO(CUST_ID,ENTITY_TYPE_CUSTOMER, CUST_EMAIL_TYPE_PRIMARY, CUST_EMAILHASH_UPDATED, CUST_EMAIL_HASH_SENT_TIME,
-				CUST_RESEND_COUNT+1,CUST_UPDATED_BY);
+				CUST_RESEND_COUNT+1,CUST_UPDATED_BY,CUST_ID);
 	}
 	
 	public static CustomerIdTypeEmailTypeDTO standardCustomerIdEmailDTO()
@@ -61,7 +63,7 @@ public class EmailVerificationDetailsFixtures {
 	
 	public static CustomerIdTypeEmailTypeUpdatedByDTO standardCustomerIdTypeEmailTypeUpdatedByDTO()
 	{
-		return new CustomerIdTypeEmailTypeUpdatedByDTO(CUST_ID,ENTITY_TYPE_CUSTOMER, CUST_EMAIL_TYPE_PRIMARY,CUST_UPDATED_BY);
+		return new CustomerIdTypeEmailTypeUpdatedByDTO(CUST_ID,ENTITY_TYPE_CUSTOMER, CUST_EMAIL_TYPE_PRIMARY,CUST_UPDATED_BY,CUST_ID);
 	}
 	
 	public static String standardJsonUpdateEmailHashDTOMVC()
@@ -72,12 +74,13 @@ public class EmailVerificationDetailsFixtures {
 	
 	public static com.projectx.mvc.domain.quickregister.UpdateEmailHashDTO standardUpdateEmailHashDTO(Long customerId)
 	{
-		return new com.projectx.mvc.domain.quickregister.UpdateEmailHashDTO(customerId,ENTITY_TYPE_CUSTOMER,EMAIL_TYPE_PRIMARY, CUST_UPDATED_BY);
+		return new com.projectx.mvc.domain.quickregister.UpdateEmailHashDTO(customerId,ENTITY_TYPE_CUSTOMER,EMAIL_TYPE_PRIMARY,
+				CUST_UPDATED_BY,customerId);
 	}
 	
 	public static CustomerIdTypeEmailTypeUpdatedByDTO standardCustomerIdTypeEmailTypeUpdatedByDTO(Long customerId)
 	{
-		return new CustomerIdTypeEmailTypeUpdatedByDTO(customerId, ENTITY_TYPE_CUSTOMER,EMAIL_TYPE_PRIMARY, CUST_UPDATED_BY);
+		return new CustomerIdTypeEmailTypeUpdatedByDTO(customerId, ENTITY_TYPE_CUSTOMER,EMAIL_TYPE_PRIMARY, CUST_UPDATED_BY,customerId);
 	}
 	
 	public static String standardJsonCustomerIdTypeEmailTypeUpdatedByDTO(Long customerId)
@@ -97,10 +100,11 @@ public class EmailVerificationDetailsFixtures {
 	
 	
 	
-	public static String standardJsonVerifyEmailHashDTO(Long customerId,Integer entityType,Integer emailType,String emailHash,String requestedBy)
+	public static String standardJsonVerifyEmailHashDTO(Long customerId,Integer entityType,Integer emailType,String emailHash,
+			Integer requestedBy,Long requestedById)
 	{
 		
-		VerifyEmailHashDTO verifyEmailHashDTO=new VerifyEmailHashDTO(customerId, entityType, emailType, emailHash,requestedBy);
+		VerifyEmailHashDTO verifyEmailHashDTO=new VerifyEmailHashDTO(customerId, entityType, emailType, emailHash,requestedBy,requestedById);
 		
 		System.out.println(gson.toJson(verifyEmailHashDTO));
 		  

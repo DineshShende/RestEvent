@@ -23,9 +23,10 @@ public class MessagerSender {
 	
 	
 	public Boolean sendHashEmail(Long customerId,Integer customerType,Integer entityType,String firstName,String lastName,String email,
-			String emailHash,String requestedBy) {
+			String emailHash,Integer requestedBy,Long requestedById) {
 		
-		String message=messageBuilder.composeEmailWithEmailHash(customerId,customerType,entityType, firstName, lastName,  emailHash,requestedBy);		
+		String message=messageBuilder.composeEmailWithEmailHash(customerId,customerType,entityType, firstName, lastName, 
+				emailHash,requestedBy,requestedById);		
 		
 		return handleCustomerVerification.sendEmail(email, message);
 	}

@@ -194,9 +194,9 @@ public class FreightRequestByCustomerRepositoryTest {
 		FreightRequestByCustomer savedEntity=freightRequestByCustomerRepository.save(standardFreightRequestByCustomerFullTruckLoad110());
 		
 		assertEquals(1, freightRequestByCustomerRepository.updateReservationStatusWithReservedFor(savedEntity.getRequestId(), 
-			FREIGHTALLOCATIONSTATUS_NEW, FREIGHTALLOCATIONSTATUS_RESPONDED, 2345L).intValue());
+			FREIGHTALLOCATIONSTATUS_NEW, FREIGHTALLOCATIONSTATUS_RESPONDED, 2345L,1,savedEntity.getCustomerId()).intValue());
 		
 		assertEquals(1, freightRequestByCustomerRepository.updateReservationStatusWithReservedFor(savedEntity.getRequestId(), 
-				FREIGHTALLOCATIONSTATUS_RESPONDED, FREIGHTALLOCATIONSTATUS_BOOKED, 2345L).intValue());
+				FREIGHTALLOCATIONSTATUS_RESPONDED, FREIGHTALLOCATIONSTATUS_BOOKED, 2345L,1,savedEntity.getCustomerId()).intValue());
 	}
 }

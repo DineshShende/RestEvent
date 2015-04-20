@@ -61,13 +61,13 @@ public class MessageBuilder {
 	
 	
 	public String composeEmailWithEmailHash(Long customerId,Integer customerType,Integer entityType,
-			String firstName,String lastName,String emailHash,String requestedBy)
+			String firstName,String lastName,String emailHash,Integer requestedBy,Long requestedById)
 	{
 		StringBuilder messageBuilder=new StringBuilder();
 		
 		messageBuilder.append("Hi "+firstName+" "+lastName+"\n");
 		messageBuilder.append("Thanks for connecting with us!!\n Please Click Below link to activate your account\n");
-		messageBuilder.append(env.getProperty("mvc.url")+"/quickregister/verifyEmailHash/"+customerId+"/"+customerType+"/"+entityType+"/"+requestedBy+"/"+emailHash);
+		messageBuilder.append(env.getProperty("mvc.url")+"/quickregister/verifyEmailHash/"+customerId+"/"+customerType+"/"+entityType+"/"+requestedBy+"/"+requestedById+"/"+emailHash);
 		
 
 		

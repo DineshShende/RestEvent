@@ -25,6 +25,8 @@ public class DocumentDetailsServiceTest {
 	@Autowired
 	DocumentDetailsService documentDetailsService;
 	
+	private Integer UPDATED_BY=1;
+	
 	@Before
 	public void setUp()
 	{
@@ -70,7 +72,8 @@ public class DocumentDetailsServiceTest {
 		assertEquals(standardDocumentDetailsWithDummyDocument(), savedEntity);
 		
 		DocumentDetails updatedEntity=documentDetailsService.updateDocument(savedEntity.getKey(),
-				standardDocumentDetailsWithDummyDocumentNew().getDocument(), standardDocumentDetailsWithDummyDocumentNew().getContentType(),"CUST_ONLINE");
+				standardDocumentDetailsWithDummyDocumentNew().getDocument(), standardDocumentDetailsWithDummyDocumentNew().getContentType(),
+				UPDATED_BY,savedEntity.getKey().getCustomerId());
 		
 		assertEquals(standardDocumentDetailsWithDummyDocumentNew(), updatedEntity);
 		
@@ -88,7 +91,8 @@ public class DocumentDetailsServiceTest {
 		
 		DocumentDetails updatedEntity=documentDetailsService.updateVerificationStatusAndRemark(savedEntity.getKey(),
 				standardDocumentDetailsWithDummyDocumentWithNewVerificationStatusAndRemark().getVerificationStatus(), 
-				standardDocumentDetailsWithDummyDocumentWithNewVerificationStatusAndRemark().getVerificationRemark(),"CUST_ONLINE");
+				standardDocumentDetailsWithDummyDocumentWithNewVerificationStatusAndRemark().getVerificationRemark(),
+				UPDATED_BY,savedEntity.getKey().getCustomerId());
 		
 		assertEquals(standardDocumentDetailsWithDummyDocumentWithNewVerificationStatusAndRemark(), updatedEntity);
 		

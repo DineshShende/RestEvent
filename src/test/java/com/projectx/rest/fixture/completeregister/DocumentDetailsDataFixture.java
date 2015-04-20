@@ -96,37 +96,43 @@ public class DocumentDetailsDataFixture {
 	public static DocumentDetails standardDocumentDetails()
 	{
 		return new DocumentDetails(standardDocumentKey(), documentDummy(), DOCUMENT_CONTENT_TYPE, DOCUMENT_VERIFICATION_STATUS,
-				DOCUMENT_VERIFICATION_REMARKS, CUST_DATE, CUST_DATE, CUST_UPDATED_BY);
+				DOCUMENT_VERIFICATION_REMARKS, CUST_DATE, CUST_DATE, 
+				CUST_UPDATED_BY,CUST_UPDATED_BY,standardDocumentKey().getCustomerId(),standardDocumentKey().getCustomerId());
 	}
 	
 	public static DocumentDetails standardDocumentDetailsWithDummyDocument()
 	{
 		return new DocumentDetails(standardDocumentKey(), documentDummy(), DOCUMENT_CONTENT_TYPE_DUMMY, DOCUMENT_VERIFICATION_STATUS,
-				DOCUMENT_VERIFICATION_REMARKS, CUST_DATE, CUST_DATE, CUST_UPDATED_BY);
+				DOCUMENT_VERIFICATION_REMARKS, CUST_DATE, CUST_DATE, 
+				CUST_UPDATED_BY,CUST_UPDATED_BY,standardDocumentKey().getCustomerId(),standardDocumentKey().getCustomerId());
 	}
 	
 	public static DocumentDetails standardDocumentDetailsWithDummyDocumentNew()
 	{
 		return new DocumentDetails(standardDocumentKey(), documentDummy(), DOCUMENT_CONTENT_TYPE_DUMMY, DOCUMENT_VERIFICATION_STATUS,
-				DOCUMENT_VERIFICATION_REMARKS, CUST_DATE, CUST_DATE, CUST_UPDATED_BY);
+				DOCUMENT_VERIFICATION_REMARKS, CUST_DATE, CUST_DATE, 
+				CUST_UPDATED_BY,CUST_UPDATED_BY,standardDocumentKey().getCustomerId(),standardDocumentKey().getCustomerId());
 	}
 	
 	public static DocumentDetails standardDocumentDetailsWithDummyDocumentWithNewVerificationStatusAndRemark()
 	{
 		return new DocumentDetails(standardDocumentKey(), documentDummy(), DOCUMENT_CONTENT_TYPE_DUMMY, DOCUMENT_VERIFICATION_STATUS_FAILED,
-				DOCUMENT_VERIFICATION_REMARKS_FAILED, CUST_DATE, CUST_DATE, CUST_UPDATED_BY);
+				DOCUMENT_VERIFICATION_REMARKS_FAILED, CUST_DATE, CUST_DATE,
+				CUST_UPDATED_BY,CUST_UPDATED_BY,standardDocumentKey().getCustomerId(),standardDocumentKey().getCustomerId());
 	}
 	
 	public static DocumentDetails standardDocumentDetailsWithNewDocumentContentType()
 	{
 		return new DocumentDetails(standardDocumentKey(), documentDummyNew(), DOCUMENT_CONTENT_TYPE_NEW, DOCUMENT_VERIFICATION_STATUS,
-				DOCUMENT_VERIFICATION_REMARKS, CUST_DATE, CUST_DATE, CUST_UPDATED_BY);
+				DOCUMENT_VERIFICATION_REMARKS, CUST_DATE, CUST_DATE, 
+				CUST_UPDATED_BY,CUST_UPDATED_BY,standardDocumentKey().getCustomerId(),standardDocumentKey().getCustomerId());
 	}
 	
 	public static DocumentDetails standardDocumentDetailsWithNewVerificationStatusAndRemark()
 	{
 		return new DocumentDetails(standardDocumentKey(), documentDummy(), DOCUMENT_CONTENT_TYPE, DOCUMENT_VERIFICATION_STATUS_FAILED,
-				DOCUMENT_VERIFICATION_REMARKS_FAILED, CUST_DATE, CUST_DATE, CUST_UPDATED_BY);
+				DOCUMENT_VERIFICATION_REMARKS_FAILED, CUST_DATE, CUST_DATE,
+				CUST_UPDATED_BY,CUST_UPDATED_BY,standardDocumentKey().getCustomerId(),standardDocumentKey().getCustomerId());
 	}
 	
 	public static String standardJsonDocumentDetails(DocumentDetails details)

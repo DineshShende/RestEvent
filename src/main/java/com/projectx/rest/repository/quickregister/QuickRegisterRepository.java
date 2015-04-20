@@ -27,9 +27,9 @@ public interface QuickRegisterRepository {
 	 
 	 QuickRegisterEntity findByMobile(Long mobile) throws ResourceNotFoundException;
 	 
-	 Integer updateMobileVerificationStatus(Long customerId,Boolean status,Date updateTime,String updatedBy);
+	 Integer updateMobileVerificationStatus(Long customerId,Boolean status,Date updateTime,Integer updatedBy,Long updatedById);
 	 
-	 Integer updateEmailVerificationStatus(Long customerId,Boolean status,Date updateTime,String updatedBy);
+	 Integer updateEmailVerificationStatus(Long customerId,Boolean status,Date updateTime,Integer updatedBy,Long updatedById);
 	 
 	 List<MobilePinPasswordDTO> getTestData();
 

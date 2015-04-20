@@ -86,9 +86,9 @@ public class EmailVerificationDetailsRepositoryImpl implements EmailVericationDe
 	@Override
 	public Integer resetEmailHashAndEmailHashSentTime(Long customerId,Integer customerType,
 			Integer emailType, String emailHash, Date emailHashSentTime,
-			Integer resetCount,String updatedBy) {
+			Integer resetCount,Integer updatedBy,Long updatedById) {
 		UpdateEmailHashAndEmailHashSentTimeAndResendCountDTO dto=new UpdateEmailHashAndEmailHashSentTimeAndResendCountDTO
-				(customerId,customerType, emailType, emailHash, emailHashSentTime, resetCount,updatedBy);
+				(customerId,customerType, emailType, emailHash, emailHashSentTime, resetCount,updatedBy,updatedById);
 		
 		ResponseEntity<Integer> updateStatus=null;
 		
@@ -106,9 +106,9 @@ public class EmailVerificationDetailsRepositoryImpl implements EmailVericationDe
 
 	@Override
 	public Integer incrementResendCountByCustomerIdAndEmail(Long customerId,Integer customerType,
-			Integer emailType,String updatedBy) {
+			Integer emailType,Integer updatedBy,Long updatedById) {
 		
-		CustomerIdTypeEmailTypeUpdatedByDTO emailDTO=new CustomerIdTypeEmailTypeUpdatedByDTO(customerId,customerType, emailType,updatedBy);
+		CustomerIdTypeEmailTypeUpdatedByDTO emailDTO=new CustomerIdTypeEmailTypeUpdatedByDTO(customerId,customerType, emailType,updatedBy,updatedById);
 		
 		ResponseEntity<Integer> updateStatus=null;
 		

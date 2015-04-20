@@ -73,7 +73,7 @@ public class DocumentDetailsController {
 		try{
 			DocumentDetails updatedEntity=documentDetailsService
 					.updateDocument(updateDocumentDTO.getKey(), updateDocumentDTO.getDocument(), updateDocumentDTO.getContentType(),
-							updateDocumentDTO.getRequestedBy());
+							updateDocumentDTO.getRequestedBy(),updateDocumentDTO.getRequestedById());
 			
 			return new ResponseEntity<DocumentDetails>(updatedEntity, HttpStatus.OK);
 			
@@ -95,7 +95,7 @@ public class DocumentDetailsController {
 		try{
 			DocumentDetails updatedEntity=documentDetailsService
 					.updateVerificationStatusAndRemark(updateDocumentDTO.getKey(), updateDocumentDTO.getVerificationStatus(), 
-							updateDocumentDTO.getVerificationRemark(),updateDocumentDTO.getRequestedBy());
+							updateDocumentDTO.getVerificationRemark(),updateDocumentDTO.getRequestedBy(),updateDocumentDTO.getRequestedById());
 			return new ResponseEntity<DocumentDetails>(updatedEntity, HttpStatus.OK);
 			
 		}catch(DocumentDetailsNotFoundException e)

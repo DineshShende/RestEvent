@@ -47,6 +47,12 @@ public class OutBoundCallResponseController {
 	@Autowired
 	DealService dealService;
 	
+	@Value("${ACTOR_ENTITY_SELF_FREIGHT_RES_SYS}")
+	private Integer ACTOR_ENTITY_SELF_FREIGHT_RES_SYS;
+	
+	@Value("${ACTOR_ENTITY_SELF_FREIGHT_RES_SYS_ID}")
+	private Long ACTOR_ENTITY_SELF_FREIGHT_RES_SYS_ID;
+	
 	@Value("${POSITIVE_RESPONSE}")
 	private Integer POSITIVE_RESPONSE;
 	
@@ -103,13 +109,14 @@ public class OutBoundCallResponseController {
 
 				Integer updateStatus=freightRequestByVendorService
 						.updateReservationStatusWithReservedFor(kooKooRequestEntity.getFreightRequestByVendorId(),FREIGHTSTATUS_NEW, FREIGHTSTATUS_BLOCKED,
-								kooKooRequestEntity.getFreightRequestByCustomerId());
+								kooKooRequestEntity.getFreightRequestByCustomerId(),ACTOR_ENTITY_SELF_FREIGHT_RES_SYS,ACTOR_ENTITY_SELF_FREIGHT_RES_SYS_ID);
 				
 				if(updateStatus.equals(POSITIVE_RESPONSE))
 				{
 					Integer customerRequestUpdateStatus=freightRequestByCustomerService
 							.updateAllocationStatus(kooKooRequestEntity.getFreightRequestByCustomerId(), FREIGHTALLOCATIONSTATUS_NEW,
-									FREIGHTALLOCATIONSTATUS_BLOCKED,kooKooRequestEntity.getFreightRequestByVendorId());
+									FREIGHTALLOCATIONSTATUS_BLOCKED,kooKooRequestEntity.getFreightRequestByVendorId(),
+									ACTOR_ENTITY_SELF_FREIGHT_RES_SYS,ACTOR_ENTITY_SELF_FREIGHT_RES_SYS_ID);
 							
 					if(customerRequestUpdateStatus.equals(POSITIVE_RESPONSE))
 					{	
@@ -132,19 +139,22 @@ public class OutBoundCallResponseController {
 				{
 					Integer customerRequestUpdateStatus=freightRequestByCustomerService
 								.updateAllocationStatus(kooKooRequestEntity.getFreightRequestByCustomerId(), FREIGHTALLOCATIONSTATUS_NEW,
-										FREIGHTALLOCATIONSTATUS_RESPONDED, kooKooRequestEntity.getFreightRequestByVendorId());
+										FREIGHTALLOCATIONSTATUS_RESPONDED, kooKooRequestEntity.getFreightRequestByVendorId(),
+										ACTOR_ENTITY_SELF_FREIGHT_RES_SYS,ACTOR_ENTITY_SELF_FREIGHT_RES_SYS_ID);
 				}
 			}
 			else if(questionListWithCounter.getCounter().equals(ONE_COUNT))
 			{
 				Integer updateVendorRequest=freightRequestByVendorService
 						.updateReservationStatusWithReservedFor(kooKooRequestEntity.getFreightRequestByVendorId(), FREIGHTSTATUS_BLOCKED,
-								FREIGHTSTATUS_BOOKED, kooKooRequestEntity.getFreightRequestByCustomerId());
+								FREIGHTSTATUS_BOOKED, kooKooRequestEntity.getFreightRequestByCustomerId(),
+								ACTOR_ENTITY_SELF_FREIGHT_RES_SYS,ACTOR_ENTITY_SELF_FREIGHT_RES_SYS_ID);
 						
 						
 				Integer updateCustomerRequestStatus=freightRequestByCustomerService.
 						updateAllocationStatus(kooKooRequestEntity.getFreightRequestByCustomerId(), FREIGHTALLOCATIONSTATUS_BLOCKED,
-								FREIGHTALLOCATIONSTATUS_BOOKED, kooKooRequestEntity.getFreightRequestByVendorId());		
+								FREIGHTALLOCATIONSTATUS_BOOKED, kooKooRequestEntity.getFreightRequestByVendorId(),
+								ACTOR_ENTITY_SELF_FREIGHT_RES_SYS,ACTOR_ENTITY_SELF_FREIGHT_RES_SYS_ID);		
 				
 				
 				if(updateCustomerRequestStatus.equals(POSITIVE_RESPONSE) && updateVendorRequest.equals(POSITIVE_RESPONSE))
@@ -164,17 +174,20 @@ public class OutBoundCallResponseController {
 			{
 				freightRequestByCustomerService
 				.updateAllocationStatus(kooKooRequestEntity.getFreightRequestByCustomerId(), FREIGHTALLOCATIONSTATUS_NEW,
-						FREIGHTALLOCATIONSTATUS_NEGFIRSTSTAGE, kooKooRequestEntity.getFreightRequestByVendorId());
+						FREIGHTALLOCATIONSTATUS_NEGFIRSTSTAGE, kooKooRequestEntity.getFreightRequestByVendorId(),
+						ACTOR_ENTITY_SELF_FREIGHT_RES_SYS,ACTOR_ENTITY_SELF_FREIGHT_RES_SYS_ID);
 			}
 			else if(questionListWithCounter.getCounter().equals(ONE_COUNT))
 			{
 				freightRequestByVendorService
 				.updateReservationStatusWithReservedFor(kooKooRequestEntity.getFreightRequestByVendorId(),
-						FREIGHTSTATUS_BLOCKED, FREIGHTSTATUS_NEW, null);
+						FREIGHTSTATUS_BLOCKED, FREIGHTSTATUS_NEW, null,
+						ACTOR_ENTITY_SELF_FREIGHT_RES_SYS,ACTOR_ENTITY_SELF_FREIGHT_RES_SYS_ID);
 				
 				freightRequestByCustomerService
 				.updateAllocationStatus(kooKooRequestEntity.getFreightRequestByCustomerId(), FREIGHTALLOCATIONSTATUS_BLOCKED,
-						FREIGHTALLOCATIONSTATUS_NEGSECONDSTAGE, kooKooRequestEntity.getFreightRequestByVendorId());
+						FREIGHTALLOCATIONSTATUS_NEGSECONDSTAGE, kooKooRequestEntity.getFreightRequestByVendorId(),
+						ACTOR_ENTITY_SELF_FREIGHT_RES_SYS,ACTOR_ENTITY_SELF_FREIGHT_RES_SYS_ID);
 				
 			}
 

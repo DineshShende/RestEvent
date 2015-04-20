@@ -21,7 +21,8 @@ public interface DriverDetailsRepository {
 	
 	List<DriverDetails> getDriversByVendorId(Long vendorId);
 	
-	Integer updateMobileAndMobileVerificationStatus(Long driverId,Long mobile,Boolean status,String updatedBy) throws ValidationFailedException;
+	Integer updateMobileAndMobileVerificationStatus(Long driverId,Long mobile,Boolean status
+			,Integer updatedBy,Long updatedById) throws ValidationFailedException;
 	
 	DriverDetails findOne(Long driverId) throws DriverDetailsNotFoundException;
 	

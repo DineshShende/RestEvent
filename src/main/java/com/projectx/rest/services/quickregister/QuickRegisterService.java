@@ -47,9 +47,9 @@ public interface QuickRegisterService {
 	
 	QuickRegisterEntity getByMobile(Long mobile) throws ResourceNotFoundException;
 
-	Integer updateMobileVerificationStatus(Long customerId,Boolean status,Date updateTime,String updatedBy);
+	Integer updateMobileVerificationStatus(Long customerId,Boolean status,Date updateTime,Integer requestedBy,Long requestedById);
 	
-	Integer updateEmailVerificationStatus(Long customerId,Boolean status,Date updateTime,String updatedBy);
+	Integer updateEmailVerificationStatus(Long customerId,Boolean status,Date updateTime,Integer requestedBy,Long requestedById);
 
 	List<MobilePinPasswordDTO> getTestData();
 	

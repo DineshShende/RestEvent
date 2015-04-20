@@ -110,7 +110,7 @@ public class CustomerDetailsWACTest {
 	.andExpect(status().isOk())
 	.andExpect(jsonPath("$.firstName").value(standardCustomerFromQuickEntity().getFirstName()))
     .andExpect(jsonPath("$.lastName").value(standardCustomerFromQuickEntity().getLastName()))
-    .andExpect(jsonPath("$.homeAddressId").doesNotExist())
+    .andExpect(jsonPath("$.homeAddressId").exists())
     .andExpect(jsonPath("$.mobile").value(standardCustomerFromQuickEntity().getMobile()))
     .andExpect(jsonPath("$.email").value(standardCustomerFromQuickEntity().getEmail()))
     .andExpect(jsonPath("$.isMobileVerified").value(standardCustomerFromQuickEntity().getIsMobileVerified()))
@@ -182,7 +182,7 @@ public class CustomerDetailsWACTest {
 				.contentType(MediaType.APPLICATION_JSON)
 				.accept(MediaType.APPLICATION_JSON))
 	.andDo(print())
-	.andExpect(status().isOk());
+	.andExpect(status().isNotAcceptable());
 	}
 	
 	@Test

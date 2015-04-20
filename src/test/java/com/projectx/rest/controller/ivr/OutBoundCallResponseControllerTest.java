@@ -195,7 +195,7 @@ public class OutBoundCallResponseControllerTest {
 		FreightRequestByVendor freightRequestByVendor=freightRequestByVendorService.newRequest(standardFreightRequestByVendor());
 
 		freightRequestByVendorService.updateReservationStatusWithReservedFor(freightRequestByVendor.getRequestId(),
-				freightRequestByVendor.getStatus(), "BLOCKED", 234L);
+				freightRequestByVendor.getStatus(), "BLOCKED", 234L,1,freightRequestByVendor.getVendorId());
 		
 		List<QuestionPossibleAnswersSelectedAnswer> questionList=questionHandlingService.getAll();
 		

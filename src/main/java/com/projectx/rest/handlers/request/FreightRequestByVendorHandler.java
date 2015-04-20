@@ -96,10 +96,11 @@ public class FreightRequestByVendorHandler implements
 	@Override
 	public Integer updateReservationStatusWithReservedFor(
 			Long freightRequestByVendorId,String oldStatus, String reservationStatus,
-			Long reservedFor) {
+			Long reservedFor,Integer updatedBy,Long updatedById) {
 
 		
-		return freightRequestByVendorRepository.updateReservationStatusWithReservedFor(freightRequestByVendorId, oldStatus, reservationStatus, reservedFor);
+		return freightRequestByVendorRepository.updateReservationStatusWithReservedFor(freightRequestByVendorId, oldStatus,
+				reservationStatus, reservedFor,updatedBy,updatedById);
 	}
 
 	/*

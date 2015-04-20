@@ -7,7 +7,8 @@ public class UpdatePasswordEmailPasswordAndPasswordTypeDTO {
 	private String password;
 	private String emailPassword;
 	private String passwordType;
-	private String updatedBy;
+	private Integer updatedBy;
+	private Long updatedById;
 	
 	public UpdatePasswordEmailPasswordAndPasswordTypeDTO() {
 		
@@ -15,7 +16,7 @@ public class UpdatePasswordEmailPasswordAndPasswordTypeDTO {
 
 	public UpdatePasswordEmailPasswordAndPasswordTypeDTO(Long customerId,
 			Integer customerType, String password, String emailPassword,
-			String passwordType, String updatedBy) {
+			String passwordType, Integer updatedBy,Long updatedById) {
 		super();
 		this.customerId = customerId;
 		this.customerType = customerType;
@@ -23,6 +24,7 @@ public class UpdatePasswordEmailPasswordAndPasswordTypeDTO {
 		this.emailPassword = emailPassword;
 		this.passwordType = passwordType;
 		this.updatedBy = updatedBy;
+		this.updatedById=updatedById;
 	}
 
 
@@ -74,12 +76,22 @@ public class UpdatePasswordEmailPasswordAndPasswordTypeDTO {
 		this.customerType = customerType;
 	}
 
-	public String getUpdatedBy() {
+
+
+	public Integer getUpdatedBy() {
 		return updatedBy;
 	}
 
-	public void setUpdatedBy(String updatedBy) {
+	public void setUpdatedBy(Integer updatedBy) {
 		this.updatedBy = updatedBy;
+	}
+
+	public Long getUpdatedById() {
+		return updatedById;
+	}
+
+	public void setUpdatedById(Long updatedById) {
+		this.updatedById = updatedById;
 	}
 
 	@Override
@@ -88,7 +100,7 @@ public class UpdatePasswordEmailPasswordAndPasswordTypeDTO {
 				+ customerId + ", customerType=" + customerType + ", password="
 				+ password + ", emailPassword=" + emailPassword
 				+ ", passwordType=" + passwordType + ", updatedBy=" + updatedBy
-				+ "]";
+				+ ", updatedById=" + updatedById + "]";
 	}
 
 	@Override
@@ -107,6 +119,8 @@ public class UpdatePasswordEmailPasswordAndPasswordTypeDTO {
 				+ ((passwordType == null) ? 0 : passwordType.hashCode());
 		result = prime * result
 				+ ((updatedBy == null) ? 0 : updatedBy.hashCode());
+		result = prime * result
+				+ ((updatedById == null) ? 0 : updatedById.hashCode());
 		return result;
 	}
 
@@ -148,6 +162,11 @@ public class UpdatePasswordEmailPasswordAndPasswordTypeDTO {
 			if (other.updatedBy != null)
 				return false;
 		} else if (!updatedBy.equals(other.updatedBy))
+			return false;
+		if (updatedById == null) {
+			if (other.updatedById != null)
+				return false;
+		} else if (!updatedById.equals(other.updatedById))
 			return false;
 		return true;
 	}

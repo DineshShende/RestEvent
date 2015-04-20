@@ -85,7 +85,7 @@ public class VendorDetailsServiceTest {
 		
 		VendorDetails savedEntity=vendorDetailsService.createCustomerDetailsFromQuickRegisterEntity(quickRegisterEntity);
 		
-		assertEquals(standardVendorCreatedFromQuickRegister(savedEntity.getVendorId()), savedEntity);
+		assertEquals(standardVendorCreatedFromQuickRegisterWithDefaultHomeAdd(savedEntity.getVendorId()), savedEntity);
 		
 		assertEquals(1, vendorDetailsService.count().intValue());
 		
@@ -102,7 +102,7 @@ public class VendorDetailsServiceTest {
 		
 		VendorDetails savedEntity=vendorDetailsService.createCustomerDetailsFromQuickRegisterEntity(quickRegisterEntity);
 		
-		assertEquals(standardVendorCreatedFromQuickRegister(savedEntity.getVendorId()), savedEntity);
+		assertEquals(standardVendorCreatedFromQuickRegisterWithDefaultHomeAdd(savedEntity.getVendorId()), savedEntity);
 		
 		assertEquals(1, vendorDetailsService.count().intValue());
 		
@@ -127,7 +127,7 @@ public class VendorDetailsServiceTest {
 		
 		VendorDetails savedEntity=vendorDetailsService.createCustomerDetailsFromQuickRegisterEntity(quickRegisterEntity);
 		
-		assertEquals(standardVendorCreatedFromQuickRegister(savedEntity.getVendorId()), savedEntity);
+		assertEquals(standardVendorCreatedFromQuickRegisterWithDefaultHomeAdd(savedEntity.getVendorId()), savedEntity);
 		
 		assertEquals(1, vendorDetailsService.count().intValue());
 		
@@ -146,7 +146,7 @@ public class VendorDetailsServiceTest {
 		
 		VendorDetails savedEntity=vendorDetailsService.createCustomerDetailsFromQuickRegisterEntity(quickRegisterEntity);
 		
-		assertEquals(standardVendorCreatedFromQuickRegister(savedEntity.getVendorId()), savedEntity);
+		assertEquals(standardVendorCreatedFromQuickRegisterWithDefaultHomeAdd(savedEntity.getVendorId()), savedEntity);
 		
 		MobileVerificationDetails mobileVerificationDetails=
 				mobileVerificationService.getByEntityIdTypeAndMobileType(savedEntity.getVendorId(),
@@ -155,7 +155,7 @@ public class VendorDetailsServiceTest {
 		assertFalse(savedEntity.getIsMobileVerified());
 		
 		assertTrue(mobileVerificationService.verifyMobilePinUpdateStatusAndSendPassword(savedEntity.getVendorId(), ENTITY_TYPE_VENDOR, MOB_TYPE_PRIMARY, 
-				mobileVerificationDetails.getMobilePin(),CUST_UPDATED_BY));
+				mobileVerificationDetails.getMobilePin(),CUST_UPDATED_BY,savedEntity.getVendorId()));
 		
 		assertTrue(vendorDetailsService.findById(savedEntity.getVendorId()).getIsMobileVerified());
 	}
@@ -181,7 +181,7 @@ public class VendorDetailsServiceTest {
 		assertFalse(savedEntity.getIsEmailVerified());
 		
 		assertTrue(emailVerificationService.verifyEmailHashUpdateStatusAndSendPassword(savedEntity.getVendorId(), ENTITY_TYPE_VENDOR, EMAIL_TYPE_PRIMARY, 
-				emailVerificationDetails.getEmailHash(),CUST_UPDATED_BY));
+				emailVerificationDetails.getEmailHash(),CUST_UPDATED_BY,savedEntity.getVendorId()));
 		
 		assertTrue(vendorDetailsService.findById(savedEntity.getVendorId()).getIsEmailVerified());
 	}
@@ -198,7 +198,8 @@ public class VendorDetailsServiceTest {
 		
 		VendorDetails savedEntity=vendorDetailsService.createCustomerDetailsFromQuickRegisterEntity(quickRegisterEntity);
 		
-		assertTrue(mobileVerificationService.sendMobilePin(savedEntity.getVendorId(), ENTITY_TYPE_VENDOR, MOB_TYPE_PRIMARY,CUST_UPDATED_BY));
+		assertTrue(mobileVerificationService.sendMobilePin(savedEntity.getVendorId(), ENTITY_TYPE_VENDOR,
+				MOB_TYPE_PRIMARY,CUST_UPDATED_BY,savedEntity.getVendorId()));
 	}
 	
 	@Test
@@ -211,7 +212,8 @@ public class VendorDetailsServiceTest {
 		
 		VendorDetails savedEntity=vendorDetailsService.createCustomerDetailsFromQuickRegisterEntity(quickRegisterEntity);
 		
-		assertTrue(emailVerificationService.sendEmailHash(savedEntity.getVendorId(), ENTITY_TYPE_VENDOR, EMAIL_TYPE_PRIMARY,CUST_UPDATED_BY));
+		assertTrue(emailVerificationService.sendEmailHash(savedEntity.getVendorId(), ENTITY_TYPE_VENDOR,
+				EMAIL_TYPE_PRIMARY,CUST_UPDATED_BY,savedEntity.getVendorId()));
 	}
 	
 	@Test

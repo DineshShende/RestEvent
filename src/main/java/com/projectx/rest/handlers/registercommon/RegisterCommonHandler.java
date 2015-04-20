@@ -55,7 +55,7 @@ public class RegisterCommonHandler implements RegisterCommonService {
 	private Integer MOBILE_REQ=2;
 	
 	@Override
-	public ForgetPasswordEntity forgetPassword(String entity,String requestedBy) {
+	public ForgetPasswordEntity forgetPassword(String entity,Integer requestedBy,Long requestedById) {
 
 		
 		QuickRegisterEntity quickRegisterEntity=null;
@@ -143,7 +143,7 @@ public class RegisterCommonHandler implements RegisterCommonService {
 		if(emailFlag && forgetPasswordEntity.getIsEmailVerified())
 		{
 			Boolean status=authenticationService.resetPassword(new CustomerIdTypeUpdatedByDTO(forgetPasswordEntity.getCustomerId(),
-					forgetPasswordEntity.getCustomerType(), requestedBy),EMAIL_REQ);
+					forgetPasswordEntity.getCustomerType(), requestedBy,requestedById),EMAIL_REQ);
 			
 			if(status)
 				sentPasswordStatus=true;
@@ -152,7 +152,7 @@ public class RegisterCommonHandler implements RegisterCommonService {
 		if(mobileFlag && forgetPasswordEntity.getIsMobileVerified())
 		{
 			Boolean status=authenticationService.resetPassword(new CustomerIdTypeUpdatedByDTO(forgetPasswordEntity.getCustomerId(),
-					forgetPasswordEntity.getCustomerType(), requestedBy),MOBILE_REQ);
+					forgetPasswordEntity.getCustomerType(), requestedBy,requestedById),MOBILE_REQ);
 			
 			if(status)
 				sentPasswordStatus=true;

@@ -24,9 +24,11 @@ public interface TransactionalUpdatesRepository {
 	
 	VendorDetails updateVendorDetails( VendorDetails vendorDetails) throws VendorDetailsTransactionalUpdateFailedException;
 	
-	Boolean updateMobileInDetailsEnityAndAuthenticationDetails(Long entityId,Integer entityType,Integer mobileType,String updatedBy) throws UpdateMobileInDetailsAndAuthentionDetailsFailedException;
+	Boolean updateMobileInDetailsEnityAndAuthenticationDetails(Long entityId,Integer entityType,Integer mobileType,
+			Integer updatedBy,Long updatedById) throws UpdateMobileInDetailsAndAuthentionDetailsFailedException;
 
-	Boolean updateEmailInDetailsEnityAndAuthenticationDetails(Long entityId,Integer entityType,Integer emailType,String updatedBy) throws UpdateEmailInDetailsAndAuthenticationDetailsFailedException;
+	Boolean updateEmailInDetailsEnityAndAuthenticationDetails(Long entityId,Integer entityType,Integer emailType,
+			Integer updatedBy,Long updatedById) throws UpdateEmailInDetailsAndAuthenticationDetailsFailedException;
 	
 	CustomerQuickRegisterEmailMobileVerificationEntity saveNewQuickRegisterEntity( QuickRegisterEntity quickRegisterEntity) throws QuickRegisterDetailsAlreadyPresentException ;
 

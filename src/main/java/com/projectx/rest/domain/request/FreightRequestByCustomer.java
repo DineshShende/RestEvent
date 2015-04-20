@@ -11,6 +11,7 @@ import java.util.Date;
 
 
 
+
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -75,7 +76,17 @@ public class FreightRequestByCustomer {
 	private Date updateTime;
 	
 	@NotNull
-	private String updatedBy;
+	private Integer updatedBy;
+	
+	@NotNull
+	private Integer insertedBy;
+	
+	@NotNull
+	private Long updatedById;
+	
+	@NotNull
+	private Long insertedById;
+	
 	
 	public FreightRequestByCustomer() {
 
@@ -90,7 +101,8 @@ public class FreightRequestByCustomer {
 			Integer length, Integer width, Integer height, String vehicleBrand,
 			String model, String commodity, String pickupTime, Long customerId,
 			String allocationStatus, Long allocatedFor, Date insertTime,
-			Date updateTime, String updatedBy) {
+			Date updateTime,
+			Integer updatedBy,Integer insertedBy,Long updatedById,Long insertedById) {
 		super();
 		
 		this.source = source;
@@ -115,6 +127,9 @@ public class FreightRequestByCustomer {
 		this.insertTime = insertTime;
 		this.updateTime = updateTime;
 		this.updatedBy = updatedBy;
+		this.insertedBy=insertedBy;
+		this.updatedById=updatedById;
+		this.insertedById=insertedById;
 	}
 
 
@@ -275,15 +290,6 @@ public class FreightRequestByCustomer {
 	public void setUpdateTime(Date updateTime) {
 		this.updateTime = updateTime;
 	}
-
-	public String getUpdatedBy() {
-		return updatedBy;
-	}
-
-	public void setUpdatedBy(String updatedBy) {
-		this.updatedBy = updatedBy;
-	}
-
 	
 	public Long getCustomerId() {
 		return customerId;
@@ -319,6 +325,52 @@ public class FreightRequestByCustomer {
 	}
 
 
+	public Integer getUpdatedBy() {
+		return updatedBy;
+	}
+
+
+
+	public void setUpdatedBy(Integer updatedBy) {
+		this.updatedBy = updatedBy;
+	}
+
+
+
+	public Integer getInsertedBy() {
+		return insertedBy;
+	}
+
+
+
+	public void setInsertedBy(Integer insertedBy) {
+		this.insertedBy = insertedBy;
+	}
+
+
+
+	public Long getUpdatedById() {
+		return updatedById;
+	}
+
+
+
+	public void setUpdatedById(Long updatedById) {
+		this.updatedById = updatedById;
+	}
+
+
+
+	public Long getInsertedById() {
+		return insertedById;
+	}
+
+
+
+	public void setInsertedById(Long insertedById) {
+		this.insertedById = insertedById;
+	}
+
 
 
 	@Override
@@ -336,7 +388,8 @@ public class FreightRequestByCustomer {
 				+ customerId + ", allocationStatus=" + allocationStatus
 				+ ", allocatedFor=" + allocatedFor + ", insertTime="
 				+ insertTime + ", updateTime=" + updateTime + ", updatedBy="
-				+ updatedBy + "]";
+				+ updatedBy + ", insertedBy=" + insertedBy + ", updatedById="
+				+ updatedById + ", insertedById=" + insertedById + "]";
 	}
 
 
@@ -345,6 +398,11 @@ public class FreightRequestByCustomer {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result
+				+ ((allocatedFor == null) ? 0 : allocatedFor.hashCode());
+		result = prime
+				* result
+				+ ((allocationStatus == null) ? 0 : allocationStatus.hashCode());
 		result = prime * result
 				+ ((bodyType == null) ? 0 : bodyType.hashCode());
 		result = prime * result
@@ -360,6 +418,10 @@ public class FreightRequestByCustomer {
 		result = prime * result + ((height == null) ? 0 : height.hashCode());
 		result = prime * result
 				+ ((insertTime == null) ? 0 : insertTime.hashCode());
+		result = prime * result
+				+ ((insertedBy == null) ? 0 : insertedBy.hashCode());
+		result = prime * result
+				+ ((insertedById == null) ? 0 : insertedById.hashCode());
 		result = prime * result
 				+ ((isFullTruckLoad == null) ? 0 : isFullTruckLoad.hashCode());
 		result = prime
@@ -377,16 +439,18 @@ public class FreightRequestByCustomer {
 		result = prime * result
 				+ ((requestId == null) ? 0 : requestId.hashCode());
 		result = prime * result + ((source == null) ? 0 : source.hashCode());
-		result = prime * result + ((allocationStatus == null) ? 0 : allocationStatus.hashCode());
 		result = prime * result
 				+ ((updateTime == null) ? 0 : updateTime.hashCode());
 		result = prime * result
 				+ ((updatedBy == null) ? 0 : updatedBy.hashCode());
 		result = prime * result
+				+ ((updatedById == null) ? 0 : updatedById.hashCode());
+		result = prime * result
 				+ ((vehicleBrand == null) ? 0 : vehicleBrand.hashCode());
 		result = prime * result + ((width == null) ? 0 : width.hashCode());
 		return result;
 	}
+
 
 
 	@Override
@@ -398,6 +462,16 @@ public class FreightRequestByCustomer {
 		if (getClass() != obj.getClass())
 			return false;
 		FreightRequestByCustomer other = (FreightRequestByCustomer) obj;
+		if (allocatedFor == null) {
+			if (other.allocatedFor != null)
+				return false;
+		} else if (!allocatedFor.equals(other.allocatedFor))
+			return false;
+		if (allocationStatus == null) {
+			if (other.allocationStatus != null)
+				return false;
+		} else if (!allocationStatus.equals(other.allocationStatus))
+			return false;
 		if (bodyType == null) {
 			if (other.bodyType != null)
 				return false;
@@ -437,6 +511,16 @@ public class FreightRequestByCustomer {
 			if (other.insertTime != null)
 				return false;
 		} else if (!insertTime.equals(other.insertTime))
+			return false;
+		if (insertedBy == null) {
+			if (other.insertedBy != null)
+				return false;
+		} else if (!insertedBy.equals(other.insertedBy))
+			return false;
+		if (insertedById == null) {
+			if (other.insertedById != null)
+				return false;
+		} else if (!insertedById.equals(other.insertedById))
 			return false;
 		if (isFullTruckLoad == null) {
 			if (other.isFullTruckLoad != null)
@@ -483,17 +567,6 @@ public class FreightRequestByCustomer {
 				return false;
 		} else if (!source.equals(other.source))
 			return false;
-		if (allocationStatus == null) {
-			if (other.allocationStatus != null)
-				return false;
-		} else if (!allocationStatus.equals(other.allocationStatus))
-			return false;
-		if (allocatedFor == null) {
-			if (other.allocatedFor != null)
-				return false;
-		} else if (!allocatedFor.equals(other.allocatedFor))
-			return false;
-		
 		if (updateTime == null) {
 			if (other.updateTime != null)
 				return false;
@@ -503,6 +576,11 @@ public class FreightRequestByCustomer {
 			if (other.updatedBy != null)
 				return false;
 		} else if (!updatedBy.equals(other.updatedBy))
+			return false;
+		if (updatedById == null) {
+			if (other.updatedById != null)
+				return false;
+		} else if (!updatedById.equals(other.updatedById))
 			return false;
 		if (vehicleBrand == null) {
 			if (other.vehicleBrand != null)
@@ -518,6 +596,8 @@ public class FreightRequestByCustomer {
 	}
 
 
+
+	
 		
 	
 }

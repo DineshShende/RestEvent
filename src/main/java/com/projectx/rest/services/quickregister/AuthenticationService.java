@@ -29,11 +29,13 @@ public interface AuthenticationService {
 			throws AuthenticationDetailsNotFoundException,LoginVerificationFailedException;
 
 	Boolean sendOrResendOrResetDefaultPassword(Long entityId,Integer entityType,Boolean resetFlag,Boolean resendFlag,
-			Integer emailOrMobile,String requestedBy) throws ResourceAlreadyPresentException;
+			Integer emailOrMobile,Integer requestedBy,Long requestedById) throws ResourceAlreadyPresentException;
 	
-	Boolean sendDefaultPassword(Long customerId,Integer customerType,Boolean resetFlag,Integer emailOrMobile,String requestedBy) throws ResourceAlreadyPresentException;
+	Boolean sendDefaultPassword(Long customerId,Integer customerType,Boolean resetFlag,Integer emailOrMobile,
+			Integer requestedBy,Long requestedById) throws ResourceAlreadyPresentException;
 	
-	Boolean resendDefaultPassword(Long customerId,Integer customerType,Integer emailOrMobile,String requestedBy) throws ResourceAlreadyPresentException;
+	Boolean resendDefaultPassword(Long customerId,Integer customerType,Integer emailOrMobile,
+			Integer requestedBy,Long requestedById) throws ResourceAlreadyPresentException;
 	
 	Boolean resetPassword(CustomerIdTypeUpdatedByDTO customerIdDTO,Integer emailOrMobile) throws ResourceAlreadyPresentException;
 	

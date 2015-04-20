@@ -138,10 +138,10 @@ public class FreightRequestByCustomerRepositoryImpl implements
 	@Override
 	public Integer updateReservationStatusWithReservedFor(
 			Long freightRequestByCustomerId, String oldStatus,
-			String reservationStatus, Long reservedBy) {
+			String reservationStatus, Long reservedBy,Integer updatedBy,Long updatedById) {
 		
 		UpdateReservationStatus updateReservationStatus=new UpdateReservationStatus(freightRequestByCustomerId,
-				oldStatus, reservationStatus, reservedBy);
+				oldStatus, reservationStatus, reservedBy,updatedBy,updatedById);
 		
 		HttpEntity<UpdateReservationStatus> entity=new HttpEntity<UpdateReservationStatus>(updateReservationStatus);
 		

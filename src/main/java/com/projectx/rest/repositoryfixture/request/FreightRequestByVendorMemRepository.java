@@ -85,7 +85,7 @@ public class FreightRequestByVendorMemRepository implements
 		
 		List<FreightRequestByVendor> returnList=new ArrayList<FreightRequestByVendor>();
 		
-		returnList.add(new FreightRequestByVendor("122", 124, 435, 32L, new Date(), "6:00AM", 10, 12L, "NEW",234L, new Date(), new Date(), "updatedBy"));
+		//returnList.add(new FreightRequestByVendor("122", 124, 435, 32L, new Date(), "6:00AM", 10, 12L, "NEW",234L, new Date(), new Date(), "updatedBy"));
 		
 		return returnList;
 	}
@@ -93,9 +93,12 @@ public class FreightRequestByVendorMemRepository implements
 	@Override
 	public Integer updateReservationStatusWithReservedFor(
 			Long freightRequestByVendorId, String oldStatus,
-			String reservationStatus, Long reservedFor) {
+			String reservationStatus, Long reservedFor, Integer updatedBy,
+			Long updatedById) {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	
 
 }

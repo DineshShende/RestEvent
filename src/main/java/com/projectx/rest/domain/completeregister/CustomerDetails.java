@@ -2,6 +2,7 @@ package com.projectx.rest.domain.completeregister;
 
 import java.util.Date;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -25,6 +26,7 @@ public class CustomerDetails {
 	
 	private Date dateOfBirth;
 	
+	@Valid
 	private Address homeAddressId;
 	
 	private Long mobile;
@@ -43,6 +45,7 @@ public class CustomerDetails {
 	
 	private String nameOfFirm;
 	
+	@Valid
 	private Address firmAddressId;
 	
 	private Long secondaryMobile;
@@ -58,7 +61,16 @@ public class CustomerDetails {
 	private Date updateTime;
 	
 	@NotNull
-	private String updatedBy;
+	private Integer updatedBy;
+	
+	@NotNull
+	private Integer insertedBy;
+	
+	@NotNull
+	private Long updatedById;
+	
+	@NotNull
+	private Long insertedById;
 
 	
 	public CustomerDetails() {
@@ -74,7 +86,8 @@ public class CustomerDetails {
 			String language, String businessDomain, String nameOfFirm,
 			Address firmAddressId, Long secondaryMobile,
 			Boolean isSecondaryMobileVerified, String secondaryEmail,
-			Date insertTime, Date updateTime, String updatedBy) {
+			Date insertTime, Date updateTime, 
+			Integer updatedBy,Integer insertedBy,Long updatedById,Long insertedById) {
 		super();
 		this.customerId = customerId;
 		this.firstName = firstName;
@@ -97,6 +110,9 @@ public class CustomerDetails {
 		this.insertTime = insertTime;
 		this.updateTime = updateTime;
 		this.updatedBy = updatedBy;
+		this.insertedBy=insertedBy;
+		this.updatedById=updatedById;
+		this.insertedById=insertedById;
 	}
 
 
@@ -284,15 +300,6 @@ public class CustomerDetails {
 	}
 
 
-	public String getUpdatedBy() {
-		return updatedBy;
-	}
-
-
-	public void setUpdatedBy(String updatedBy) {
-		this.updatedBy = updatedBy;
-	}
-
 	public String getMiddleName() {
 		return middleName;
 	}
@@ -314,9 +321,53 @@ public class CustomerDetails {
 		this.phoneNumber = phoneNumber;
 	}
 
-
-
 	
+	public Integer getUpdatedBy() {
+		return updatedBy;
+	}
+
+
+
+	public void setUpdatedBy(Integer updatedBy) {
+		this.updatedBy = updatedBy;
+	}
+
+
+
+	public Integer getInsertedBy() {
+		return insertedBy;
+	}
+
+
+
+	public void setInsertedBy(Integer insertedBy) {
+		this.insertedBy = insertedBy;
+	}
+
+
+
+	public Long getUpdatedById() {
+		return updatedById;
+	}
+
+
+
+	public void setUpdatedById(Long updatedById) {
+		this.updatedById = updatedById;
+	}
+
+
+
+	public Long getInsertedById() {
+		return insertedById;
+	}
+
+
+
+	public void setInsertedById(Long insertedById) {
+		this.insertedById = insertedById;
+	}
+
 
 
 	@Override
@@ -334,7 +385,8 @@ public class CustomerDetails {
 				+ ", isSecondaryMobileVerified=" + isSecondaryMobileVerified
 				+ ", secondaryEmail=" + secondaryEmail + ", insertTime="
 				+ insertTime + ", updateTime=" + updateTime + ", updatedBy="
-				+ updatedBy + "]";
+				+ updatedBy + ", insertedBy=" + insertedBy + ", updatedById="
+				+ updatedById + ", insertedById=" + insertedById + "]";
 	}
 
 
@@ -359,6 +411,10 @@ public class CustomerDetails {
 		result = prime * result
 				+ ((insertTime == null) ? 0 : insertTime.hashCode());
 		result = prime * result
+				+ ((insertedBy == null) ? 0 : insertedBy.hashCode());
+		result = prime * result
+				+ ((insertedById == null) ? 0 : insertedById.hashCode());
+		result = prime * result
 				+ ((isEmailVerified == null) ? 0 : isEmailVerified.hashCode());
 		result = prime
 				* result
@@ -377,6 +433,8 @@ public class CustomerDetails {
 		result = prime * result
 				+ ((nameOfFirm == null) ? 0 : nameOfFirm.hashCode());
 		result = prime * result
+				+ ((phoneNumber == null) ? 0 : phoneNumber.hashCode());
+		result = prime * result
 				+ ((secondaryEmail == null) ? 0 : secondaryEmail.hashCode());
 		result = prime * result
 				+ ((secondaryMobile == null) ? 0 : secondaryMobile.hashCode());
@@ -384,14 +442,13 @@ public class CustomerDetails {
 				+ ((updateTime == null) ? 0 : updateTime.hashCode());
 		result = prime * result
 				+ ((updatedBy == null) ? 0 : updatedBy.hashCode());
+		result = prime * result
+				+ ((updatedById == null) ? 0 : updatedById.hashCode());
 		return result;
 	}
 
 
 
-
-
-	
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -406,22 +463,14 @@ public class CustomerDetails {
 				return false;
 		} else if (!businessDomain.equals(other.businessDomain))
 			return false;
-		if (phoneNumber == null) {
-			if (other.phoneNumber != null)
+		if (customerId == null) {
+			if (other.customerId != null)
 				return false;
-		} else if (!phoneNumber.equals(other.phoneNumber))
-			return false;	
-		
-		if (middleName == null) {
-			if (other.middleName != null)
-				return false;
-		} else if (!middleName.equals(other.middleName))
-			return false;	
+		}
 		if (dateOfBirth == null) {
 			if (other.dateOfBirth != null)
 				return false;
-		} else if (Math.abs(dateOfBirth.getTime()-other.dateOfBirth.getTime())>10000000)
-			return false;
+		}
 		if (email == null) {
 			if (other.email != null)
 				return false;
@@ -445,8 +494,16 @@ public class CustomerDetails {
 		if (insertTime == null) {
 			if (other.insertTime != null)
 				return false;
-		} else if (Math.abs(insertTime.getTime()-other.insertTime.getTime())>10000000)
+		}
+		if (insertedBy == null) {
+			if (other.insertedBy != null)
+				return false;
+		} else if (!insertedBy.equals(other.insertedBy))
 			return false;
+		if (insertedById == null) {
+			if (other.insertedById != null)
+				return false;
+		} 
 		if (isEmailVerified == null) {
 			if (other.isEmailVerified != null)
 				return false;
@@ -473,6 +530,11 @@ public class CustomerDetails {
 				return false;
 		} else if (!lastName.equals(other.lastName))
 			return false;
+		if (middleName == null) {
+			if (other.middleName != null)
+				return false;
+		} else if (!middleName.equals(other.middleName))
+			return false;
 		if (mobile == null) {
 			if (other.mobile != null)
 				return false;
@@ -482,6 +544,11 @@ public class CustomerDetails {
 			if (other.nameOfFirm != null)
 				return false;
 		} else if (!nameOfFirm.equals(other.nameOfFirm))
+			return false;
+		if (phoneNumber == null) {
+			if (other.phoneNumber != null)
+				return false;
+		} else if (!phoneNumber.equals(other.phoneNumber))
 			return false;
 		if (secondaryEmail == null) {
 			if (other.secondaryEmail != null)
@@ -496,16 +563,21 @@ public class CustomerDetails {
 		if (updateTime == null) {
 			if (other.updateTime != null)
 				return false;
-		} else if (Math.abs(updateTime.getTime()-other.updateTime.getTime())>10000000)//!updateTime.equals(other.updateTime)
-			return false;
+		}
 		if (updatedBy == null) {
 			if (other.updatedBy != null)
 				return false;
 		} else if (!updatedBy.equals(other.updatedBy))
 			return false;
+		if (updatedById == null) {
+			if (other.updatedById != null)
+				return false;
+		} 
 		return true;
 	}
 
-	
+
+
+		
 	
 }

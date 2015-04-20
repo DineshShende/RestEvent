@@ -97,11 +97,11 @@ public class TransactionalDetailsRepositoryImpl implements
 
 	@Override
 	public Boolean updateMobileInDetailsEnityAndAuthenticationDetails (
-			Long entityId, Integer entityType, Integer mobileType,String updatedBy) 
+			Long entityId, Integer entityType, Integer mobileType,Integer updatedBy,Long updatedById) 
 					throws UpdateMobileInDetailsAndAuthentionDetailsFailedException,ValidationFailedException{
 
 		CustomerIdTypeMobileTypeRequestedByDTO customerIdTypeMobileTypeDTO=
-				new CustomerIdTypeMobileTypeRequestedByDTO(entityId, entityType, mobileType,updatedBy);
+				new CustomerIdTypeMobileTypeRequestedByDTO(entityId, entityType, mobileType,updatedBy,updatedById);
 		
 		HttpEntity<CustomerIdTypeMobileTypeRequestedByDTO> entity=new HttpEntity<CustomerIdTypeMobileTypeRequestedByDTO>(customerIdTypeMobileTypeDTO);
 		
@@ -126,11 +126,11 @@ public class TransactionalDetailsRepositoryImpl implements
 
 	@Override
 	public Boolean updateEmailInDetailsEnityAndAuthenticationDetails(
-			Long entityId, Integer entityType, Integer emailType,String updatedBy) 
+			Long entityId, Integer entityType, Integer emailType,Integer updatedBy,Long updatedById) 
 					throws UpdateEmailInDetailsAndAuthenticationDetailsFailedException,ValidationFailedException{
 
 		CustomerIdTypeEmailTypeUpdatedByDTO customerIdTypeEmailTypeDTO=
-				new CustomerIdTypeEmailTypeUpdatedByDTO(entityId, entityType, emailType,updatedBy);
+				new CustomerIdTypeEmailTypeUpdatedByDTO(entityId, entityType, emailType,updatedBy,updatedById);
 		
 		HttpEntity<CustomerIdTypeEmailTypeUpdatedByDTO> entity=new HttpEntity<CustomerIdTypeEmailTypeUpdatedByDTO>(customerIdTypeEmailTypeDTO);
 		

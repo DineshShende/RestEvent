@@ -14,7 +14,9 @@ public class UpdatePasswordAndPasswordTypeDTO {
 
 	private Boolean isForcefulChangePassword;
 	
-	private String updatedBy;
+	private Integer updatedBy;
+	
+	private Long updatedById;
 	
 
 	public UpdatePasswordAndPasswordTypeDTO() {
@@ -25,7 +27,7 @@ public class UpdatePasswordAndPasswordTypeDTO {
 
 	public UpdatePasswordAndPasswordTypeDTO(Long customerId,
 			Integer customerType, String password, String passwordType,
-			Boolean isForcefulChangePassword, String updatedBy) {
+			Boolean isForcefulChangePassword, Integer updatedBy,Long updatedById) {
 		super();
 		this.customerId = customerId;
 		this.customerType = customerType;
@@ -33,6 +35,8 @@ public class UpdatePasswordAndPasswordTypeDTO {
 		this.passwordType = passwordType;
 		this.isForcefulChangePassword = isForcefulChangePassword;
 		this.updatedBy = updatedBy;
+		this.updatedById=updatedById;
+		
 	}
 
 
@@ -74,11 +78,11 @@ public class UpdatePasswordAndPasswordTypeDTO {
 	}
 
 
-	public String getUpdatedBy() {
+	public Integer getUpdatedBy() {
 		return updatedBy;
 	}
 
-	public void setUpdatedBy(String updatedBy) {
+	public void setUpdatedBy(Integer updatedBy) {
 		this.updatedBy = updatedBy;
 	}
 
@@ -94,15 +98,32 @@ public class UpdatePasswordAndPasswordTypeDTO {
 		this.isForcefulChangePassword = isForcefulChangePassword;
 	}
 
+	
+
+
+	public Long getUpdatedById() {
+		return updatedById;
+	}
+
+
+
+	public void setUpdatedById(Long updatedById) {
+		this.updatedById = updatedById;
+	}
+
 
 
 	@Override
 	public String toString() {
 		return "UpdatePasswordAndPasswordTypeDTO [customerId=" + customerId
 				+ ", customerType=" + customerType + ", password=" + password
-				+ ", passwordType=" + passwordType + ", updatedBy=" + updatedBy
+				+ ", passwordType=" + passwordType
+				+ ", isForcefulChangePassword=" + isForcefulChangePassword
+				+ ", updatedBy=" + updatedBy + ", updatedById=" + updatedById
 				+ "]";
 	}
+
+
 
 	@Override
 	public int hashCode() {
@@ -112,14 +133,22 @@ public class UpdatePasswordAndPasswordTypeDTO {
 				+ ((customerId == null) ? 0 : customerId.hashCode());
 		result = prime * result
 				+ ((customerType == null) ? 0 : customerType.hashCode());
+		result = prime
+				* result
+				+ ((isForcefulChangePassword == null) ? 0
+						: isForcefulChangePassword.hashCode());
 		result = prime * result
 				+ ((password == null) ? 0 : password.hashCode());
 		result = prime * result
 				+ ((passwordType == null) ? 0 : passwordType.hashCode());
 		result = prime * result
 				+ ((updatedBy == null) ? 0 : updatedBy.hashCode());
+		result = prime * result
+				+ ((updatedById == null) ? 0 : updatedById.hashCode());
 		return result;
 	}
+
+
 
 	@Override
 	public boolean equals(Object obj) {
@@ -140,6 +169,12 @@ public class UpdatePasswordAndPasswordTypeDTO {
 				return false;
 		} else if (!customerType.equals(other.customerType))
 			return false;
+		if (isForcefulChangePassword == null) {
+			if (other.isForcefulChangePassword != null)
+				return false;
+		} else if (!isForcefulChangePassword
+				.equals(other.isForcefulChangePassword))
+			return false;
 		if (password == null) {
 			if (other.password != null)
 				return false;
@@ -155,10 +190,14 @@ public class UpdatePasswordAndPasswordTypeDTO {
 				return false;
 		} else if (!updatedBy.equals(other.updatedBy))
 			return false;
+		if (updatedById == null) {
+			if (other.updatedById != null)
+				return false;
+		} else if (!updatedById.equals(other.updatedById))
+			return false;
 		return true;
 	}
 
-	
-	
+
 
 }

@@ -18,8 +18,7 @@ public class CustomerDetailsValidator implements ConstraintValidator<CustomerDet
 	@Override
 	public boolean isValid(CustomerDetails value, ConstraintValidatorContext context) {
 		
-		if(value.getMobile()==null && value.getEmail()==null ||((value.getMobile()!=null && value.getIsMobileVerified()==null)||
-				(value.getEmail()!=null && value.getIsEmailVerified()==null)))
+		if(value.getMobile()==null && value.getEmail()==null )
 			return false;
 		else
 			return true;

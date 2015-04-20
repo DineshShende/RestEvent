@@ -41,7 +41,7 @@ public class RegisterCommonController {
 		
 		try{
 			ForgetPasswordEntity quickRegisterEntity=registerCommonService.forgetPassword(passwordRedirectDTO.getEntity(),
-					passwordRedirectDTO.getRequestedBy());
+					passwordRedirectDTO.getRequestedBy(),passwordRedirectDTO.getRequestedById());
 			result=new ResponseEntity<ForgetPasswordEntity>(quickRegisterEntity, HttpStatus.OK);
 		}catch(ResourceNotFoundException e)
 		{

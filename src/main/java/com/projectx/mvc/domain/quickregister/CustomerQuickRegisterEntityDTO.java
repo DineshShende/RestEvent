@@ -26,7 +26,10 @@ public class CustomerQuickRegisterEntityDTO {
 	private Integer customerType;
 	
 	@NotNull
-	private String  requestBy;
+	private Integer  requestBy;
+	
+	@NotNull
+	private Long  requestById;
 	
 	
 	public CustomerQuickRegisterEntityDTO()
@@ -36,7 +39,7 @@ public class CustomerQuickRegisterEntityDTO {
 
 	public CustomerQuickRegisterEntityDTO(String firstName, String lastName,
 			String email, Long mobile, Integer pin, Integer customerType,
-			String requestBy) {
+			Integer requestBy,Long  requestById) {
 		super();
 		this.firstName = firstName;
 		this.lastName = lastName;
@@ -45,6 +48,7 @@ public class CustomerQuickRegisterEntityDTO {
 		this.pincode = pin;
 		this.customerType = customerType;
 		this.requestBy = requestBy;
+		this.requestById=requestById;
 	}
 
 
@@ -114,12 +118,22 @@ public class CustomerQuickRegisterEntityDTO {
 	
 	
 
-	public String getRequestBy() {
+	public Integer getRequestBy() {
 		return requestBy;
 	}
 
-	public void setRequestBy(String requestBy) {
+	public void setRequestBy(Integer requestBy) {
 		this.requestBy = requestBy;
+	}
+
+	
+	
+	public Long getRequestById() {
+		return requestById;
+	}
+
+	public void setRequestById(Long requestById) {
+		this.requestById = requestById;
 	}
 
 	@Override
@@ -127,7 +141,8 @@ public class CustomerQuickRegisterEntityDTO {
 		return "CustomerQuickRegisterEntityDTO [firstName=" + firstName
 				+ ", lastName=" + lastName + ", email=" + email + ", mobile="
 				+ mobile + ", pincode=" + pincode + ", customerType="
-				+ customerType + ", requestBy=" + requestBy + "]";
+				+ customerType + ", requestBy=" + requestBy + ", requestById="
+				+ requestById + "]";
 	}
 
 	@Override
@@ -145,6 +160,8 @@ public class CustomerQuickRegisterEntityDTO {
 		result = prime * result + ((pincode == null) ? 0 : pincode.hashCode());
 		result = prime * result
 				+ ((requestBy == null) ? 0 : requestBy.hashCode());
+		result = prime * result
+				+ ((requestById == null) ? 0 : requestById.hashCode());
 		return result;
 	}
 
@@ -192,8 +209,14 @@ public class CustomerQuickRegisterEntityDTO {
 				return false;
 		} else if (!requestBy.equals(other.requestBy))
 			return false;
+		if (requestById == null) {
+			if (other.requestById != null)
+				return false;
+		} else if (!requestById.equals(other.requestById))
+			return false;
 		return true;
 	}
 
+	
 	
 }

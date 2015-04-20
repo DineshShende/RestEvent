@@ -77,18 +77,21 @@ public class FreightRequestByCustomerMemRepository implements
 		
 	}
 
-	@Override
-	public Integer updateReservationStatusWithReservedFor(
-			Long freightRequestByCustomerId, String oldStatus,
-			String reservationStatus, Long reservedBy) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+
 
 	@Override
 	public List<FreightRequestByCustomer> getMatchingCustReqForVendorReq(
 			FreightRequestByVendor freightRequestByVendor,
 			String allocationStatus) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Integer updateReservationStatusWithReservedFor(
+			Long freightRequestByCustomerId, String oldStatus,
+			String reservationStatus, Long reservedBy, Integer updatedBy,
+			Long updatedById) {
 		// TODO Auto-generated method stub
 		return null;
 	}

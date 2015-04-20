@@ -18,22 +18,25 @@ public interface MobileVerificationService {
 	
 	MobileVerificationDetails getByMobile(Long mobile) throws ResourceAlreadyPresentException;
 	
-	Boolean sendOrResendOrResetMobilePin(Long entityId,Integer entityType,Integer mobileType,String updatedBy,Boolean resetFlag,
+	Boolean sendOrResendOrResetMobilePin(Long entityId,Integer entityType,Integer mobileType,Integer requestedBy,Long requestedById,Boolean resetFlag,
 			Boolean resendFlag)throws ResourceNotFoundException;
 	
-	Boolean sendMobilePin(Long entityId,Integer entityType,Integer mobileType,String updatedBy) throws ResourceNotFoundException;
+	Boolean sendMobilePin(Long entityId,Integer entityType,Integer mobileType,Integer requestedBy,Long requestedById) throws ResourceNotFoundException;
 
-	Boolean reSendMobilePin(Long customerId,Integer customerType,Integer mobileType,String updatedBy) throws ResourceNotFoundException;
+	Boolean reSendMobilePin(Long customerId,Integer customerType,Integer mobileType,Integer requestedBy,Long requestedById) throws ResourceNotFoundException;
 	
-	Boolean reSetMobilePin(Long customerId,Integer customerType,Integer mobileType,String updatedBy) throws ResourceNotFoundException;
+	Boolean reSetMobilePin(Long customerId,Integer customerType,Integer mobileType,Integer requestedBy,Long requestedById) throws ResourceNotFoundException;
 	
-	Boolean verifyMobilePin(Long customerId,Integer customerType,Integer mobileType,Integer mobilePin,String requestedBy);
+	Boolean verifyMobilePin(Long customerId,Integer customerType,Integer mobileType,Integer mobilePin,Integer requestedBy,Long requestedById);
 	
-	Boolean verifyMobilePinUpdateStatusAndSendPassword(Long customerId,Integer customerType,Integer mobileType,Integer mobilePin,String updatedBy);
+	Boolean verifyMobilePinUpdateStatusAndSendPassword(Long customerId,Integer customerType,Integer mobileType,Integer mobilePin,
+			Integer requestedBy,Long requestedById);
 	
-	Integer updateMobilePin(Long customerId,Integer customerType,Integer mobileType,String updatedBy);
+	Integer updateMobilePin(Long customerId,Integer customerType,Integer mobileType,
+			Integer requestedBy,Long requestedById);
 
-	MobileVerificationDetails createEntity(Long customerId,Integer customerType,Long mobile,Integer mobileType,String updatedBy);
+	MobileVerificationDetails createEntity(Long customerId,Integer customerType,Long mobile,Integer mobileType,
+			Integer requestedBy,Long requestedById);
 	
 	
 

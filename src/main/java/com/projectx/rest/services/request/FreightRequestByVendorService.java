@@ -20,7 +20,8 @@ public interface FreightRequestByVendorService {
 	
 	List<FreightRequestByVendor> getMatchingVendorReqFromCustomerReq(FreightRequestByCustomer freightRequestByCustomer); 
 	
-	Integer updateReservationStatusWithReservedFor(Long freightRequestByVendorId,String oldStatus,String reservationStatus,Long reservedFor);
+	Integer updateReservationStatusWithReservedFor(Long freightRequestByVendorId,String oldStatus,String reservationStatus,Long reservedFor,
+			Integer updatedBy,Long updatedById);
 	
 	Boolean deleteRequestById(Long requestId);
 	

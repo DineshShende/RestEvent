@@ -175,7 +175,8 @@ public class QuickRegisterRepositoryTest {
 	{
 		assertEquals(new Integer(0), customerQuickRegisterRepository.updateEmailVerificationStatus(standardUpdateEmailMobileVerificationStatus().getCustomerId(),
 				standardUpdateEmailMobileVerificationStatus().getStatus(),standardUpdateEmailMobileVerificationStatus().getUpdateTime(),
-				standardUpdateEmailMobileVerificationStatus().getUpdatedBy()));
+				standardUpdateEmailMobileVerificationStatus().getUpdatedBy(),
+				standardUpdateEmailMobileVerificationStatus().getUpdatedById()));
 		
 		QuickRegisterEntity savedCustomer=customerQuickRegisterRepository.save(standardEmailMobileCustomer());
 		
@@ -183,7 +184,8 @@ public class QuickRegisterRepositoryTest {
 		
 		assertEquals(new Integer(1), customerQuickRegisterRepository.updateEmailVerificationStatus(savedCustomer.getCustomerId(),
 				standardUpdateEmailMobileVerificationStatus().getStatus(),standardUpdateEmailMobileVerificationStatus().getUpdateTime(),
-				standardUpdateEmailMobileVerificationStatus().getUpdatedBy()));
+				standardUpdateEmailMobileVerificationStatus().getUpdatedBy(),
+				standardUpdateEmailMobileVerificationStatus().getUpdatedById()));
 		
 		assertEquals(CUST_IS_EMAIL_VERIFIED_TRUE, customerQuickRegisterRepository.findByCustomerId(savedCustomer.getCustomerId()).getIsEmailVerified());
 		
@@ -194,7 +196,7 @@ public class QuickRegisterRepositoryTest {
 	{
 		assertEquals(new Integer(0), customerQuickRegisterRepository.updateMobileVerificationStatus(standardUpdateEmailMobileVerificationStatus().getCustomerId(),
 				standardUpdateEmailMobileVerificationStatus().getStatus(),standardUpdateEmailMobileVerificationStatus().getUpdateTime(),
-				standardUpdateEmailMobileVerificationStatus().getUpdatedBy()));
+				standardUpdateEmailMobileVerificationStatus().getUpdatedBy(),standardUpdateEmailMobileVerificationStatus().getUpdatedById()));
 		
 		QuickRegisterEntity savedCustomer=customerQuickRegisterRepository.save(standardEmailMobileCustomer());
 		
@@ -202,7 +204,8 @@ public class QuickRegisterRepositoryTest {
 		
 		assertEquals(new Integer(1), customerQuickRegisterRepository.updateMobileVerificationStatus(savedCustomer.getCustomerId(),
 				standardUpdateEmailMobileVerificationStatus().getStatus(),standardUpdateEmailMobileVerificationStatus().getUpdateTime(),
-				standardUpdateEmailMobileVerificationStatus().getUpdatedBy()));
+				standardUpdateEmailMobileVerificationStatus().getUpdatedBy(),
+				standardUpdateEmailMobileVerificationStatus().getUpdatedById()));
 		
 		assertEquals(CUST_IS_MOBILE_VERIFIED_TRUE, customerQuickRegisterRepository.findByCustomerId(savedCustomer.getCustomerId()).getIsMobileVerified());
 		

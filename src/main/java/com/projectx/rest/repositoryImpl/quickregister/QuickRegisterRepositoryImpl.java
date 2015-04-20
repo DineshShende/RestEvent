@@ -136,9 +136,10 @@ public class QuickRegisterRepositoryImpl implements
 	
 	@Override
 	public Integer updateMobileVerificationStatus(Long customerId,
-			Boolean status, Date updateTime, String updatedBy) {
+			Boolean status, Date updateTime, Integer updatedBy,Long updatedById) {
 		
-		UpdateEmailMobileVerificationStatus mobileVerificationStatus=new UpdateEmailMobileVerificationStatus(customerId, status, updateTime, updatedBy);
+		UpdateEmailMobileVerificationStatus mobileVerificationStatus=new UpdateEmailMobileVerificationStatus(customerId, status, updateTime,
+				updatedBy,updatedById);
 		
 		ResponseEntity<Integer> updateStatus=restTemplate.exchange(env.getProperty("data.url")+"/customer/quickregister/updateMobileVerificationStatus",
 				HttpMethod.POST,new HttpEntity<UpdateEmailMobileVerificationStatus>(mobileVerificationStatus), Integer.class);
@@ -149,9 +150,10 @@ public class QuickRegisterRepositoryImpl implements
 
 	@Override
 	public Integer updateEmailVerificationStatus(Long customerId,
-			Boolean status, Date updateTime, String updatedBy) {
+			Boolean status, Date updateTime, Integer updatedBy, Long updatedById) {
 		
-		UpdateEmailMobileVerificationStatus mobileVerificationStatus=new UpdateEmailMobileVerificationStatus(customerId, status, updateTime, updatedBy);
+		UpdateEmailMobileVerificationStatus mobileVerificationStatus=new UpdateEmailMobileVerificationStatus(customerId, status,
+				updateTime, updatedBy,updatedById);
 		
 		ResponseEntity<Integer> updateStatus=restTemplate.exchange(env.getProperty("data.url")+"/customer/quickregister/updateEmailVerificationStatus", 
 				HttpMethod.POST,new HttpEntity<UpdateEmailMobileVerificationStatus>(mobileVerificationStatus), Integer.class);

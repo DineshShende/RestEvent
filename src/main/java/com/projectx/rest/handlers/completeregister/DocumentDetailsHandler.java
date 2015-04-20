@@ -29,7 +29,10 @@ public class DocumentDetailsHandler implements DocumentDetailsService {
 			DocumentDetails customerDocument)throws DocumentDetailsNotSavedException,ValidationFailedException {
 		
 		customerDocument.setInsertTime(new Date());
-		customerDocument.setUpdatedBy("CUST_ONLINE");
+		customerDocument.setUpdatedBy(customerDocument.getUpdatedBy());
+		customerDocument.setInsertedBy(customerDocument.getInsertedBy());
+		customerDocument.setUpdatedById(customerDocument.getUpdatedById());
+		customerDocument.setInsertedById(customerDocument.getInsertedById());
 		customerDocument.setUpdateTime(new Date());
 		
 		DocumentDetails savedEntity=documentDetailsRepository.saveCustomerDocument(customerDocument);
@@ -52,7 +55,7 @@ public class DocumentDetailsHandler implements DocumentDetailsService {
 
 	@Override
 	public DocumentDetails updateDocument(DocumentKey key, byte[] document,
-			String contentType,String requestedBy)  throws DocumentDetailsNotFoundException{
+			String contentType,Integer requestedBy,Long requestedById)  throws DocumentDetailsNotFoundException{
 		
 		DocumentDetails fetchedEntity=documentDetailsRepository.getByCustomerId(key);
 		
@@ -63,6 +66,7 @@ public class DocumentDetailsHandler implements DocumentDetailsService {
 			fetchedEntity.setVerificationRemark("NOT VERIFIED");
 			fetchedEntity.setVerificationStatus(1);
 			fetchedEntity.setUpdatedBy(requestedBy);
+			fetchedEntity.setUpdatedById(requestedById);
 			fetchedEntity.setUpdateTime(new Date());
 		
 			DocumentDetails updatedEntity=documentDetailsRepository.saveCustomerDocument(fetchedEntity);
@@ -76,7 +80,7 @@ public class DocumentDetailsHandler implements DocumentDetailsService {
 
 	@Override
 	public DocumentDetails updateVerificationStatusAndRemark(DocumentKey key,
-			Integer verificationStatus, String verificationRemark,String requestedBy)throws DocumentDetailsNotFoundException {
+			Integer verificationStatus, String verificationRemark,Integer requestedBy,Long requestedById)throws DocumentDetailsNotFoundException {
 		
 		DocumentDetails fetchedEntity=documentDetailsRepository.getByCustomerId(key);
 		
@@ -85,6 +89,7 @@ public class DocumentDetailsHandler implements DocumentDetailsService {
 			fetchedEntity.setVerificationStatus(verificationStatus);
 			fetchedEntity.setVerificationRemark(verificationRemark);
 			fetchedEntity.setUpdatedBy(requestedBy);
+			fetchedEntity.setUpdatedById(requestedById);
 			fetchedEntity.setUpdateTime(new Date());
 		
 			DocumentDetails updatedEntity=documentDetailsRepository.saveCustomerDocument(fetchedEntity);

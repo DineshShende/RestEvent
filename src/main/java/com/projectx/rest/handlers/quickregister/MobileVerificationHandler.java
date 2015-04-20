@@ -84,7 +84,7 @@ public class MobileVerificationHandler implements MobileVerificationService {
 	
 	@Override
 	public MobileVerificationDetails createEntity(
-			Long customerId,Integer customerType,Long mobile,Integer mobileType,String updatedBy) {
+			Long customerId,Integer customerType,Long mobile,Integer mobileType,Integer updatedBy,Long updatedById) {
 		
 		MobileVerificationDetails mobileVerificationDetails=new MobileVerificationDetails();
 		MobileVerificationDetailsKey key=new MobileVerificationDetailsKey(customerId,customerType,mobileType);
@@ -95,6 +95,9 @@ public class MobileVerificationHandler implements MobileVerificationService {
 		mobileVerificationDetails.setMobileVerificationAttempts(0);
 		mobileVerificationDetails.setResendCount(0);
 		mobileVerificationDetails.setUpdatedBy(updatedBy);
+		mobileVerificationDetails.setUpdatedById(updatedById);
+		mobileVerificationDetails.setInsertedBy(updatedBy);
+		mobileVerificationDetails.setInsertedById(updatedById);
 		mobileVerificationDetails.setInsertTime(new Date());
 		mobileVerificationDetails.setUpdateTime(new Date());
 		
@@ -105,7 +108,7 @@ public class MobileVerificationHandler implements MobileVerificationService {
 	
 	@Override
 	public Boolean verifyMobilePinUpdateStatusAndSendPassword(Long customerId,Integer customerType,Integer mobileType, Integer mobilePin,
-			String requestedBy)throws ResourceNotFoundException,ValidationFailedException				
+			Integer requestedBy,Long requestedById)throws ResourceNotFoundException,ValidationFailedException				
 	{
 	
 				
@@ -116,7 +119,7 @@ public class MobileVerificationHandler implements MobileVerificationService {
 		Boolean updateDetails=true;
 		
 			
-		if(verifyMobilePin(customerId, customerType, mobileType, mobilePin,requestedBy))
+		if(verifyMobilePin(customerId, customerType, mobileType, mobilePin,requestedBy,requestedById))
 		{
 			verificationStatus=true;
 			
@@ -126,13 +129,16 @@ public class MobileVerificationHandler implements MobileVerificationService {
 				fetchedEntity.setIsMobileVerified(true);
 				
 				fetchedEntity.setUpdateTime(new Date());
-				fetchedEntity.setUpdatedBy("CUST_ONLINE");
+				fetchedEntity.setUpdatedBy(requestedBy);
+				fetchedEntity.setUpdatedById(requestedById);
 				
 				UpdateStatus=customerQuickRegisterService.updateMobileVerificationStatus(fetchedEntity.getCustomerId(), 
-						fetchedEntity.getIsMobileVerified(), fetchedEntity.getUpdateTime(), fetchedEntity.getUpdatedBy());
+						fetchedEntity.getIsMobileVerified(), fetchedEntity.getUpdateTime(), fetchedEntity.getUpdatedBy(),fetchedEntity.getUpdatedById());
 				
 				if(UpdateStatus.equals(UPDATE_SUCESS))
-					sendPasswordStatus=authenticationHandler.sendDefaultPassword(fetchedEntity.getCustomerId(),fetchedEntity.getCustomerType(), false,MOBILE_REQ,requestedBy);
+					sendPasswordStatus=authenticationHandler.sendDefaultPassword(fetchedEntity.getCustomerId(),fetchedEntity.getCustomerType(),
+							false,MOBILE_REQ,requestedBy,requestedById);
+				
 			
 				
 			}catch(ResourceNotFoundException e)
@@ -141,7 +147,8 @@ public class MobileVerificationHandler implements MobileVerificationService {
 				{
 					MobileVerificationDetails mobile=getByEntityIdTypeAndMobileType(customerId, customerType, mobileType);
 					
-					Integer updationStatus=driverDetailsService.updateMobileAndVerificationStatus(customerId, mobile.getMobile(), true,requestedBy);
+					Integer updationStatus=driverDetailsService.updateMobileAndVerificationStatus(customerId, mobile.getMobile(), true,
+							requestedBy,requestedById);
 					
 					if(updationStatus.equals(UPDATE_SUCESS))
 						updateDetails=true;
@@ -151,7 +158,7 @@ public class MobileVerificationHandler implements MobileVerificationService {
 				else
 				{	
 				updateDetails=transactionalUpdatesService
-						.updateMobileInDetailsEnityAndAuthenticationDetails(customerId, customerType, mobileType,requestedBy);
+						.updateMobileInDetailsEnityAndAuthenticationDetails(customerId, customerType, mobileType,requestedBy,requestedById);
 				}
 			}
 			
@@ -166,7 +173,7 @@ public class MobileVerificationHandler implements MobileVerificationService {
 	}
 
 	@Override
-	public Boolean verifyMobilePin(Long customerId,Integer customerType,Integer mobileType, Integer mobilePin,String requestedBy) 
+	public Boolean verifyMobilePin(Long customerId,Integer customerType,Integer mobileType, Integer mobilePin,Integer requestedBy,Long requestedById) 
 			throws ResourceNotFoundException{
 		
 		MobileVerificationDetails mobileVerificationDetails=getByEntityIdTypeAndMobileType(customerId,customerType, mobileType);
@@ -183,7 +190,7 @@ public class MobileVerificationHandler implements MobileVerificationService {
 		
 			customerMobileVerificationDetailsRepository.updateMobilePinAndMobileVerificationAttemptsAndResendCount(customerId, 
 					customerType,mobileVerificationDetails.getKey().getMobileType(),mobileVerificationDetails.getMobilePin(),
-					mobileVerificationDetails.getMobileVerificationAttempts(), mobileVerificationDetails.getResendCount(),requestedBy);
+					mobileVerificationDetails.getMobileVerificationAttempts(), mobileVerificationDetails.getResendCount(),requestedBy,requestedById);
 		
 			return false;
 		}
@@ -193,7 +200,7 @@ public class MobileVerificationHandler implements MobileVerificationService {
 
 			
 	@Override
-	public Boolean sendOrResendOrResetMobilePin(Long customerId,Integer customerType, Integer mobileType,String updatedBy,Boolean resetFlag,
+	public Boolean sendOrResendOrResetMobilePin(Long customerId,Integer customerType, Integer mobileType,Integer updatedBy,Long updatedById,Boolean resetFlag,
 			Boolean resendFlag)throws ResourceNotFoundException
 	{
 		
@@ -209,7 +216,7 @@ public class MobileVerificationHandler implements MobileVerificationService {
 		
 		if(resetFlag || mobileVerificationDetails.getMobilePin()==null)
 		{	
-			mobilePinUpdateStatus=updateMobilePin(customerId, customerType,mobileType,updatedBy);
+			mobilePinUpdateStatus=updateMobilePin(customerId, customerType,mobileType,updatedBy,updatedById);
 			resetFlag=true;
 		}	
 		
@@ -224,7 +231,7 @@ public class MobileVerificationHandler implements MobileVerificationService {
 			mobileVerificationDetails=customerMobileVerificationDetailsRepository.geByEntityIdTypeAndMobileType(customerId, customerType,mobileType);
 		
 		if(resendFlag)
-				updateStatus=customerMobileVerificationDetailsRepository.incrementResendCount(customerId,customerType, mobileType,updatedBy);
+				updateStatus=customerMobileVerificationDetailsRepository.incrementResendCount(customerId,customerType, mobileType,updatedBy,updatedById);
 	
 		
 		if(updateStatus.equals(UPDATE_SUCESS) && mobilePinUpdateStatus.equals(UPDATE_SUCESS))
@@ -239,9 +246,9 @@ public class MobileVerificationHandler implements MobileVerificationService {
 
 	@Override
 	public Boolean sendMobilePin(Long entityId, Integer entityType,
-			Integer mobileType,String updatedBy)throws ResourceNotFoundException {
+			Integer mobileType,Integer updatedBy,Long updatedById)throws ResourceNotFoundException {
 		
-		Boolean result=sendOrResendOrResetMobilePin(entityId, entityType, mobileType,updatedBy, false, false);
+		Boolean result=sendOrResendOrResetMobilePin(entityId, entityType, mobileType,updatedBy,updatedById, false, false);
 		
 		return result;
 	}
@@ -250,9 +257,9 @@ public class MobileVerificationHandler implements MobileVerificationService {
 
 	@Override
 	public Boolean reSendMobilePin(Long customerId, Integer customerType,
-			Integer mobileType,String updatedBy)throws ResourceNotFoundException {
+			Integer mobileType,Integer updatedBy,Long updatedById)throws ResourceNotFoundException {
 		
-		Boolean result=sendOrResendOrResetMobilePin(customerId, customerType, mobileType,updatedBy, false, true);
+		Boolean result=sendOrResendOrResetMobilePin(customerId, customerType, mobileType,updatedBy,updatedById, false, true);
 		
 		return result;
 	}
@@ -261,21 +268,21 @@ public class MobileVerificationHandler implements MobileVerificationService {
 
 	@Override
 	public Boolean reSetMobilePin(Long customerId, Integer customerType,
-			Integer mobileType,String updatedBy)throws ResourceNotFoundException {
+			Integer mobileType,Integer updatedBy,Long updatedById)throws ResourceNotFoundException {
 		
-		Boolean result=sendOrResendOrResetMobilePin(customerId, customerType, mobileType,updatedBy, true, false);
+		Boolean result=sendOrResendOrResetMobilePin(customerId, customerType, mobileType,updatedBy,updatedById, true, false);
 		
 		return result;
 	}
 
 	
 	@Override
-	public Integer updateMobilePin(Long customerId,Integer customerType,Integer mobileType,String updatedBy) {
+	public Integer updateMobilePin(Long customerId,Integer customerType,Integer mobileType,Integer updatedBy,Long updatedById) {
 		
 		Integer mobilePin=handleCustomerVerification.genarateMobilePin();
 
 		return customerMobileVerificationDetailsRepository.
-				updateMobilePinAndMobileVerificationAttemptsAndResendCount(customerId,customerType, mobileType, mobilePin, 0, 0,updatedBy);
+				updateMobilePinAndMobileVerificationAttemptsAndResendCount(customerId,customerType, mobileType, mobilePin, 0, 0,updatedBy,updatedById);
 	}
 
 

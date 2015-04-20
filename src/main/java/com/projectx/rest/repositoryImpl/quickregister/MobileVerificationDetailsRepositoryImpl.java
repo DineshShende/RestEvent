@@ -82,11 +82,11 @@ public class MobileVerificationDetailsRepositoryImpl implements MobileVerificati
 	@Override
 	public Integer updateMobilePinAndMobileVerificationAttemptsAndResendCount(
 			Long customerId,Integer customerType, Integer mobileType, Integer mobilePin,
-			Integer mobileVerificationAttempts, Integer resendCount,String updatedBy) {
+			Integer mobileVerificationAttempts, Integer resendCount,Integer updatedBy,Long updatedById) {
 		
 		
 		UpdateMobilePinAndMobileVerificationAttemptsAndResetCountDTO dto=new UpdateMobilePinAndMobileVerificationAttemptsAndResetCountDTO
-				(customerId,customerType, mobileType, mobilePin, mobileVerificationAttempts, resendCount,updatedBy);
+				(customerId,customerType, mobileType, mobilePin, mobileVerificationAttempts, resendCount,updatedBy,updatedById);
 		
 		ResponseEntity<Integer> updateStatus=null;
 		
@@ -104,9 +104,10 @@ public class MobileVerificationDetailsRepositoryImpl implements MobileVerificati
 
 	@Override
 	public Integer incrementMobileVerificationAttempts(Long customerId,Integer customerType,
-			Integer mobileType,String updatedBy) {
+			Integer mobileType,Integer updatedBy,Long updatedById) {
 			
-		CustomerIdTypeMobileTypeRequestedByDTO mobileDTO=new CustomerIdTypeMobileTypeRequestedByDTO(customerId,customerType, mobileType,updatedBy);
+		CustomerIdTypeMobileTypeRequestedByDTO mobileDTO=new CustomerIdTypeMobileTypeRequestedByDTO(customerId,customerType,
+				mobileType,updatedBy,updatedById);
 		
 		ResponseEntity<Integer> updateStatus=null;
 		
@@ -124,9 +125,10 @@ public class MobileVerificationDetailsRepositoryImpl implements MobileVerificati
 	}
 
 	@Override
-	public Integer incrementResendCount(Long customerId,Integer customerType, Integer mobileType,String updatedBy) {
+	public Integer incrementResendCount(Long customerId,Integer customerType, Integer mobileType,Integer updatedBy,Long updatedById) {
 
-		CustomerIdTypeMobileTypeRequestedByDTO mobileDTO=new CustomerIdTypeMobileTypeRequestedByDTO(customerId,customerType, mobileType,updatedBy);
+		CustomerIdTypeMobileTypeRequestedByDTO mobileDTO=new CustomerIdTypeMobileTypeRequestedByDTO(customerId,customerType, 
+				mobileType,updatedBy,updatedById);
 		
 		ResponseEntity<Integer> updateStatus=null;
 		

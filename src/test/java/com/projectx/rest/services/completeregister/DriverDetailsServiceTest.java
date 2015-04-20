@@ -66,7 +66,8 @@ public class DriverDetailsServiceTest {
 		assertNotEquals(standardDriverDetailsNewMobileAndFirstName(savedEntity.getDriverId()).getMobile(),
 				updatedEntity.getMobile());
 		
-		mobileVerificationService.reSendMobilePin(savedEntity.getDriverId(),ENTITY_TYPE_DRIVER,ENTITY_TYPE_PRIMARY,CUST_UPDATED_BY);
+		mobileVerificationService.reSendMobilePin(savedEntity.getDriverId(),ENTITY_TYPE_DRIVER,ENTITY_TYPE_PRIMARY,CUST_UPDATED_BY,
+				savedEntity.getDriverId());
 		
 		MobileVerificationDetails mobileVerificationDetails
 			=mobileVerificationService.getByEntityIdTypeAndMobileType(savedEntity.getDriverId(),ENTITY_TYPE_DRIVER,ENTITY_TYPE_PRIMARY);
@@ -75,7 +76,7 @@ public class DriverDetailsServiceTest {
 		
 		assertTrue(mobileVerificationService
 			.verifyMobilePinUpdateStatusAndSendPassword(savedEntity.getDriverId(),ENTITY_TYPE_DRIVER,ENTITY_TYPE_PRIMARY, 
-					mobileVerificationDetails.getMobilePin(),CUST_UPDATED_BY));
+					mobileVerificationDetails.getMobilePin(),CUST_UPDATED_BY,savedEntity.getDriverId()));
 		
 		assertEquals(standardDriverDetailsNewMobileAndFirstName(savedEntity.getDriverId()).getMobile(),
 				driverDetailsService.getDriverById(savedEntity.getDriverId()).getMobile());

@@ -52,7 +52,7 @@ public class MobileVerificationDetailsMemRepository implements
 
 	@Override
 	public Integer updateMobilePinAndMobileVerificationAttemptsAndResendCount(Long customerId,Integer customerType,Integer mobileType,Integer mobilePin
-			,Integer mobileVerificationAttempts,Integer resendCount,String updatedBy) {
+			,Integer mobileVerificationAttempts,Integer resendCount,Integer updatedBy,Long updatedById) {
 		
 		MobileVerificationDetailsKey key=new MobileVerificationDetailsKey(customerId, customerType, mobileType);
 		
@@ -65,6 +65,7 @@ public class MobileVerificationDetailsMemRepository implements
 			oldRecord.setMobileVerificationAttempts(mobileVerificationAttempts);
 			oldRecord.setResendCount(resendCount);
 			oldRecord.setUpdatedBy(updatedBy);			
+			oldRecord.setUpdatedById(updatedById);
 			
 			customerList.put(key, oldRecord);
 		
@@ -92,7 +93,7 @@ public class MobileVerificationDetailsMemRepository implements
 
 	@Override
 	public Integer incrementMobileVerificationAttempts(Long customerId,Integer customerType,
-			Integer mobileType,String updatedBy) {
+			Integer mobileType,Integer updatedBy,Long updatedById) {
 		
 		MobileVerificationDetailsKey key=new MobileVerificationDetailsKey(customerId, customerType, mobileType);
 		
@@ -103,6 +104,7 @@ public class MobileVerificationDetailsMemRepository implements
 		
 			oldRecord.setMobileVerificationAttempts(oldRecord.getMobileVerificationAttempts()+1);
 			oldRecord.setUpdatedBy(updatedBy);					
+			oldRecord.setUpdatedById(updatedById);
 			
 			customerList.put(key, oldRecord);
 		
@@ -113,7 +115,7 @@ public class MobileVerificationDetailsMemRepository implements
 	}
 
 	@Override
-	public Integer incrementResendCount(Long customerId,Integer customerType, Integer mobileType,String updatedBy) {
+	public Integer incrementResendCount(Long customerId,Integer customerType, Integer mobileType,Integer updatedBy,Long updatedById) {
 		
 		MobileVerificationDetailsKey key=new MobileVerificationDetailsKey(customerId, customerType, mobileType);
 		
@@ -123,7 +125,9 @@ public class MobileVerificationDetailsMemRepository implements
 			customerList.remove(key);
 		
 			oldRecord.setResendCount(oldRecord.getResendCount()+1);
-			oldRecord.setUpdatedBy(updatedBy);					
+			oldRecord.setUpdatedBy(updatedBy);
+			oldRecord.setUpdatedById(updatedById);
+			
 			customerList.put(key, oldRecord);
 		
 			return 1;

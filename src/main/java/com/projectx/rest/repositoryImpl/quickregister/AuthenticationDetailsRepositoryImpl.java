@@ -85,10 +85,10 @@ public class AuthenticationDetailsRepositoryImpl implements AuthenticationDetail
 
 	@Override
 	public Integer updatePasswordEmailPasswordAndPasswordTypeAndCounts(Long customerId,Integer customerType,String password,
-			String emailPassword, String passwordType,String updatedBy) throws ValidationFailedException{
+			String emailPassword, String passwordType,Integer updatedBy,Long updatedById) throws ValidationFailedException{
 		
 		UpdatePasswordEmailPasswordAndPasswordTypeDTO passwordAndPasswordTypeDTO=new UpdatePasswordEmailPasswordAndPasswordTypeDTO(customerId,customerType, password, 
-				emailPassword,passwordType,updatedBy);
+				emailPassword,passwordType,updatedBy,updatedById);
 
 		ResponseEntity<Integer> updateStatus=null;
 		
@@ -109,9 +109,9 @@ public class AuthenticationDetailsRepositoryImpl implements AuthenticationDetail
 
 
 	@Override
-	public Integer incrementResendCount(Long customerId,Integer customerType,String updatedBy) {
+	public Integer incrementResendCount(Long customerId,Integer customerType,Integer updatedBy,Long updatedById) {
 
-		CustomerIdTypeUpdatedByDTO customerIdDTO=new CustomerIdTypeUpdatedByDTO(customerId,customerType,updatedBy);
+		CustomerIdTypeUpdatedByDTO customerIdDTO=new CustomerIdTypeUpdatedByDTO(customerId,customerType,updatedBy,updatedById);
 		
 		ResponseEntity<Integer> updateStatus=null;
 		
@@ -128,9 +128,9 @@ public class AuthenticationDetailsRepositoryImpl implements AuthenticationDetail
 	}
 
 	@Override
-	public Integer incrementLastUnsucessfullAttempts(Long customerId,Integer customerType,String updatedBy) {
+	public Integer incrementLastUnsucessfullAttempts(Long customerId,Integer customerType,Integer updatedBy,Long updatedById) {
 
-		CustomerIdTypeUpdatedByDTO customerIdDTO=new CustomerIdTypeUpdatedByDTO(customerId,customerType,updatedBy);
+		CustomerIdTypeUpdatedByDTO customerIdDTO=new CustomerIdTypeUpdatedByDTO(customerId,customerType,updatedBy,updatedById);
 		
 		ResponseEntity<Integer> updateStatus=null;
 		

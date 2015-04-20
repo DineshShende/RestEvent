@@ -49,7 +49,9 @@ public class AuthenticationDetailsDataFixtures {
 	public static AuthenticationDetails standardCustomerEmailMobileAuthenticationDetails()
 	{
 		
-		return new AuthenticationDetails(standardAuthenticationDetailsKey(), CUST_EMAIL, CUST_MOBILE, CUST_PASSWORD_DEFAULT, CUST_PASSWORD_TYPE_DEFAULT, CUST_EMAILHASH, CUST_RESEND_COUNT, CUST_LOGIN_VERIFICATION_ATTEMPTS,CUST_DATE,CUST_DATE,CUST_UPDATED_BY);
+		return new AuthenticationDetails(standardAuthenticationDetailsKey(), CUST_EMAIL, CUST_MOBILE, CUST_PASSWORD_DEFAULT, 
+				CUST_PASSWORD_TYPE_DEFAULT, CUST_EMAILHASH, CUST_RESEND_COUNT, CUST_LOGIN_VERIFICATION_ATTEMPTS,CUST_DATE,CUST_DATE,
+				CUST_UPDATED_BY,CUST_UPDATED_BY,CUST_ID,CUST_ID);
 	}
 	
 	public static AuthenticationDetailsAng standardCustomerEmailMobileAuthenticationDetailsAng()
@@ -60,39 +62,52 @@ public class AuthenticationDetailsDataFixtures {
 
 	public static AuthenticationDetails standardCustomerEmailAuthenticationDetailsWithOutPassword()
 	{
-		return new AuthenticationDetails(standardAuthenticationDetailsKey(), CUST_EMAIL,CUST_MOBILE, null, null,  null, CUST_RESEND_COUNT, CUST_LOGIN_VERIFICATION_ATTEMPTS,CUST_DATE,CUST_DATE,CUST_UPDATED_BY);
+		return new AuthenticationDetails(standardAuthenticationDetailsKey(), CUST_EMAIL,CUST_MOBILE, null, null,  null,
+				CUST_RESEND_COUNT, CUST_LOGIN_VERIFICATION_ATTEMPTS,CUST_DATE,CUST_DATE,
+				CUST_UPDATED_BY,CUST_UPDATED_BY,CUST_ID,CUST_ID);
 	}
 
 	
 	public static AuthenticationDetails standardCustomerEmailAuthenticationDetails()
 	{
-		return new AuthenticationDetails(standardAuthenticationDetailsKey(), CUST_EMAIL,CUST_MOBILE, CUST_PASSWORD_DEFAULT, CUST_PASSWORD_TYPE_DEFAULT,  CUST_EMAILHASH, CUST_RESEND_COUNT, CUST_LOGIN_VERIFICATION_ATTEMPTS,CUST_DATE,CUST_DATE,CUST_UPDATED_BY);
+		return new AuthenticationDetails(standardAuthenticationDetailsKey(), CUST_EMAIL,CUST_MOBILE, CUST_PASSWORD_DEFAULT,
+				CUST_PASSWORD_TYPE_DEFAULT,  CUST_EMAILHASH, CUST_RESEND_COUNT, CUST_LOGIN_VERIFICATION_ATTEMPTS,
+				CUST_DATE,CUST_DATE,CUST_UPDATED_BY,CUST_UPDATED_BY,CUST_ID,CUST_ID);
 	}
 
 	public static AuthenticationDetails standardCustomerMobileAuthenticationDetails()
 	{
-		return new AuthenticationDetails(standardAuthenticationDetailsKey(), null,CUST_MOBILE, CUST_PASSWORD_DEFAULT, CUST_PASSWORD_TYPE_DEFAULT, null, CUST_RESEND_COUNT, CUST_LOGIN_VERIFICATION_ATTEMPTS,CUST_DATE,CUST_DATE,CUST_UPDATED_BY);
+		return new AuthenticationDetails(standardAuthenticationDetailsKey(), null,CUST_MOBILE, 
+				CUST_PASSWORD_DEFAULT, CUST_PASSWORD_TYPE_DEFAULT, null, CUST_RESEND_COUNT, CUST_LOGIN_VERIFICATION_ATTEMPTS,
+				CUST_DATE,CUST_DATE,CUST_UPDATED_BY,CUST_UPDATED_BY,CUST_ID,CUST_ID);
 	}
 
 	public static AuthenticationDetails standardCustomerEmailMobileAuthenticationDetailsWithNewPassword()
 	{
-		return new AuthenticationDetails(standardAuthenticationDetailsKey(), CUST_EMAIL, CUST_MOBILE, CUST_PASSWORD_CHANGED, CUST_PASSWORD_TYPE_CHANGED,null,CUST_RESEND_COUNT,CUST_LOGIN_VERIFICATION_ATTEMPTS,CUST_DATE,CUST_DATE,CUST_UPDATED_BY);
+		return new AuthenticationDetails(standardAuthenticationDetailsKey(), CUST_EMAIL, CUST_MOBILE,
+				CUST_PASSWORD_CHANGED, CUST_PASSWORD_TYPE_CHANGED,null,CUST_RESEND_COUNT,CUST_LOGIN_VERIFICATION_ATTEMPTS,
+				CUST_DATE,CUST_DATE,CUST_UPDATED_BY,CUST_UPDATED_BY,CUST_ID,CUST_ID);
 	}
 	
 	public static AuthenticationDetails standardCustomerEmailAuthenticationDetailsWithNewPassword()
 	{
-		return new AuthenticationDetails(standardAuthenticationDetailsKey(), CUST_EMAIL, null, CUST_PASSWORD_CHANGED, CUST_PASSWORD_TYPE_CHANGED,null,CUST_RESEND_COUNT,CUST_LOGIN_VERIFICATION_ATTEMPTS,CUST_DATE,CUST_DATE,CUST_UPDATED_BY);
+		return new AuthenticationDetails(standardAuthenticationDetailsKey(), CUST_EMAIL, null,
+				CUST_PASSWORD_CHANGED, CUST_PASSWORD_TYPE_CHANGED,null,CUST_RESEND_COUNT,CUST_LOGIN_VERIFICATION_ATTEMPTS,
+				CUST_DATE,CUST_DATE,CUST_UPDATED_BY,CUST_UPDATED_BY,CUST_ID,CUST_ID);
 	}
 
 	public static AuthenticationDetails standardCustomerMobileAuthenticationDetailsWithNewPassword()
 	{
-		return new AuthenticationDetails(standardAuthenticationDetailsKey(), null, CUST_MOBILE, CUST_PASSWORD_CHANGED, CUST_PASSWORD_TYPE_CHANGED,null,CUST_RESEND_COUNT,CUST_LOGIN_VERIFICATION_ATTEMPTS,CUST_DATE,CUST_DATE,CUST_UPDATED_BY);
+		return new AuthenticationDetails(standardAuthenticationDetailsKey(), null, CUST_MOBILE, CUST_PASSWORD_CHANGED,
+				CUST_PASSWORD_TYPE_CHANGED,null,CUST_RESEND_COUNT,CUST_LOGIN_VERIFICATION_ATTEMPTS,CUST_DATE,
+				CUST_DATE,CUST_UPDATED_BY,CUST_UPDATED_BY,CUST_ID,CUST_ID);
 	}
 
 	
 	public static UpdatePasswordEmailPasswordAndPasswordTypeDTO standardUpdatePasswordEmailPasswordAndPasswordTypeDTO()
 	{
-		return new UpdatePasswordEmailPasswordAndPasswordTypeDTO(CUST_ID,ENTITY_TYPE_CUSTOMER, CUST_PASSWORD_CHANGED,CUST_EMAILHASH_UPDATED,CUST_PASSWORD_TYPE_CHANGED,CUST_UPDATED_BY);
+		return new UpdatePasswordEmailPasswordAndPasswordTypeDTO(CUST_ID,ENTITY_TYPE_CUSTOMER, CUST_PASSWORD_CHANGED,
+				CUST_EMAILHASH_UPDATED,CUST_PASSWORD_TYPE_CHANGED,CUST_UPDATED_BY,CUST_ID);
 	}
 //	
 //	public static UpdateCountByCustomerId standardUpdateCountByCustomerId()
@@ -107,12 +122,13 @@ public class AuthenticationDetailsDataFixtures {
 	
 	public static UpdatePasswordDTO standardUpdatePasswordDTO()
 	{
-		return new UpdatePasswordDTO(CUST_ID,ENTITY_TYPE_CUSTOMER, CUST_PASSWORD_CHANGED,false,CUST_UPDATED_BY);
+		return new UpdatePasswordDTO(CUST_ID,ENTITY_TYPE_CUSTOMER, CUST_PASSWORD_CHANGED,false,CUST_UPDATED_BY,CUST_ID);
 	}
 	
 	public static UpdatePasswordAndPasswordTypeDTO standardUpdatePasswordAndPasswordTypeDTO()
 	{
-		return new UpdatePasswordAndPasswordTypeDTO(CUST_ID,ENTITY_TYPE_CUSTOMER, CUST_PASSWORD_CHANGED,CUST_PASSWORD_TYPE_CHANGED,false,CUST_UPDATED_BY);
+		return new UpdatePasswordAndPasswordTypeDTO(CUST_ID,ENTITY_TYPE_CUSTOMER, CUST_PASSWORD_CHANGED,CUST_PASSWORD_TYPE_CHANGED,
+				false,CUST_UPDATED_BY,CUST_ID);
 	}
 	
 	public static LoginVerificationDTO standardLoginVerificationWithEmail()
@@ -159,12 +175,12 @@ public class AuthenticationDetailsDataFixtures {
 	
 	public static CustomerIdTypeUpdatedByDTO standardCustomerIdTypeUpdatedByDTO()
 	{
-		return new CustomerIdTypeUpdatedByDTO(CUST_ID,ENTITY_TYPE_CUSTOMER,CUST_UPDATED_BY);
+		return new CustomerIdTypeUpdatedByDTO(CUST_ID,ENTITY_TYPE_CUSTOMER,CUST_UPDATED_BY,CUST_ID);
 	}
 	
 	public static CustomerIdTypeEmailOrMobileOptionUpdatedBy standardCustomerIdTypeEmailOrMobileOptionUpdatedBy()
 	{
-		return new CustomerIdTypeEmailOrMobileOptionUpdatedBy(CUST_ID,ENTITY_TYPE_CUSTOMER,EMAIL_REQ,CUST_UPDATED_BY);
+		return new CustomerIdTypeEmailOrMobileOptionUpdatedBy(CUST_ID,ENTITY_TYPE_CUSTOMER,EMAIL_REQ,CUST_UPDATED_BY,CUST_ID);
 	}
 	
 	public static String standardJsonCustomerIdTypeEmailOrMobileOptionUpdatedBy(CustomerIdTypeEmailOrMobileOptionUpdatedBy dto)
@@ -250,19 +266,7 @@ public class AuthenticationDetailsDataFixtures {
 	
 	public static String standJsonEmailPasswordLoginVerification(LoginVerificationWithDefaultEmailPasswordDTO dto)
 	{
-		StringBuilder jsonBuilder=new StringBuilder();
-
-		jsonBuilder.append("{\"customerId\":"+standardEmailLoginVerification().getCustomerId()+",");
-		
-		jsonBuilder.append("\"customerType\":"+standardEmailLoginVerification().getCustomerType()+",");
-		
-		jsonBuilder.append("\"emailPassword\":\""+standardEmailLoginVerification().getEmailPassword()+"\"}");
-		
-		
-		System.out.println(jsonBuilder.toString());
-		
-		//return jsonBuilder.toString();
-		
+	
 		return gson.toJson(dto);
 
 	}

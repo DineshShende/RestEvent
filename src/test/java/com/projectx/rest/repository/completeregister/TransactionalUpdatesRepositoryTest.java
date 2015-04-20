@@ -116,7 +116,7 @@ public class TransactionalUpdatesRepositoryTest {
 		
 		MobileVerificationDetails mobileVerificationDetails=
 				new MobileVerificationDetails(new MobileVerificationDetailsKey(CUST_ID, ENTITY_TYPE_CUSTOMER, ENTITY_TYPE_PRIMARY),
-						CUST_MOBILE, CUST_MOBILEPIN, ZERO_COUNT, ZERO_COUNT, new Date(), new Date(), "CUST_ONLINE");
+						CUST_MOBILE, CUST_MOBILEPIN, ZERO_COUNT, ZERO_COUNT, new Date(), new Date(), CUST_UPDATED_BY,CUST_UPDATED_BY,CUST_ID,CUST_ID);
 		
 		mobileVerificationDetailsRepository.save(mobileVerificationDetails);
 		
@@ -176,7 +176,7 @@ public class TransactionalUpdatesRepositoryTest {
 		
 		EmailVerificationDetails emailVerificationDetails=
 				new EmailVerificationDetails(new EmailVerificationDetailsKey(CUST_ID, ENTITY_TYPE_CUSTOMER, ENTITY_TYPE_PRIMARY),
-						savedEntity.getEmail(), CUST_EMAILHASH, new Date(), ZERO_COUNT, new Date(), new Date(), "CUST_ONLINE");
+						savedEntity.getEmail(), CUST_EMAILHASH, new Date(), ZERO_COUNT, new Date(), new Date(), CUST_UPDATED_BY,CUST_UPDATED_BY,CUST_ID,CUST_ID);
 		
 		emailVerificationDetailsRepository.save(emailVerificationDetails);
 		
@@ -235,7 +235,7 @@ public class TransactionalUpdatesRepositoryTest {
 		
 		MobileVerificationDetails mobileVerificationDetails=
 				new MobileVerificationDetails(new MobileVerificationDetailsKey(CUST_ID, ENTITY_TYPE_CUSTOMER, ENTITY_TYPE_SECONDARY),
-						CUST_MOBILE, CUST_MOBILEPIN, ZERO_COUNT, ZERO_COUNT, new Date(), new Date(), "CUST_ONLINE");
+						CUST_MOBILE, CUST_MOBILEPIN, ZERO_COUNT, ZERO_COUNT, new Date(), new Date(),  CUST_UPDATED_BY,CUST_UPDATED_BY,CUST_ID,CUST_ID);
 		
 		mobileVerificationDetailsRepository.save(mobileVerificationDetails);
 		
@@ -294,15 +294,15 @@ public class TransactionalUpdatesRepositoryTest {
 		
 		MobileVerificationDetails mobileVerificationDetails=
 				new MobileVerificationDetails(new MobileVerificationDetailsKey(CUST_ID, ENTITY_TYPE_CUSTOMER, ENTITY_TYPE_PRIMARY),
-						CUST_MOBILE, CUST_MOBILEPIN, ZERO_COUNT, ZERO_COUNT, new Date(), new Date(), "CUST_ONLINE");
+						CUST_MOBILE, CUST_MOBILEPIN, ZERO_COUNT, ZERO_COUNT, new Date(), new Date(),  CUST_UPDATED_BY,CUST_UPDATED_BY,CUST_ID,CUST_ID);
 		
 		MobileVerificationDetails mobileVerificationDetailsSec=
 				new MobileVerificationDetails(new MobileVerificationDetailsKey(CUST_ID, ENTITY_TYPE_CUSTOMER, ENTITY_TYPE_SECONDARY),
-						CUST_SEC_MOBILE, CUST_MOBILEPIN, ZERO_COUNT, ZERO_COUNT, new Date(), new Date(), "CUST_ONLINE");
+						CUST_SEC_MOBILE, CUST_MOBILEPIN, ZERO_COUNT, ZERO_COUNT, new Date(), new Date(), CUST_UPDATED_BY,CUST_UPDATED_BY,CUST_ID,CUST_ID);
 		
 		EmailVerificationDetails emailVerificationDetails=
 				new EmailVerificationDetails(new EmailVerificationDetailsKey(CUST_ID, ENTITY_TYPE_CUSTOMER, ENTITY_TYPE_PRIMARY),
-						CUST_EMAIL, CUST_EMAILHASH, new Date(), ZERO_COUNT, new Date(), new Date(), "CUST_ONLINE");
+						CUST_EMAIL, CUST_EMAILHASH, new Date(), ZERO_COUNT, new Date(), new Date(), CUST_UPDATED_BY,CUST_UPDATED_BY,CUST_ID,CUST_ID);
 		
 		mobileVerificationDetailsRepository.save(mobileVerificationDetails);
 		mobileVerificationDetailsRepository.save(mobileVerificationDetailsSec);
@@ -409,19 +409,19 @@ public class TransactionalUpdatesRepositoryTest {
 		
 		MobileVerificationDetails mobileVerificationDetails=
 				new MobileVerificationDetails(new MobileVerificationDetailsKey(CUST_ID, ENTITY_TYPE_CUSTOMER, ENTITY_TYPE_PRIMARY),
-						CUST_MOBILE, CUST_MOBILEPIN, ZERO_COUNT, ZERO_COUNT, new Date(), new Date(), "CUST_ONLINE");
+						CUST_MOBILE, CUST_MOBILEPIN, ZERO_COUNT, ZERO_COUNT, new Date(), new Date(),  CUST_UPDATED_BY,CUST_UPDATED_BY,CUST_ID,CUST_ID);
 		
 		MobileVerificationDetails mobileVerificationDetailsSec=
 				new MobileVerificationDetails(new MobileVerificationDetailsKey(CUST_ID, ENTITY_TYPE_CUSTOMER, ENTITY_TYPE_SECONDARY),
-						CUST_SEC_MOBILE, CUST_MOBILEPIN, ZERO_COUNT, ZERO_COUNT, new Date(), new Date(), "CUST_ONLINE");
+						CUST_SEC_MOBILE, CUST_MOBILEPIN, ZERO_COUNT, ZERO_COUNT, new Date(), new Date(),  CUST_UPDATED_BY,CUST_UPDATED_BY,CUST_ID,CUST_ID);
 		
 		EmailVerificationDetails emailVerificationDetails=
 				new EmailVerificationDetails(new EmailVerificationDetailsKey(CUST_ID, ENTITY_TYPE_CUSTOMER, ENTITY_TYPE_PRIMARY),
-						CUST_EMAIL, CUST_EMAILHASH, new Date(), ZERO_COUNT, new Date(), new Date(), "CUST_ONLINE");
+						CUST_EMAIL, CUST_EMAILHASH, new Date(), ZERO_COUNT, new Date(), new Date(),  CUST_UPDATED_BY,CUST_UPDATED_BY,CUST_ID,CUST_ID);
 		
 		MobileVerificationDetails mobileVerificationDetailsDuplicate=
 				new MobileVerificationDetails(new MobileVerificationDetailsKey(213L, ENTITY_TYPE_CUSTOMER, ENTITY_TYPE_PRIMARY),
-						CUST_MOBILE_NEW, CUST_MOBILEPIN, ZERO_COUNT, ZERO_COUNT, new Date(), new Date(), "CUST_ONLINE");
+						CUST_MOBILE_NEW, CUST_MOBILEPIN, ZERO_COUNT, ZERO_COUNT, new Date(), new Date(),  CUST_UPDATED_BY,CUST_UPDATED_BY,CUST_ID,CUST_ID);
 		
 		
 		mobileVerificationDetailsRepository.save(mobileVerificationDetails);
@@ -523,7 +523,8 @@ public class TransactionalUpdatesRepositoryTest {
 		
 		MobileVerificationDetails mobileVerificationDetails=
 				new MobileVerificationDetails(new MobileVerificationDetailsKey(VENDOR_ID,ENTITY_TYPE_VENDOR, ENTITY_TYPE_PRIMARY),
-						standardVendor().getMobile(), CUST_MOBILEPIN, ZERO_COUNT, ZERO_COUNT, new Date(), new Date(), "CUST_ONLINE");
+						standardVendor().getMobile(), CUST_MOBILEPIN, ZERO_COUNT, ZERO_COUNT, new Date(), new Date(),
+						 CUST_UPDATED_BY,CUST_UPDATED_BY,CUST_ID,CUST_ID);
 		
 		mobileVerificationDetailsRepository.save(mobileVerificationDetails);
 		
@@ -580,7 +581,8 @@ public class TransactionalUpdatesRepositoryTest {
 		
 		EmailVerificationDetails emailVerificationDetails=
 				new EmailVerificationDetails(new EmailVerificationDetailsKey(standardVendor().getVendorId(), ENTITY_TYPE_VENDOR, ENTITY_TYPE_PRIMARY),
-						standardVendor().getEmail(), CUST_EMAILHASH, new Date(), ZERO_COUNT, new Date(), new Date(), "CUST_ONLINE");
+						standardVendor().getEmail(), CUST_EMAILHASH, new Date(), ZERO_COUNT, new Date(), new Date(),
+						 CUST_UPDATED_BY,CUST_UPDATED_BY,CUST_ID,CUST_ID);
 		
 		emailVerificationDetailsRepository.save(emailVerificationDetails);
 		
@@ -634,15 +636,18 @@ public class TransactionalUpdatesRepositoryTest {
 		
 		MobileVerificationDetails mobileVerificationDetails=
 				new MobileVerificationDetails(new MobileVerificationDetailsKey(standardVendor().getVendorId(), ENTITY_TYPE_VENDOR, ENTITY_TYPE_PRIMARY),
-						standardVendor().getMobile(), CUST_MOBILEPIN, ZERO_COUNT, ZERO_COUNT, new Date(), new Date(), "CUST_ONLINE");
+						standardVendor().getMobile(), CUST_MOBILEPIN, ZERO_COUNT, ZERO_COUNT, new Date(), new Date(),
+						 CUST_UPDATED_BY,CUST_UPDATED_BY,CUST_ID,CUST_ID);
 		
 		EmailVerificationDetails emailVerificationDetails=
 				new EmailVerificationDetails(new EmailVerificationDetailsKey(CUST_ID, ENTITY_TYPE_CUSTOMER, ENTITY_TYPE_PRIMARY),
-						standardVendor().getEmail(), CUST_EMAILHASH, new Date(), ZERO_COUNT, new Date(), new Date(), "CUST_ONLINE");
+						standardVendor().getEmail(), CUST_EMAILHASH, new Date(), ZERO_COUNT, new Date(), new Date(),
+						 CUST_UPDATED_BY,CUST_UPDATED_BY,CUST_ID,CUST_ID);
 		
 		MobileVerificationDetails mobileVerificationDetailsDuplicate=
 				new MobileVerificationDetails(new MobileVerificationDetailsKey(213L, ENTITY_TYPE_CUSTOMER, ENTITY_TYPE_PRIMARY),
-						CUST_MOBILE_NEW, CUST_MOBILEPIN, ZERO_COUNT, ZERO_COUNT, new Date(), new Date(), "CUST_ONLINE");
+						CUST_MOBILE_NEW, CUST_MOBILEPIN, ZERO_COUNT, ZERO_COUNT, new Date(), new Date(), 
+						 CUST_UPDATED_BY,CUST_UPDATED_BY,CUST_ID,CUST_ID);
 		
 		
 		mobileVerificationDetailsRepository.save(mobileVerificationDetails);
@@ -723,7 +728,8 @@ public class TransactionalUpdatesRepositoryTest {
 		
 		MobileVerificationDetails newMobileVerificationDetails=
 				new MobileVerificationDetails(new MobileVerificationDetailsKey(savedCustomer.getCustomerId(), ENTITY_TYPE_CUSTOMER, ENTITY_TYPE_PRIMARY),
-						CUST_MOBILE_NEW, CUST_MOBILEPIN, ZERO_COUNT, ZERO_COUNT, new Date(), new Date(), "CUST_ONLINE");
+						CUST_MOBILE_NEW, CUST_MOBILEPIN, ZERO_COUNT, ZERO_COUNT, new Date(), new Date(), 
+						 CUST_UPDATED_BY,CUST_UPDATED_BY,CUST_ID,CUST_ID);
 		
 		MobileVerificationDetails savedMobileDetails=mobileVerificationDetailsRepository.save(newMobileVerificationDetails);
 		
@@ -743,7 +749,7 @@ public class TransactionalUpdatesRepositoryTest {
 		}
 		
 		assertTrue(transactionalUpdatesRepository.updateMobileInDetailsEnityAndAuthenticationDetails(savedCustomer.getCustomerId(), ENTITY_TYPE_CUSTOMER, ENTITY_TYPE_PRIMARY,
-				savedCustomer.getUpdatedBy()));
+				savedCustomer.getUpdatedBy(),savedCustomer.getCustomerId()));
 		
 		assertEquals(1, customerDetailsCustomRepository.count().intValue());
 		
@@ -782,11 +788,13 @@ public class TransactionalUpdatesRepositoryTest {
 		
 		MobileVerificationDetails newMobileVerificationDetails=
 				new MobileVerificationDetails(new MobileVerificationDetailsKey(savedCustomer.getCustomerId(), ENTITY_TYPE_CUSTOMER, ENTITY_TYPE_PRIMARY),
-						CUST_MOBILE_NEW, CUST_MOBILEPIN, ZERO_COUNT, ZERO_COUNT, new Date(), new Date(), "CUST_ONLINE");
+						CUST_MOBILE_NEW, CUST_MOBILEPIN, ZERO_COUNT, ZERO_COUNT, new Date(), new Date(),
+						 CUST_UPDATED_BY,CUST_UPDATED_BY,CUST_ID,CUST_ID);
 		
 		AuthenticationDetails duplicateAuthenticationDetails=
 				new AuthenticationDetails(new AuthenticationDetailsKey(214L, 1), null, CUST_MOBILE_NEW, CUST_PASSWORD_CHANGED, CUST_PASSWORD_TYPE_CHANGED,
-						CUST_EMAILHASH, ZERO_COUNT, ZERO_COUNT, new Date(), new Date(), "CUST_ONLINE");
+						CUST_EMAILHASH, ZERO_COUNT, ZERO_COUNT, new Date(), new Date(),
+						 CUST_UPDATED_BY,CUST_UPDATED_BY,CUST_ID,CUST_ID);
 		
 		MobileVerificationDetails savedMobileDetails=mobileVerificationDetailsRepository.save(newMobileVerificationDetails);
 		
@@ -804,7 +812,7 @@ public class TransactionalUpdatesRepositoryTest {
 		
 			try{
 				status=transactionalUpdatesRepository.updateMobileInDetailsEnityAndAuthenticationDetails(savedCustomer.getCustomerId(), ENTITY_TYPE_CUSTOMER, ENTITY_TYPE_PRIMARY,
-						savedCustomer.getUpdatedBy());
+						savedCustomer.getUpdatedBy(),savedCustomer.getCustomerId());
 			}catch(UpdateMobileInDetailsAndAuthentionDetailsFailedException e)
 			{
 				assertNull(status);
@@ -837,7 +845,8 @@ public class TransactionalUpdatesRepositoryTest {
 		
 		MobileVerificationDetails newMobileVerificationDetails=
 				new MobileVerificationDetails(new MobileVerificationDetailsKey(savedVendor.getVendorId(), ENTITY_TYPE_VENDOR, ENTITY_TYPE_PRIMARY),
-						CUST_MOBILE_NEW, CUST_MOBILEPIN, ZERO_COUNT, ZERO_COUNT, new Date(), new Date(), "CUST_ONLINE");
+						CUST_MOBILE_NEW, CUST_MOBILEPIN, ZERO_COUNT, ZERO_COUNT, new Date(), new Date(),
+						 CUST_UPDATED_BY,CUST_UPDATED_BY,CUST_ID,CUST_ID);
 		
 		MobileVerificationDetails savedMobileDetails=mobileVerificationDetailsRepository.save(newMobileVerificationDetails);
 		
@@ -857,7 +866,7 @@ public class TransactionalUpdatesRepositoryTest {
 		}
 		
 		assertTrue(transactionalUpdatesRepository.updateMobileInDetailsEnityAndAuthenticationDetails(savedVendor.getVendorId(), ENTITY_TYPE_VENDOR, ENTITY_TYPE_PRIMARY,
-				savedVendor.getUpdatedBy()));
+				savedVendor.getUpdatedBy(),savedVendor.getVendorId()));
 		
 		assertEquals(1, vendorDetailsCustomRepository.count().intValue());
 		
@@ -896,11 +905,13 @@ public class TransactionalUpdatesRepositoryTest {
 		
 		MobileVerificationDetails newMobileVerificationDetails=
 				new MobileVerificationDetails(new MobileVerificationDetailsKey(savedVendor.getVendorId(), ENTITY_TYPE_VENDOR, ENTITY_TYPE_PRIMARY),
-						CUST_MOBILE_NEW, CUST_MOBILEPIN, ZERO_COUNT, ZERO_COUNT, new Date(), new Date(), "CUST_ONLINE");
+						CUST_MOBILE_NEW, CUST_MOBILEPIN, ZERO_COUNT, ZERO_COUNT, new Date(), new Date(),
+						CUST_UPDATED_BY,CUST_UPDATED_BY,CUST_ID,CUST_ID);
 		
 		AuthenticationDetails duplicateAuthenticationDetails=
 				new AuthenticationDetails(new AuthenticationDetailsKey(214L, ENTITY_TYPE_CUSTOMER), null, CUST_MOBILE_NEW, CUST_PASSWORD_CHANGED, CUST_PASSWORD_TYPE_CHANGED,
-						CUST_EMAILHASH, ZERO_COUNT, ZERO_COUNT, new Date(), new Date(), "CUST_ONLINE");
+						CUST_EMAILHASH, ZERO_COUNT, ZERO_COUNT, new Date(), new Date(),
+						 CUST_UPDATED_BY,CUST_UPDATED_BY,CUST_ID,CUST_ID);
 		
 		MobileVerificationDetails savedMobileDetails=mobileVerificationDetailsRepository.save(newMobileVerificationDetails);
 		
@@ -918,7 +929,7 @@ public class TransactionalUpdatesRepositoryTest {
 		
 		try{
 			status=transactionalUpdatesRepository.updateMobileInDetailsEnityAndAuthenticationDetails(savedVendor.getVendorId(), ENTITY_TYPE_VENDOR, ENTITY_TYPE_PRIMARY,
-					savedVendor.getUpdatedBy());
+					savedVendor.getUpdatedBy(),savedVendor.getVendorId());
 		}catch(UpdateMobileInDetailsAndAuthentionDetailsFailedException e)
 		{
 			assertNull(status);
@@ -951,7 +962,8 @@ public class TransactionalUpdatesRepositoryTest {
 		
 		EmailVerificationDetails newEmailVerificationDetails=
 				new EmailVerificationDetails(new EmailVerificationDetailsKey(savedCustomer.getCustomerId(), ENTITY_TYPE_CUSTOMER, ENTITY_TYPE_PRIMARY),
-						CUST_EMAIL_NEW, CUST_EMAILHASH, new Date(), ZERO_COUNT, new Date(), new Date(), "CUST_ONLINE");
+						CUST_EMAIL_NEW, CUST_EMAILHASH, new Date(), ZERO_COUNT, new Date(), new Date(),
+						 CUST_UPDATED_BY,CUST_UPDATED_BY,CUST_ID,CUST_ID);
 		
 		EmailVerificationDetails savedEmailDetails=emailVerificationDetailsRepository.save(newEmailVerificationDetails);
 		
@@ -972,7 +984,7 @@ public class TransactionalUpdatesRepositoryTest {
 		}
 		
 		assertTrue(transactionalUpdatesRepository.updateEmailInDetailsEnityAndAuthenticationDetails(savedCustomer.getCustomerId(), ENTITY_TYPE_CUSTOMER, ENTITY_TYPE_PRIMARY,
-				savedCustomer.getUpdatedBy()));
+				savedCustomer.getUpdatedBy(),savedCustomer.getCustomerId()));
 		
 		assertEquals(1, customerDetailsCustomRepository.count().intValue());
 		
@@ -1011,12 +1023,14 @@ public class TransactionalUpdatesRepositoryTest {
 		
 		EmailVerificationDetails newEmailVerificationDetails=
 				new EmailVerificationDetails(new EmailVerificationDetailsKey(savedCustomer.getCustomerId(), ENTITY_TYPE_CUSTOMER, ENTITY_TYPE_PRIMARY),
-						CUST_EMAIL_NEW, CUST_EMAILHASH, new Date(), ZERO_COUNT, new Date(), new Date(), "CUST_ONLINe");
+						CUST_EMAIL_NEW, CUST_EMAILHASH, new Date(), ZERO_COUNT, new Date(), new Date(),
+						 CUST_UPDATED_BY,CUST_UPDATED_BY,CUST_ID,CUST_ID);
 		
 		
 		AuthenticationDetails duplicateAuthenticationDetails=
 				new AuthenticationDetails(new AuthenticationDetailsKey(214L, ENTITY_TYPE_CUSTOMER), CUST_EMAIL_NEW, null, CUST_PASSWORD_CHANGED, CUST_PASSWORD_TYPE_CHANGED,
-						CUST_EMAILHASH, ZERO_COUNT, ZERO_COUNT, new Date(), new Date(), "CUST_ONLINE");
+						CUST_EMAILHASH, ZERO_COUNT, ZERO_COUNT, new Date(), new Date(), 
+						 CUST_UPDATED_BY,CUST_UPDATED_BY,CUST_ID,CUST_ID);
 		
 		EmailVerificationDetails savedEmailDetails=emailVerificationDetailsRepository.save(newEmailVerificationDetails);
 		
@@ -1034,7 +1048,7 @@ public class TransactionalUpdatesRepositoryTest {
 		
 		try{
 			status=transactionalUpdatesRepository.updateEmailInDetailsEnityAndAuthenticationDetails(savedCustomer.getCustomerId(), ENTITY_TYPE_CUSTOMER, ENTITY_TYPE_PRIMARY,
-					savedCustomer.getUpdatedBy());
+					savedCustomer.getUpdatedBy(),savedCustomer.getCustomerId());
 		}
 		catch (UpdateEmailInDetailsAndAuthenticationDetailsFailedException e) {
 			assertNull(status);
@@ -1066,7 +1080,8 @@ public class TransactionalUpdatesRepositoryTest {
 		
 		EmailVerificationDetails newEmailVerificationDetails=
 				new EmailVerificationDetails(new EmailVerificationDetailsKey(savedVendor.getVendorId(), ENTITY_TYPE_VENDOR, ENTITY_TYPE_PRIMARY),
-						CUST_EMAIL_NEW, CUST_EMAILHASH, new Date(), ZERO_COUNT, new Date(), new Date(), "CUST_ONLINe");
+						CUST_EMAIL_NEW, CUST_EMAILHASH, new Date(), ZERO_COUNT, new Date(), new Date(),
+						 CUST_UPDATED_BY,CUST_UPDATED_BY,CUST_ID,CUST_ID);
 		
 		EmailVerificationDetails savedEmailDetails=emailVerificationDetailsRepository.save(newEmailVerificationDetails);
 		
@@ -1086,7 +1101,7 @@ public class TransactionalUpdatesRepositoryTest {
 		}
 		
 		assertTrue(transactionalUpdatesRepository.updateEmailInDetailsEnityAndAuthenticationDetails(savedVendor.getVendorId(), ENTITY_TYPE_VENDOR, ENTITY_TYPE_PRIMARY,
-				savedVendor.getUpdatedBy()));
+				savedVendor.getUpdatedBy(),savedVendor.getVendorId()));
 		
 		assertEquals(1, vendorDetailsCustomRepository.count().intValue());
 		
@@ -1125,11 +1140,13 @@ public class TransactionalUpdatesRepositoryTest {
 		
 		EmailVerificationDetails newEmailVerificationDetails=
 				new EmailVerificationDetails(new EmailVerificationDetailsKey(savedVendor.getVendorId(), ENTITY_TYPE_VENDOR, ENTITY_TYPE_PRIMARY),
-						CUST_EMAIL_NEW, CUST_EMAILHASH, new Date(), ZERO_COUNT, new Date(), new Date(), "CUST_ONLINe");
+						CUST_EMAIL_NEW, CUST_EMAILHASH, new Date(), ZERO_COUNT, new Date(), new Date(),
+						 CUST_UPDATED_BY,CUST_UPDATED_BY,CUST_ID,CUST_ID);
 		
 		AuthenticationDetails duplicateAuthenticationDetails=
 				new AuthenticationDetails(new AuthenticationDetailsKey(214L, ENTITY_TYPE_CUSTOMER), CUST_EMAIL_NEW, null, CUST_PASSWORD_CHANGED, CUST_PASSWORD_TYPE_CHANGED,
-						CUST_EMAILHASH, ZERO_COUNT, ZERO_COUNT, new Date(), new Date(), "CUST_ONLINE");
+						CUST_EMAILHASH, ZERO_COUNT, ZERO_COUNT, new Date(), new Date(),
+						 CUST_UPDATED_BY,CUST_UPDATED_BY,CUST_ID,CUST_ID);
 		
 		EmailVerificationDetails savedEmailDetails=emailVerificationDetailsRepository.save(newEmailVerificationDetails);
 		
@@ -1147,7 +1164,7 @@ public class TransactionalUpdatesRepositoryTest {
 		
 		try{
 			status=transactionalUpdatesRepository.updateEmailInDetailsEnityAndAuthenticationDetails(savedVendor.getVendorId(), ENTITY_TYPE_VENDOR, ENTITY_TYPE_PRIMARY,
-					savedVendor.getUpdatedBy());
+					savedVendor.getUpdatedBy(),savedVendor.getVendorId());
 		}catch(UpdateEmailInDetailsAndAuthenticationDetailsFailedException e)
 		{
 			assertNull(status);
@@ -1277,7 +1294,7 @@ public class TransactionalUpdatesRepositoryTest {
 		QuickRegisterEntity quickRegisterEntity=quickRegisterRepository.save(standardEmailMobileCustomer());
 		
 		customerDetailsCustomRepository.save(new CustomerDetails(215L, "ABX","A.", "ASD", null, null, CUST_MOBILE,null,false, CUST_EMAIL, false, 
-				null, null, null, null, null, null, null, new Date(), new Date(), "CUST_ONLINE"));
+				null, null, null, null, null, null, null, new Date(), new Date(), CUST_UPDATED_BY,CUST_UPDATED_BY,CUST_ID,CUST_ID));
 		
 		
 		assertEquals(1,quickRegisterRepository.findAll().size());
@@ -1344,7 +1361,7 @@ public class TransactionalUpdatesRepositoryTest {
 		
 		vendorDetailsCustomRepository.save(new VendorDetails(215L, "ASD","A.", "AES",null, null,null,null, standardEmailMobileVendor().getMobile(),
 				null,false, standardEmailMobileVendor().getEmail(), false, 
-				null, null, null, null,null,null));
+				null, null, null, new Date(),new Date(), CUST_UPDATED_BY,CUST_UPDATED_BY,CUST_ID,CUST_ID));
 		
 		
 		assertEquals(1,quickRegisterRepository.findAll().size());

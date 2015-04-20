@@ -58,9 +58,9 @@ public class DriverDetailsHandler implements DriverDetailsService {
 
 	@Override
 	public Integer updateMobileAndVerificationStatus(Long driverId,
-			Long mobile, Boolean status,String updatedBy) {
+			Long mobile, Boolean status,Integer updatedBy,Long updatedById) {
 		
-		Integer result=driverDetailsRepository.updateMobileAndMobileVerificationStatus(driverId, mobile, status,updatedBy);
+		Integer result=driverDetailsRepository.updateMobileAndMobileVerificationStatus(driverId, mobile, status,updatedBy,updatedById);
 		
 		return result;
 		

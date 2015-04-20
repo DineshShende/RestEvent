@@ -43,7 +43,7 @@ public class EmailVerificationController {
 		
 		try{
 			Boolean status=emailVerificationService.verifyEmailHashUpdateStatusAndSendPassword(verifyEmail.getCustomerId(),verifyEmail.getCustomerType(),
-					verifyEmail.getEmailType(), verifyEmail.getEmailHash(),verifyEmail.getUpdatedBy());
+					verifyEmail.getEmailType(), verifyEmail.getEmailHash(),verifyEmail.getUpdatedBy(),verifyEmail.getUpdatedById());
 			
 			result=new ResponseEntity<Boolean>(status, HttpStatus.OK);
 			
@@ -66,7 +66,8 @@ public class EmailVerificationController {
 		
 		try{
 			Boolean result=emailVerificationService
-					.sendEmailHash(updateEmailHash.getCustomerId(),updateEmailHash.getCustomerType(),updateEmailHash.getEmailType(),updateEmailHash.getRequestedBy());
+					.sendEmailHash(updateEmailHash.getCustomerId(),updateEmailHash.getCustomerType(),updateEmailHash.getEmailType(),
+							updateEmailHash.getRequestedBy(),updateEmailHash.getRequestedById());
 			return new ResponseEntity<Boolean>(result, HttpStatus.OK);
 			
 		}catch(ResourceNotFoundException e)
@@ -85,7 +86,8 @@ public class EmailVerificationController {
 		
 		try{
 			Boolean result=emailVerificationService
-					.reSetEmailHash(updateEmailHash.getCustomerId(),updateEmailHash.getCustomerType(),updateEmailHash.getEmailType(),updateEmailHash.getRequestedBy());
+					.reSetEmailHash(updateEmailHash.getCustomerId(),updateEmailHash.getCustomerType(),updateEmailHash.getEmailType(),
+							updateEmailHash.getRequestedBy(),updateEmailHash.getRequestedById());
 			return new ResponseEntity<Boolean>(result, HttpStatus.OK);
 			
 		}catch(ResourceNotFoundException e)
@@ -104,7 +106,7 @@ public class EmailVerificationController {
 		
 		try{
 			Boolean result= emailVerificationService.reSendEmailHash(updateEmailHash.getCustomerId(),updateEmailHash.getCustomerType(),
-					updateEmailHash.getEmailType(),updateEmailHash.getRequestedBy());
+					updateEmailHash.getEmailType(),updateEmailHash.getRequestedBy(),updateEmailHash.getRequestedById());
 			
 			return new ResponseEntity<Boolean>(result, HttpStatus.OK);
 		}catch(ResourceNotFoundException e)

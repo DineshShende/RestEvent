@@ -39,7 +39,7 @@ public class TransactionalUpdateMemRepository implements
 	@Override
 	public Boolean updateMobileInDetailsEnityAndAuthenticationDetails(
 			Long entityId, Integer entityType, Integer mobileType,
-			String updatedBy)
+			Integer updatedBy,Long updatedById)
 			throws UpdateMobileInDetailsAndAuthentionDetailsFailedException {
 		// TODO Auto-generated method stub
 		return true;
@@ -48,7 +48,7 @@ public class TransactionalUpdateMemRepository implements
 	@Override
 	public Boolean updateEmailInDetailsEnityAndAuthenticationDetails(
 			Long entityId, Integer entityType, Integer emailType,
-			String updatedBy)
+			Integer updatedBy,Long updatedById)
 			throws UpdateEmailInDetailsAndAuthenticationDetailsFailedException {
 		// TODO Auto-generated method stub
 		return true;

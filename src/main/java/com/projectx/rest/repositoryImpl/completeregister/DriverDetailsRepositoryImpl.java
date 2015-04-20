@@ -93,10 +93,10 @@ public class DriverDetailsRepositoryImpl implements DriverDetailsRepository {
 
 	@Override
 	public Integer updateMobileAndMobileVerificationStatus(Long driverId,
-			Long mobile, Boolean status,String updatedBy) {
+			Long mobile, Boolean status,Integer updatedBy,Long updatedById) {
 
 		UpdateMobileVerificationStatusUpdatedByDTO mobileVerificationStatusDTO=
-				new UpdateMobileVerificationStatusUpdatedByDTO(driverId, mobile, status,updatedBy);
+				new UpdateMobileVerificationStatusUpdatedByDTO(driverId, mobile, status,updatedBy,updatedById);
 		
 		HttpEntity<UpdateMobileVerificationStatusUpdatedByDTO> entity=
 				new HttpEntity<UpdateMobileVerificationStatusUpdatedByDTO>(mobileVerificationStatusDTO);

@@ -94,7 +94,7 @@ public class MobileVerificationControllerStandAloneTest {
 	@Test
 	public void reSetMobilePin() throws Exception
 	{
-		when(mobileVerificationService.reSetMobilePin(CUST_ID,ENTITY_TYPE_CUSTOMER,MOB_TYPE_PRIMARY,CUST_UPDATED_BY)).thenReturn(true);
+		when(mobileVerificationService.reSetMobilePin(CUST_ID,ENTITY_TYPE_CUSTOMER,MOB_TYPE_PRIMARY,CUST_UPDATED_BY,CUST_ID)).thenReturn(true);
 		
 		this.mockMvc.perform(
 	            post("/customer/quickregister/resetMobilePin")
@@ -112,7 +112,7 @@ public class MobileVerificationControllerStandAloneTest {
 	@Test
 	public void reSendMobilePin() throws Exception
 	{
-		when(mobileVerificationService.reSendMobilePin(CUST_ID,ENTITY_TYPE_CUSTOMER,MOB_TYPE_PRIMARY,CUST_UPDATED_BY)).thenReturn(true);
+		when(mobileVerificationService.reSendMobilePin(CUST_ID,ENTITY_TYPE_CUSTOMER,MOB_TYPE_PRIMARY,CUST_UPDATED_BY,CUST_ID)).thenReturn(true);
 		
 		this.mockMvc.perform(
 	            post("/customer/quickregister/resendMobilePin")

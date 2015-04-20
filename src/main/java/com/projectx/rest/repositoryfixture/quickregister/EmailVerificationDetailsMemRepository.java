@@ -59,7 +59,7 @@ public class EmailVerificationDetailsMemRepository implements EmailVericationDet
 	@Override
 	public Integer resetEmailHashAndEmailHashSentTime(Long customerId,Integer customerType,
 			Integer emailType, String emailHash, Date emailHashSentTime,
-			Integer resetCount,String updatedBy) {
+			Integer resetCount,Integer updatedBy,Long updatedById) {
 
 		EmailVerificationDetailsKey key=new EmailVerificationDetailsKey(customerId, customerType, emailType); 
 		
@@ -72,6 +72,7 @@ public class EmailVerificationDetailsMemRepository implements EmailVericationDet
 			oldRecord.setEmailHashSentTime(emailHashSentTime);
 			oldRecord.setResendCount(resetCount);
 			oldRecord.setUpdatedBy(updatedBy);
+			oldRecord.setUpdatedById(updatedById);
 			
 			customerList.put(key, oldRecord);
 		
@@ -86,7 +87,7 @@ public class EmailVerificationDetailsMemRepository implements EmailVericationDet
 
 	@Override
 	public Integer incrementResendCountByCustomerIdAndEmail(Long customerId,Integer customerType,
-			Integer emailType,String updatedBy) {
+			Integer emailType,Integer updatedBy,Long updatedById) {
 
 
 		EmailVerificationDetailsKey key=new EmailVerificationDetailsKey(customerId, customerType, emailType);
@@ -98,6 +99,7 @@ public class EmailVerificationDetailsMemRepository implements EmailVericationDet
 		
 			oldRecord.setResendCount(oldRecord.getResendCount()+1);
 			oldRecord.setUpdatedBy(updatedBy);
+			oldRecord.setUpdatedById(updatedById);
 								
 			customerList.put(key, oldRecord);
 		

@@ -86,10 +86,10 @@ public class FreightRequestByCustomerHandler implements
 
 	@Override
 	public Integer updateAllocationStatus(Long freightRequestByCustomerId,
-			String oldStatus, String allocationStatus, Long allocatedFor) {
+			String oldStatus, String allocationStatus, Long allocatedFor,Integer updatedBy,Long updatedById) {
 		
 		return freightRequestByCustomerRepository
-				.updateReservationStatusWithReservedFor(freightRequestByCustomerId, oldStatus, allocationStatus, allocatedFor);
+				.updateReservationStatusWithReservedFor(freightRequestByCustomerId, oldStatus, allocationStatus, allocatedFor,updatedBy,updatedById);
 	}
 
 }

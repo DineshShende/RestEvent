@@ -40,16 +40,16 @@ public class TransactionalUpdatesHandler implements
 
 	@Override
 	public Boolean updateMobileInDetailsEnityAndAuthenticationDetails(
-			Long entityId, Integer entityType, Integer mobileType,String updatedBy) throws UpdateMobileInDetailsAndAuthentionDetailsFailedException{
+			Long entityId, Integer entityType, Integer mobileType,Integer updatedBy,Long updatedById) throws UpdateMobileInDetailsAndAuthentionDetailsFailedException{
 
-		return transactionalUpdatesRepository.updateMobileInDetailsEnityAndAuthenticationDetails(entityId, entityType, mobileType,updatedBy);
+		return transactionalUpdatesRepository.updateMobileInDetailsEnityAndAuthenticationDetails(entityId, entityType, mobileType,updatedBy,updatedById);
 	}
 
 	@Override
 	public Boolean updateEmailInDetailsEnityAndAuthenticationDetails(
-			Long entityId, Integer entityType, Integer emailType,String updatedBy) throws UpdateEmailInDetailsAndAuthenticationDetailsFailedException {
+			Long entityId, Integer entityType, Integer emailType,Integer updatedBy,Long updatedById) throws UpdateEmailInDetailsAndAuthenticationDetailsFailedException {
 
-		return transactionalUpdatesRepository.updateEmailInDetailsEnityAndAuthenticationDetails(entityId, entityType, emailType,updatedBy);
+		return transactionalUpdatesRepository.updateEmailInDetailsEnityAndAuthenticationDetails(entityId, entityType, emailType,updatedBy,updatedById);
 	}
 
 	@Override

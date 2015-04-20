@@ -28,7 +28,8 @@ public interface FreightRequestByCustomerRepository {
 	
 	List<FreightRequestByCustomer> findByCustomerId(Long customerId);
 	
-	Integer updateReservationStatusWithReservedFor(Long freightRequestByCustomerId,String oldStatus,String reservationStatus,Long reservedBy);
+	Integer updateReservationStatusWithReservedFor(Long freightRequestByCustomerId,String oldStatus,String reservationStatus,Long reservedBy,
+			Integer updatedBy,Long updatedById);
 	
 	List<FreightRequestByCustomer> getMatchingCustReqForVendorReq(FreightRequestByVendor freightRequestByVendor,String allocationStatus);
 

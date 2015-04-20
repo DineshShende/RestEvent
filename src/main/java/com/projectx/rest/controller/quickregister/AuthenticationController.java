@@ -129,7 +129,7 @@ public class AuthenticationController {
 		
 		try{
 			Boolean status=authenticationService.resetPassword(new CustomerIdTypeUpdatedByDTO(customerIdDTO.getCustomerId(),
-					customerIdDTO.getCustomerType(), customerIdDTO.getUpdatedBy()),customerIdDTO.getEmailOrMobile());
+					customerIdDTO.getCustomerType(), customerIdDTO.getUpdatedBy(),customerIdDTO.getUpdatedById()),customerIdDTO.getEmailOrMobile());
 			result=new ResponseEntity<Boolean>(status, HttpStatus.OK);
 		}catch(AuthenticationDetailsNotFoundException  | QuickRegisterEntityNotFoundException | CustomerDetailsNotFoundException 
 				|VendorDetailsNotFoundException e)
@@ -150,7 +150,7 @@ public class AuthenticationController {
 		
 		try{
 			Boolean status=authenticationService.resendPassword(new CustomerIdTypeUpdatedByDTO(customerIdDTO.getCustomerId(),
-					customerIdDTO.getCustomerType(), customerIdDTO.getUpdatedBy()),customerIdDTO.getEmailOrMobile());
+					customerIdDTO.getCustomerType(), customerIdDTO.getUpdatedBy(),customerIdDTO.getUpdatedById()),customerIdDTO.getEmailOrMobile());
 			result=new ResponseEntity<Boolean>(status, HttpStatus.OK);
 		}catch(AuthenticationDetailsNotFoundException  | QuickRegisterEntityNotFoundException | CustomerDetailsNotFoundException 
 				|VendorDetailsNotFoundException e)
@@ -179,7 +179,8 @@ public class AuthenticationController {
 		
 		UpdatePasswordAndPasswordTypeDTO updatePassword=new UpdatePasswordAndPasswordTypeDTO(
 				updatePasswordDTO.getCustomerId(),updatePasswordDTO.getCustomerType(),updatePasswordDTO.getPassword(), 
-				CUST_PASSWORD_TYPE_CHANGED,updatePasswordDTO.getIsForcefulChangePassword(),updatePasswordDTO.getRequestedBy());	
+				CUST_PASSWORD_TYPE_CHANGED,updatePasswordDTO.getIsForcefulChangePassword(),updatePasswordDTO.getRequestedBy(),
+				updatePasswordDTO.getRequestedById());	
 		
 		try{
 			Boolean result=authenticationService.updatePassword(updatePassword);
