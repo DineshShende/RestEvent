@@ -17,6 +17,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.projectx.rest.config.Application;
 import com.projectx.rest.domain.async.RetriggerDetails;
+import com.projectx.rest.domain.comndto.ResponseDTO;
+import com.projectx.rest.exception.repository.completeregister.ValidationFailedException;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes=Application.class)
@@ -25,9 +27,6 @@ public class RetriggerDetailsRepositoryTest {
 
 	@Autowired
 	RetriggerDetailsRepository retriggerDetailsRepository;
-	
-	
-
 	
 	@Before
 	public void setUp()
@@ -54,11 +53,29 @@ public class RetriggerDetailsRepositoryTest {
 	}
 	
 	@Test
+	public void saveWithError()
+	{
+		
+		RetriggerDetails savedEntity=null;
+				
+		try{
+				retriggerDetailsRepository.save(standardRetriggerDetailsWithError());
+		}catch(ValidationFailedException e)
+		{
+			e.printStackTrace();
+		}
+		
+		
+	}
+	
+	
+	
+	@Test
 	public void findAll()
 	{
 		RetriggerDetails savedEntity=retriggerDetailsRepository.save(standardRetriggerDetails());
 		
-		List<RetriggerDetails> list=(List<RetriggerDetails>) retriggerDetailsRepository.findAll();
+		List<RetriggerDetails> list=retriggerDetailsRepository.findAll();
 	
 		assertEquals(1, list.size());
 		

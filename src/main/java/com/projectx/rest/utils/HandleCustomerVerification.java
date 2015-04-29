@@ -274,7 +274,7 @@ public class HandleCustomerVerification implements HandleVerificationService {
 		
 			String result=restTemplate.getForObject(requestBuilder.toString(), String.class);	
 			
-			System.out.println(result);
+			//System.out.println(result);
 			
 			//Thread.sleep(800);
 			

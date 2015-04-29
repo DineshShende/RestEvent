@@ -30,30 +30,11 @@ public class QuickRegisterMemRepository implements
 	}
 
 	@Override
-	public QuickRegisterEntity save(QuickRegisterEntity customer)
-		 {
-		
-		if(customer.getCustomerId()==null)
-			customer.setCustomerId(CUST_ID);
-		
-		 customerList.put(customer.getCustomerId(), customer);
-		
-		return customer;
-		 
-	}
+	public Integer count() {
 
-	@Override
-	public List<QuickRegisterEntity> findAll() {
-
-		List<QuickRegisterEntity> customerArrayList=new ArrayList<QuickRegisterEntity>();
 		
 		
-		for(Long key:customerList.keySet())
-		{
-			customerArrayList.add(customerList.get(key));
-		}
-		
-		return customerArrayList;
+		return customerList.size();
 	}
 
 	@Override
@@ -144,10 +125,6 @@ public class QuickRegisterMemRepository implements
 			return 0;
 	}
 
-	@Override
-	public List<MobilePinPasswordDTO> getTestData() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	
 
 }

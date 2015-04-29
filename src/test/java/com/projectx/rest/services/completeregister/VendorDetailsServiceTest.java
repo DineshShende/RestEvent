@@ -23,6 +23,8 @@ import com.projectx.rest.domain.completeregister.VendorDetails;
 import com.projectx.rest.domain.quickregister.EmailVerificationDetails;
 import com.projectx.rest.domain.quickregister.MobileVerificationDetails;
 import com.projectx.rest.domain.quickregister.QuickRegisterEntity;
+import com.projectx.rest.repository.completeregister.TransactionalUpdatesRepository;
+import com.projectx.rest.services.quickregister.AuthenticationService;
 import com.projectx.rest.services.quickregister.EmailVerificationService;
 import com.projectx.rest.services.quickregister.MobileVerificationService;
 import com.projectx.rest.services.quickregister.QuickRegisterService;
@@ -46,6 +48,12 @@ public class VendorDetailsServiceTest {
 	EmailVerificationService emailVerificationService;
 	
 	@Autowired
+	AuthenticationService authenticationService;
+	
+	@Autowired
+	TransactionalUpdatesRepository transactionalUpdatesRepository;
+	
+	@Autowired
 	QuickRegisterService quickRegisterService;
 	
 	private Integer ENTITY_TYPE_VENDOR=2;
@@ -54,6 +62,8 @@ public class VendorDetailsServiceTest {
 	
 	private Integer ENTITY_TYPE_SECONDARY=2;
 	
+	
+	private Integer ACTOR_ENTITY_SELF_WEB=1;
 	
 	
 	@Before
@@ -64,6 +74,7 @@ public class VendorDetailsServiceTest {
 		mobileVerificationService.clearTestData();
 		emailVerificationService.clearTestData();
 		quickRegisterService.clearDataForTesting();
+		authenticationService.clearTestData();
 	}
 	
 	@Test
@@ -81,8 +92,10 @@ public class VendorDetailsServiceTest {
 		
 		assertNull(vendorDetailsService.createCustomerDetailsFromQuickRegisterEntity(standardEmailMobileVendor()));
 		
-		QuickRegisterEntity quickRegisterEntity=quickRegisterService.saveCustomerQuickRegisterEntity(standardEmailMobileVendor());
+		QuickRegisterEntity quickRegisterEntity=transactionalUpdatesRepository
+				.saveNewQuickRegisterEntity(standardEmailMobileVendor()).getCustomerQuickRegisterEntity();
 		
+				
 		VendorDetails savedEntity=vendorDetailsService.createCustomerDetailsFromQuickRegisterEntity(quickRegisterEntity);
 		
 		assertEquals(standardVendorCreatedFromQuickRegisterWithDefaultHomeAdd(savedEntity.getVendorId()), savedEntity);
@@ -98,7 +111,9 @@ public class VendorDetailsServiceTest {
 		
 		assertEquals(0, vendorDetailsService.count().intValue());
 		
-		QuickRegisterEntity quickRegisterEntity=quickRegisterService.saveCustomerQuickRegisterEntity(standardEmailMobileVendor());
+		QuickRegisterEntity quickRegisterEntity=transactionalUpdatesRepository
+				.saveNewQuickRegisterEntity(standardEmailMobileVendor()).getCustomerQuickRegisterEntity();
+		
 		
 		VendorDetails savedEntity=vendorDetailsService.createCustomerDetailsFromQuickRegisterEntity(quickRegisterEntity);
 		
@@ -123,7 +138,9 @@ public class VendorDetailsServiceTest {
 	{
 		assertEquals(0, vendorDetailsService.count().intValue());
 		
-		QuickRegisterEntity quickRegisterEntity=quickRegisterService.saveCustomerQuickRegisterEntity(standardEmailMobileVendor());
+		QuickRegisterEntity quickRegisterEntity=transactionalUpdatesRepository
+				.saveNewQuickRegisterEntity(standardEmailMobileVendor()).getCustomerQuickRegisterEntity();
+		
 		
 		VendorDetails savedEntity=vendorDetailsService.createCustomerDetailsFromQuickRegisterEntity(quickRegisterEntity);
 		
@@ -147,6 +164,9 @@ public class VendorDetailsServiceTest {
 		VendorDetails savedEntity=vendorDetailsService.createCustomerDetailsFromQuickRegisterEntity(quickRegisterEntity);
 		
 		assertEquals(standardVendorCreatedFromQuickRegisterWithDefaultHomeAdd(savedEntity.getVendorId()), savedEntity);
+		
+		assertTrue(mobileVerificationService.sendMobilePin(savedEntity.getVendorId(), ENTITY_TYPE_VENDOR,
+				ENTITY_TYPE_PRIMARY, ACTOR_ENTITY_SELF_WEB, savedEntity.getVendorId()));
 		
 		MobileVerificationDetails mobileVerificationDetails=
 				mobileVerificationService.getByEntityIdTypeAndMobileType(savedEntity.getVendorId(),
@@ -174,11 +194,16 @@ public class VendorDetailsServiceTest {
 		
 		assertEquals(standardVendor(savedEntity), vendorDetailsService.updateVendorDetails(standardVendor(savedEntity)));
 		
+		assertTrue(emailVerificationService.sendEmailHash(savedEntity.getVendorId(), ENTITY_TYPE_VENDOR, ENTITY_TYPE_PRIMARY,
+				ACTOR_ENTITY_SELF_WEB, savedEntity.getVendorId()));
+		
 		EmailVerificationDetails emailVerificationDetails=
 				emailVerificationService.getByEntityIdTypeAndEmailType(savedEntity.getVendorId(),
 						ENTITY_TYPE_VENDOR, EMAIL_TYPE_PRIMARY);
 		
 		assertFalse(savedEntity.getIsEmailVerified());
+		
+		
 		
 		assertTrue(emailVerificationService.verifyEmailHashUpdateStatusAndSendPassword(savedEntity.getVendorId(), ENTITY_TYPE_VENDOR, EMAIL_TYPE_PRIMARY, 
 				emailVerificationDetails.getEmailHash(),CUST_UPDATED_BY,savedEntity.getVendorId()));

@@ -15,15 +15,10 @@ import com.projectx.rest.exception.repository.completeregister.VendorDetailsNotF
 @Repository
 public interface VendorDetailsRepository {
 
+
 	VendorDetails save(VendorDetails vendorDetails) throws VendorDetailsAlreadyPresentException,ValidationFailedException;
-	
-	VendorDetails update( VendorDetails vendorDetails);
-	
+
 	VendorDetails findOne( Long vendorId) throws VendorDetailsNotFoundException;
-	
-	Integer updateEmailVerificationStatus( UpdateEmailVerificationStatusUpdatedByDTO updateVerificationStatusDTO);
-	
-	Integer updateMobileVerificationStatus( UpdateMobileVerificationStatusUpdatedByDTO updateVerificationStatusDTO);
 	
 	Integer count();
 	

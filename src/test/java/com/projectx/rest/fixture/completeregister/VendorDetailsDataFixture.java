@@ -36,7 +36,7 @@ public class VendorDetailsDataFixture {
 	
 	public static Long VENDOR_SEC_MOBILE=8625867000L;
 	
-	public static String VENDOR_EMAIL="tedmosby@gmail.com";
+	//public static String VENDOR_EMAIL="tedmosby@gmail.com";
 	
 	public static Boolean VENDOR_STATUS_TRUE=true;
 	

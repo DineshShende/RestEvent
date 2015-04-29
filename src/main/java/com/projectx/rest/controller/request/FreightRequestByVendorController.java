@@ -14,12 +14,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.projectx.mvc.domain.request.FreightRequestByVendorDTO;
 import com.projectx.rest.domain.request.FreightRequestByCustomer;
 import com.projectx.rest.domain.request.FreightRequestByVendor;
+import com.projectx.rest.domain.request.FreightRequestByVendorDTO;
 import com.projectx.rest.exception.repository.completeregister.ValidationFailedException;
 import com.projectx.rest.exception.repository.quickregister.ResourceAlreadyPresentException;
 import com.projectx.rest.exception.repository.quickregister.ResourceNotFoundException;
+import com.projectx.rest.services.request.FreightRequestByCustomerService;
 import com.projectx.rest.services.request.FreightRequestByVendorService;
 
 @RestController
@@ -28,6 +29,9 @@ public class FreightRequestByVendorController {
 
 	@Autowired
 	FreightRequestByVendorService freightRequestByVendorService;
+	
+	@Autowired
+	FreightRequestByCustomerService freightRequestByCustomerService;
 
 	@RequestMapping(method = RequestMethod.POST)
 	public ResponseEntity<FreightRequestByVendor> newRequest(
@@ -41,6 +45,8 @@ public class FreightRequestByVendorController {
 		try{
 			FreightRequestByVendor savedEntity = freightRequestByVendorService
 				.newRequest(freightRequestByVendor);
+			
+			//freightRequestByCustomerService.getMatchingCustReqForVendorReqAndProceedWithHandShake(savedEntity);
 			
 			result=new ResponseEntity<FreightRequestByVendor>(savedEntity, HttpStatus.CREATED);
 			
@@ -56,14 +62,14 @@ public class FreightRequestByVendorController {
 	}
 
 	@RequestMapping(value = "/getById/{requestId}")
-	public ResponseEntity<FreightRequestByVendor> getRequestById(@PathVariable Long requestId) {
+	public ResponseEntity<FreightRequestByVendorDTO> getRequestById(@PathVariable Long requestId) {
 		
 		try{
 			
-			FreightRequestByVendor savedEntity = freightRequestByVendorService
+			FreightRequestByVendorDTO savedEntity = freightRequestByVendorService
 					.getRequestById(requestId);
 			
-			return new ResponseEntity<FreightRequestByVendor>(savedEntity, HttpStatus.FOUND);
+			return new ResponseEntity<FreightRequestByVendorDTO>(savedEntity, HttpStatus.FOUND);
 		}catch(ResourceNotFoundException e)
 		{
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -71,26 +77,26 @@ public class FreightRequestByVendorController {
 	}
 
 	@RequestMapping(value = "/findByVendorId/{vendorId}")
-	public ResponseEntity<List<FreightRequestByVendor>> getAllRequestForVendor(
+	public ResponseEntity<List<FreightRequestByVendorDTO>> getAllRequestForVendor(
 			@PathVariable Long vendorId) {
-		List<FreightRequestByVendor> savedEntity = freightRequestByVendorService
+		List<FreightRequestByVendorDTO> savedEntity = freightRequestByVendorService
 				.getAllRequestForVendor(vendorId);
 
-		return new ResponseEntity<List<FreightRequestByVendor>>(savedEntity, HttpStatus.OK);
+		return new ResponseEntity<List<FreightRequestByVendorDTO>>(savedEntity, HttpStatus.OK);
 
 	}
 
 	@RequestMapping(value = "/getMatchingVendorReqForCustomerReq",method=RequestMethod.POST)
-	public ResponseEntity<List<FreightRequestByVendor>> getMatchingVendorReqForCustomerReq(@Valid @RequestBody FreightRequestByCustomer freightRequestByCustomer,
+	public ResponseEntity<List<FreightRequestByVendorDTO>> getMatchingVendorReqForCustomerReq(@Valid @RequestBody FreightRequestByCustomer freightRequestByCustomer,
 			BindingResult bindingResult) {
 		
 		if(bindingResult.hasErrors())
 			return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
 		
-		List<FreightRequestByVendor> savedEntity = freightRequestByVendorService
+		List<FreightRequestByVendorDTO> savedEntity = freightRequestByVendorService
 				.getMatchingVendorReqFromCustomerReq(freightRequestByCustomer);
 
-		return new ResponseEntity<List<FreightRequestByVendor>>(savedEntity, HttpStatus.OK);
+		return new ResponseEntity<List<FreightRequestByVendorDTO>>(savedEntity, HttpStatus.OK);
 
 	}
 

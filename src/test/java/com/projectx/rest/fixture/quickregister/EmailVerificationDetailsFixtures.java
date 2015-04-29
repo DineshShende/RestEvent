@@ -38,6 +38,12 @@ public class EmailVerificationDetailsFixtures {
 				CUST_RESEND_COUNT, CUST_DATE, CUST_UPDATE_TIME, CUST_UPDATED_BY,CUST_UPDATED_BY,CUST_ID,CUST_ID);
 	}
 	
+	public static EmailVerificationDetails standardCustomerEmailVerificationDetailsNull()
+	{
+		return new EmailVerificationDetails(standardEmailVerificationDetailsKey(), CUST_EMAIL, null, CUST_DATE,
+				CUST_RESEND_COUNT, CUST_DATE, CUST_UPDATE_TIME, CUST_UPDATED_BY,CUST_UPDATED_BY,CUST_ID,CUST_ID);
+	}
+	
 	public static EmailVerificationDetails standardCustomerEmailVerificationDetailsWithOutPassword()
 	{
 		return new EmailVerificationDetails(standardEmailVerificationDetailsKey(), CUST_EMAIL, CUST_EMAILHASH, null,
@@ -90,10 +96,6 @@ public class EmailVerificationDetailsFixtures {
 	
 	public static String standardJsonUpdateEmailHashDTOMVC(com.projectx.mvc.domain.quickregister.UpdateEmailHashDTO customerId)
 	{
-		
-		//System.out.println("{\"customerId\":"+customerId+",\"customerType\":"+ENTITY_TYPE_CUSTOMER+",\"emailType\":\""+CUST_EMAIL_TYPE_PRIMARY+",\"requestedBy\":\""+CUST_UPDATED_BY+"\"}");
-		
-		//return "{\"customerId\":"+customerId+",\"customerType\":"+ENTITY_TYPE_CUSTOMER+",\"emailType\":\""+CUST_EMAIL_TYPE_PRIMARY+",\"requestedBy\":\""+CUST_UPDATED_BY+"\"}";
 		
 		return gson.toJson(customerId);
 	}

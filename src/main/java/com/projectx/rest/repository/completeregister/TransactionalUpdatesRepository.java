@@ -19,11 +19,7 @@ import com.projectx.rest.exception.repository.quickregister.QuickRegisterDetails
 
 public interface TransactionalUpdatesRepository {
 	
-	CustomerDetails updateCustomerDetails( CustomerDetails customerDetails) throws CustomerDetailsTransactionalUpdateFailedException
-	,ValidationFailedException;
-	
-	VendorDetails updateVendorDetails( VendorDetails vendorDetails) throws VendorDetailsTransactionalUpdateFailedException;
-	
+
 	Boolean updateMobileInDetailsEnityAndAuthenticationDetails(Long entityId,Integer entityType,Integer mobileType,
 			Integer updatedBy,Long updatedById) throws UpdateMobileInDetailsAndAuthentionDetailsFailedException;
 

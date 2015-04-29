@@ -4,6 +4,7 @@ import java.text.NumberFormat;
 import java.text.ParsePosition;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.projectx.mvc.domain.quickregister.CustomerIdTypeUpdatedByDTO;
@@ -53,6 +54,12 @@ public class RegisterCommonHandler implements RegisterCommonService {
 	private Integer EMAIL_REQ=1;
 	
 	private Integer MOBILE_REQ=2;
+	
+	@Value("${CUSTOMER_DETAILS_NOT_FOUND_BY_ID}")
+	private String CUSTOMER_DETAILS_NOT_FOUND_BY_ID;
+	
+	@Value("${VENDOR_DETAILS_NOT_FOUND_BY_ID}")
+	private String VENDOR_DETAILS_NOT_FOUND_BY_ID;
 	
 	@Override
 	public ForgetPasswordEntity forgetPassword(String entity,Integer requestedBy,Long requestedById) {
@@ -114,7 +121,7 @@ public class RegisterCommonHandler implements RegisterCommonService {
 					
 				}catch(ResourceNotFoundException ex)
 				{
-					throw new ResourceNotFoundException();
+					throw new ResourceNotFoundException(CUSTOMER_DETAILS_NOT_FOUND_BY_ID);
 				}
 				
 			}
@@ -133,7 +140,7 @@ public class RegisterCommonHandler implements RegisterCommonService {
 					
 				}catch(ResourceNotFoundException ex)
 				{
-					throw new ResourceNotFoundException();
+					throw new ResourceNotFoundException(VENDOR_DETAILS_NOT_FOUND_BY_ID);
 				}
 				
 			}

@@ -17,8 +17,6 @@ public interface DriverDetailsRepository {
 
 	DriverDetails save(DriverDetails driverDetails) throws DriverDetailsAlreadyPresentException,ValidationFailedException;
 	
-	//DriverDetails update(DriverDetails driverDetails) throws DriverDetailsUpdateFailedException,ValidationFailedException;
-	
 	List<DriverDetails> getDriversByVendorId(Long vendorId);
 	
 	Integer updateMobileAndMobileVerificationStatus(Long driverId,Long mobile,Boolean status

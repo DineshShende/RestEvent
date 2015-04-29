@@ -16,6 +16,7 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -40,6 +41,7 @@ public class AuthenticationControllerStandAloneTest {
 	
 	private Integer MOBILE_REQ=2;
 	
+		
 	@Before
 	public void setUp() throws Exception
 	{
@@ -58,28 +60,7 @@ public class AuthenticationControllerStandAloneTest {
 	
 		
 	
-	@Test
-	public void updatePassword() throws Exception
-	{
-		when(authenticationService.updatePassword(standardUpdatePasswordAndPasswordTypeDTO())).thenReturn(true);
-	
-		when(authenticationService.getByEntityIdType(standardUpdatePasswordAndPasswordTypeDTO().getCustomerId(),
-				standardUpdatePasswordAndPasswordTypeDTO().getCustomerType())).thenReturn(standardCustomerEmailAuthenticationDetails());
 		
-		this.mockMvc.perform(
-	            post("/customer/quickregister/updatePassword")
-	                    .content(standardJsonUpdatePasswordAndPasswordType(standardUpdatePasswordDTO()))
-	                    .contentType(MediaType.APPLICATION_JSON)
-	                    .accept(MediaType.APPLICATION_JSON))
-
-	            .andDo(print())
-	            .andExpect(status().isOk())
-	            .andExpect(content().string("true"));
-
-	}
-	
-	
-	
 	@Test
 	public void resetPassword() throws Exception
 	{
@@ -93,7 +74,8 @@ public class AuthenticationControllerStandAloneTest {
 
 	            .andDo(print())
 	            .andExpect(status().isOk())
-	            .andExpect(content().string("true"));
+	            .andExpect(jsonPath("$.result").value(true))
+	            .andExpect(jsonPath("$.errorMessage").value(""));
 		
 		
 	}
@@ -118,33 +100,7 @@ public class AuthenticationControllerStandAloneTest {
 		
 	}
 	
-	/*
-	@Test
-	public void resetPasswordRedirect() throws Exception
-	{
-		when(authenticationService.resetPasswordByEmailOrMobileRedirect(Long.toString(CUST_MOBILE))).thenReturn(standardEmailMobileCustomer());
-		
-		this.mockMvc.perform(
-					post("/customer/quickregister/resetPasswordRedirect")
-					.content(standardJsonResetPasswordRedirect(Long.toString(CUST_MOBILE)))
-					.contentType(MediaType.APPLICATION_JSON)
-					.accept(MediaType.APPLICATION_JSON))
-		.andDo(print())
-		.andExpect(status().isOk())
-		.andExpect(jsonPath("$.firstName").value(standardEmailMobileCustomer().getFirstName()))
-        .andExpect(jsonPath("$.lastName").value(standardEmailMobileCustomer().getLastName()))
-        .andExpect(jsonPath("$.mobile").value(standardEmailMobileCustomer().getMobile()))
-        .andExpect(jsonPath("$.email").value(standardEmailMobileCustomer().getEmail()))
-        .andExpect(jsonPath("$.isMobileVerified").value(standardEmailMobileCustomer().getIsMobileVerified()))
-        .andExpect(jsonPath("$.isEmailVerified").value(standardEmailMobileCustomer().getIsEmailVerified()))
-        .andExpect(jsonPath("$.insertTime").exists())
-		.andExpect(jsonPath("$.updateTime").exists())
-		.andExpect(jsonPath("$.updatedBy").value(standardEmailMobileCustomer().getUpdatedBy()));
-		
-	}
 	
-	
-*/
 
 
 }

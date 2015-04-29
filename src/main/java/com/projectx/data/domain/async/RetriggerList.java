@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.projectx.rest.domain.async.RetriggerDetails;
+import com.projectx.rest.domain.comndto.ResponseDTO;
 
 public class RetriggerList {
 
@@ -14,7 +15,7 @@ public class RetriggerList {
 	public RetriggerList(List<RetriggerDetails> list) {
 		super();
 		this.list = list;
-	}
+	} 
 
 	public RetriggerList() {
 		super();

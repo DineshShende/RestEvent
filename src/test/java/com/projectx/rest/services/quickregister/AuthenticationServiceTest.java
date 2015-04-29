@@ -57,44 +57,6 @@ public class AuthenticationServiceTest {
 		assertEquals(standardCustomerEmailAuthenticationDetailsWithOutPassword(),authenticationDetails );
 	}
 	
-	
-	@Test
-	public void saveCustomerAuthenticationDetailsAndGetByCustomerId()
-	{
-		AuthenticationDetails authenticationDetailsNull=null;
-		
-		try{
-			authenticationDetailsNull=authenticationService.getByEntityIdType(CUST_ID,ENTITY_TYPE_CUSTOMER);
-		}catch(AuthenticationDetailsNotFoundException e)
-		{
-			assertNull(authenticationDetailsNull);
-		}
-		
-		
-		
-		AuthenticationDetails authenticationDetails=authenticationService.saveCustomerAuthenticationDetails(standardCustomerEmailAuthenticationDetails());
-		
-		assertEquals(standardCustomerEmailAuthenticationDetails(),authenticationService
-				.getByEntityIdType(authenticationDetails.getKey().getCustomerId(),authenticationDetails.getKey().getCustomerType()));
-		
-	}
-
-
-	@Test
-	public void saveAndGetVerificationDetailsByCustomerId()
-	{
-		authenticationService.saveCustomerAuthenticationDetails(standardCustomerEmailMobileAuthenticationDetails());
-		
-		AuthenticationDetails authenticationDetails=authenticationService.
-				getByEntityIdType(standardEmailMobileCustomer().getCustomerId(),standardEmailMobileCustomer().getCustomerType());
-				
-		assertEquals(standardEmailMobileCustomer().getCustomerId(), authenticationDetails.getKey().getCustomerId());
-		assertEquals(standardEmailMobileCustomer().getEmail(), authenticationDetails.getEmail());
-		assertEquals(standardEmailMobileCustomer().getMobile(), authenticationDetails.getMobile());
-		assertNotNull( authenticationDetails.getPassword());
-		assertNotNull( authenticationDetails.getPasswordType());
-		assertNotNull( authenticationDetails.getEmailPassword());
-	}
 
 	@Test
 	public void getVerificationDetailsByCustomerIdFailingCase()

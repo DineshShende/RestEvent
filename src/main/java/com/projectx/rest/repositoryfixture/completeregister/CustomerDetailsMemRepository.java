@@ -22,6 +22,7 @@ public class CustomerDetailsMemRepository implements CustomerDetailsRepository {
 	
 	Map<Long,CustomerDetails> list=new HashMap<Long,CustomerDetails>();
 	
+	
 	@Override
 	public CustomerDetails save(CustomerDetails customerDetails) {
 
@@ -39,74 +40,6 @@ public class CustomerDetailsMemRepository implements CustomerDetailsRepository {
 			list.put(customerDetails.getCustomerId(), customerDetails);
 		
 		return customerDetails;
-	}
-
-	@Override
-	public Integer updateMobileVerificationStatus(
-			UpdateMobileVerificationStatusUpdatedByDTO verificationStatusDTO) {
-
-		CustomerDetails oldRecord=list.get(verificationStatusDTO.getCustomerId());
-		
-		if(oldRecord!=null)
-		{	
-			list.remove(verificationStatusDTO.getCustomerId());
-		
-			oldRecord.setIsMobileVerified(verificationStatusDTO.getStatus());
-
-			list.put(verificationStatusDTO.getCustomerId(), oldRecord);
-		
-			return 1;
-		}
-		else
-			return 0;
-
-
-		
-	}
-
-	@Override
-	public Integer updateSecondaryMobileVerificationStatus(
-			UpdateMobileVerificationStatusUpdatedByDTO verificationStatusDTO) {
-
-		CustomerDetails oldRecord=list.get(verificationStatusDTO.getCustomerId());
-		
-		if(oldRecord!=null)
-		{	
-			list.remove(verificationStatusDTO.getCustomerId());
-		
-			oldRecord.setMobile(verificationStatusDTO.getMobile());
-			oldRecord.setIsSecondaryMobileVerified(verificationStatusDTO.getStatus());
-
-			list.put(verificationStatusDTO.getCustomerId(), oldRecord);
-		
-			return 1;
-		}
-		else
-			return 0;
-
-	}
-
-	@Override
-	public Integer updateEmailVerificationStatus(
-			UpdateEmailVerificationStatusUpdatedByDTO verificationStatusDTO) {
-		
-		CustomerDetails oldRecord=list.get(verificationStatusDTO.getCustomerId());
-		
-		if(oldRecord!=null)
-		{	
-			list.remove(verificationStatusDTO.getCustomerId());
-		
-			oldRecord.setEmail(verificationStatusDTO.getEmail());
-			oldRecord.setIsEmailVerified(verificationStatusDTO.getStatus());
-
-			list.put(verificationStatusDTO.getCustomerId(), oldRecord);
-		
-			return 1;
-		}
-		else
-			return 0;
-
-		
 	}
 	
 	@Override

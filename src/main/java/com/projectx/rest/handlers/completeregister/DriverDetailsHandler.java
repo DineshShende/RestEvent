@@ -27,17 +27,6 @@ public class DriverDetailsHandler implements DriverDetailsService {
 		return addedDriver;
 	}
 
-	/*
-	@Override
-	public DriverDetails updateDriver(DriverDetails driverDetails) {
-
-		DriverDetails updatedDriver=driverDetailsRepository.update(driverDetails);
-		
-		return updatedDriver;
-
-	}
-	*/
-
 	@Override
 	public DriverDetails getDriverById(Long driverId) {
 

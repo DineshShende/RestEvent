@@ -8,6 +8,7 @@ import static com.projectx.rest.fixture.request.FreightRequestByVendorDataFixtur
 
 import java.util.List;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -50,8 +51,10 @@ public class FreightRequestByCustomerRepositoryTest {
 			
 
 	@Before
+	@After
 	public void clearData()
 	{
+		
 		freightRequestByCustomerRepository.clearTestData();
 		freightRequestByVendorRepository.clearTestData();
 		vehicleDetailsRepository.clearTestData();
@@ -182,7 +185,7 @@ public class FreightRequestByCustomerRepositoryTest {
 		
 		//System.out.println(list.size());
 		
-		assertEquals(3, list.size());
+		assertEquals(1, list.size());
 	}
 
 	@Test

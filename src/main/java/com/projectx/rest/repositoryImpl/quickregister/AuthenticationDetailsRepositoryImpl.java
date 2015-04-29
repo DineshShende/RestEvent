@@ -38,31 +38,15 @@ public class AuthenticationDetailsRepositoryImpl implements AuthenticationDetail
 	
 	@Autowired
 	Environment env;
-
-
-	@Override
-	public AuthenticationDetails save(
-			AuthenticationDetails authenticationDetails) throws ResourceAlreadyPresentException,ValidationFailedException{
-		
-		HttpEntity<AuthenticationDetails> entity=new HttpEntity<AuthenticationDetails>(authenticationDetails);
-		
-		ResponseEntity<AuthenticationDetails> result=null;
-		
-		try{
-			result=restTemplate.exchange(env.getProperty("data.url")+"/customer/quickregister/customerAuthentication/saveLoginDetails",HttpMethod.POST,
-					entity, AuthenticationDetails.class);
-		}catch(RestClientException e)
-		{
-			throw new ValidationFailedException();
-		}
-		
-		if(result.getStatusCode()==HttpStatus.CREATED)
-			return result.getBody();
-		else
-			throw new ResourceAlreadyPresentException();
-			
-		
-	}
+	
+	@Value("${AUTHENTICATION_DETAILS_NOT_FOUND_BY_EMAIL}")
+	private String AUTHENTICATION_DETAILS_NOT_FOUND_BY_EMAIL;
+	
+	@Value("${AUTHENTICATION_DETAILS_NOT_FOUND_BY_MOBILE}")
+	private String AUTHENTICATION_DETAILS_NOT_FOUND_BY_MOBILE;
+	
+	@Value("${AUTHENTICATION_DETAILS_NOT_FOUND_BY_ID}")
+	private String AUTHENTICATION_DETAILS_NOT_FOUND_BY_ID;
 
 	@Override
 	public AuthenticationDetails getByCustomerIdType(Long customerId,Integer customerType) throws AuthenticationDetailsNotFoundException {
@@ -79,7 +63,7 @@ public class AuthenticationDetailsRepositoryImpl implements AuthenticationDetail
 		if(result.getStatusCode()==HttpStatus.FOUND)
 			return result.getBody();
 		else
-			throw new AuthenticationDetailsNotFoundException();
+			throw new AuthenticationDetailsNotFoundException(AUTHENTICATION_DETAILS_NOT_FOUND_BY_ID);
 		
 	}
 
@@ -160,7 +144,7 @@ public class AuthenticationDetailsRepositoryImpl implements AuthenticationDetail
 		if(result.getStatusCode()==HttpStatus.FOUND)
 			return result.getBody();
 		else
-			throw new AuthenticationDetailsNotFoundException();
+			throw new AuthenticationDetailsNotFoundException(AUTHENTICATION_DETAILS_NOT_FOUND_BY_EMAIL);
 		
 	}
 
@@ -179,7 +163,7 @@ public class AuthenticationDetailsRepositoryImpl implements AuthenticationDetail
 		if(result.getStatusCode()==HttpStatus.FOUND)
 			return result.getBody();
 		else
-			throw new AuthenticationDetailsNotFoundException();
+			throw new AuthenticationDetailsNotFoundException(AUTHENTICATION_DETAILS_NOT_FOUND_BY_MOBILE);
 		
 	}
 

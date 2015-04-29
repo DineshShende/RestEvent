@@ -16,9 +16,12 @@ import com.projectx.data.domain.quickregister.CustomerIdTypeEmailTypeDTO;
 import com.projectx.data.domain.quickregister.CustomerIdTypeEmailTypeUpdatedByDTO;
 import com.projectx.mvc.domain.quickregister.UpdateEmailHashDTO;
 import com.projectx.mvc.domain.quickregister.VerifyEmailHashDTO;
+import com.projectx.rest.domain.comndto.ResponseDTO;
 import com.projectx.rest.domain.quickregister.EmailVerificationDetails;
+import com.projectx.rest.exception.repository.completeregister.UpdateEmailInDetailsAndAuthenticationDetailsFailedException;
 import com.projectx.rest.exception.repository.completeregister.ValidationFailedException;
 import com.projectx.rest.exception.repository.quickregister.EmailVerificationDetailNotFoundException;
+import com.projectx.rest.exception.repository.quickregister.QuickRegisterEntityNotFoundException;
 import com.projectx.rest.exception.repository.quickregister.ResourceNotFoundException;
 import com.projectx.rest.services.quickregister.EmailVerificationService;
 import com.projectx.rest.utils.HandleVerificationService;
@@ -34,32 +37,30 @@ public class EmailVerificationController {
 	HandleVerificationService handleCustomerVerification; 
 	
 	@RequestMapping(value="/verifyEmailHash",method=RequestMethod.POST)
-	public ResponseEntity<Boolean> verifyEmailHash(@Valid @RequestBody VerifyEmailHashDTO verifyEmail,BindingResult bindingResult)
+	public ResponseEntity<ResponseDTO<Boolean>> verifyEmailHash(@Valid @RequestBody VerifyEmailHashDTO verifyEmail,BindingResult bindingResult)
 	{
 		if(bindingResult.hasErrors())
 			return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
 		
-		ResponseEntity<Boolean> result=null;
+		ResponseEntity<ResponseDTO<Boolean>> result=null;
 		
 		try{
 			Boolean status=emailVerificationService.verifyEmailHashUpdateStatusAndSendPassword(verifyEmail.getCustomerId(),verifyEmail.getCustomerType(),
 					verifyEmail.getEmailType(), verifyEmail.getEmailHash(),verifyEmail.getUpdatedBy(),verifyEmail.getUpdatedById());
 			
-			result=new ResponseEntity<Boolean>(status, HttpStatus.OK);
+			result=new ResponseEntity<ResponseDTO<Boolean>>(new ResponseDTO<Boolean>("",status), HttpStatus.OK);
 			
-		}catch(ResourceNotFoundException e)
+		}catch(ValidationFailedException | UpdateEmailInDetailsAndAuthenticationDetailsFailedException 
+				| EmailVerificationDetailNotFoundException |QuickRegisterEntityNotFoundException e)
 		{
-			result= new ResponseEntity<>(HttpStatus.NO_CONTENT);
-		}catch(ValidationFailedException e)
-		{
-			return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+			return new ResponseEntity<ResponseDTO<Boolean>>(new ResponseDTO<Boolean>(e.getMessage(),null), HttpStatus.OK);
 		}
 		
 		return result;
 	}
 	
 	@RequestMapping(value="/sendEmailHash",method=RequestMethod.POST)
-	public ResponseEntity<Boolean> sendEmailHash(@Valid @RequestBody CustomerIdTypeEmailTypeUpdatedByDTO updateEmailHash,BindingResult  bindingResult)
+	public ResponseEntity<ResponseDTO<Boolean>> sendEmailHash(@Valid @RequestBody CustomerIdTypeEmailTypeUpdatedByDTO updateEmailHash,BindingResult  bindingResult)
 	{
 		if(bindingResult.hasErrors())
 			return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
@@ -68,18 +69,18 @@ public class EmailVerificationController {
 			Boolean result=emailVerificationService
 					.sendEmailHash(updateEmailHash.getCustomerId(),updateEmailHash.getCustomerType(),updateEmailHash.getEmailType(),
 							updateEmailHash.getRequestedBy(),updateEmailHash.getRequestedById());
-			return new ResponseEntity<Boolean>(result, HttpStatus.OK);
+			return new ResponseEntity<ResponseDTO<Boolean>>(new ResponseDTO<Boolean>("",result), HttpStatus.OK);
 			
 		}catch(ResourceNotFoundException e)
 		{
-			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+			return new ResponseEntity<ResponseDTO<Boolean>>(new ResponseDTO<Boolean>(e.getMessage(),null),HttpStatus.OK);
 		}
 		
 	}
 
 	
 	@RequestMapping(value="/resetEmailHash",method=RequestMethod.POST)
-	public ResponseEntity<Boolean> updateEmailHash(@Valid @RequestBody CustomerIdTypeEmailTypeUpdatedByDTO updateEmailHash,BindingResult  bindingResult)
+	public ResponseEntity<ResponseDTO<Boolean>> updateEmailHash(@Valid @RequestBody CustomerIdTypeEmailTypeUpdatedByDTO updateEmailHash,BindingResult  bindingResult)
 	{
 		if(bindingResult.hasErrors())
 			return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
@@ -88,17 +89,17 @@ public class EmailVerificationController {
 			Boolean result=emailVerificationService
 					.reSetEmailHash(updateEmailHash.getCustomerId(),updateEmailHash.getCustomerType(),updateEmailHash.getEmailType(),
 							updateEmailHash.getRequestedBy(),updateEmailHash.getRequestedById());
-			return new ResponseEntity<Boolean>(result, HttpStatus.OK);
+			return new ResponseEntity<ResponseDTO<Boolean>>(new ResponseDTO<Boolean>("",result), HttpStatus.OK);
 			
 		}catch(ResourceNotFoundException e)
 		{
-			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+			return new ResponseEntity<ResponseDTO<Boolean>>(new ResponseDTO<Boolean>(e.getMessage(),null),HttpStatus.OK);
 		}
 		
 	}
 	
 	@RequestMapping(value="/resendEmailHash",method=RequestMethod.POST)
-	public ResponseEntity<Boolean> reSendEmailHash(@Valid @RequestBody CustomerIdTypeEmailTypeUpdatedByDTO updateEmailHash,BindingResult bindingResult)
+	public ResponseEntity<ResponseDTO<Boolean>> reSendEmailHash(@Valid @RequestBody CustomerIdTypeEmailTypeUpdatedByDTO updateEmailHash,BindingResult bindingResult)
 	{
 		if(bindingResult.hasErrors())	
 			return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
@@ -108,10 +109,10 @@ public class EmailVerificationController {
 			Boolean result= emailVerificationService.reSendEmailHash(updateEmailHash.getCustomerId(),updateEmailHash.getCustomerType(),
 					updateEmailHash.getEmailType(),updateEmailHash.getRequestedBy(),updateEmailHash.getRequestedById());
 			
-			return new ResponseEntity<Boolean>(result, HttpStatus.OK);
+			return new ResponseEntity<ResponseDTO<Boolean>>(new ResponseDTO<Boolean>("",result), HttpStatus.OK);
 		}catch(ResourceNotFoundException e)
 		{
-			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+			return new ResponseEntity<ResponseDTO<Boolean>>(new ResponseDTO<Boolean>(e.getMessage(),null),HttpStatus.OK);
 		}
 		
 		

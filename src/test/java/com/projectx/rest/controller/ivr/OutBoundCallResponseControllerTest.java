@@ -1,25 +1,31 @@
 package com.projectx.rest.controller.ivr;
 
 import static com.projectx.rest.config.Constants.SPRING_PROFILE_ACTIVE_TEST;
+import static com.projectx.rest.fixtures.ivr.OutBoundCallDataFixture.*;
 import static com.projectx.rest.fixture.completeregister.CustomerDetailsDataFixtures.standardCustomerDetailsAlreadyPresent;
 import static com.projectx.rest.fixture.completeregister.VendorDetailsDataFixture.*;
 import static com.projectx.rest.fixture.completeregister.VehicleDetailsDataFixtures.standardVehicleDetails;
+import static com.projectx.rest.fixture.quickregister.QuickRegisterDataFixture.standardEntityIdDTO;
+import static com.projectx.rest.fixture.quickregister.QuickRegisterDataFixture.standardJsonEntityIdDTO;
 import static com.projectx.rest.fixture.request.FreightRequestByCustomerDataFixture.standardFreightRequestByCustomerLessThanTruckLoadOpenNoModel;
 import static com.projectx.rest.fixture.request.FreightRequestByVendorDataFixture.standardFreightRequestByVendor;
 import static org.junit.Assert.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.List;
 import java.util.UUID;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -27,6 +33,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import com.projectx.mvc.domain.ivr.KooResponseDTO;
 import com.projectx.rest.config.Application;
 import com.projectx.rest.domain.completeregister.CustomerDetails;
 import com.projectx.rest.domain.completeregister.VendorDetails;
@@ -38,6 +45,7 @@ import com.projectx.rest.domain.ivr.QuestionPossibleAnswersSelectedAnswer;
 import com.projectx.rest.domain.ivr.TrackKookooResponseDTO;
 import com.projectx.rest.domain.request.FreightRequestByCustomer;
 import com.projectx.rest.domain.request.FreightRequestByVendor;
+import com.projectx.rest.domain.request.FreightRequestByVendorDTO;
 import com.projectx.rest.exception.repository.quickregister.ResourceNotFoundException;
 import com.projectx.rest.service.ivr.PreBookService;
 import com.projectx.rest.service.ivr.QuestionHandlingService;
@@ -45,6 +53,8 @@ import com.projectx.rest.services.completeregister.CustomerDetailsService;
 import com.projectx.rest.services.completeregister.VehicleDetailsService;
 import com.projectx.rest.services.completeregister.VendorDetailsService;
 import com.projectx.rest.services.handshake.DealService;
+import com.projectx.rest.services.quickregister.AuthenticationService;
+import com.projectx.rest.services.quickregister.QuickRegisterService;
 import com.projectx.rest.services.request.FreightRequestByCustomerService;
 import com.projectx.rest.services.request.FreightRequestByVendorService;
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -78,6 +88,12 @@ public class OutBoundCallResponseControllerTest {
 	
 	@Autowired
 	VendorDetailsService vendorDetailsService;
+	
+	@Autowired
+	QuickRegisterService quickRegisterService;
+	
+	@Autowired
+	AuthenticationService authenticationService;
 	
 	@Autowired
 	QuestionHandlingService questionHandlingService;
@@ -117,11 +133,20 @@ public class OutBoundCallResponseControllerTest {
 	public void setUp()
 	{
 		this.mockMvc=MockMvcBuilders.webAppContextSetup(wac).build();
+		
+	}
+	
+	@Before
+	@After
+	public void clearTestData()
+	{
 		freightRequestByCustomerService.clearTestData();
 		freightRequestByVendorService.clearTestData();
-		vehicleDetailsService.clearTestData();
 		customerDetailsService.clearTestData();
 		vendorDetailsService.clearTestData();
+		quickRegisterService.clearDataForTesting();
+		authenticationService.clearTestData();
+		vehicleDetailsService.clearTestData();
 	}
 	
 	@Test
@@ -159,17 +184,19 @@ public class OutBoundCallResponseControllerTest {
 		assertEquals(0, freightRequestByCustomerStatusDTO.getQuestionList(savedEntity.getRequestId()).getCounter().intValue()); 
 		
 		this.mockMvc.perform(
-	            get("/outboundcall/receiveResponse/"+sid+"/"+customerDetails.getMobile()+"/1")
-	                    )
-	            .andDo(print())
-	            .andExpect(status().isOk());
+				post("/outboundcall/receiveResponse")
+				.content(standardJsonKooResponseDTO(new KooResponseDTO(sid, customerDetails.getMobile(), 1)))
+				.contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON));
+		       // .andDo(print())
+	            //.andExpect(status().isOk());
 	 
 		
 		assertEquals(1, freightRequestByCustomerStatusDTO.getQuestionList(savedEntity.getRequestId()).getCounter().intValue());
 		
 		FreightRequestByCustomer customerRequest=freightRequestByCustomerService.getRequestById(savedEntity.getRequestId());
 		
-		FreightRequestByVendor vendorRequest=freightRequestByVendorService.getRequestById(freightRequestByVendor.getRequestId());
+		FreightRequestByVendorDTO vendorRequest=freightRequestByVendorService.getRequestById(freightRequestByVendor.getRequestId());
 		
 		assertEquals(FREIGHTALLOCATIONSTATUS_BLOCKED, customerRequest.getAllocationStatus());
 		
@@ -215,10 +242,13 @@ public class OutBoundCallResponseControllerTest {
 		
 		
 		this.mockMvc.perform(
-	            get("/outboundcall/receiveResponse/"+sid+"/"+customerDetails.getMobile()+"/1")
-	                    )
-	            .andDo(print())
-	            .andExpect(status().isOk());
+				post("/outboundcall/receiveResponse")
+				.content(standardJsonKooResponseDTO(new KooResponseDTO(sid, customerDetails.getMobile(), 1)))
+				.contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON));
+		       // .andDo(print())
+	            //.andExpect(status().isOk());
+	
 	 
 		
 		assertEquals(0, freightRequestByCustomerStatusDTO.getQuestionList(savedEntity.getRequestId()).getCounter().intValue());
@@ -262,17 +292,19 @@ public class OutBoundCallResponseControllerTest {
 		assertEquals(0, freightRequestByCustomerStatusDTO.getQuestionList(savedEntity.getRequestId()).getCounter().intValue()); 
 		
 		this.mockMvc.perform(
-	            get("/outboundcall/receiveResponse/"+sid+"/"+customerDetails.getMobile()+"/1")
-	                    )
-	            .andDo(print())
-	            .andExpect(status().isOk());
-	 
+				post("/outboundcall/receiveResponse")
+				.content(standardJsonKooResponseDTO(new KooResponseDTO(sid, customerDetails.getMobile(), 1)))
+				.contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON));
+		       // .andDo(print())
+	            //.andExpect(status().isOk());
+		
 		
 		assertEquals(1, freightRequestByCustomerStatusDTO.getQuestionList(savedEntity.getRequestId()).getCounter().intValue());
 		
 		FreightRequestByCustomer customerRequest=freightRequestByCustomerService.getRequestById(savedEntity.getRequestId());
 		
-		FreightRequestByVendor vendorRequest=freightRequestByVendorService.getRequestById(freightRequestByVendor.getRequestId());
+		FreightRequestByVendorDTO vendorRequest=freightRequestByVendorService.getRequestById(freightRequestByVendor.getRequestId());
 		
 		assertEquals(FREIGHTALLOCATIONSTATUS_BLOCKED, customerRequest.getAllocationStatus());
 		
@@ -296,10 +328,12 @@ public class OutBoundCallResponseControllerTest {
 		}
 		
 		this.mockMvc.perform(
-	            get("/outboundcall/receiveResponse/"+sid+"/"+customerDetails.getMobile()+"/1")
-	                    )
-	            .andDo(print())
-	            .andExpect(status().isOk());
+				post("/outboundcall/receiveResponse")
+				.content(standardJsonKooResponseDTO(new KooResponseDTO(sid, customerDetails.getMobile(), 1)))
+				.contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON));
+		       // .andDo(print())
+	            //.andExpect(status().isOk());
 
 		
 		
@@ -357,17 +391,19 @@ public class OutBoundCallResponseControllerTest {
 		assertEquals(0, freightRequestByCustomerStatusDTO.getQuestionList(savedEntity.getRequestId()).getCounter().intValue()); 
 		
 		this.mockMvc.perform(
-	            get("/outboundcall/receiveResponse/"+sid+"/"+customerDetails.getMobile()+"/2")
-	                    )
-	            .andDo(print())
-	            .andExpect(status().isOk());
+				post("/outboundcall/receiveResponse")
+				.content(standardJsonKooResponseDTO(new KooResponseDTO(sid, customerDetails.getMobile(), 2)))
+				.contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON));
+		       // .andDo(print())
+	            //.andExpect(status().isOk());
 	 
 		
 		assertEquals(0, freightRequestByCustomerStatusDTO.getQuestionList(savedEntity.getRequestId()).getCounter().intValue());
 		
 		FreightRequestByCustomer customerRequest=freightRequestByCustomerService.getRequestById(savedEntity.getRequestId());
 		
-		FreightRequestByVendor vendorRequest=freightRequestByVendorService.getRequestById(freightRequestByVendor.getRequestId());
+		FreightRequestByVendorDTO vendorRequest=freightRequestByVendorService.getRequestById(freightRequestByVendor.getRequestId());
 		
 		assertEquals(FREIGHTALLOCATIONSTATUS_NEGFIRSTSTAGE, customerRequest.getAllocationStatus());
 		
@@ -409,17 +445,19 @@ public class OutBoundCallResponseControllerTest {
 		assertEquals(0, freightRequestByCustomerStatusDTO.getQuestionList(savedEntity.getRequestId()).getCounter().intValue()); 
 		
 		this.mockMvc.perform(
-	            get("/outboundcall/receiveResponse/"+sid+"/"+customerDetails.getMobile()+"/1")
-	                    )
-	            .andDo(print())
-	            .andExpect(status().isOk());
+				post("/outboundcall/receiveResponse")
+				.content(standardJsonKooResponseDTO(new KooResponseDTO(sid, customerDetails.getMobile(), 1)))
+				.contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON));
+		       // .andDo(print())
+	            //.andExpect(status().isOk());
 	 
 		
 		assertEquals(1, freightRequestByCustomerStatusDTO.getQuestionList(savedEntity.getRequestId()).getCounter().intValue());
 		
 		FreightRequestByCustomer customerRequest=freightRequestByCustomerService.getRequestById(savedEntity.getRequestId());
 		
-		FreightRequestByVendor vendorRequest=freightRequestByVendorService.getRequestById(freightRequestByVendor.getRequestId());
+		FreightRequestByVendorDTO vendorRequest=freightRequestByVendorService.getRequestById(freightRequestByVendor.getRequestId());
 		
 		assertEquals(FREIGHTALLOCATIONSTATUS_BLOCKED, customerRequest.getAllocationStatus());
 		
@@ -442,11 +480,14 @@ public class OutBoundCallResponseControllerTest {
 			assertEquals(1, 1);
 		}
 		
+		
 		this.mockMvc.perform(
-	            get("/outboundcall/receiveResponse/"+sid+"/"+customerDetails.getMobile()+"/2")
-	                    )
-	            .andDo(print())
-	            .andExpect(status().isOk());
+				post("/outboundcall/receiveResponse")
+				.content(standardJsonKooResponseDTO(new KooResponseDTO(sid, customerDetails.getMobile(), 2)))
+				.contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON));
+		       // .andDo(print())
+	            //.andExpect(status().isOk());
 		
 		customerRequest=freightRequestByCustomerService.getRequestById(savedEntity.getRequestId());
 		

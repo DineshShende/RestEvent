@@ -12,10 +12,6 @@ import com.projectx.rest.domain.quickregister.QuickRegisterEntity;
 @Service
 public interface TransactionalUpdatesService {
 
-	CustomerDetails updateCustomerDetails( CustomerDetails customerDetails);
-	
-	VendorDetails updateVendorDetails( VendorDetails vendorDetails);
-	
 	Boolean updateMobileInDetailsEnityAndAuthenticationDetails(Long entityId,Integer entityType,Integer mobileType,
 			Integer updatedBy,Long updatedById);
 

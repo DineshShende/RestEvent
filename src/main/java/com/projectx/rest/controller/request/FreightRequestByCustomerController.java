@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.context.request.async.DeferredResult;
 
 import com.projectx.rest.domain.completeregister.CustomerDetails;
 import com.projectx.rest.domain.ivr.FreightRequestByCustomerStatusDTO;
@@ -72,6 +73,7 @@ public class FreightRequestByCustomerController {
 		try{
 			FreightRequestByCustomer savedEntity=freightRequestByCustomerService.newRequest(freightRequestByCustomer);
 			result=new ResponseEntity<FreightRequestByCustomer>(savedEntity, HttpStatus.CREATED);
+						
 		}catch(ResourceAlreadyPresentException e)
 		{
 			result=new ResponseEntity<>(HttpStatus.ALREADY_REPORTED);
@@ -108,77 +110,16 @@ public class FreightRequestByCustomerController {
 
 	
 	@RequestMapping(value="/getMatchingCustomerReqForVendorReq",method=RequestMethod.POST)
-	public void getMatchingCustomerReqForVendorReq(@Valid @RequestBody FreightRequestByVendor freightRequestByVendor,
+	public DeferredResult<Boolean> getMatchingCustomerReqForVendorReq(@Valid @RequestBody FreightRequestByVendor freightRequestByVendor,
 			BindingResult bindingResult)
 	{
+		DeferredResult<Boolean> result=new DeferredResult<Boolean>();
 		
-		List<FreightRequestByCustomer> list=freightRequestByCustomerService.getMatchingCustReqForVendorReq(freightRequestByVendor,FREIGHTALLOCATIONSTATUS_RESPONDED);
+		freightRequestByCustomerService.getMatchingCustReqForVendorReqAndProceedWithHandShake(freightRequestByVendor);
 		
-		if(list.size()!=0)
-		{
-		
-			list.forEach(e->{
+		result.onTimeout(()->result.setResult(true));
 				
-				QuestionListWithCounter questionListWithCounter=null;
-							
-				if(freightRequestByCustomerStatusDTO.contains(e.getCustomerId()))
-				{
-					questionListWithCounter=freightRequestByCustomerStatusDTO.getQuestionList(e.getCustomerId());
-					
-				}
-				else
-				{
-					List<QuestionPossibleAnswersSelectedAnswer> questionList=questionHandlingService.getAll();
-				
-					if(questionList==null || questionList.size()==0)
-						throw new RuntimeException();
-					
-				
-					CustomerDetails customerDetails=customerDetailsService.findById(e.getCustomerId());
-					 
-					questionListWithCounter=new QuestionListWithCounter(customerDetails.getMobile(), 0, questionList);
-					 
-					freightRequestByCustomerStatusDTO.add(e.getRequestId(), questionListWithCounter);
-					 
-					
-				}
-					
-				IVRCallInfoDTO ivrCallInfoDTO=new IVRCallInfoDTO(questionListWithCounter.getMobile(), questionListWithCounter.getQuestionList().get(questionListWithCounter.getCounter()));	 
-				 
-				String sid=outBoundCallService.makeOutBoundCall(ivrCallInfoDTO);
-					 
-				trackKookooResponseDTO.add(sid, new KooKooRequestEntity(e.getRequestId(), freightRequestByVendor.getRequestId()));
-				
-						
-			});
-		
-		}else
-		{
-			
-			list=freightRequestByCustomerService.getMatchingCustReqForVendorReq(freightRequestByVendor,FREIGHTALLOCATIONSTATUS_NEW);
-			
-			List<QuestionPossibleAnswersSelectedAnswer> questionList=questionHandlingService.getAll();
-			
-			if(questionList==null || questionList.size()==0)
-				throw new RuntimeException();
-			
-			list.parallelStream().forEach(e->{
-				
-				 CustomerDetails customerDetails=customerDetailsService.findById(e.getCustomerId());
-				 
-				 QuestionListWithCounter questionListWithCounter=new QuestionListWithCounter(customerDetails.getMobile(), 0, questionList);
-				 
-				 freightRequestByCustomerStatusDTO.add(e.getRequestId(), questionListWithCounter);
-				 
-				 IVRCallInfoDTO ivrCallInfoDTO=new IVRCallInfoDTO(customerDetails.getMobile(), questionListWithCounter.getQuestionList().get(questionListWithCounter.getCounter()));	 
-				 
-				 String sid=outBoundCallService.makeOutBoundCall(ivrCallInfoDTO);
-				 
-				 trackKookooResponseDTO.add(sid, new KooKooRequestEntity(e.getRequestId(), freightRequestByVendor.getRequestId()));
-				 
-				 
-			});
-		}
+		return result;
 	}
 
 	

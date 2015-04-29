@@ -74,22 +74,6 @@ public class MobileVerificationControllerStandAloneTest {
 		
 	}
 	
-	/*
-	@Test
-	public void verifyMobilePinForMobileCustomer() throws Exception
-	{
-		when(mobileVerificationService.verifyMobilePin(CUST_ID,ENTITY_TYPE_CUSTOMER,MOB_TYPE_PRIMARY, CUST_MOBILEPIN)).thenReturn(true);
-		
-		this.mockMvc.perform(
-	            post("/customer/quickregister/verifyMobilePin")
-	                    .content(standardJsonVerifyMobilePinDTO())
-	                    .contentType(MediaType.APPLICATION_JSON)
-	                    .accept(MediaType.APPLICATION_JSON))
-	            .andDo(print())
-	            .andExpect(status().isOk())
-	            .andExpect(content().string("true"));
-	}
-	*/
 	
 	@Test
 	public void reSetMobilePin() throws Exception
@@ -103,7 +87,8 @@ public class MobileVerificationControllerStandAloneTest {
 	                    .accept(MediaType.APPLICATION_JSON))
 	            .andDo(print())
 	            .andExpect(status().isOk())
-	            .andExpect(content().string("true"));
+	            .andExpect(jsonPath("$.result").value(true))
+	            .andExpect(jsonPath("$.errorMessage").value(""));
 		
 	}
 	
@@ -121,7 +106,8 @@ public class MobileVerificationControllerStandAloneTest {
 	                    .accept(MediaType.APPLICATION_JSON))
 	            .andDo(print())
 	            .andExpect(status().isOk())
-	            .andExpect(content().string("true"));
+	            .andExpect(jsonPath("$.result").value(true))
+	            .andExpect(jsonPath("$.errorMessage").value(""));
 		
 	}
 	

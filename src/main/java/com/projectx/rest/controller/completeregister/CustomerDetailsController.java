@@ -37,7 +37,7 @@ public class CustomerDetailsController {
 	@Autowired
 	QuickRegisterService quickRegisterService;
 	
-	
+	//Can be removed from here
 	@RequestMapping(value="/createFromQuickRegister",method=RequestMethod.POST)
 	public ResponseEntity<CustomerDetails> createCustomerDetailsFromQuickRegisterEntity(@Valid @RequestBody EntityIdDTO entityIdDTO,
 			BindingResult bindingResult)

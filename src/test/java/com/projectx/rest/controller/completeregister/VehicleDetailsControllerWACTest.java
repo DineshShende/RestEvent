@@ -11,6 +11,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -49,6 +50,13 @@ public class VehicleDetailsControllerWACTest {
 	{
 		this.mockMvc=MockMvcBuilders.webAppContextSetup(wac).build();
 		
+		
+	}
+	
+	@Before
+	@After
+	public void clearTestData()
+	{
 		vehicleDetailsService.clearTestData();
 	}
 	
@@ -130,6 +138,46 @@ public class VehicleDetailsControllerWACTest {
 
 		
 	}
+
+	
+	@Test
+	public void getByRegistrationNumber() throws Exception
+	{
+		
+		VehicleDetails vehicleDetails=vehicleDetailsService.addVehicle(standardVehicleDetails());
+		
+		this.mockMvc.perform(
+	            get("/vendor/vehicle/getByRegistrationNumber/"+vehicleDetails.getRegistrationNumber())
+	                )
+	            .andDo(print())
+	            .andExpect(status().isFound())
+	            
+	         //   .andExpect(jsonPath("$.key.customerId").value(standardDocumentDetailsWithDummyDocument().getKey().getCustomerId()))
+		
+		 		.andExpect(jsonPath("$.ownerFirstName").value(standardVehicleDetails().getOwnerFirstName()))
+		 		.andExpect(jsonPath("$.ownerMiddleName").value(standardVehicleDetails().getOwnerMiddleName()))
+		 		.andExpect(jsonPath("$.ownerLastName").value(standardVehicleDetails().getOwnerLastName()))
+		 	//	.andExpect(jsonPath("$.vehicleTypeId.vehicleTypeName").value(standVehicleTypeDetails().getVehicleTypeName()))
+	            .andExpect(jsonPath("$.vehicleBrandId.vehicleBrandName").value(standardVehicleBrandDetails().getVehicleBrandName()))
+	            .andExpect(jsonPath("$.vehicleBrandId.modelNumber").value(standardVehicleBrandDetails().getModelNumber()))
+	            .andExpect(jsonPath("$.vehicleBrandId.vehicleTypeId.vehicleTypeName").value(standVehicleTypeDetails().getVehicleTypeName()))
+	            .andExpect(jsonPath("$.vehicleBodyType").value(standardVehicleDetails().getVehicleBodyType()))
+	            .andExpect(jsonPath("$.isBodyTypeFlexible").value(standardVehicleDetails().getIsBodyTypeFlexible()))
+	            .andExpect(jsonPath("$.registrationNumber").value(standardVehicleDetails().getRegistrationNumber()))
+	            .andExpect(jsonPath("$.chassisNumber").value(standardVehicleDetails().getChassisNumber()))
+	            .andExpect(jsonPath("$.loadCapacityInTons").value(standardVehicleDetails().getLoadCapacityInTons()))
+	            .andExpect(jsonPath("$.numberOfWheels").value(standardVehicleDetails().getNumberOfWheels()))
+	            .andExpect(jsonPath("$.permitType").value(standardVehicleDetails().getPermitType()))
+	            .andExpect(jsonPath("$.insuranceStatus").value(standardVehicleDetails().getInsuranceStatus()))
+	            .andExpect(jsonPath("$.insuranceNumber").value(standardVehicleDetails().getInsuranceNumber()))
+	            .andExpect(jsonPath("$.insuranceCompany").value(standardVehicleDetails().getInsuranceCompany()))
+	            .andExpect(jsonPath("$.updatedBy").value(standardVehicleDetails().getUpdatedBy()))
+	            .andExpect(jsonPath("$.insertTime").exists())
+	            .andExpect(jsonPath("$.updateTime").exists());
+
+		
+	}
+
 	
 	@Test
 	public void deleteByVehicleId() throws Exception

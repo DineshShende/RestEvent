@@ -10,9 +10,12 @@ import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+
 import com.projectx.rest.config.Application;
+import com.projectx.rest.domain.quickregister.EmailVerificationDetails;
 import com.projectx.rest.domain.quickregister.MobileVerificationDetails;
 import com.projectx.rest.exception.repository.quickregister.MobileVerificationDetailsNotFoundException;
+import com.projectx.rest.repository.completeregister.TransactionalUpdatesRepository;
 import com.projectx.rest.repository.quickregister.MobileVerificationDetailsRepository;
 
 import static com.projectx.rest.config.Constants.SPRING_PROFILE_ACTIVE_TEST;
@@ -26,13 +29,29 @@ import static com.projectx.rest.fixture.quickregister.QuickRegisterDataFixture.*
 public class MobileVerificationDetailsRepositoryTest {
 
 	
+	
+	
+	@Autowired
+	TransactionalUpdatesRepository transactionalUpdatesRepository;
+	
+	@Autowired
+	QuickRegisterRepository quickRegisterRepository;
+	
+	@Autowired
+	EmailVericationDetailsRepository emailVericationDetailsRepository;
+	
+	@Autowired
+	AuthenticationDetailsRepository authenticationDetailsRepository;
+	
 	@Autowired
 	MobileVerificationDetailsRepository customerMobileVerificationDetailsRepository;
-	
 	
 	@Before
 	public void setUp()
 	{
+		authenticationDetailsRepository.clearLoginDetailsForTesting();
+		quickRegisterRepository.clearCustomerQuickRegister();
+		emailVericationDetailsRepository.clearTestData();
 		customerMobileVerificationDetailsRepository.clearTestData();
 	}
 	
@@ -59,13 +78,13 @@ public class MobileVerificationDetailsRepositoryTest {
 			assertNull(mobileVerificationDetails);
 		}
 		
-		MobileVerificationDetails savedEntity=customerMobileVerificationDetailsRepository.save(standardCustomerMobileVerificationDetails());
+		MobileVerificationDetails savedEntity= transactionalUpdatesRepository.saveNewQuickRegisterEntity(standardEmailMobileCustomer()).getCustomerMobileVerificationDetails();
 		
-		assertEquals(standardCustomerMobileVerificationDetails(), savedEntity);
+		assertEquals(standardCustomerMobileVerificationDetailsNull(), savedEntity);
 		
 		assertEquals(1, customerMobileVerificationDetailsRepository.count().intValue());
 		
-		assertEquals(savedEntity,customerMobileVerificationDetailsRepository.geByEntityIdTypeAndMobileType(standardCustomerMobileVerificationDetailsByCustomerIdAndMobileDTO().getCustomerId(),
+		assertEquals(savedEntity,customerMobileVerificationDetailsRepository.geByEntityIdTypeAndMobileType(savedEntity.getKey().getCustomerId(),
 				standardCustomerMobileVerificationDetailsByCustomerIdAndMobileDTO().getCustomerType(),
 				MOB_TYPE_PRIMARY));
 	}
@@ -87,9 +106,9 @@ public class MobileVerificationDetailsRepositoryTest {
 			assertNull(mobileVerificationDetails);
 		}
 		
-		MobileVerificationDetails savedEntity=customerMobileVerificationDetailsRepository.save(standardCustomerMobileVerificationDetails());
+		MobileVerificationDetails savedEntity= transactionalUpdatesRepository.saveNewQuickRegisterEntity(standardEmailMobileCustomer()).getCustomerMobileVerificationDetails();
 		
-		assertEquals(standardCustomerMobileVerificationDetails(), savedEntity);
+		assertEquals(standardCustomerMobileVerificationDetailsNull(), savedEntity);
 		
 		assertEquals(1, customerMobileVerificationDetailsRepository.count().intValue());
 		
@@ -110,13 +129,14 @@ public class MobileVerificationDetailsRepositoryTest {
 				standardUpdateMobilePinAndMobileVerificationAttemptsDTO().getUpdatedBy(),
 				standardUpdateMobilePinAndMobileVerificationAttemptsDTO().getUpdatedById()).intValue());
 		
-		MobileVerificationDetails oldSaved=customerMobileVerificationDetailsRepository.save(standardCustomerMobileVerificationDetails());
+		MobileVerificationDetails oldSaved= transactionalUpdatesRepository.saveNewQuickRegisterEntity(standardEmailMobileCustomer()).getCustomerMobileVerificationDetails();
 		
 		
-		assertEquals(CUST_MOBILEPIN, customerMobileVerificationDetailsRepository.geByEntityIdTypeAndMobileType(oldSaved.getKey().getCustomerId(),oldSaved.getKey().getCustomerType(), oldSaved.getKey().getMobileType()).getMobilePin());
+		assertNull(customerMobileVerificationDetailsRepository.geByEntityIdTypeAndMobileType(oldSaved.getKey().getCustomerId(),oldSaved.getKey().getCustomerType(), oldSaved.getKey().getMobileType()).getMobilePin());
 		
 		
-		assertEquals(1, customerMobileVerificationDetailsRepository.updateMobilePinAndMobileVerificationAttemptsAndResendCount(standardUpdateMobilePinAndMobileVerificationAttemptsDTO().getCustomerId(),
+		assertEquals(1, customerMobileVerificationDetailsRepository.updateMobilePinAndMobileVerificationAttemptsAndResendCount(
+				oldSaved.getKey().getCustomerId(),
 				standardUpdateMobilePinAndMobileVerificationAttemptsDTO().getCustomerType(),
 				standardUpdateMobilePinAndMobileVerificationAttemptsDTO().getMobileType(),standardUpdateMobilePinAndMobileVerificationAttemptsDTO().getMobilePin(),
 				standardUpdateMobilePinAndMobileVerificationAttemptsDTO().getMobileVerificationAttempts(), standardUpdateMobilePinAndMobileVerificationAttemptsDTO().getResendCount(),
@@ -140,12 +160,12 @@ public class MobileVerificationDetailsRepositoryTest {
 				standardCustomerIdTypeMobileTypeUpdatedByDTO().getMobileType(),standardCustomerIdTypeMobileTypeUpdatedByDTO().getRequestedBy(),
 				standardCustomerIdTypeMobileTypeUpdatedByDTO().getRequestedById()));
 		
-		MobileVerificationDetails oldSaved=customerMobileVerificationDetailsRepository.save(standardCustomerMobileVerificationDetails());
+		MobileVerificationDetails oldSaved= transactionalUpdatesRepository.saveNewQuickRegisterEntity(standardEmailMobileCustomer()).getCustomerMobileVerificationDetails();
 		
 		assertEquals(new Integer(0), customerMobileVerificationDetailsRepository.geByEntityIdTypeAndMobileType(
 				oldSaved.getKey().getCustomerId(),oldSaved.getKey().getCustomerType(), oldSaved.getKey().getMobileType()).getMobileVerificationAttempts());
 		
-		assertEquals(new Integer(1), customerMobileVerificationDetailsRepository.incrementMobileVerificationAttempts(standardCustomerIdTypeMobileTypeUpdatedByDTO().getCustomerId()
+		assertEquals(new Integer(1), customerMobileVerificationDetailsRepository.incrementMobileVerificationAttempts(oldSaved.getKey().getCustomerId()
 				,standardCustomerIdTypeMobileTypeUpdatedByDTO().getCustomerType(),
 				standardCustomerIdMobileDTO().getMobileType(),standardCustomerIdTypeMobileTypeUpdatedByDTO().getRequestedBy(),
 				standardCustomerIdTypeMobileTypeUpdatedByDTO().getRequestedById()));
@@ -165,13 +185,14 @@ public class MobileVerificationDetailsRepositoryTest {
 				standardCustomerIdTypeMobileTypeUpdatedByDTO().getMobileType(),standardCustomerIdTypeMobileTypeUpdatedByDTO().getRequestedBy(),
 				standardCustomerIdTypeMobileTypeUpdatedByDTO().getRequestedById()));
 		
-		MobileVerificationDetails oldSaved=customerMobileVerificationDetailsRepository.save(standardCustomerMobileVerificationDetails());
+		MobileVerificationDetails oldSaved= transactionalUpdatesRepository.saveNewQuickRegisterEntity(standardEmailMobileCustomer()).getCustomerMobileVerificationDetails();
 		
 		assertEquals(new Integer(0), customerMobileVerificationDetailsRepository
 				.geByEntityIdTypeAndMobileType(oldSaved.getKey().getCustomerId(),oldSaved.getKey().getCustomerType(), oldSaved.getKey().getMobileType()).getResendCount());
 		
-		assertEquals(new Integer(1), customerMobileVerificationDetailsRepository.incrementResendCount(standardCustomerIdTypeMobileTypeUpdatedByDTO().getCustomerId(),
-				standardCustomerIdTypeMobileTypeUpdatedByDTO().getCustomerType(),
+		assertEquals(new Integer(1), customerMobileVerificationDetailsRepository.incrementResendCount(
+				oldSaved.getKey().getCustomerId(),
+				oldSaved.getKey().getCustomerType(),
 				standardCustomerIdTypeMobileTypeUpdatedByDTO().getMobileType(),standardCustomerIdTypeMobileTypeUpdatedByDTO().getRequestedBy(),
 				standardCustomerIdTypeMobileTypeUpdatedByDTO().getRequestedById()));
 		
@@ -185,7 +206,7 @@ public class MobileVerificationDetailsRepositoryTest {
 	{
 		assertEquals(0, customerMobileVerificationDetailsRepository.count().intValue());
 		
-		MobileVerificationDetails oldSaved=customerMobileVerificationDetailsRepository.save(standardCustomerMobileVerificationDetails());
+		MobileVerificationDetails oldSaved= transactionalUpdatesRepository.saveNewQuickRegisterEntity(standardEmailMobileCustomer()).getCustomerMobileVerificationDetails();
 		
 		assertEquals(1, customerMobileVerificationDetailsRepository.count().intValue());
 		
@@ -197,7 +218,7 @@ public class MobileVerificationDetailsRepositoryTest {
 	{
 		assertEquals(0, customerMobileVerificationDetailsRepository.count().intValue());
 		
-		MobileVerificationDetails oldSaved=customerMobileVerificationDetailsRepository.save(standardCustomerMobileVerificationDetails());
+		MobileVerificationDetails oldSaved= transactionalUpdatesRepository.saveNewQuickRegisterEntity(standardEmailMobileCustomer()).getCustomerMobileVerificationDetails();
 		
 		assertEquals(1, customerMobileVerificationDetailsRepository.count().intValue());
 	
@@ -212,7 +233,7 @@ public class MobileVerificationDetailsRepositoryTest {
 	{
 		assertEquals(0, customerMobileVerificationDetailsRepository.count().intValue());
 		
-		MobileVerificationDetails oldSaved=customerMobileVerificationDetailsRepository.save(standardCustomerMobileVerificationDetails());
+		MobileVerificationDetails oldSaved= transactionalUpdatesRepository.saveNewQuickRegisterEntity(standardEmailMobileCustomer()).getCustomerMobileVerificationDetails();
 		
 		assertEquals(1, customerMobileVerificationDetailsRepository.count().intValue());
 	

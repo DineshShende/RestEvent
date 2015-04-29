@@ -24,6 +24,7 @@ import com.projectx.rest.exception.repository.quickregister.QuickRegisterDetails
 import com.projectx.rest.exception.repository.quickregister.QuickRegisterEntityNotFoundException;
 import com.projectx.rest.exception.repository.quickregister.QuickRegisterEntityNotSavedException;
 import com.projectx.rest.exception.repository.quickregister.ResourceNotFoundException;
+import com.projectx.rest.repository.completeregister.TransactionalUpdatesRepository;
 import com.projectx.rest.repository.quickregister.QuickRegisterRepository;
 
 
@@ -43,6 +44,9 @@ public class QuickRegisterRepositoryTest {
 	
 	@Autowired
 	AuthenticationDetailsRepository authenticationDetailsRepository;
+	
+	@Autowired
+	TransactionalUpdatesRepository transactionalUpdatesRepository;
 	
 	@Before
 	public void clearExistingRecords()
@@ -66,7 +70,7 @@ public class QuickRegisterRepositoryTest {
 		System.out.println("Test Profile:"+activeProfile+":Pro:"+env.getActiveProfiles()[0]);
 		
 		try{
-			quickRegisterEntity=customerQuickRegisterRepository.save(standardEmailMobileCustomerWithError());
+			quickRegisterEntity=transactionalUpdatesRepository.saveNewQuickRegisterEntity(standardEmailMobileCustomerWithError()).getCustomerQuickRegisterEntity();
 		}catch(ValidationFailedException e)
 		{
 			assertNull(quickRegisterEntity);
@@ -79,10 +83,10 @@ public class QuickRegisterRepositoryTest {
 	{
 		QuickRegisterEntity quickRegisterEntity=null;
 		
-		customerQuickRegisterRepository.save(standardEmailMobileCustomer());
+		transactionalUpdatesRepository.saveNewQuickRegisterEntity(standardEmailMobileCustomer()).getCustomerQuickRegisterEntity();
 		
 		try{
-			quickRegisterEntity=customerQuickRegisterRepository.save(standardEmailMobileCustomer());
+			quickRegisterEntity=transactionalUpdatesRepository.saveNewQuickRegisterEntity(standardEmailMobileCustomer()).getCustomerQuickRegisterEntity();
 		}catch(QuickRegisterDetailsAlreadyPresentException e)
 		{
 			assertNull(quickRegisterEntity);
@@ -90,35 +94,7 @@ public class QuickRegisterRepositoryTest {
 		
 	}
 	
-	@Test
-	public void findAllWithEmailMobileCustomer() {
-		
-		List<QuickRegisterEntity> customerList=customerQuickRegisterRepository.findAll();
-		
-		assertEquals(0,customerList.size());
-		
-		customerQuickRegisterRepository.save(standardEmailMobileCustomer());
-		
-		customerList=customerQuickRegisterRepository.findAll();
-		
-		assertEquals(1,customerList.size());
-		
-		QuickRegisterEntity customer=customerList.get(0);
-		
-		assertEquals(CUST_FIRSTNAME, customer.getFirstName());
-		assertEquals(CUST_LASTNAME, customerList.get(0).getLastName());
-		assertEquals(CUST_EMAIL, customerList.get(0).getEmail());
-		assertEquals(CUST_MOBILE, customerList.get(0).getMobile());
-		assertEquals(CUST_PIN_CODE, customerList.get(0).getPincode());
-		assertEquals(CUST_IS_EMAIL_VERIFIED_FALSE, customerList.get(0).getIsEmailVerified());
-		assertEquals(CUST_IS_MOBILE_VERIFIED_FALSE, customerList.get(0).getIsMobileVerified());
-		assertNotNull(customerList.get(0).getInsertTime());
-		assertNotNull(customerList.get(0).getUpdateTime());
-		assertEquals(CUST_UPDATED_BY, customerList.get(0).getUpdatedBy());
-		
-	}
 	
-
 	
 	@Test
 	public void findByCustomerIdWithEmailMobileCustomer()  {
@@ -132,7 +108,7 @@ public class QuickRegisterRepositoryTest {
 			assertNull(quickRegisterEntity);
 		}
 		
-		QuickRegisterEntity savedCustomer=customerQuickRegisterRepository.save(standardEmailMobileCustomer());
+		QuickRegisterEntity savedCustomer=transactionalUpdatesRepository.saveNewQuickRegisterEntity(standardEmailMobileCustomer()).getCustomerQuickRegisterEntity();
 
 		assertEquals(savedCustomer,customerQuickRegisterRepository.findByCustomerId(savedCustomer.getCustomerId()));
 			
@@ -161,7 +137,7 @@ public class QuickRegisterRepositoryTest {
 		}
 		
 				
-		QuickRegisterEntity savedEntity=customerQuickRegisterRepository.save(standardEmailMobileCustomer());
+		QuickRegisterEntity savedEntity=transactionalUpdatesRepository.saveNewQuickRegisterEntity(standardEmailMobileCustomer()).getCustomerQuickRegisterEntity();
 		
 		assertEquals(savedEntity,customerQuickRegisterRepository.findByEmail(CUST_EMAIL));
 		
@@ -178,9 +154,9 @@ public class QuickRegisterRepositoryTest {
 				standardUpdateEmailMobileVerificationStatus().getUpdatedBy(),
 				standardUpdateEmailMobileVerificationStatus().getUpdatedById()));
 		
-		QuickRegisterEntity savedCustomer=customerQuickRegisterRepository.save(standardEmailMobileCustomer());
+		QuickRegisterEntity savedCustomer=transactionalUpdatesRepository.saveNewQuickRegisterEntity(standardEmailMobileCustomer()).getCustomerQuickRegisterEntity();
 		
-		assertEquals(1, customerQuickRegisterRepository.findAll().size());
+		assertEquals(1,customerQuickRegisterRepository.count().intValue());
 		
 		assertEquals(new Integer(1), customerQuickRegisterRepository.updateEmailVerificationStatus(savedCustomer.getCustomerId(),
 				standardUpdateEmailMobileVerificationStatus().getStatus(),standardUpdateEmailMobileVerificationStatus().getUpdateTime(),
@@ -198,9 +174,9 @@ public class QuickRegisterRepositoryTest {
 				standardUpdateEmailMobileVerificationStatus().getStatus(),standardUpdateEmailMobileVerificationStatus().getUpdateTime(),
 				standardUpdateEmailMobileVerificationStatus().getUpdatedBy(),standardUpdateEmailMobileVerificationStatus().getUpdatedById()));
 		
-		QuickRegisterEntity savedCustomer=customerQuickRegisterRepository.save(standardEmailMobileCustomer());
+		QuickRegisterEntity savedCustomer=transactionalUpdatesRepository.saveNewQuickRegisterEntity(standardEmailMobileCustomer()).getCustomerQuickRegisterEntity();
 		
-		assertEquals(1, customerQuickRegisterRepository.findAll().size());
+		assertEquals(1,customerQuickRegisterRepository.count().intValue());
 		
 		assertEquals(new Integer(1), customerQuickRegisterRepository.updateMobileVerificationStatus(savedCustomer.getCustomerId(),
 				standardUpdateEmailMobileVerificationStatus().getStatus(),standardUpdateEmailMobileVerificationStatus().getUpdateTime(),
@@ -218,15 +194,15 @@ public class QuickRegisterRepositoryTest {
 	@Test
 	public void clearData() throws Exception
 	{
-		assertEquals(0, customerQuickRegisterRepository.findAll().size());
+		assertEquals(0,customerQuickRegisterRepository.count().intValue());
 		
-		QuickRegisterEntity savedEntity=customerQuickRegisterRepository.save(standardMobileCustomer());
+		QuickRegisterEntity savedCustomer=transactionalUpdatesRepository.saveNewQuickRegisterEntity(standardEmailMobileCustomer()).getCustomerQuickRegisterEntity();
 		
-		assertEquals(1, customerQuickRegisterRepository.findAll().size());
+		assertEquals(1,customerQuickRegisterRepository.count().intValue());
 		
 		customerQuickRegisterRepository.clearCustomerQuickRegister();
 		
-		assertEquals(0, customerQuickRegisterRepository.findAll().size());
+		assertEquals(0,customerQuickRegisterRepository.count().intValue());
 		
 	}
 	

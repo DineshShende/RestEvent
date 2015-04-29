@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Repository;
 
 import com.projectx.rest.domain.async.RetriggerDetails;
+import com.projectx.rest.domain.comndto.ResponseDTO;
 
 
 @Repository

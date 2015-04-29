@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import com.projectx.data.domain.quickregister.MobilePinPasswordDTO;
 import com.projectx.data.domain.quickregister.UpdateEmailMobileVerificationStatus;
+import com.projectx.rest.domain.quickregister.CustomerQuickRegisterEmailMobileVerificationEntity;
 import com.projectx.rest.domain.quickregister.QuickRegisterEntity;
 import com.projectx.rest.exception.repository.completeregister.ValidationFailedException;
 import com.projectx.rest.exception.repository.quickregister.QuickRegisterDetailsAlreadyPresentException;
@@ -17,10 +18,6 @@ import com.projectx.rest.exception.repository.quickregister.ResourceNotFoundExce
 @Repository
 public interface QuickRegisterRepository {
 
-	 QuickRegisterEntity save(QuickRegisterEntity customer) throws QuickRegisterDetailsAlreadyPresentException,ValidationFailedException;
-	
-	 List<QuickRegisterEntity> findAll();
-	 
 	 QuickRegisterEntity findByCustomerId(Long customerId) throws ResourceNotFoundException;
 	 
 	 QuickRegisterEntity findByEmail(String email) throws ResourceNotFoundException;
@@ -31,8 +28,8 @@ public interface QuickRegisterRepository {
 	 
 	 Integer updateEmailVerificationStatus(Long customerId,Boolean status,Date updateTime,Integer updatedBy,Long updatedById);
 	 
-	 List<MobilePinPasswordDTO> getTestData();
-
+	 Integer count();
+	 
 	 void clearCustomerQuickRegister();
 	 	
 }

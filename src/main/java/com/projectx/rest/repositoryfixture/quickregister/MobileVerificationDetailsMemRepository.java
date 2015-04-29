@@ -26,16 +26,6 @@ public class MobileVerificationDetailsMemRepository implements
 	
 	
 	@Override
-	public MobileVerificationDetails save(
-			MobileVerificationDetails mobileVerificationDetails) {
-		
-		
-		customerList.put(mobileVerificationDetails.getKey(), mobileVerificationDetails);
-		
-		return mobileVerificationDetails;
-	}
-
-	@Override
 	public MobileVerificationDetails geByEntityIdTypeAndMobileType(Long customerId,Integer customerType,Integer mobileType) {
 		
 		MobileVerificationDetailsKey key=new MobileVerificationDetailsKey(customerId, customerType, mobileType);

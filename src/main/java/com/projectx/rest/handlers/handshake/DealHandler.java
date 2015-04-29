@@ -10,6 +10,7 @@ import com.projectx.rest.domain.completeregister.VendorDetails;
 import com.projectx.rest.domain.handshake.DealDetails;
 import com.projectx.rest.domain.request.FreightRequestByCustomer;
 import com.projectx.rest.domain.request.FreightRequestByVendor;
+import com.projectx.rest.domain.request.FreightRequestByVendorDTO;
 import com.projectx.rest.repository.handshake.DealDetailsRepository;
 import com.projectx.rest.services.completeregister.CustomerDetailsService;
 import com.projectx.rest.services.completeregister.VendorDetailsService;
@@ -42,11 +43,11 @@ public class DealHandler implements DealService {
 	
 	@Override
 	public DealDetails triggerDeal(Long freightRequestByCustomer,
-			Long freightRequestByVendor,String deductionMode,Integer amount,String triggeredBy) {
+			Long freightRequestByVendor,String deductionMode,Integer amount,Integer triggeredBy,Long triggeredById) {
 
 		
 		DealDetails dealDetails=new DealDetails(freightRequestByCustomer, freightRequestByVendor, deductionMode, amount, 
-				triggeredBy, new Date(), triggeredBy, new Date());
+				new Date(), new Date(), triggeredBy, triggeredById, triggeredBy, triggeredById);
 
 		DealDetails savedDealDetails=save(dealDetails);
 		
@@ -60,7 +61,7 @@ public class DealHandler implements DealService {
 		
 		FreightRequestByCustomer requestByCustomer=freightRequestByCustomerService.getRequestById(freightRequestByCustomer);
 		
-		FreightRequestByVendor requestByVendor=freightRequestByVendorService.getRequestById(freightRequestByVendor);
+		FreightRequestByVendorDTO requestByVendor=freightRequestByVendorService.getRequestById(freightRequestByVendor);
 		
 		
 		CustomerDetails customerDetails=customerDetailsService.findById(requestByCustomer.getCustomerId());
@@ -83,9 +84,10 @@ public class DealHandler implements DealService {
 
 	@Override
 	public DealDetails triggerDealAndExchangeContact(
-			Long freightRequestByCustomer, Long freightRequestByVendor,String deductionMode,Integer amount,String triggeredBy) {
+			Long freightRequestByCustomer, Long freightRequestByVendor,String deductionMode,Integer amount
+			,Integer triggeredBy,Long triggeredById) {
 
-		DealDetails dealDetails=triggerDeal(freightRequestByCustomer, freightRequestByVendor, deductionMode, amount, triggeredBy);
+		DealDetails dealDetails=triggerDeal(freightRequestByCustomer, freightRequestByVendor, deductionMode, amount, triggeredBy,triggeredById);
 		
 		Boolean result=exchangeContact(dealDetails.getDealId(), freightRequestByCustomer, freightRequestByVendor);
 

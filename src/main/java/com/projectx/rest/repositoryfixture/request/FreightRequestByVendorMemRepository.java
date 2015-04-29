@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 import com.projectx.rest.domain.request.FreightRequestByCustomer;
 import com.projectx.rest.domain.request.FreightRequestByVendor;
+import com.projectx.rest.domain.request.FreightRequestByVendorDTO;
 import com.projectx.rest.repository.request.FreightRequestByVendorRepository;
 
 
@@ -35,9 +36,9 @@ public class FreightRequestByVendorMemRepository implements
 	}
 
 	@Override
-	public FreightRequestByVendor getById(Long requestId) {
+	public FreightRequestByVendorDTO getById(Long requestId) {
 
-		return list.get(requestId);
+		return null;
 	}
 
 	@Override
@@ -62,15 +63,15 @@ public class FreightRequestByVendorMemRepository implements
 	}
 
 	@Override
-	public List<FreightRequestByVendor> findByVendor(Long vendorId) {
+	public List<FreightRequestByVendorDTO> findByVendor(Long vendorId) {
 
-		List<FreightRequestByVendor> freightRequestByVendorList=new ArrayList<FreightRequestByVendor>();
+		List<FreightRequestByVendorDTO> freightRequestByVendorList=new ArrayList<FreightRequestByVendorDTO>();
 		
 		
 		for(Long key:list.keySet())
 		{
-			if(list.get(key).getVendorId().equals(vendorId))
-			freightRequestByVendorList.add(list.get(key));
+			//if(list.get(key).getVendorId().equals(vendorId))
+			//freightRequestByVendorList.add(list.get(key));
 		}
 		
 		return freightRequestByVendorList;
@@ -80,10 +81,10 @@ public class FreightRequestByVendorMemRepository implements
 	}
 
 	@Override
-	public List<FreightRequestByVendor> getMatchingVendorReqFromCustomerReq(
+	public List<FreightRequestByVendorDTO> getMatchingVendorReqFromCustomerReq(
 			FreightRequestByCustomer freightRequestByCustomer) {
 		
-		List<FreightRequestByVendor> returnList=new ArrayList<FreightRequestByVendor>();
+		List<FreightRequestByVendorDTO> returnList=new ArrayList<FreightRequestByVendorDTO>();
 		
 		//returnList.add(new FreightRequestByVendor("122", 124, 435, 32L, new Date(), "6:00AM", 10, 12L, "NEW",234L, new Date(), new Date(), "updatedBy"));
 		

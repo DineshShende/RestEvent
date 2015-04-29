@@ -44,8 +44,8 @@ public class QuickRegisterHandler implements
 	@Autowired
 	QuickRegisterRepository customerQuickRegisterRepository;
 	
-	@Autowired
-	AuthenticationHandler authenticationHandler; 
+	//@Autowired
+	//AuthenticationHandler authenticationHandler; 
 	
 	@Autowired
 	EmailVerificationService emailVerificationService;
@@ -318,17 +318,6 @@ public class QuickRegisterHandler implements
 	}
 
 	@Override
-	public QuickRegisterEntity saveCustomerQuickRegisterEntity(
-			QuickRegisterEntity customerQuickRegisterEntity) throws QuickRegisterDetailsAlreadyPresentException,ValidationFailedException {
-		
-		QuickRegisterEntity quickRegisterEntity=customerQuickRegisterRepository.save(customerQuickRegisterEntity);
-		
-		return quickRegisterEntity;
-	}
-
-	
-	
-	@Override
 	public QuickRegisterEntity getByEntityId(
 			Long customerId)throws QuickRegisterEntityNotFoundException {
 		
@@ -355,17 +344,13 @@ public class QuickRegisterHandler implements
 	@Override
 	public void clearDataForTesting() {
 		customerQuickRegisterRepository.clearCustomerQuickRegister();
-		authenticationHandler.clearTestData();
+	//	authenticationHandler.clearTestData();
 		mobileVerificationService.clearTestData();
 		emailVerificationService.clearTestData();
 		
 	}
 
-	@Override
-	public List<MobilePinPasswordDTO> getTestData() {
 
-		return customerQuickRegisterRepository.getTestData();
-	}
 
 
 }

@@ -20,7 +20,7 @@ import com.projectx.rest.service.ivr.OutBoundCallService;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
-@ActiveProfiles(SPRING_PROFILE_ACTIVE_TEST)
+@ActiveProfiles(SPRING_PROFILE_ACTIVE_TEST)//
 
 public class OutBoundCallResponseServiceTest {
 

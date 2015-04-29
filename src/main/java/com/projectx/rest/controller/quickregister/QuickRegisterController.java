@@ -34,6 +34,7 @@ import com.projectx.mvc.domain.quickregister.UpdateMobilePinDTO;
 import com.projectx.mvc.domain.quickregister.UpdatePasswordDTO;
 import com.projectx.mvc.domain.quickregister.VerifyEmailHashDTO;
 import com.projectx.mvc.domain.quickregister.VerifyMobilePinDTO;
+import com.projectx.rest.domain.comndto.ResponseDTO;
 import com.projectx.rest.domain.quickregister.AuthenticationDetails;
 import com.projectx.rest.domain.quickregister.EmailVerificationDetails;
 import com.projectx.rest.domain.quickregister.MobileVerificationDetails;
@@ -54,25 +55,13 @@ public class QuickRegisterController {
 	@Autowired
 	QuickRegisterService customerQuickRegisterService;
 
-	/*	
-	@RequestMapping(value="/checkifexist",method=RequestMethod.POST)
-	public ResponseEntity<CustomerQuickRegisterStringStatusEntity> checkIfCustomerAlreadyExist(@Valid @RequestBody CustomerQuickRegisterEntityDTO customer,
-			BindingResult bindingResult) throws Exception
-	{
-		if(bindingResult.hasErrors())
-			return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
 		
-		return new ResponseEntity<CustomerQuickRegisterStringStatusEntity>(customerQuickRegisterService.checkIfAlreadyRegistered(customer),
-				HttpStatus.OK);
-	}
-	*/
-	
 	@RequestMapping(method=RequestMethod.POST)
 	public ResponseEntity<CustomerQuickRegisterStatusEntity> addNewCustomerQuickRegister(@Valid @RequestBody CustomerQuickRegisterEntityDTO newCustomer,
 			BindingResult bindingResult) throws Exception
 	{		
 		if(bindingResult.hasErrors())
-			return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+			return new ResponseEntity<CustomerQuickRegisterStatusEntity>(new CustomerQuickRegisterStatusEntity("VALIDATION_FAILED", null),HttpStatus.OK);
 		
 		CustomerQuickRegisterStatusEntity preCheck=customerQuickRegisterService.checkIfAlreadyRegistered(newCustomer);
 		
@@ -84,49 +73,46 @@ public class QuickRegisterController {
 			try{
 				CustomerQuickRegisterStatusEntity newCustomerEntity=customerQuickRegisterService.handleNewCustomerQuickRegister(newCustomer);
 				result=new ResponseEntity<CustomerQuickRegisterStatusEntity>(newCustomerEntity, HttpStatus.CREATED);
-			}catch(RestClientException e)
-			{
-				result=new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
 			}
 			catch(ResourceAlreadyPresentException e)
 			{
-				result=new ResponseEntity<>(HttpStatus.ALREADY_REPORTED);
-			}catch (ResourceNotFoundException e) {
-				result=new ResponseEntity<>(HttpStatus.NO_CONTENT);
+				return new ResponseEntity<CustomerQuickRegisterStatusEntity>(new CustomerQuickRegisterStatusEntity(e.getMessage(), null),HttpStatus.ALREADY_REPORTED);
+			}
+			catch(RestClientException e)
+			{
+				return new ResponseEntity<CustomerQuickRegisterStatusEntity>(new CustomerQuickRegisterStatusEntity("COMMUNICATION_PROB_DATA_LAYER", null),HttpStatus.OK);
 			}
 		}else
 		{
-			result=new ResponseEntity<>(preCheck, HttpStatus.ALREADY_REPORTED);
+			result=new ResponseEntity<CustomerQuickRegisterStatusEntity>(preCheck, HttpStatus.ALREADY_REPORTED);
 		}
 							
 		return result;
 	}
 
 	@RequestMapping(value="/getByCustomerId",method=RequestMethod.POST)
-	public ResponseEntity<QuickRegisterEntity> getCustomerByCustomerId(@Valid @RequestBody CustomerIdTypeDTO customerIdDTO,
+	public ResponseEntity<ResponseDTO<QuickRegisterEntity>> getCustomerByCustomerId(@Valid @RequestBody CustomerIdTypeDTO customerIdDTO,
 			BindingResult bindingResult )
 	{
 		if(bindingResult.hasErrors())
-			return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+			return new ResponseEntity<ResponseDTO<QuickRegisterEntity>>
+							(new ResponseDTO<QuickRegisterEntity>("VALIDATION_FAILED", null),HttpStatus.OK);
 		
-		ResponseEntity<QuickRegisterEntity> result=null;
+		ResponseEntity<ResponseDTO<QuickRegisterEntity>> result=null;
 		
 		try{
 			QuickRegisterEntity fetchedEntity=customerQuickRegisterService.getByEntityId(customerIdDTO.getCustomerId());
-			result=new ResponseEntity<QuickRegisterEntity>(fetchedEntity, HttpStatus.FOUND);
+			result=new ResponseEntity<ResponseDTO<QuickRegisterEntity>>(new ResponseDTO<QuickRegisterEntity>
+											("", fetchedEntity), HttpStatus.OK);
 		}catch(QuickRegisterEntityNotFoundException e)
 		{
-			result=new ResponseEntity<>(HttpStatus.NO_CONTENT);
+			return new ResponseEntity<ResponseDTO<QuickRegisterEntity>>
+			(new ResponseDTO<QuickRegisterEntity>(e.getMessage(), null),HttpStatus.OK);
 		}
 		
 		return result;
 	}
 
-	@RequestMapping(value="/getTestData",method=RequestMethod.GET)
-	List<MobilePinPasswordDTO> getTestData()
-	{
-		return customerQuickRegisterService.getTestData();
-	}
 	
 	@RequestMapping(value="/cleartestdata")
 	public Boolean clearTestData()

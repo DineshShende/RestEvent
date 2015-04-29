@@ -27,18 +27,6 @@ public class TransactionalUpdatesHandler implements
 	TransactionalUpdatesRepository transactionalUpdatesRepository;
 	
 	@Override
-	public CustomerDetails updateCustomerDetails(CustomerDetails customerDetails) throws CustomerDetailsTransactionalUpdateFailedException{
-
-		return transactionalUpdatesRepository.updateCustomerDetails(customerDetails);
-	}
-
-	@Override
-	public VendorDetails updateVendorDetails(VendorDetails vendorDetails) throws VendorDetailsTransactionalUpdateFailedException{
-
-		return transactionalUpdatesRepository.updateVendorDetails(vendorDetails);
-	}
-
-	@Override
 	public Boolean updateMobileInDetailsEnityAndAuthenticationDetails(
 			Long entityId, Integer entityType, Integer mobileType,Integer updatedBy,Long updatedById) throws UpdateMobileInDetailsAndAuthentionDetailsFailedException{
 

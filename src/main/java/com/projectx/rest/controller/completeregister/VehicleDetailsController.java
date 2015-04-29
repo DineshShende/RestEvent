@@ -64,6 +64,23 @@ public class VehicleDetailsController {
 		
 	}
 	
+	@RequestMapping(value="/getByRegistrationNumber/{vehicleRegistrationNumber}")
+	public ResponseEntity<VehicleDetails> getByRegistration(@PathVariable String vehicleRegistrationNumber)
+	{
+		ResponseEntity<VehicleDetails> result=null;
+		
+		try{
+			VehicleDetails fetchedVehicle=vehicleDetailsService.getVehicleByRegistartionNumber(vehicleRegistrationNumber);
+			result=new ResponseEntity<VehicleDetails>(fetchedVehicle, HttpStatus.FOUND);
+		}catch(VehicleDetailsNotFoundException e)
+		{
+			result=new ResponseEntity<>(HttpStatus.NO_CONTENT);
+		}
+		
+		return result;
+		
+	}
+	
 	@RequestMapping(value="/deleteByVehicleId/{vehicleId}")
 	public ResponseEntity<Boolean> deleteByVehicleId(@PathVariable Long vehicleId)
 	{

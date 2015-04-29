@@ -14,8 +14,11 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.projectx.rest.config.Application;
+import com.projectx.rest.domain.quickregister.AuthenticationDetails;
 import com.projectx.rest.domain.quickregister.EmailVerificationDetails;
+import com.projectx.rest.domain.quickregister.QuickRegisterEntity;
 import com.projectx.rest.exception.repository.quickregister.EmailVerificationDetailNotFoundException;
+import com.projectx.rest.repository.completeregister.TransactionalUpdatesRepository;
 import com.projectx.rest.repository.quickregister.EmailVericationDetailsRepository;
 
 
@@ -29,11 +32,27 @@ public class EmailVerificationDetailsRepositoryTest {
 	@Autowired
 	EmailVericationDetailsRepository customerEmailVericationDetailsRepository;
 	
+	@Autowired
+	QuickRegisterRepository quickRegisterRepository;
+	
+	@Autowired
+	AuthenticationDetailsRepository authenticationDetailsRepository;
+	
+	@Autowired
+	MobileVerificationDetailsRepository customerMobileVerificationDetailsRepository;
+	
+	
+	@Autowired
+	TransactionalUpdatesRepository transactionalUpdatesRepository;
+	
 	
 	@Before
 	public void setUp()
 	{
+		authenticationDetailsRepository.clearLoginDetailsForTesting();
+		quickRegisterRepository.clearCustomerQuickRegister();
 		customerEmailVericationDetailsRepository.clearTestData();
+		customerMobileVerificationDetailsRepository.clearTestData();
 	}
 	
 	
@@ -43,34 +62,7 @@ public class EmailVerificationDetailsRepositoryTest {
 		
 	}
 	
-	@Test
-	public void saveAndGetByCustomerIdAndEmail()
-	{
-		assertEquals(0, customerEmailVericationDetailsRepository.count().intValue());
-		
-		
-	EmailVerificationDetails emailVerificationDetails=null;
 	
-	try{
-		emailVerificationDetails=customerEmailVericationDetailsRepository.getByEntityIdTypeAndEmailType(standardCustomerEmailVerificationDetails().getKey().getCustomerId(),
-				standardCustomerEmailVerificationDetails().getKey().getCustomerType(),EMAIL_TYPE_PRIMARY);
-	}catch(EmailVerificationDetailNotFoundException e)
-	{
-		assertNull(emailVerificationDetails);
-	}
-		
-		
-		
-		EmailVerificationDetails savedEntity=customerEmailVericationDetailsRepository.save(standardCustomerEmailVerificationDetails());
-		
-		assertEquals(standardCustomerEmailVerificationDetails(), savedEntity);
-		
-		assertEquals(1, customerEmailVericationDetailsRepository.count().intValue());
-		
-		assertEquals(savedEntity, customerEmailVericationDetailsRepository.getByEntityIdTypeAndEmailType(standardCustomerEmailVerificationDetailsByCustomerIdAndEmailDTO().getCustomerId(),
-				standardCustomerEmailVerificationDetailsByCustomerIdAndEmailDTO().getCustomerType(),
-				EMAIL_TYPE_PRIMARY));
-	}
 	
 	@Test
 	public void getWithOutFailure()
@@ -108,9 +100,10 @@ public class EmailVerificationDetailsRepositoryTest {
 			assertNull(emailVerificationDetails);
 		}
 		
-		EmailVerificationDetails savedEntity=customerEmailVericationDetailsRepository.save(standardCustomerEmailVerificationDetails());
+		EmailVerificationDetails savedEntity= transactionalUpdatesRepository.saveNewQuickRegisterEntity(standardEmailMobileCustomer()).getCustomerEmailVerificationDetails();
 		
-		assertEquals(standardCustomerEmailVerificationDetails(), savedEntity);
+			
+		assertEquals(standardCustomerEmailVerificationDetailsNull(), savedEntity);
 		
 		assertEquals(1, customerEmailVericationDetailsRepository.count().intValue());
 		
@@ -134,24 +127,26 @@ public class EmailVerificationDetailsRepositoryTest {
 				standardUpdateEmailHashAndEmailHashSentTimeDTO().getUpdatedBy(),
 				standardUpdateEmailHashAndEmailHashSentTimeDTO().getUpdatedById()).intValue());
 		
-		EmailVerificationDetails oldSaved=customerEmailVericationDetailsRepository.save(standardCustomerEmailVerificationDetails());
+		EmailVerificationDetails oldSaved= transactionalUpdatesRepository.saveNewQuickRegisterEntity(standardEmailMobileCustomer()).getCustomerEmailVerificationDetails();
 		
 		String oldEmailHash=oldSaved.getEmailHash();
 		
-		assertEquals(1, customerEmailVericationDetailsRepository.resetEmailHashAndEmailHashSentTime(standardUpdateEmailHashAndEmailHashSentTimeDTO().getCustomerId(),
+		assertEquals(1, customerEmailVericationDetailsRepository.resetEmailHashAndEmailHashSentTime(
+				oldSaved.getKey().getCustomerId(),
 				standardUpdateEmailHashAndEmailHashSentTimeDTO().getCustomerType(),
 				standardUpdateEmailHashAndEmailHashSentTimeDTO().getEmailType(), standardUpdateEmailHashAndEmailHashSentTimeDTO().getEmailHash(), standardUpdateEmailHashAndEmailHashSentTimeDTO().getEmailHashSentTime(),
 				standardUpdateEmailHashAndEmailHashSentTimeDTO().getResendCount(),
 				standardUpdateEmailHashAndEmailHashSentTimeDTO().getUpdatedBy(),
 				standardUpdateEmailHashAndEmailHashSentTimeDTO().getUpdatedById()).intValue());
 		
-		EmailVerificationDetails newFetched=customerEmailVericationDetailsRepository.getByEntityIdTypeAndEmailType(standardCustomerEmailVerificationDetailsByCustomerIdAndEmailDTO().getCustomerId(),
+		EmailVerificationDetails newFetched=customerEmailVericationDetailsRepository.getByEntityIdTypeAndEmailType(oldSaved.getKey().getCustomerId(),
 				standardCustomerEmailVerificationDetailsByCustomerIdAndEmailDTO().getCustomerType(),
 				EMAIL_TYPE_PRIMARY);
 		
 		String newEmailHash=newFetched.getEmailHash();
 		
-		assertFalse(oldEmailHash.equals(newEmailHash));
+		assertNull(oldEmailHash);
+		assertNotNull((newEmailHash));
 		
 		
 	}
@@ -166,11 +161,12 @@ public class EmailVerificationDetailsRepositoryTest {
 				standardCustomerIdTypeEmailTypeUpdatedByDTO().getRequestedBy(),
 				standardCustomerIdTypeEmailTypeUpdatedByDTO().getRequestedById()).intValue());
 		
-		EmailVerificationDetails oldSaved=customerEmailVericationDetailsRepository.save(standardCustomerEmailVerificationDetails());
+		EmailVerificationDetails oldSaved= transactionalUpdatesRepository.saveNewQuickRegisterEntity(standardEmailMobileCustomer()).getCustomerEmailVerificationDetails();
 		
 		assertEquals(0, oldSaved.getResendCount().intValue());
 		
-		assertEquals(1, customerEmailVericationDetailsRepository.incrementResendCountByCustomerIdAndEmail(standardCustomerIdTypeEmailTypeUpdatedByDTO().getCustomerId(),
+		assertEquals(1, customerEmailVericationDetailsRepository.incrementResendCountByCustomerIdAndEmail(
+				oldSaved.getKey().getCustomerId(),
 				standardCustomerIdTypeEmailTypeUpdatedByDTO().getCustomerType(),EMAIL_TYPE_PRIMARY,
 				standardCustomerIdTypeEmailTypeUpdatedByDTO().getRequestedBy(),
 				standardCustomerIdTypeEmailTypeUpdatedByDTO().getRequestedById()).intValue());
@@ -184,7 +180,7 @@ public class EmailVerificationDetailsRepositoryTest {
 	{
 		assertEquals(0, customerEmailVericationDetailsRepository.count().intValue());
 		
-		EmailVerificationDetails oldSaved=customerEmailVericationDetailsRepository.save(standardCustomerEmailVerificationDetails());
+		EmailVerificationDetails oldSaved= transactionalUpdatesRepository.saveNewQuickRegisterEntity(standardEmailMobileCustomer()).getCustomerEmailVerificationDetails();
 		
 		assertEquals(1, customerEmailVericationDetailsRepository.count().intValue());
 		
@@ -196,7 +192,7 @@ public class EmailVerificationDetailsRepositoryTest {
 	{
 		assertEquals(0, customerEmailVericationDetailsRepository.count().intValue());
 		
-		EmailVerificationDetails oldSaved=customerEmailVericationDetailsRepository.save(standardCustomerEmailVerificationDetails());
+		EmailVerificationDetails oldSaved= transactionalUpdatesRepository.saveNewQuickRegisterEntity(standardEmailMobileCustomer()).getCustomerEmailVerificationDetails();
 		
 		assertEquals(1, customerEmailVericationDetailsRepository.count().intValue());
 	
@@ -211,7 +207,7 @@ public class EmailVerificationDetailsRepositoryTest {
 	{
 		assertEquals(0, customerEmailVericationDetailsRepository.count().intValue());
 		
-		EmailVerificationDetails oldSaved=customerEmailVericationDetailsRepository.save(standardCustomerEmailVerificationDetails());
+		EmailVerificationDetails oldSaved= transactionalUpdatesRepository.saveNewQuickRegisterEntity(standardEmailMobileCustomer()).getCustomerEmailVerificationDetails();
 		
 		assertEquals(1, customerEmailVericationDetailsRepository.count().intValue());
 	

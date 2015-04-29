@@ -19,11 +19,12 @@ public interface DealService {
 	
 	Boolean clearTestData();
 	
-	DealDetails triggerDeal(Long freightRequestByCustomer,Long freightRequestByVendor,String deductionMode,Integer amount,String triggeredBy);
+	DealDetails triggerDeal(Long freightRequestByCustomer,Long freightRequestByVendor,String deductionMode,
+			Integer amount,Integer triggeredBy,Long triggeredById);
 
 	Boolean exchangeContact(Long dealId,Long freightRequestByCustomer,Long freightRequestByVendor);
 	
 	DealDetails triggerDealAndExchangeContact(Long freightRequestByCustomer,Long freightRequestByVendor,String deductionMode,Integer amount
-			,String triggeredBy);
+			,Integer triggeredBy,Long triggeredById);
 	
 }

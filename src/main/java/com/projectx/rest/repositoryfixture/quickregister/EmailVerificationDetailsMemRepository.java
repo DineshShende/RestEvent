@@ -18,13 +18,6 @@ public class EmailVerificationDetailsMemRepository implements EmailVericationDet
 
 	Map<EmailVerificationDetailsKey,EmailVerificationDetails> customerList=new HashMap<EmailVerificationDetailsKey,EmailVerificationDetails>();
 	
-	@Override
-	public EmailVerificationDetails save(
-			EmailVerificationDetails emailVerificationDetails) {
-		
-		customerList.put(emailVerificationDetails.getKey(), emailVerificationDetails);
-		return emailVerificationDetails;
-	}
 
 	@Override
 	public EmailVerificationDetails getByEntityIdTypeAndEmailType(

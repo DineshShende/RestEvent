@@ -28,17 +28,6 @@ public class AuthenticationDetailsMemRepository implements AuthenticationDetails
 	}
 
 
-	@Override
-	public AuthenticationDetails save(
-			AuthenticationDetails authenticationDetails) {
-
-		AuthenticationDetails authenticationDetailsReturned=customerList.put(authenticationDetails.getKey(), authenticationDetails);
-		
-		return authenticationDetails;
-	}
-
-
-	
 
 	@Override
 	public AuthenticationDetails getByEmail(String email) {
@@ -172,24 +161,6 @@ public class AuthenticationDetailsMemRepository implements AuthenticationDetails
 		return true;
 	}
 
-	
-	
-/*
 
-	@Override
-	public CustomerAuthenticationDetails loginVerification(String email,
-			Long mobile, String password) {
-		
-		for(Long key:customerList.keySet())
-		{
-			if(((customerList.get(key).getEmail()!=null && customerList.get(key).getEmail().equals(email))|| (customerList.get(key).getMobile()!=null && customerList.get(key).getMobile().equals(mobile)))&& customerList.get(key).getPassword().equals(password))
-			{
-				return customerList.get(key);	
-			}
-		}
-				
-		return new CustomerAuthenticationDetails();
-	}
-*/
 
 }

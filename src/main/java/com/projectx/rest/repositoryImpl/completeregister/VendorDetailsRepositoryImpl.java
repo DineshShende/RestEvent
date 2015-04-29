@@ -1,6 +1,7 @@
 package com.projectx.rest.repositoryImpl.completeregister;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
@@ -31,8 +32,13 @@ public class VendorDetailsRepositoryImpl implements VendorDetailsRepository {
 	
 	@Autowired
 	Environment env;
-
 	
+	@Value("${VENDOR_DETAILS_NOT_FOUND_BY_ID}")
+	private String VENDOR_DETAILS_NOT_FOUND_BY_ID;
+	
+	
+
+
 	@Override
 	public VendorDetails save(VendorDetails vendorDetails)throws VendorDetailsAlreadyPresentException,ValidationFailedException {
 	
@@ -56,18 +62,7 @@ public class VendorDetailsRepositoryImpl implements VendorDetailsRepository {
 		
 	}
 
-	@Override
-	public VendorDetails update(VendorDetails vendorDetails) {
-		
-		VendorDetails updatedEntity=restTemplate.postForObject(env.getProperty("data.url")+"/vendor/update",
-				vendorDetails, VendorDetails.class);
-		
-		return updatedEntity;
-
-		
-	}
-
-	@Override
+		@Override
 	public VendorDetails findOne(Long vendorId) throws VendorDetailsNotFoundException{
 	
 		ResponseEntity<VendorDetails> result=restTemplate
@@ -76,32 +71,11 @@ public class VendorDetailsRepositoryImpl implements VendorDetailsRepository {
 		if(result.getStatusCode()==HttpStatus.FOUND)
 			return result.getBody();
 		else
-			throw new VendorDetailsNotFoundException();
+			throw new VendorDetailsNotFoundException(VENDOR_DETAILS_NOT_FOUND_BY_ID);
 
 	}
 
-	@Override
-	public Integer updateEmailVerificationStatus(
-			UpdateEmailVerificationStatusUpdatedByDTO updateVerificationStatusDTO) {
-
-		Integer updateStatus=restTemplate.postForObject(env.getProperty("data.url")+"/vendor/updateEmailVerificationStatus",
-				updateVerificationStatusDTO, Integer.class);
-		
-		return updateStatus;
-
-	}
-
-	@Override
-	public Integer updateMobileVerificationStatus(
-			UpdateMobileVerificationStatusUpdatedByDTO updateVerificationStatusDTO) {
-
-		Integer updateStatus=restTemplate.postForObject(env.getProperty("data.url")+"/vendor/updateMobileVerificationStatus",
-				updateVerificationStatusDTO, Integer.class);
-		
-		return updateStatus;
-
-	}
-
+	
 	@Override
 	public Integer count() {
 		

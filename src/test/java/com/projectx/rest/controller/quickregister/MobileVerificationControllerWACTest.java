@@ -3,7 +3,6 @@ package com.projectx.rest.controller.quickregister;
 import static com.projectx.rest.config.Constants.SPRING_PROFILE_ACTIVE_TEST;
 import static com.projectx.rest.fixture.quickregister.QuickRegisterDataFixture.CUST_ID;
 import static com.projectx.rest.fixture.quickregister.EmailVerificationDetailsFixtures.*;
-import static com.projectx.rest.fixture.quickregister.QuickRegisterDataFixture.standardEmailCustomerDTO;
 import static com.projectx.rest.fixture.quickregister.QuickRegisterDataFixture.*;
 import static org.junit.Assert.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -32,6 +31,8 @@ import com.projectx.rest.domain.quickregister.QuickRegisterEntity;
 import com.projectx.rest.exception.repository.quickregister.QuickRegisterEntityNotFoundException;
 import com.projectx.rest.exception.repository.quickregister.ResourceNotFoundException;
 import com.projectx.rest.handlers.quickregister.QuickRegisterHandler;
+import com.projectx.rest.services.quickregister.AuthenticationService;
+import com.projectx.rest.services.quickregister.QuickRegisterService;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
@@ -45,13 +46,17 @@ public class MobileVerificationControllerWACTest {
 	MockMvc mockMvc;
 	
 	@Autowired
-	QuickRegisterHandler customerQuickRegisterHandler;
+	QuickRegisterService customerQuickRegisterHandler;
+	
+	@Autowired
+	AuthenticationService authenticationService;
 	
 	@Before
 	public void setUp()
 	{
 		this.mockMvc=MockMvcBuilders.webAppContextSetup(wac).build();
 		customerQuickRegisterHandler.clearDataForTesting();
+		authenticationService.clearTestData();
 	}
 	
 	@Test
@@ -84,7 +89,8 @@ public class MobileVerificationControllerWACTest {
 	                    .accept(MediaType.APPLICATION_JSON))
 	            .andDo(print())
 	            .andExpect(status().isOk())
-	            .andExpect(content().string("true"));
+	            .andExpect(jsonPath("$.result").value(true))
+	            .andExpect(jsonPath("$.errorMessage").value(""));
 	    
 				
 	}

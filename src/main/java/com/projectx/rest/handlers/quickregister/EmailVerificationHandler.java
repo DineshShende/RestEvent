@@ -14,6 +14,7 @@ import com.projectx.rest.domain.completeregister.VendorDetails;
 import com.projectx.rest.domain.quickregister.EmailVerificationDetails;
 import com.projectx.rest.domain.quickregister.EmailVerificationDetailsKey;
 import com.projectx.rest.domain.quickregister.QuickRegisterEntity;
+import com.projectx.rest.exception.repository.completeregister.UpdateEmailInDetailsAndAuthenticationDetailsFailedException;
 import com.projectx.rest.exception.repository.completeregister.ValidationFailedException;
 import com.projectx.rest.exception.repository.quickregister.EmailVerificationDetailNotFoundException;
 import com.projectx.rest.exception.repository.quickregister.QuickRegisterEntityNotFoundException;
@@ -98,15 +99,7 @@ public class EmailVerificationHandler implements EmailVerificationService {
 		return emailVerificationDetails;
 	}
 	
-	@Override
-	public EmailVerificationDetails saveDetails(
-			EmailVerificationDetails emailVerificationDetails) throws ResourceAlreadyPresentException,ValidationFailedException{
-		
-		EmailVerificationDetails verificationDetails=customerEmailVericationDetailsRepository.save(emailVerificationDetails);
-		
-		return verificationDetails;
-	}
-
+	
 
 
 	@Override
@@ -121,7 +114,7 @@ public class EmailVerificationHandler implements EmailVerificationService {
 	@Override
 	public Boolean verifyEmailHashUpdateStatusAndSendPassword(Long customerId,Integer customerType,Integer emailType, String emailHash,
 			Integer requestBy,Long requestById) 
-							throws EmailVerificationDetailNotFoundException,QuickRegisterEntityNotFoundException
+							throws EmailVerificationDetailNotFoundException,QuickRegisterEntityNotFoundException,UpdateEmailInDetailsAndAuthenticationDetailsFailedException
 	{
 		
 		Integer updateStatus=UPDATE_SUCESS;
@@ -174,7 +167,12 @@ public class EmailVerificationHandler implements EmailVerificationService {
 		EmailVerificationDetails emailVerificationDetails=getByEntityIdTypeAndEmailType(customerId, customerType,emailType);
 		
 	
-		Date emailHashSentTime=emailVerificationDetails.getEmailHashSentTime();
+		Date emailHashSentTime=null;
+		
+		if(emailVerificationDetails.getEmailHashSentTime()!=null)
+			emailHashSentTime=emailVerificationDetails.getEmailHashSentTime();
+		else
+			return false;
 		
 		Date verificationTime=new Date();
 		
@@ -183,7 +181,7 @@ public class EmailVerificationHandler implements EmailVerificationService {
 		long diffHours = dateDiffernce / (60 * 60 * 1000);
 		
 		
-		if(emailVerificationDetails.getEmailHash().equals(emailHash) && diffHours<EMAIL_VALIDITY_TIME_IN_HRS)
+		if(emailVerificationDetails.getEmailHash()!=null && emailVerificationDetails.getEmailHash().equals(emailHash) && diffHours<EMAIL_VALIDITY_TIME_IN_HRS)
 		{
 			return true;			
 		}
@@ -196,7 +194,7 @@ public class EmailVerificationHandler implements EmailVerificationService {
 
 	@Override
 	public Boolean sendOrResendOrResetEmailHash(Long customerId,Integer customerType,Integer emailType,Boolean resetFlag,Boolean resendFlag,
-			Integer requestedBy,Long requestedById)throws ResourceNotFoundException
+			Integer requestedBy,Long requestedById)throws EmailVerificationDetailNotFoundException,ResourceNotFoundException
 	{
 		
 		Integer updateStatus=new Integer(1);

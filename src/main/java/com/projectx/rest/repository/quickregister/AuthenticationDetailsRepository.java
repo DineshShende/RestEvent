@@ -13,8 +13,6 @@ import com.projectx.rest.exception.repository.quickregister.ResourceAlreadyPrese
 @Repository
 public interface AuthenticationDetailsRepository  {
 
-	AuthenticationDetails save(AuthenticationDetails authenticationDetails) throws ResourceAlreadyPresentException,ValidationFailedException;
-	
 	AuthenticationDetails getByCustomerIdType(Long customerId,Integer customerType) throws AuthenticationDetailsNotFoundException;
 	
 	AuthenticationDetails getByEmail(String email) throws AuthenticationDetailsNotFoundException;
@@ -32,8 +30,5 @@ public interface AuthenticationDetailsRepository  {
 	
 	Boolean clearLoginDetailsForTesting();
 	
-	//Integer updateEmailPasswordAndPasswordTypeAndCounts(Long customerId,Integer customerType,String emailPassword);
 
-	//CustomerAuthenticationDetails loginVerification(String email,Long mobile,String password);
-	
 }

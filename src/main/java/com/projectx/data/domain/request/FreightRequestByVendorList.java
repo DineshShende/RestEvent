@@ -4,26 +4,27 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.projectx.rest.domain.request.FreightRequestByVendor;
+import com.projectx.rest.domain.request.FreightRequestByVendorDTO;
 
 public class FreightRequestByVendorList {
 
-	List<FreightRequestByVendor> requestList;
+	List<FreightRequestByVendorDTO> requestList;
 
 	public FreightRequestByVendorList() {
 		super();
 	}
 
 	@JsonCreator
-	public FreightRequestByVendorList(List<FreightRequestByVendor> requestList) {
+	public FreightRequestByVendorList(List<FreightRequestByVendorDTO> requestList) {
 		super();
 		this.requestList = requestList;
 	}
 
-	public List<FreightRequestByVendor> getRequestList() {
+	public List<FreightRequestByVendorDTO> getRequestList() {
 		return requestList;
 	}
 
-	public void setRequestList(List<FreightRequestByVendor> requestList) {
+	public void setRequestList(List<FreightRequestByVendorDTO> requestList) {
 		this.requestList = requestList;
 	}
 

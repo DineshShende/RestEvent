@@ -4,16 +4,23 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.UUID;
 
+
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.AsyncRestTemplate;
 import org.springframework.web.client.RestTemplate;
 
+
+
+import com.projectx.mvc.domain.ivr.KooResponseDTO;
 import com.projectx.rest.domain.ivr.FreightRequestByCustomerStatusDTO;
 import com.projectx.rest.domain.ivr.IVRCallInfoDTO;
 import com.projectx.rest.repository.ivr.QuestionPossibleAnswersSelectedAnswerRepositoty;
@@ -30,7 +37,7 @@ public class SendOutBoundCallController {
 	QuestionPossibleAnswersSelectedAnswerRepositoty questionPossibleAnswersSelectedAnswerRepositoty;
 	
 	@Autowired
-	RestTemplate restTemplate; 
+	AsyncRestTemplate asyncRestTemplate; 
 	
 	@Autowired
 	Environment env;
@@ -57,8 +64,8 @@ public class SendOutBoundCallController {
 				
 			}
 			
-			restTemplate.exchange(env.getProperty("rest.url")+"/outboundcall/receiveResponse/"+randomNumber+"/"
-					+Long.toString(ivrCallInfoDTO.getMobile()) +"/"+1, HttpMethod.GET, null, Void.class);
+			asyncRestTemplate.exchange(env.getProperty("rest.url")+"/outboundcall/receiveResponse", HttpMethod.POST,
+					new HttpEntity<KooResponseDTO>(new KooResponseDTO(randomNumber, ivrCallInfoDTO.getMobile(), (int)(Math.random()*2))), Boolean.class);
 		}
 		);
 		

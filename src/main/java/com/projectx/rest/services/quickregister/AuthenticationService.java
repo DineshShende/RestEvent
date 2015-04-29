@@ -17,9 +17,6 @@ public interface AuthenticationService {
 	
 	Boolean updatePassword(UpdatePasswordAndPasswordTypeDTO updatePasswordDTO);
 
-	AuthenticationDetails saveCustomerAuthenticationDetails(
-			AuthenticationDetails entity) throws ResourceAlreadyPresentException,ValidationFailedException;
-
 	AuthenticationDetails getByEntityIdType(Long customerId,Integer customerType);
 	
 	AuthenticationDetails verifyLoginDetails(LoginVerificationDTO loginVerificationDTO) 

@@ -7,6 +7,7 @@ import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
@@ -17,6 +18,7 @@ import com.projectx.rest.service.ivr.OutBoundCallService;
 
 @Component
 @PropertySource(value="classpath:/application.properties")
+@Profile(value="Prod")
 public class OutBoundCallHandler implements OutBoundCallService {
 
 	@Autowired
@@ -28,7 +30,11 @@ public class OutBoundCallHandler implements OutBoundCallService {
 	@Override
 	public String makeOutBoundCall(IVRCallInfoDTO ivrCallInfoDTO)  {
 
-		String result=restTemplate.postForObject(env.getProperty("rest.url")+"/outboundcall/makecall",ivrCallInfoDTO ,String.class);
+		String url=(env.getProperty("KOO_URL")+"?phone_no=0"+ivrCallInfoDTO.getMobile()+"&api_key="+env.getProperty("KOO_API_KEY")+""
+				+ "&outbound_version=2&extra_data=<response><playtext>"+ivrCallInfoDTO.getPossibleAnswersSelectedAnswer().getQuestion()+""
+				+ "</playtext></response>&url="+env.getProperty("KOO_ACCESSIBLE_URL")+"/koocall");
+		
+		String result=restTemplate.getForObject(url, String.class);
 		
 		String status=null;
 		String sid=null;

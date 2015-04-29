@@ -22,6 +22,7 @@ import com.projectx.rest.exception.repository.quickregister.ResourceNotFoundExce
 import com.projectx.rest.services.completeregister.CustomerDetailsService;
 import com.projectx.rest.services.completeregister.TransactionalUpdatesService;
 import com.projectx.rest.services.completeregister.VendorDetailsService;
+import com.projectx.rest.services.quickregister.AuthenticationService;
 import com.projectx.rest.services.quickregister.QuickRegisterService;
 
 import static com.projectx.rest.fixture.quickregister.QuickRegisterDataFixture.*;
@@ -49,6 +50,10 @@ public class RegisterCommonServiceTest {
 	@Autowired
 	VendorDetailsService vendorDetailsService;
 	
+	@Autowired
+	AuthenticationService authenticationService;
+	
+	
 	@Value("${ACTOR_ENTITY_SELF_WEB}")
 	private Long ACTOR_ENTITY_SELF_WEB;
 	
@@ -58,6 +63,7 @@ public class RegisterCommonServiceTest {
 		customerDetailsService.clearTestData();
 		vendorDetailsService.clearTestData();
 		quickRegisterService.clearDataForTesting();
+		authenticationService.clearTestData();
 	}
 	
 	@Test

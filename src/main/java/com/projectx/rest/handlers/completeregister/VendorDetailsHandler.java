@@ -34,18 +34,7 @@ public class VendorDetailsHandler implements VendorDetailsService {
 	VendorDetailsRepository vendorDetailsRepository;
 	
 	@Autowired
-	MobileVerificationService mobileVerificationService;
-	
-	@Autowired
-	EmailVerificationService emailVerificationService;
-	
-	@Autowired
 	TransactionalUpdatesService transactionalUpdatesService;
-	
-	@Autowired
-	MessagerSender messagerSender;
-	
-	private static Integer UPDATE_SUCESS=new Integer(1);
 
 	
 	@Override
@@ -61,7 +50,7 @@ public class VendorDetailsHandler implements VendorDetailsService {
 	@Override
 	public VendorDetails updateVendorDetails(VendorDetails vendorDetails) throws VendorDetailsTransactionalUpdateFailedException{
 		
-		VendorDetails updatedEntity=transactionalUpdatesService.updateVendorDetails(vendorDetails);
+		VendorDetails updatedEntity=vendorDetailsRepository.save(vendorDetails);
 		
 		return updatedEntity;
 	}
@@ -75,46 +64,6 @@ public class VendorDetailsHandler implements VendorDetailsService {
 		
 	}
 
-	/*
-	@Override
-	public Boolean verifyMobileDetails(Long customerId, Integer customerType,
-			 Integer mobileType,Integer mobilePin,String updatedBy)throws ResourceNotFoundException,ValidationFailedException {
-		
-		Boolean verificationStatus=mobileVerificationService
-				.verifyMobilePinUpdateStatusAndSendPassword(customerId, customerType, mobileType, mobilePin,updatedBy);
-		
-		return verificationStatus;
-	}
-
-	
-	@Override
-	public Boolean verifyEmailDetails(Long customerId, Integer customerType,
-			Integer emailType,  String emailHash,String requestedBy) throws ResourceNotFoundException{
-		
-		Boolean verificationStatus=emailVerificationService
-				.verifyEmailHashUpdateStatusAndSendPassword(customerId, customerType, emailType, emailHash,requestedBy);
-				
-		return verificationStatus;
-	}
-	@Override
-	public Boolean sendMobileVerificationDetails(Long vendorId,
-			Integer entityType, Integer mobileType,String updatedBy)throws ResourceNotFoundException {
-
-		Boolean sendStatus=mobileVerificationService.sendMobilePin(vendorId, entityType, mobileType,updatedBy);
-		
-		return sendStatus;		
-	}
-
-	@Override
-	public Boolean sendEmailVerificationDetails(Long vendorId,
-			Integer entityType, Integer emailType,String requestedBy) throws ResourceNotFoundException{
-
-		Boolean sendStatus=emailVerificationService.sendEmailHash(vendorId, entityType, emailType,requestedBy);
-		
-		return sendStatus;
-	
-	}
-	*/
 
 	@Override
 	public void clearTestData() {
@@ -133,51 +82,6 @@ public class VendorDetailsHandler implements VendorDetailsService {
 		return count;
 	}
 
-	/*
-	 	@Override
-	public String checkIfMobileSaved(Long vendorId, Integer entityType,Integer mobileType,
-			Long mobile) {
 
-		String status=mobileVerificationService.checkIfMobileAlreadyExist(vendorId, entityType,mobileType, mobile);
-		
-		return status;
-		
-	}
-
-	@Override
-	public String checkIfEmailSaved(Long vendorId, Integer entityType,Integer emailType,
-			String email) {
-
-		String status=emailVerificationService.checkIfEmailAlreadyExist(vendorId, entityType,emailType, email);
-		
-		return status;
-		
-	}
-	
-		@Override
-	public MobileVerificationDetails saveMobileVerificationDetails(
-			MobileVerificationDetails mobileVerificationDetails) {
-
-		MobileVerificationDetails savedEntity=mobileVerificationService.saveDetails(mobileVerificationDetails);
-		
-		return savedEntity;
-		
-	}
-	
-
-
-	@Override
-	public EmailVerificationDetails saveEmailVerificationDetails(
-			EmailVerificationDetails emailVerificationDetails) {
-
-		EmailVerificationDetails savedEntity=emailVerificationService.saveDetails(emailVerificationDetails);
-		
-		return savedEntity;
-		
-	}
-	 
-	 
-	 * 
-	 */
 	
 }	

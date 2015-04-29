@@ -23,6 +23,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 import com.projectx.rest.config.Application;
 import com.projectx.rest.services.completeregister.TransactionalUpdatesService;
+import com.projectx.rest.services.quickregister.AuthenticationService;
 import com.projectx.rest.services.quickregister.QuickRegisterService;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -42,11 +43,15 @@ public class RegisterCommonControllerTest {
 	@Autowired
 	TransactionalUpdatesService transactionalUpdatesService;
 	
+	@Autowired
+	AuthenticationService authenticationService;
+	
 	@Before
 	public void setUp()
 	{
 		this.mockMvc=MockMvcBuilders.webAppContextSetup(wac).build();
 		quickRegisterService.clearDataForTesting();
+		authenticationService.clearTestData();
 		
 	}
 	
@@ -70,11 +75,12 @@ public class RegisterCommonControllerTest {
 	            .andExpect(status().isOk())
 		
 	            
-	            .andExpect(jsonPath("$.customerType").value(standardEmailMobileCustomer().getCustomerType()))
-		        .andExpect(jsonPath("$.mobile").doesNotExist())
-	            .andExpect(jsonPath("$.email").value(standardEmailMobileCustomer().getEmail()))
-	            .andExpect(jsonPath("$.isMobileVerified").value(standardEmailMobileCustomer().getIsMobileVerified()))
-	            .andExpect(jsonPath("$.isEmailVerified").value(standardEmailMobileCustomer().getIsEmailVerified()));
+	            .andExpect(jsonPath("$.result.customerType").value(standardEmailMobileCustomer().getCustomerType()))
+		        .andExpect(jsonPath("$.result.mobile").doesNotExist())
+	            .andExpect(jsonPath("$.result.email").value(standardEmailMobileCustomer().getEmail()))
+	            .andExpect(jsonPath("$.result.isMobileVerified").value(standardEmailMobileCustomer().getIsMobileVerified()))
+	            .andExpect(jsonPath("$.result.isEmailVerified").value(standardEmailMobileCustomer().getIsEmailVerified()))
+	            .andExpect(jsonPath("$.errorMessage").value(""));
 	    
 	
 	}

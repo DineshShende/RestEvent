@@ -2,7 +2,6 @@ package com.projectx.rest.domain.handshake;
 
 import java.util.Date;
 
-
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -25,37 +24,52 @@ public class DealDetails {
 	
 	private Integer amount;
 	
-	@NotNull
-	private String insertedBy;
 	
 	@NotNull
 	private Date insertTime;
 	
 	@NotNull
-	private String updatedBy;
+	private Date updateTime;
 	
 	@NotNull
-	private Date updateTime;
+	private Integer updatedBy;
+	
+	@NotNull
+	private Long updatedById;
+	
+	@NotNull
+	private Integer insertedBy;
+	
+	@NotNull
+	private Long insertedById;
 
 	public DealDetails() {
 
 	}
 
+	
+
+	
 	public DealDetails(Long freightRequestByCustomerId,
 			Long freightRequestByVendorId, String deductionMode,
-			Integer amount, String insertedBy, Date insertTime,
-			String updatedBy, Date updateTime) {
+			Integer amount, Date insertTime, Date updateTime,
+			Integer updatedBy, Long updatedById, Integer insertedBy,
+			Long insertedById) {
 		super();
-		
 		this.freightRequestByCustomerId = freightRequestByCustomerId;
 		this.freightRequestByVendorId = freightRequestByVendorId;
 		this.deductionMode = deductionMode;
 		this.amount = amount;
-		this.insertedBy = insertedBy;
 		this.insertTime = insertTime;
-		this.updatedBy = updatedBy;
 		this.updateTime = updateTime;
+		this.updatedBy = updatedBy;
+		this.updatedById = updatedById;
+		this.insertedBy = insertedBy;
+		this.insertedById = insertedById;
 	}
+
+
+
 
 	public Long getDealId() {
 		return dealId;
@@ -97,14 +111,6 @@ public class DealDetails {
 		this.amount = amount;
 	}
 
-	public String getInsertedBy() {
-		return insertedBy;
-	}
-
-	public void setInsertedBy(String insertedBy) {
-		this.insertedBy = insertedBy;
-	}
-
 	@JsonSerialize(using=JsonDateSerializer.class)
 	public Date getInsertTime() {
 		return insertTime;
@@ -115,13 +121,59 @@ public class DealDetails {
 		this.insertTime = insertTime;
 	}
 
-	public String getUpdatedBy() {
+
+
+	public Integer getInsertedBy() {
+		return insertedBy;
+	}
+
+
+
+
+	public void setInsertedBy(Integer insertedBy) {
+		this.insertedBy = insertedBy;
+	}
+
+
+
+
+	public Long getInsertedById() {
+		return insertedById;
+	}
+
+
+
+
+	public void setInsertedById(Long insertedById) {
+		this.insertedById = insertedById;
+	}
+
+
+
+
+	public Integer getUpdatedBy() {
 		return updatedBy;
 	}
 
-	public void setUpdatedBy(String updatedBy) {
+
+
+	public void setUpdatedBy(Integer updatedBy) {
 		this.updatedBy = updatedBy;
 	}
+
+
+
+	public Long getUpdatedById() {
+		return updatedById;
+	}
+
+
+
+	public void setUpdatedById(Long updatedById) {
+		this.updatedById = updatedById;
+	}
+
+
 
 	@JsonSerialize(using=JsonDateSerializer.class)
 	public Date getUpdateTime() {
@@ -133,6 +185,8 @@ public class DealDetails {
 		this.updateTime = updateTime;
 	}
 
+
+
 	@Override
 	public String toString() {
 		return "DealDetails [dealId=" + dealId
@@ -140,9 +194,11 @@ public class DealDetails {
 				+ ", freightRequestByVendorId=" + freightRequestByVendorId
 				+ ", deductionMode=" + deductionMode + ", amount=" + amount
 				+ ", insertedBy=" + insertedBy + ", insertTime=" + insertTime
-				+ ", updatedBy=" + updatedBy + ", updateTime=" + updateTime
-				+ "]";
+				+ ", updatedBy=" + updatedBy + ", updatedById=" + updatedById
+				+ ", updateTime=" + updateTime + "]";
 	}
+
+
 
 	@Override
 	public int hashCode() {
@@ -168,8 +224,12 @@ public class DealDetails {
 				+ ((updateTime == null) ? 0 : updateTime.hashCode());
 		result = prime * result
 				+ ((updatedBy == null) ? 0 : updatedBy.hashCode());
+		result = prime * result
+				+ ((updatedById == null) ? 0 : updatedById.hashCode());
 		return result;
 	}
+
+
 
 	@Override
 	public boolean equals(Object obj) {
@@ -207,29 +267,30 @@ public class DealDetails {
 		} else if (!freightRequestByVendorId
 				.equals(other.freightRequestByVendorId))
 			return false;
-		/*if (insertTime == null) {
+		if (insertTime == null) {
 			if (other.insertTime != null)
 				return false;
-		} else if (!insertTime.equals(other.insertTime))
-			return false;*/
+		}
 		if (insertedBy == null) {
 			if (other.insertedBy != null)
 				return false;
-		} else if (!insertedBy.equals(other.insertedBy))
-			return false;
-		/*if (updateTime == null) {
+		} 
+		if (updateTime == null) {
 			if (other.updateTime != null)
 				return false;
-		} else if (!updateTime.equals(other.updateTime))
-			return false;*/
+		}
 		if (updatedBy == null) {
 			if (other.updatedBy != null)
 				return false;
 		} else if (!updatedBy.equals(other.updatedBy))
 			return false;
+		if (updatedById == null) {
+			if (other.updatedById != null)
+				return false;
+		} 
 		return true;
 	}
-	
+
 	
 	
 	

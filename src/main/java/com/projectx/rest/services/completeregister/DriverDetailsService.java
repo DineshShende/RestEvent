@@ -11,8 +11,6 @@ public interface DriverDetailsService {
 	
 	DriverDetails save(DriverDetails driverDetails);
 	
-	//DriverDetails updateDriver(DriverDetails driverDetails);
-	
 	DriverDetails getDriverById(Long driverId);
 	
 	Boolean deleteDriver(Long driverId);

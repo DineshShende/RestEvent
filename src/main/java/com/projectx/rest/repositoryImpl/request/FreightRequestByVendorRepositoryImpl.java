@@ -19,6 +19,7 @@ import com.projectx.data.domain.request.UpdateReservationStatus;
 import com.projectx.rest.domain.completeregister.CustomerDetails;
 import com.projectx.rest.domain.request.FreightRequestByCustomer;
 import com.projectx.rest.domain.request.FreightRequestByVendor;
+import com.projectx.rest.domain.request.FreightRequestByVendorDTO;
 import com.projectx.rest.exception.repository.completeregister.ValidationFailedException;
 import com.projectx.rest.exception.repository.quickregister.ResourceAlreadyPresentException;
 import com.projectx.rest.exception.repository.quickregister.ResourceNotFoundException;
@@ -66,11 +67,11 @@ public class FreightRequestByVendorRepositoryImpl implements
 	}
 
 	@Override
-	public FreightRequestByVendor getById(Long requestId) throws ResourceNotFoundException{
+	public FreightRequestByVendorDTO getById(Long requestId) throws ResourceNotFoundException{
 		
 
-		ResponseEntity<FreightRequestByVendor> result=restTemplate.exchange(env.getProperty("data.url")+"/request/freightRequestByVendor/getById/"+requestId,
-				HttpMethod.GET,null,FreightRequestByVendor.class);
+		ResponseEntity<FreightRequestByVendorDTO> result=restTemplate.exchange(env.getProperty("data.url")+"/request/freightRequestByVendor/getById/"+requestId,
+				HttpMethod.GET,null,FreightRequestByVendorDTO.class);
 		
 		if(result.getStatusCode()==HttpStatus.FOUND)
 			return result.getBody();
@@ -93,7 +94,7 @@ public class FreightRequestByVendorRepositoryImpl implements
 
 
 	@Override
-	public List<FreightRequestByVendor> findByVendor(Long vendorId) {
+	public List<FreightRequestByVendorDTO> findByVendor(Long vendorId) {
 
 		FreightRequestByVendorList result=restTemplate.getForObject(env.getProperty("data.url")+"/request/freightRequestByVendor/findByVendorId/"+vendorId,
 				FreightRequestByVendorList.class);
@@ -105,7 +106,7 @@ public class FreightRequestByVendorRepositoryImpl implements
 	}
 
 	@Override
-	public List<FreightRequestByVendor> getMatchingVendorReqFromCustomerReq(
+	public List<FreightRequestByVendorDTO> getMatchingVendorReqFromCustomerReq(
 			FreightRequestByCustomer freightRequestByCustomer) {
 		
 		FreightRequestByVendorList result=restTemplate.postForObject(env.getProperty("data.url")+"/request/freightRequestByVendor/getMatchingVendorReqFromCustomerReq",

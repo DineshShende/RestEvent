@@ -10,6 +10,7 @@ import java.util.HashMap;
 import javax.mail.AuthenticationFailedException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
@@ -76,6 +77,12 @@ public class AuthenticationHandler implements AuthenticationService {
 	private Integer ACTOR_ENTITY_SELF_WEB=1;
 	
 	private Integer MOBILE_REQ=2;
+	
+	@Value("${AUTHENTICATION_DETAILS_USERNAME_PASSWORD_DOES_NOT_MATCH}")
+	private String AUTHENTICATION_DETAILS_USERNAME_PASSWORD_DOES_NOT_MATCH;
+	
+	@Value("${AUTHENTICATION_DETAILS_USERID_DEFAULT_PASSWORD_DOES_NOT_MATCH}")
+	private String AUTHENTICATION_DETAILS_USERID_DEFAULT_PASSWORD_DOES_NOT_MATCH;
 
 
 	@Override
@@ -124,7 +131,7 @@ public class AuthenticationHandler implements AuthenticationService {
 			customerAuthenticationDetailsRepository.incrementLastUnsucessfullAttempts(customerAuthenticationDetails.getKey().getCustomerId(),
 					customerAuthenticationDetails.getKey().getCustomerType(),ACTOR_ENTITY_SELF_WEB,customerAuthenticationDetails.getKey().getCustomerId());
 			
-			throw new LoginVerificationFailedException(); 	
+			throw new LoginVerificationFailedException(AUTHENTICATION_DETAILS_USERNAME_PASSWORD_DOES_NOT_MATCH); 	
 			
 		}
 		
@@ -146,10 +153,11 @@ public class AuthenticationHandler implements AuthenticationService {
 				customerAuthenticationDetails.getEmailPassword().equals(emailPasswordDTO.getEmailPassword()))
 		{
 			return customerAuthenticationDetails;
+			
 		}
 		else
 		{
-			throw new LoginVerificationFailedException();
+			throw new LoginVerificationFailedException(AUTHENTICATION_DETAILS_USERID_DEFAULT_PASSWORD_DOES_NOT_MATCH);
 		}
 		
 		
@@ -158,7 +166,8 @@ public class AuthenticationHandler implements AuthenticationService {
 	
 	@Override
 	public Boolean sendOrResendOrResetDefaultPassword(Long entityId,
-			Integer entityType, Boolean resetFlag, Boolean resendFlag,Integer emailOrMobile,Integer requestedBy,Long requestedById)throws AuthenticationDetailsNotFoundException,
+			Integer entityType, Boolean resetFlag, Boolean resendFlag,Integer emailOrMobile,Integer requestedBy,Long requestedById)
+					throws AuthenticationDetailsNotFoundException,
 			QuickRegisterEntityNotFoundException,CustomerDetailsNotFoundException,VendorDetailsNotFoundException {
 		
 		
@@ -263,9 +272,6 @@ public class AuthenticationHandler implements AuthenticationService {
 	public Boolean resetPassword(CustomerIdTypeUpdatedByDTO customerIdDTO,Integer emailOrMobile) throws AuthenticationDetailsNotFoundException,
 	QuickRegisterEntityNotFoundException,CustomerDetailsNotFoundException,VendorDetailsNotFoundException 
 	{
-		//QuickRegisterEntity customer=customerQuickRegisterService
-		//		.getByEntityId(customerIdDTO.getCustomerId());
-		
 		return sendDefaultPassword(customerIdDTO.getCustomerId(),customerIdDTO.getCustomerType(),true,emailOrMobile,
 				customerIdDTO.getUpdatedBy(),customerIdDTO.getUpdatedById());
 	}
@@ -301,15 +307,7 @@ public class AuthenticationHandler implements AuthenticationService {
 		return customerAuthenticationDetailsRepository.getByCustomerIdType(customerId,customerType);
 	}
 	
-	@Override
-	public AuthenticationDetails saveCustomerAuthenticationDetails(
-			AuthenticationDetails entity) throws ResourceAlreadyPresentException,ValidationFailedException{
-		
-		AuthenticationDetails customerAuthenticationDetails=customerAuthenticationDetailsRepository.save(entity);
-		
-		return customerAuthenticationDetails;
-	}
-
+	
 	
 	private Boolean isMobileNumber(String entity)
 	{

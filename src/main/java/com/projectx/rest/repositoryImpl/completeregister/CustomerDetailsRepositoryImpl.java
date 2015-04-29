@@ -3,6 +3,7 @@ package com.projectx.rest.repositoryImpl.completeregister;
 import javax.validation.ValidationException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
@@ -35,6 +36,9 @@ public class CustomerDetailsRepositoryImpl implements CustomerDetailsRepository 
 	
 	@Autowired
 	Environment env;
+	
+	@Value("${CUSTOMER_DETAILS_NOT_FOUND_BY_ID}")
+	private String CUSTOMER_DETAILS_NOT_FOUND_BY_ID;
 
 
 	@Override
@@ -71,84 +75,11 @@ public class CustomerDetailsRepositoryImpl implements CustomerDetailsRepository 
 		if(result.getStatusCode()==HttpStatus.FOUND)
 			return result.getBody();
 		else
-			throw new CustomerDetailsNotFoundException();
+			throw new CustomerDetailsNotFoundException(CUSTOMER_DETAILS_NOT_FOUND_BY_ID);
 
 		
 	}
 
-
-	@Override
-	public Integer updateMobileVerificationStatus(
-			UpdateMobileVerificationStatusUpdatedByDTO verificationStatusDTO)
-			throws CustomerDetailsAlreadyPresentException,ValidationFailedException
-	{
-
-		ResponseEntity<Integer> updatedStatus=null;
-		
-		HttpEntity<UpdateMobileVerificationStatusUpdatedByDTO> entity=new HttpEntity<UpdateMobileVerificationStatusUpdatedByDTO>(verificationStatusDTO);
-		
-		try{
-			updatedStatus=restTemplate.exchange(env.getProperty("data.url")+"/customer/completeregister/updateMobileVerificationStatus",
-					HttpMethod.POST,entity, Integer.class);
-		}catch(RestClientException e)
-		{
-			throw new ValidationFailedException();
-		}
-		
-		if(updatedStatus.getStatusCode()==HttpStatus.OK)
-			return updatedStatus.getBody();
-		else
-			throw new CustomerDetailsAlreadyPresentException();
-	}
-
-	@Override
-	public Integer updateSecondaryMobileVerificationStatus(
-			UpdateMobileVerificationStatusUpdatedByDTO verificationStatusDTO) throws CustomerDetailsAlreadyPresentException,ValidationFailedException{
-
-		
-		ResponseEntity<Integer> updatedStatus=null;
-		
-		HttpEntity<UpdateMobileVerificationStatusUpdatedByDTO> entity=new HttpEntity<UpdateMobileVerificationStatusUpdatedByDTO>(verificationStatusDTO);
-		
-		try{
-			updatedStatus=restTemplate.exchange(env.getProperty("data.url")+"/customer/completeregister/updateSecondaryMobileVerificationStatus",
-					HttpMethod.POST,entity, Integer.class);
-		}catch(RestClientException e)
-		{
-			throw new ValidationFailedException();
-		}
-		
-		if(updatedStatus.getStatusCode()==HttpStatus.OK)
-			return updatedStatus.getBody();
-		else
-			throw new CustomerDetailsAlreadyPresentException();
-	
-	}
-
-	@Override
-	public Integer updateEmailVerificationStatus(
-			UpdateEmailVerificationStatusUpdatedByDTO verificationStatusDTO) throws CustomerDetailsAlreadyPresentException, ValidationFailedException{
-
-		HttpEntity<UpdateEmailVerificationStatusUpdatedByDTO> entity=new HttpEntity<UpdateEmailVerificationStatusUpdatedByDTO>(verificationStatusDTO);
-		
-		ResponseEntity<Integer> result=null;
-		
-		try{
-			result=restTemplate.exchange(env.getProperty("data.url")+"/customer/completeregister/updateEmailVerificationStatus",
-					HttpMethod.POST,entity, Integer.class);
-
-		}catch(RestClientException e)
-		{
-			throw new ValidationFailedException();
-		}
-		
-		if(result.getStatusCode()==HttpStatus.OK)
-			return result.getBody();
-		else
-			throw new CustomerDetailsAlreadyPresentException();
-
-		
-	}
 
 	
 	@Override

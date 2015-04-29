@@ -21,20 +21,6 @@ import com.projectx.rest.repository.completeregister.TransactionalUpdatesReposit
 public class TransactionalUpdateMemRepository implements
 		TransactionalUpdatesRepository {
 
-	
-	@Override
-	public CustomerDetails updateCustomerDetails(CustomerDetails customerDetails)
-			throws CustomerDetailsTransactionalUpdateFailedException {
-		// TODO Auto-generated method stub
-		return customerDetails;
-	}
-
-	@Override
-	public VendorDetails updateVendorDetails(VendorDetails vendorDetails)
-			throws VendorDetailsTransactionalUpdateFailedException {
-		// TODO Auto-generated method stub
-		return vendorDetails;
-	}
 
 	@Override
 	public Boolean updateMobileInDetailsEnityAndAuthenticationDetails(

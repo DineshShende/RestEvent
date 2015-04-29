@@ -114,19 +114,15 @@ public class TransactionalUpdatesRepositoryTest {
 		
 		CustomerDetails oldEntity=customerDetailsCustomRepository.findOne(savedEntity.getCustomerId());
 		
-		MobileVerificationDetails mobileVerificationDetails=
-				new MobileVerificationDetails(new MobileVerificationDetailsKey(CUST_ID, ENTITY_TYPE_CUSTOMER, ENTITY_TYPE_PRIMARY),
-						CUST_MOBILE, CUST_MOBILEPIN, ZERO_COUNT, ZERO_COUNT, new Date(), new Date(), CUST_UPDATED_BY,CUST_UPDATED_BY,CUST_ID,CUST_ID);
 		
-		mobileVerificationDetailsRepository.save(mobileVerificationDetails);
 		
 		savedEntity.setMobile(CUST_MOBILE_NEW);
 		
 		assertEquals(1, customerDetailsCustomRepository.count().intValue());
 		
-		assertEquals(mobileVerificationDetails, mobileVerificationDetailsRepository.getByMobile(CUST_MOBILE));
+		assertNotNull(mobileVerificationDetailsRepository.getByMobile(CUST_MOBILE));
 		
-		mobileVerificationDetails=null;
+		MobileVerificationDetails mobileVerificationDetails=null;
 		try
 		{
 		mobileVerificationDetails=mobileVerificationDetailsRepository.getByMobile(CUST_MOBILE_NEW);
@@ -136,7 +132,7 @@ public class TransactionalUpdatesRepositoryTest {
 			assertNull(mobileVerificationDetails);
 		}
 		
-		CustomerDetails updatedEntity=transactionalUpdatesRepository.updateCustomerDetails(savedEntity);
+		CustomerDetails updatedEntity=customerDetailsCustomRepository.save(savedEntity);
 		
 		savedEntity.setMobile(oldEntity.getMobile());
 		savedEntity.setSecondaryMobile(oldEntity.getSecondaryMobile());
@@ -144,7 +140,7 @@ public class TransactionalUpdatesRepositoryTest {
 		
 		assertEquals(savedEntity,updatedEntity);
 		
-		assertEquals(1, mobileVerificationDetailsRepository.count().intValue());
+		assertEquals(2, mobileVerificationDetailsRepository.count().intValue());
 		
 		try
 		{
@@ -157,7 +153,7 @@ public class TransactionalUpdatesRepositoryTest {
 		
 		assertNotNull( mobileVerificationDetailsRepository.getByMobile(CUST_MOBILE_NEW).getKey());
 		
-		assertEquals(1, mobileVerificationDetailsRepository.count().intValue());
+		assertEquals(2, mobileVerificationDetailsRepository.count().intValue());
 		
 		assertEquals(1, customerDetailsCustomRepository.count().intValue());
 		
@@ -174,19 +170,14 @@ public class TransactionalUpdatesRepositoryTest {
 		
 		CustomerDetails oldEntity=customerDetailsCustomRepository.findOne(savedEntity.getCustomerId());
 		
-		EmailVerificationDetails emailVerificationDetails=
-				new EmailVerificationDetails(new EmailVerificationDetailsKey(CUST_ID, ENTITY_TYPE_CUSTOMER, ENTITY_TYPE_PRIMARY),
-						savedEntity.getEmail(), CUST_EMAILHASH, new Date(), ZERO_COUNT, new Date(), new Date(), CUST_UPDATED_BY,CUST_UPDATED_BY,CUST_ID,CUST_ID);
-		
-		emailVerificationDetailsRepository.save(emailVerificationDetails);
-		
+				
 		savedEntity.setEmail(CUST_EMAIL_NEW);
 		
 		assertEquals(1, customerDetailsCustomRepository.count().intValue());
 		
 		assertNotNull(emailVerificationDetailsRepository.getByEmail(CUST_EMAIL).getKey());
 		
-		emailVerificationDetails=null;
+		EmailVerificationDetails emailVerificationDetails=null;
 		
 		try{
 			emailVerificationDetails=emailVerificationDetailsRepository.getByEmail(CUST_EMAIL_NEW);
@@ -197,7 +188,7 @@ public class TransactionalUpdatesRepositoryTest {
 		}
 		
 		
-		CustomerDetails updatedEntity=transactionalUpdatesRepository.updateCustomerDetails(savedEntity);
+		CustomerDetails updatedEntity=customerDetailsCustomRepository.save(savedEntity);
 		
 		savedEntity.setMobile(oldEntity.getMobile());
 		savedEntity.setSecondaryMobile(oldEntity.getSecondaryMobile());
@@ -233,19 +224,14 @@ public class TransactionalUpdatesRepositoryTest {
 		
 		CustomerDetails oldEntity=customerDetailsCustomRepository.findOne(savedEntity.getCustomerId());
 		
-		MobileVerificationDetails mobileVerificationDetails=
-				new MobileVerificationDetails(new MobileVerificationDetailsKey(CUST_ID, ENTITY_TYPE_CUSTOMER, ENTITY_TYPE_SECONDARY),
-						CUST_MOBILE, CUST_MOBILEPIN, ZERO_COUNT, ZERO_COUNT, new Date(), new Date(),  CUST_UPDATED_BY,CUST_UPDATED_BY,CUST_ID,CUST_ID);
-		
-		mobileVerificationDetailsRepository.save(mobileVerificationDetails);
-		
+			
 		savedEntity.setSecondaryMobile(CUST_MOBILE_NEW);
 		
 		assertEquals(1, customerDetailsCustomRepository.count().intValue());
 		
-		assertEquals(mobileVerificationDetails, mobileVerificationDetailsRepository.getByMobile(CUST_MOBILE));
+		assertNotNull(mobileVerificationDetailsRepository.getByMobile(CUST_MOBILE));
 		
-		mobileVerificationDetails=null;
+		MobileVerificationDetails mobileVerificationDetails=null;
 		
 		try{
 			mobileVerificationDetailsRepository.getByMobile(CUST_MOBILE_NEW);
@@ -255,7 +241,7 @@ public class TransactionalUpdatesRepositoryTest {
 			assertNull(mobileVerificationDetails);
 		}
 		
-		CustomerDetails updatedEntity=transactionalUpdatesRepository.updateCustomerDetails(savedEntity);
+		CustomerDetails updatedEntity=customerDetailsCustomRepository.save(savedEntity);
 		
 		savedEntity.setMobile(oldEntity.getMobile());
 		savedEntity.setSecondaryMobile(oldEntity.getSecondaryMobile());
@@ -274,7 +260,7 @@ public class TransactionalUpdatesRepositoryTest {
 		}
 		
 		
-		assertEquals(1, mobileVerificationDetailsRepository.count().intValue());
+		assertEquals(2, mobileVerificationDetailsRepository.count().intValue());
 		
 		assertEquals(1, customerDetailsCustomRepository.count().intValue());
 		
@@ -292,21 +278,6 @@ public class TransactionalUpdatesRepositoryTest {
 		
 		CustomerDetails oldEntity=customerDetailsCustomRepository.findOne(savedEntity.getCustomerId());
 		
-		MobileVerificationDetails mobileVerificationDetails=
-				new MobileVerificationDetails(new MobileVerificationDetailsKey(CUST_ID, ENTITY_TYPE_CUSTOMER, ENTITY_TYPE_PRIMARY),
-						CUST_MOBILE, CUST_MOBILEPIN, ZERO_COUNT, ZERO_COUNT, new Date(), new Date(),  CUST_UPDATED_BY,CUST_UPDATED_BY,CUST_ID,CUST_ID);
-		
-		MobileVerificationDetails mobileVerificationDetailsSec=
-				new MobileVerificationDetails(new MobileVerificationDetailsKey(CUST_ID, ENTITY_TYPE_CUSTOMER, ENTITY_TYPE_SECONDARY),
-						CUST_SEC_MOBILE, CUST_MOBILEPIN, ZERO_COUNT, ZERO_COUNT, new Date(), new Date(), CUST_UPDATED_BY,CUST_UPDATED_BY,CUST_ID,CUST_ID);
-		
-		EmailVerificationDetails emailVerificationDetails=
-				new EmailVerificationDetails(new EmailVerificationDetailsKey(CUST_ID, ENTITY_TYPE_CUSTOMER, ENTITY_TYPE_PRIMARY),
-						CUST_EMAIL, CUST_EMAILHASH, new Date(), ZERO_COUNT, new Date(), new Date(), CUST_UPDATED_BY,CUST_UPDATED_BY,CUST_ID,CUST_ID);
-		
-		mobileVerificationDetailsRepository.save(mobileVerificationDetails);
-		mobileVerificationDetailsRepository.save(mobileVerificationDetailsSec);
-		emailVerificationDetailsRepository.save(emailVerificationDetails);
 		
 		savedEntity.setMobile(CUST_MOBILE_NEW);
 		savedEntity.setSecondaryMobile(CUST_SEC_MOBILE_NEW);
@@ -316,11 +287,11 @@ public class TransactionalUpdatesRepositoryTest {
 		assertEquals(2, mobileVerificationDetailsRepository.count().intValue());
 		assertEquals(1, emailVerificationDetailsRepository.count().intValue());
 		
-		assertEquals(mobileVerificationDetails, mobileVerificationDetailsRepository.getByMobile(CUST_MOBILE));
-		assertEquals(mobileVerificationDetailsSec, mobileVerificationDetailsRepository.getByMobile(CUST_SEC_MOBILE));
+		assertNotNull( mobileVerificationDetailsRepository.getByMobile(CUST_MOBILE));
+		assertNotNull( mobileVerificationDetailsRepository.getByMobile(CUST_SEC_MOBILE));
 		assertNotNull(emailVerificationDetailsRepository.getByEmail(CUST_EMAIL).getKey());
 		
-		mobileVerificationDetails=null;
+		MobileVerificationDetails mobileVerificationDetails=null;
 		
 		try{
 			mobileVerificationDetails=mobileVerificationDetailsRepository.getByMobile(CUST_MOBILE_NEW);
@@ -330,7 +301,7 @@ public class TransactionalUpdatesRepositoryTest {
 		}
 		
 		
-		mobileVerificationDetailsSec=null;
+		MobileVerificationDetails mobileVerificationDetailsSec=null;
 		
 		try{
 			mobileVerificationDetailsSec=mobileVerificationDetailsRepository.getByMobile(CUST_SEC_MOBILE_NEW);
@@ -339,7 +310,7 @@ public class TransactionalUpdatesRepositoryTest {
 			assertNull(mobileVerificationDetailsSec);
 		}
 		
-		emailVerificationDetails=null;
+		EmailVerificationDetails emailVerificationDetails=null;
 		
 		try{
 			emailVerificationDetailsRepository.getByEmail(CUST_EMAIL_NEW);
@@ -347,7 +318,7 @@ public class TransactionalUpdatesRepositoryTest {
 		{
 			assertNull(emailVerificationDetails);
 		}
-		CustomerDetails updatedEntity=transactionalUpdatesRepository.updateCustomerDetails(savedEntity);
+		CustomerDetails updatedEntity=customerDetailsCustomRepository.save(savedEntity);
 		
 		savedEntity.setMobile(oldEntity.getMobile());
 		savedEntity.setSecondaryMobile(oldEntity.getSecondaryMobile());
@@ -407,38 +378,18 @@ public class TransactionalUpdatesRepositoryTest {
 		
 		CustomerDetails oldEntity=customerDetailsCustomRepository.findOne(savedEntity.getCustomerId());
 		
-		MobileVerificationDetails mobileVerificationDetails=
-				new MobileVerificationDetails(new MobileVerificationDetailsKey(CUST_ID, ENTITY_TYPE_CUSTOMER, ENTITY_TYPE_PRIMARY),
-						CUST_MOBILE, CUST_MOBILEPIN, ZERO_COUNT, ZERO_COUNT, new Date(), new Date(),  CUST_UPDATED_BY,CUST_UPDATED_BY,CUST_ID,CUST_ID);
 		
-		MobileVerificationDetails mobileVerificationDetailsSec=
-				new MobileVerificationDetails(new MobileVerificationDetailsKey(CUST_ID, ENTITY_TYPE_CUSTOMER, ENTITY_TYPE_SECONDARY),
-						CUST_SEC_MOBILE, CUST_MOBILEPIN, ZERO_COUNT, ZERO_COUNT, new Date(), new Date(),  CUST_UPDATED_BY,CUST_UPDATED_BY,CUST_ID,CUST_ID);
-		
-		EmailVerificationDetails emailVerificationDetails=
-				new EmailVerificationDetails(new EmailVerificationDetailsKey(CUST_ID, ENTITY_TYPE_CUSTOMER, ENTITY_TYPE_PRIMARY),
-						CUST_EMAIL, CUST_EMAILHASH, new Date(), ZERO_COUNT, new Date(), new Date(),  CUST_UPDATED_BY,CUST_UPDATED_BY,CUST_ID,CUST_ID);
-		
-		MobileVerificationDetails mobileVerificationDetailsDuplicate=
-				new MobileVerificationDetails(new MobileVerificationDetailsKey(213L, ENTITY_TYPE_CUSTOMER, ENTITY_TYPE_PRIMARY),
-						CUST_MOBILE_NEW, CUST_MOBILEPIN, ZERO_COUNT, ZERO_COUNT, new Date(), new Date(),  CUST_UPDATED_BY,CUST_UPDATED_BY,CUST_ID,CUST_ID);
-		
-		
-		mobileVerificationDetailsRepository.save(mobileVerificationDetails);
-		mobileVerificationDetailsRepository.save(mobileVerificationDetailsSec);
-		mobileVerificationDetailsRepository.save(mobileVerificationDetailsDuplicate);
-		emailVerificationDetailsRepository.save(emailVerificationDetails);
 		
 		savedEntity.setMobile(CUST_MOBILE_NEW);
 		savedEntity.setSecondaryMobile(CUST_SEC_MOBILE_NEW);
 		savedEntity.setEmail(CUST_EMAIL_NEW);
 		
 		assertEquals(1, customerDetailsCustomRepository.count().intValue());
-		assertEquals(3, mobileVerificationDetailsRepository.count().intValue());
+		assertEquals(2, mobileVerificationDetailsRepository.count().intValue());
 		assertEquals(1, emailVerificationDetailsRepository.count().intValue());
 		
-		assertEquals(mobileVerificationDetails, mobileVerificationDetailsRepository.getByMobile(CUST_MOBILE));
-		assertEquals(mobileVerificationDetailsSec, mobileVerificationDetailsRepository.getByMobile(CUST_SEC_MOBILE));
+		assertNotNull(mobileVerificationDetailsRepository.getByMobile(CUST_MOBILE));
+		assertNotNull(mobileVerificationDetailsRepository.getByMobile(CUST_SEC_MOBILE));
 		assertNotNull(emailVerificationDetailsRepository.getByEmail(CUST_EMAIL).getKey());
 		
 		assertNotNull( mobileVerificationDetailsRepository.getByMobile(CUST_MOBILE_NEW).getKey());
@@ -466,7 +417,7 @@ public class TransactionalUpdatesRepositoryTest {
 		CustomerDetails updatedEntity=null;
 		
 		try{		
-			updatedEntity=transactionalUpdatesRepository.updateCustomerDetails(savedEntity);
+			updatedEntity=customerDetailsCustomRepository.save(savedEntity);
 		}catch(CustomerDetailsTransactionalUpdateFailedException e)
 		{
 			assertNull(updatedEntity);
@@ -475,12 +426,12 @@ public class TransactionalUpdatesRepositoryTest {
 		
 		//assertEquals(oldEntity, updatedEntity);
 		
-			assertEquals(3, mobileVerificationDetailsRepository.count().intValue());
+			assertEquals(2, mobileVerificationDetailsRepository.count().intValue());
 			assertEquals(1, customerDetailsCustomRepository.count().intValue());
 			assertEquals(1, emailVerificationDetailsRepository.count().intValue());
 			
-			assertEquals(mobileVerificationDetails, mobileVerificationDetailsRepository.getByMobile(CUST_MOBILE));
-			assertEquals(mobileVerificationDetailsSec, mobileVerificationDetailsRepository.getByMobile(CUST_SEC_MOBILE));
+			assertNotNull( mobileVerificationDetailsRepository.getByMobile(CUST_MOBILE));
+			assertNotNull( mobileVerificationDetailsRepository.getByMobile(CUST_SEC_MOBILE));
 			assertNotNull(emailVerificationDetailsRepository.getByEmail(CUST_EMAIL).getKey());
 			
 			assertNotNull( mobileVerificationDetailsRepository.getByMobile(CUST_MOBILE_NEW).getKey());
@@ -521,18 +472,12 @@ public class TransactionalUpdatesRepositoryTest {
 		
 		VendorDetails oldEntity=vendorDetailsCustomRepository.findOne(standardVendor().getVendorId());
 		
-		MobileVerificationDetails mobileVerificationDetails=
-				new MobileVerificationDetails(new MobileVerificationDetailsKey(VENDOR_ID,ENTITY_TYPE_VENDOR, ENTITY_TYPE_PRIMARY),
-						standardVendor().getMobile(), CUST_MOBILEPIN, ZERO_COUNT, ZERO_COUNT, new Date(), new Date(),
-						 CUST_UPDATED_BY,CUST_UPDATED_BY,CUST_ID,CUST_ID);
-		
-		mobileVerificationDetailsRepository.save(mobileVerificationDetails);
 		
 		savedEntity.setMobile(CUST_MOBILE_NEW);
 		
 		assertEquals(1, vendorDetailsCustomRepository.count().intValue());
 		
-		assertEquals(mobileVerificationDetails, mobileVerificationDetailsRepository.getByMobile(standardVendor().getMobile()));
+		assertNotNull( mobileVerificationDetailsRepository.getByMobile(standardVendor().getMobile()));
 		
 		MobileVerificationDetails mobileVerificationDetailsNull=null;
 		
@@ -543,13 +488,13 @@ public class TransactionalUpdatesRepositoryTest {
 			assertNull(mobileVerificationDetailsNull);
 		}
 		
-		VendorDetails updatedEntity=transactionalUpdatesRepository.updateVendorDetails(savedEntity);
+		VendorDetails updatedEntity=vendorDetailsCustomRepository.save(savedEntity);
 		
 		savedEntity.setMobile(oldEntity.getMobile());//as we are not changing mobile until verified
 		
 		assertEquals(savedEntity, updatedEntity);
 		
-		assertEquals(1, mobileVerificationDetailsRepository.count().intValue());
+		assertEquals(2, mobileVerificationDetailsRepository.count().intValue());
 		
 		assertNotNull( mobileVerificationDetailsRepository.getByMobile(CUST_MOBILE_NEW));
 		
@@ -562,7 +507,7 @@ public class TransactionalUpdatesRepositoryTest {
 			assertNull(mobileVerificationDetailsNull);
 		}
 		
-		assertEquals(1, mobileVerificationDetailsRepository.count().intValue());
+		assertEquals(2, mobileVerificationDetailsRepository.count().intValue());
 		
 		assertEquals(1, vendorDetailsCustomRepository.count().intValue());
 		
@@ -578,13 +523,6 @@ public class TransactionalUpdatesRepositoryTest {
 		VendorDetails savedEntity=vendorDetailsCustomRepository.save(standardVendor());
 		
 		VendorDetails oldEntity=vendorDetailsCustomRepository.findOne(standardVendor().getVendorId());
-		
-		EmailVerificationDetails emailVerificationDetails=
-				new EmailVerificationDetails(new EmailVerificationDetailsKey(standardVendor().getVendorId(), ENTITY_TYPE_VENDOR, ENTITY_TYPE_PRIMARY),
-						standardVendor().getEmail(), CUST_EMAILHASH, new Date(), ZERO_COUNT, new Date(), new Date(),
-						 CUST_UPDATED_BY,CUST_UPDATED_BY,CUST_ID,CUST_ID);
-		
-		emailVerificationDetailsRepository.save(emailVerificationDetails);
 		
 		savedEntity.setEmail(CUST_EMAIL_NEW);
 		
@@ -602,7 +540,7 @@ public class TransactionalUpdatesRepositoryTest {
 		}
 		
 		
-		VendorDetails updatedEntity=transactionalUpdatesRepository.updateVendorDetails(savedEntity);
+		VendorDetails updatedEntity=vendorDetailsCustomRepository.save(savedEntity);
 		
 		savedEntity.setEmail(oldEntity.getEmail());
 		
@@ -634,35 +572,17 @@ public class TransactionalUpdatesRepositoryTest {
 		
 		VendorDetails oldEntity=vendorDetailsCustomRepository.findOne(standardVendor().getVendorId());
 		
-		MobileVerificationDetails mobileVerificationDetails=
-				new MobileVerificationDetails(new MobileVerificationDetailsKey(standardVendor().getVendorId(), ENTITY_TYPE_VENDOR, ENTITY_TYPE_PRIMARY),
-						standardVendor().getMobile(), CUST_MOBILEPIN, ZERO_COUNT, ZERO_COUNT, new Date(), new Date(),
-						 CUST_UPDATED_BY,CUST_UPDATED_BY,CUST_ID,CUST_ID);
-		
-		EmailVerificationDetails emailVerificationDetails=
-				new EmailVerificationDetails(new EmailVerificationDetailsKey(CUST_ID, ENTITY_TYPE_CUSTOMER, ENTITY_TYPE_PRIMARY),
-						standardVendor().getEmail(), CUST_EMAILHASH, new Date(), ZERO_COUNT, new Date(), new Date(),
-						 CUST_UPDATED_BY,CUST_UPDATED_BY,CUST_ID,CUST_ID);
-		
-		MobileVerificationDetails mobileVerificationDetailsDuplicate=
-				new MobileVerificationDetails(new MobileVerificationDetailsKey(213L, ENTITY_TYPE_CUSTOMER, ENTITY_TYPE_PRIMARY),
-						CUST_MOBILE_NEW, CUST_MOBILEPIN, ZERO_COUNT, ZERO_COUNT, new Date(), new Date(), 
-						 CUST_UPDATED_BY,CUST_UPDATED_BY,CUST_ID,CUST_ID);
-		
-		
-		mobileVerificationDetailsRepository.save(mobileVerificationDetails);
-		mobileVerificationDetailsRepository.save(mobileVerificationDetailsDuplicate);
-		emailVerificationDetailsRepository.save(emailVerificationDetails);
-		
 		savedEntity.setFirstName("RRRR");
 		savedEntity.setMobile(CUST_MOBILE_NEW);
 		savedEntity.setEmail(CUST_EMAIL_NEW);
+		
+		vendorDetailsCustomRepository.save(savedEntity);
 		
 		assertEquals(1, vendorDetailsCustomRepository.count().intValue());
 		assertEquals(2, mobileVerificationDetailsRepository.count().intValue());
 		assertEquals(1, emailVerificationDetailsRepository.count().intValue());
 		
-		assertEquals(mobileVerificationDetails, mobileVerificationDetailsRepository.getByMobile(standardVendor().getMobile()));
+		assertNotNull(mobileVerificationDetailsRepository.getByMobile(standardVendor().getMobile()));
 		assertNotNull(emailVerificationDetailsRepository.getByEmail(standardVendor().getEmail()).getKey());
 		
 		assertNotNull( mobileVerificationDetailsRepository.getByMobile(CUST_MOBILE_NEW).getKey());
@@ -681,7 +601,7 @@ public class TransactionalUpdatesRepositoryTest {
 		VendorDetails updatedEntity=null;
 		
 		try{
-			updatedEntity=transactionalUpdatesRepository.updateVendorDetails(savedEntity);
+			updatedEntity=vendorDetailsCustomRepository.save(savedEntity);
 		}catch(VendorDetailsTransactionalUpdateFailedException e)
 		{
 			assertNull(updatedEntity);
@@ -694,7 +614,7 @@ public class TransactionalUpdatesRepositoryTest {
 			assertEquals(1, vendorDetailsCustomRepository.count().intValue());
 			assertEquals(1, emailVerificationDetailsRepository.count().intValue());
 			
-			assertEquals(mobileVerificationDetails, mobileVerificationDetailsRepository.getByMobile(standardVendor().getMobile()));
+			assertNotNull(mobileVerificationDetailsRepository.getByMobile(standardVendor().getMobile()));
 			assertNotNull(emailVerificationDetailsRepository.getByEmail(standardVendor().getEmail()).getKey());
 			
 			assertNotNull( mobileVerificationDetailsRepository.getByMobile(CUST_MOBILE_NEW).getKey());
@@ -726,18 +646,13 @@ public class TransactionalUpdatesRepositoryTest {
 		
 		CustomerDetails savedCustomer=customerDetailsCustomRepository.save(standardCustomerDetails(standardCustomerFromQuickEntity()));
 		
-		MobileVerificationDetails newMobileVerificationDetails=
-				new MobileVerificationDetails(new MobileVerificationDetailsKey(savedCustomer.getCustomerId(), ENTITY_TYPE_CUSTOMER, ENTITY_TYPE_PRIMARY),
-						CUST_MOBILE_NEW, CUST_MOBILEPIN, ZERO_COUNT, ZERO_COUNT, new Date(), new Date(), 
-						 CUST_UPDATED_BY,CUST_UPDATED_BY,CUST_ID,CUST_ID);
-		
-		MobileVerificationDetails savedMobileDetails=mobileVerificationDetailsRepository.save(newMobileVerificationDetails);
-		
-		AuthenticationDetails savedAuthenticationDetails=authenticationDetailsRepository.save(standardCustomerEmailMobileAuthenticationDetails());
-		
 		assertEquals(savedCustomer.getMobile(),customerDetailsCustomRepository.findOne(savedCustomer.getCustomerId()).getMobile());
 		
+		savedCustomer.setMobile(CUST_MOBILE_NEW);
+		
 	//	assertNotNull(authenticationDetailsRepository.getCustomerAuthenticationDetailsByMobile(savedMobileDetails.getMobile()).getKey());
+		
+		customerDetailsCustomRepository.save(savedCustomer);
 		
 		AuthenticationDetails authenticationDetails=null;
 		
@@ -753,7 +668,7 @@ public class TransactionalUpdatesRepositoryTest {
 		
 		assertEquals(1, customerDetailsCustomRepository.count().intValue());
 		
-		assertEquals(1, mobileVerificationDetailsRepository.count().intValue());
+		assertEquals(2, mobileVerificationDetailsRepository.count().intValue());
 		
 		assertEquals(1, authenticationDetailsRepository.count().intValue());
 		
@@ -773,7 +688,7 @@ public class TransactionalUpdatesRepositoryTest {
 		
 	}
 	
-	
+	/*
 	@Test
 	public void updateMobileInDetailsEnityAndAuthenticationDetailsWithCustomerMobileWithFailure()
 	{
@@ -786,15 +701,9 @@ public class TransactionalUpdatesRepositoryTest {
 		
 		CustomerDetails savedCustomer=customerDetailsCustomRepository.save(standardCustomerDetails(standardCustomerFromQuickEntity()));
 		
-		MobileVerificationDetails newMobileVerificationDetails=
-				new MobileVerificationDetails(new MobileVerificationDetailsKey(savedCustomer.getCustomerId(), ENTITY_TYPE_CUSTOMER, ENTITY_TYPE_PRIMARY),
-						CUST_MOBILE_NEW, CUST_MOBILEPIN, ZERO_COUNT, ZERO_COUNT, new Date(), new Date(),
-						 CUST_UPDATED_BY,CUST_UPDATED_BY,CUST_ID,CUST_ID);
+		savedCustomer.setMobile(CUST_MOBILE_NEW);
 		
-		AuthenticationDetails duplicateAuthenticationDetails=
-				new AuthenticationDetails(new AuthenticationDetailsKey(214L, 1), null, CUST_MOBILE_NEW, CUST_PASSWORD_CHANGED, CUST_PASSWORD_TYPE_CHANGED,
-						CUST_EMAILHASH, ZERO_COUNT, ZERO_COUNT, new Date(), new Date(),
-						 CUST_UPDATED_BY,CUST_UPDATED_BY,CUST_ID,CUST_ID);
+		customerDetailsCustomRepository.save(savedCustomer);
 		
 		MobileVerificationDetails savedMobileDetails=mobileVerificationDetailsRepository.save(newMobileVerificationDetails);
 		
@@ -828,7 +737,7 @@ public class TransactionalUpdatesRepositoryTest {
 		
 		
 	}
-		
+	*/	
 	
 	
 	@Test
@@ -843,20 +752,16 @@ public class TransactionalUpdatesRepositoryTest {
 		
 		VendorDetails savedVendor=vendorDetailsCustomRepository.save(standardVendor());
 		
-		MobileVerificationDetails newMobileVerificationDetails=
-				new MobileVerificationDetails(new MobileVerificationDetailsKey(savedVendor.getVendorId(), ENTITY_TYPE_VENDOR, ENTITY_TYPE_PRIMARY),
-						CUST_MOBILE_NEW, CUST_MOBILEPIN, ZERO_COUNT, ZERO_COUNT, new Date(), new Date(),
-						 CUST_UPDATED_BY,CUST_UPDATED_BY,CUST_ID,CUST_ID);
-		
-		MobileVerificationDetails savedMobileDetails=mobileVerificationDetailsRepository.save(newMobileVerificationDetails);
-		
-		AuthenticationDetails savedAuthenticationDetails=authenticationDetailsRepository.save(standardCustomerEmailMobileAuthenticationDetailsVendor());
 		
 		assertEquals(savedVendor.getMobile(),vendorDetailsCustomRepository.findOne(savedVendor.getVendorId()).getMobile());
 		
-		assertNotNull(authenticationDetailsRepository.getByMobile(savedAuthenticationDetails.getMobile()).getKey());
+		assertNotNull(authenticationDetailsRepository.getByMobile(savedVendor.getMobile()).getKey());
 		
 		AuthenticationDetails authenticationDetails=null;
+		
+		savedVendor.setMobile(CUST_MOBILE_NEW);
+		
+		vendorDetailsCustomRepository.save(savedVendor);
 		
 		try{
 			authenticationDetails=authenticationDetailsRepository.getByMobile(CUST_MOBILE_NEW);
@@ -870,7 +775,7 @@ public class TransactionalUpdatesRepositoryTest {
 		
 		assertEquals(1, vendorDetailsCustomRepository.count().intValue());
 		
-		assertEquals(1, mobileVerificationDetailsRepository.count().intValue());
+		assertEquals(2, mobileVerificationDetailsRepository.count().intValue());
 		
 		assertEquals(1, authenticationDetailsRepository.count().intValue());
 		
@@ -879,7 +784,7 @@ public class TransactionalUpdatesRepositoryTest {
 		authenticationDetails=null;
 		
 		try{
-			authenticationDetails=authenticationDetailsRepository.getByMobile(savedAuthenticationDetails.getMobile());
+			authenticationDetails=authenticationDetailsRepository.getByMobile(savedVendor.getMobile());
 		}catch(AuthenticationDetailsNotFoundException e)
 		{
 			assertNull(authenticationDetails);
@@ -890,7 +795,7 @@ public class TransactionalUpdatesRepositoryTest {
 		
 	}
 	
-	
+	/*
 	@Test
 	public void updateMobileInDetailsEnityAndAuthenticationDetailsWithVendorMobileWithFailure()
 	{
@@ -946,7 +851,7 @@ public class TransactionalUpdatesRepositoryTest {
 		
 		
 	}
-
+*/
 	
 	@Test
 	public void updateEmailInDetailsEnityAndAuthenticationDetailsWithCustomerEmail()
@@ -960,19 +865,13 @@ public class TransactionalUpdatesRepositoryTest {
 		
 		CustomerDetails savedCustomer=customerDetailsCustomRepository.save(standardCustomerDetails(standardCustomerFromQuickEntity()));
 		
-		EmailVerificationDetails newEmailVerificationDetails=
-				new EmailVerificationDetails(new EmailVerificationDetailsKey(savedCustomer.getCustomerId(), ENTITY_TYPE_CUSTOMER, ENTITY_TYPE_PRIMARY),
-						CUST_EMAIL_NEW, CUST_EMAILHASH, new Date(), ZERO_COUNT, new Date(), new Date(),
-						 CUST_UPDATED_BY,CUST_UPDATED_BY,CUST_ID,CUST_ID);
-		
-		EmailVerificationDetails savedEmailDetails=emailVerificationDetailsRepository.save(newEmailVerificationDetails);
-		
-		AuthenticationDetails savedAuthenticationDetails=authenticationDetailsRepository.save(standardCustomerEmailMobileAuthenticationDetails());
-		
 		assertEquals(savedCustomer.getEmail(),customerDetailsCustomRepository.findOne(savedCustomer.getCustomerId()).getEmail());
 		
-		assertNotNull(authenticationDetailsRepository.getByEmail(savedAuthenticationDetails.getEmail()).getKey());
+		assertNotNull(authenticationDetailsRepository.getByEmail(savedCustomer.getEmail()).getKey());
 		
+		savedCustomer.setEmail(CUST_EMAIL_NEW);
+		
+		customerDetailsCustomRepository.save(savedCustomer);
 		
 		AuthenticationDetails authenticationDetails=null;
 		
@@ -997,7 +896,7 @@ public class TransactionalUpdatesRepositoryTest {
 		authenticationDetails=null;
 		
 		try{
-				authenticationDetails=authenticationDetailsRepository.getByEmail(savedAuthenticationDetails.getEmail());
+				authenticationDetails=authenticationDetailsRepository.getByEmail(CUST_EMAIL);
 		}catch(AuthenticationDetailsNotFoundException e)
 		{
 			assertNull(authenticationDetails);
@@ -1008,7 +907,7 @@ public class TransactionalUpdatesRepositoryTest {
 		
 	}
 		
-	
+	/*
 	@Test
 	public void updateEmailInDetailsEnityAndAuthenticationDetailsWithCustomerEmailWithFailure()
 	{
@@ -1064,7 +963,7 @@ public class TransactionalUpdatesRepositoryTest {
 		
 		
 	}
-
+*/
 	
 	@Test
 	public void updateEmailInDetailsEnityAndAuthenticationDetailsWithVendorEmail()
@@ -1078,18 +977,13 @@ public class TransactionalUpdatesRepositoryTest {
 		
 		VendorDetails savedVendor=vendorDetailsCustomRepository.save(standardVendor());
 		
-		EmailVerificationDetails newEmailVerificationDetails=
-				new EmailVerificationDetails(new EmailVerificationDetailsKey(savedVendor.getVendorId(), ENTITY_TYPE_VENDOR, ENTITY_TYPE_PRIMARY),
-						CUST_EMAIL_NEW, CUST_EMAILHASH, new Date(), ZERO_COUNT, new Date(), new Date(),
-						 CUST_UPDATED_BY,CUST_UPDATED_BY,CUST_ID,CUST_ID);
-		
-		EmailVerificationDetails savedEmailDetails=emailVerificationDetailsRepository.save(newEmailVerificationDetails);
-		
-		AuthenticationDetails savedAuthenticationDetails=authenticationDetailsRepository.save(standardCustomerEmailMobileAuthenticationDetailsVendor());
-		
 		assertEquals(savedVendor.getEmail(),vendorDetailsCustomRepository.findOne(savedVendor.getVendorId()).getEmail());
 		
-		assertNotNull(authenticationDetailsRepository.getByEmail(savedAuthenticationDetails.getEmail()).getKey());
+		assertNotNull(authenticationDetailsRepository.getByEmail(VENDOR_EMAIL).getKey());
+		
+		savedVendor.setEmail(CUST_EMAIL_NEW);
+		
+		vendorDetailsCustomRepository.save(savedVendor);
 		
 		AuthenticationDetails authenticationDetails=null;
 		
@@ -1114,7 +1008,7 @@ public class TransactionalUpdatesRepositoryTest {
 		authenticationDetails=null;
 		
 		try{
-			authenticationDetails=authenticationDetailsRepository.getByEmail(savedAuthenticationDetails.getEmail());
+			authenticationDetails=authenticationDetailsRepository.getByEmail(VENDOR_EMAIL);
 		}catch(AuthenticationDetailsNotFoundException e)
 		{
 			assertNull(authenticationDetails);
@@ -1125,7 +1019,7 @@ public class TransactionalUpdatesRepositoryTest {
 		
 	}
 	
-	
+	/*
 	@Test
 	public void updateEmailInDetailsEnityAndAuthenticationDetailsWithVendorEmailWithFailure()
 	{
@@ -1180,13 +1074,14 @@ public class TransactionalUpdatesRepositoryTest {
 		
 		
 	}
-
+*/
 	
 	@Test
 	public void saveNewQuickRegisterEntity()
 	{
-		assertEquals(0, quickRegisterRepository.findAll().size());
 		
+		assertEquals(0, quickRegisterRepository.count().intValue());
+				
 		assertEquals(0,mobileVerificationDetailsRepository.count().intValue());
 		
 		assertEquals(0,emailVerificationDetailsRepository.count().intValue());
@@ -1205,7 +1100,7 @@ public class TransactionalUpdatesRepositoryTest {
 		assertEquals(standardCustomerEmailVerificationDetails().getEmail(), authenticationDetailsRepository
 				.getByCustomerIdType(savedEntity.getCustomerQuickRegisterEntity().getCustomerId(), savedEntity.getCustomerQuickRegisterEntity().getCustomerType()).getEmail());
 		
-		assertEquals(1,quickRegisterRepository.findAll().size());
+		assertEquals(1, quickRegisterRepository.count().intValue());
 		
 		assertEquals(1,mobileVerificationDetailsRepository.count().intValue());
 		
@@ -1219,7 +1114,7 @@ public class TransactionalUpdatesRepositoryTest {
 	@Test
 	public void saveNewQuickRegisterEntityFailedCase()
 	{
-		assertEquals(0,quickRegisterRepository.findAll().size());
+		assertEquals(0, quickRegisterRepository.count().intValue());
 		
 		assertEquals(0,mobileVerificationDetailsRepository.count().intValue());
 		
@@ -1227,9 +1122,17 @@ public class TransactionalUpdatesRepositoryTest {
 		
 		assertEquals(0,authenticationDetailsRepository.count().intValue());
 		
-		authenticationDetailsRepository.save(standardCustomerEmailMobileAuthenticationDetails());
+		transactionalUpdatesRepository.saveNewQuickRegisterEntity(standardEmailMobileCustomer());
 		
 		CustomerQuickRegisterEmailMobileVerificationEntity savedEntity=null;
+		
+		assertEquals(1, quickRegisterRepository.count().intValue());
+		
+		assertEquals(1,mobileVerificationDetailsRepository.count().intValue());
+		
+		assertEquals(1,emailVerificationDetailsRepository.count().intValue());
+		
+		assertEquals(1,authenticationDetailsRepository.count().intValue());
 		
 		try{
 			savedEntity=transactionalUpdatesRepository.saveNewQuickRegisterEntity(standardEmailMobileCustomer());
@@ -1245,11 +1148,11 @@ public class TransactionalUpdatesRepositoryTest {
 		assertEquals(new EmailVerificationDetails(), savedEntity.getCustomerEmailVerificationDetails());
 		*/
 		
-		assertEquals(0,quickRegisterRepository.findAll().size());
+		assertEquals(1, quickRegisterRepository.count().intValue());
 		
-		assertEquals(0,mobileVerificationDetailsRepository.count().intValue());
+		assertEquals(1,mobileVerificationDetailsRepository.count().intValue());
 		
-		assertEquals(0,emailVerificationDetailsRepository.count().intValue());
+		assertEquals(1,emailVerificationDetailsRepository.count().intValue());
 		
 		assertEquals(1,authenticationDetailsRepository.count().intValue());
 		
@@ -1261,22 +1164,22 @@ public class TransactionalUpdatesRepositoryTest {
 	public void deleteQuickRegisterEntityCreateDetailsWithCustomerEntity()
 	{
 		
-		assertEquals(0,quickRegisterRepository.findAll().size());
+		assertEquals(0, quickRegisterRepository.count().intValue());
 		
 		assertEquals(0, customerDetailsCustomRepository.count().intValue());
 		
-		QuickRegisterEntity quickRegisterEntity=quickRegisterRepository.save(standardEmailMobileCustomer());
+		CustomerQuickRegisterEmailMobileVerificationEntity quickRegisterEntity=transactionalUpdatesRepository.saveNewQuickRegisterEntity(standardEmailMobileCustomer());
 		
-		assertEquals(1,quickRegisterRepository.findAll().size());
+		assertEquals(1, quickRegisterRepository.count().intValue());
 		
 		CustomerOrVendorDetailsDTO customerOrVendorDetailsDTO=
-				transactionalUpdatesRepository.deleteQuickRegisterEntityCreateDetails(quickRegisterEntity);
+				transactionalUpdatesRepository.deleteQuickRegisterEntityCreateDetails(quickRegisterEntity.getCustomerQuickRegisterEntity());
 		
 		assertNull(customerOrVendorDetailsDTO.getVendorDetails());
 		
 		assertNotNull(customerOrVendorDetailsDTO.getCustomerDetails());
 		
-		assertEquals(0,quickRegisterRepository.findAll().size());
+		assertEquals(0, quickRegisterRepository.count().intValue());
 		
 		assertEquals(1, customerDetailsCustomRepository.count().intValue());
 		
@@ -1287,25 +1190,23 @@ public class TransactionalUpdatesRepositoryTest {
 	public void deleteQuickRegisterEntityCreateDetailsWithCustomerEntityWithFailure()
 	{
 		
-		assertEquals(0,quickRegisterRepository.findAll().size());
+		assertEquals(0, quickRegisterRepository.count().intValue());
 		
 		assertEquals(0, customerDetailsCustomRepository.count().intValue());
 		
-		QuickRegisterEntity quickRegisterEntity=quickRegisterRepository.save(standardEmailMobileCustomer());
+		CustomerQuickRegisterEmailMobileVerificationEntity quickRegisterEntity=transactionalUpdatesRepository.saveNewQuickRegisterEntity(standardEmailMobileCustomer());
 		
-		customerDetailsCustomRepository.save(new CustomerDetails(215L, "ABX","A.", "ASD", null, null, CUST_MOBILE,null,false, CUST_EMAIL, false, 
-				null, null, null, null, null, null, null, new Date(), new Date(), CUST_UPDATED_BY,CUST_UPDATED_BY,CUST_ID,CUST_ID));
+				
 		
+		assertEquals(1, quickRegisterRepository.count().intValue());
 		
-		assertEquals(1,quickRegisterRepository.findAll().size());
-		
-		assertEquals(1, customerDetailsCustomRepository.count().intValue());
+		assertEquals(0, customerDetailsCustomRepository.count().intValue());
 		
 		CustomerOrVendorDetailsDTO customerOrVendorDetailsDTO = null;
 		
 		try{
 			customerOrVendorDetailsDTO=
-				transactionalUpdatesRepository.deleteQuickRegisterEntityCreateDetails(quickRegisterEntity);
+				transactionalUpdatesRepository.deleteQuickRegisterEntityCreateDetails(quickRegisterEntity.getCustomerQuickRegisterEntity());
 		}catch(DeleteQuickCreateDetailsEntityFailedException e)
 		{
 			assertNull(customerOrVendorDetailsDTO);
@@ -1316,9 +1217,9 @@ public class TransactionalUpdatesRepositoryTest {
 		assertNull(customerOrVendorDetailsDTO.getVendorDetails());
 		*/
 		
-			assertEquals(1,quickRegisterRepository.findAll().size());
+		assertEquals(0, quickRegisterRepository.count().intValue());
 		
-			assertEquals(1, customerDetailsCustomRepository.count().intValue());
+		assertEquals(0, customerDetailsCustomRepository.count().intValue());
 		
 	}
 	
@@ -1327,22 +1228,22 @@ public class TransactionalUpdatesRepositoryTest {
 	public void deleteQuickRegisterEntityCreateDetailsWithVendorEntity()
 	{
 		
-		assertEquals(0,quickRegisterRepository.findAll().size());
+		assertEquals(0, quickRegisterRepository.count().intValue());
 		
 		assertEquals(0, vendorDetailsCustomRepository.count().intValue());
 		
-		QuickRegisterEntity quickRegisterEntity=quickRegisterRepository.save(standardEmailMobileVendor());
+		CustomerQuickRegisterEmailMobileVerificationEntity quickRegisterEntity=transactionalUpdatesRepository.saveNewQuickRegisterEntity(standardEmailMobileVendor());
 		
-		assertEquals(1,quickRegisterRepository.findAll().size());
+		assertEquals(1, quickRegisterRepository.count().intValue());
 		
 		CustomerOrVendorDetailsDTO customerOrVendorDetailsDTO=
-				transactionalUpdatesRepository.deleteQuickRegisterEntityCreateDetails(quickRegisterEntity);
+				transactionalUpdatesRepository.deleteQuickRegisterEntityCreateDetails(quickRegisterEntity.getCustomerQuickRegisterEntity());
 		
 		assertNotNull(customerOrVendorDetailsDTO.getVendorDetails());
 		
 		assertNull(customerOrVendorDetailsDTO.getCustomerDetails());
 		
-		assertEquals(0,quickRegisterRepository.findAll().size());
+		assertEquals(1, quickRegisterRepository.count().intValue());
 		
 		assertEquals(1, vendorDetailsCustomRepository.count().intValue());
 		
@@ -1353,18 +1254,18 @@ public class TransactionalUpdatesRepositoryTest {
 	public void deleteQuickRegisterEntityCreateDetailsWithVendorEntityWithFailure()
 	{
 		
-		assertEquals(0,quickRegisterRepository.findAll().size());
+		assertEquals(0, quickRegisterRepository.count().intValue());
 		
 		assertEquals(0, vendorDetailsCustomRepository.count().intValue());
 		
-		QuickRegisterEntity quickRegisterEntity=quickRegisterRepository.save(standardEmailMobileVendor());
+		CustomerQuickRegisterEmailMobileVerificationEntity quickRegisterEntity=transactionalUpdatesRepository.saveNewQuickRegisterEntity(standardEmailMobileCustomer());
 		
 		vendorDetailsCustomRepository.save(new VendorDetails(215L, "ASD","A.", "AES",null, null,null,null, standardEmailMobileVendor().getMobile(),
 				null,false, standardEmailMobileVendor().getEmail(), false, 
 				null, null, null, new Date(),new Date(), CUST_UPDATED_BY,CUST_UPDATED_BY,CUST_ID,CUST_ID));
 		
 		
-		assertEquals(1,quickRegisterRepository.findAll().size());
+		assertEquals(1, quickRegisterRepository.count().intValue());
 		
 		assertEquals(1, vendorDetailsCustomRepository.count().intValue());
 		
@@ -1372,7 +1273,7 @@ public class TransactionalUpdatesRepositoryTest {
 		
 		try{
 			customerOrVendorDetailsDTO=
-				transactionalUpdatesRepository.deleteQuickRegisterEntityCreateDetails(quickRegisterEntity);
+				transactionalUpdatesRepository.deleteQuickRegisterEntityCreateDetails(quickRegisterEntity.getCustomerQuickRegisterEntity());
 		}catch(DeleteQuickCreateDetailsEntityFailedException e)
 		{
 			assertNull(customerOrVendorDetailsDTO);
@@ -1383,9 +1284,9 @@ public class TransactionalUpdatesRepositoryTest {
 			assertNull(customerOrVendorDetailsDTO.getCustomerDetails());
 		*/	
 		
-			assertEquals(1,quickRegisterRepository.findAll().size());
+		assertEquals(1, quickRegisterRepository.count().intValue());
 		
-			assertEquals(1, vendorDetailsCustomRepository.count().intValue());
+		assertEquals(1, vendorDetailsCustomRepository.count().intValue());
 		
 	}
 

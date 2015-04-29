@@ -33,9 +33,7 @@ public interface QuickRegisterService {
 	CustomerQuickRegisterEmailMobileVerificationEntity saveNewCustomerQuickRegisterEntity(QuickRegisterEntity customer) 
 			throws QuickRegisterDetailsAlreadyPresentException,ValidationFailedException;
 	
-	QuickRegisterEntity saveCustomerQuickRegisterEntity(QuickRegisterEntity customerQuickRegisterEntity)
-		throws QuickRegisterDetailsAlreadyPresentException,ValidationFailedException,ResourceNotFoundException;
-	
+		
 	CustomerQuickRegisterStatusEntity handleNewCustomerQuickRegister(CustomerQuickRegisterEntityDTO customer) throws Exception;
 	
 	QuickRegisterEntity getByEntityId(Long customerId);
@@ -51,7 +49,6 @@ public interface QuickRegisterService {
 	
 	Integer updateEmailVerificationStatus(Long customerId,Boolean status,Date updateTime,Integer requestedBy,Long requestedById);
 
-	List<MobilePinPasswordDTO> getTestData();
 	
 	//Testing
 	void clearDataForTesting();

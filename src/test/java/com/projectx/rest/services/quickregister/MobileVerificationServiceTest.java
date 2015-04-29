@@ -58,29 +58,4 @@ public class MobileVerificationServiceTest {
 	}
 	
 
-	@Test
-	public void saveCustomerMobileVerificationEntityAndGetByCustomerIdAndEmail()
-	{
-		MobileVerificationDetails savedEntity=mobileVerificationService.saveDetails(standardCustomerMobileVerificationDetails());
-		
-		MobileVerificationDetails fetchedEntity=mobileVerificationService
-				.getByEntityIdTypeAndMobileType(savedEntity.getKey().getCustomerId(),
-						savedEntity.getKey().getCustomerType(),savedEntity.getKey().getMobileType());
-		
-		assertEquals(savedEntity, fetchedEntity);
-		
-	}
-	
-
-
-	
-	@Test
-	public void deleteKey()
-	{
-		MobileVerificationDetails savedEntity=mobileVerificationService.saveDetails(standardCustomerMobileVerificationDetails());
-		
-		assertTrue(mobileVerificationService
-				.deleteByKey(savedEntity.getKey()));
-		
-	}
 }

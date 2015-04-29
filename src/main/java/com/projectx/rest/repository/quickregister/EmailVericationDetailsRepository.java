@@ -14,9 +14,6 @@ import com.projectx.rest.exception.repository.quickregister.ResourceAlreadyPrese
 @Repository
 public interface EmailVericationDetailsRepository {
 
-	EmailVerificationDetails save(EmailVerificationDetails mobileVerificationDetails)
-						throws ResourceAlreadyPresentException,ValidationFailedException;
-	
 	EmailVerificationDetails getByEntityIdTypeAndEmailType(Long customerId,Integer customerType,Integer emailType) throws EmailVerificationDetailNotFoundException;
 	
 	EmailVerificationDetails getByEmail(String email) throws EmailVerificationDetailNotFoundException;

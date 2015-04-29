@@ -10,9 +10,6 @@ import com.projectx.rest.exception.repository.quickregister.ResourceNotFoundExce
 public interface EmailVerificationService {
 
     
-	EmailVerificationDetails saveDetails(EmailVerificationDetails emailVerificationDetails) 
-			throws ResourceAlreadyPresentException,ValidationFailedException;
-	
 	EmailVerificationDetails getByEntityIdTypeAndEmailType(Long customerId,Integer customerType,Integer emailType) throws ResourceNotFoundException;
     
     EmailVerificationDetails getByEmail(String email) throws ResourceNotFoundException;

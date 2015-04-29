@@ -24,9 +24,13 @@ import com.projectx.rest.domain.quickregister.QuickRegisterEntity;
 import com.projectx.rest.domain.request.FreightRequestByCustomer;
 import com.projectx.rest.domain.request.FreightRequestByVendor;
 import com.projectx.rest.exception.repository.quickregister.ResourceNotFoundException;
+import com.projectx.rest.repository.completeregister.TransactionalUpdatesRepository;
 import com.projectx.rest.services.completeregister.CustomerDetailsService;
 import com.projectx.rest.services.completeregister.VehicleDetailsService;
 import com.projectx.rest.services.completeregister.VendorDetailsService;
+import com.projectx.rest.services.quickregister.AuthenticationService;
+import com.projectx.rest.services.quickregister.EmailVerificationService;
+import com.projectx.rest.services.quickregister.MobileVerificationService;
 import com.projectx.rest.services.quickregister.QuickRegisterService;
 import com.projectx.rest.services.request.FreightRequestByCustomerService;
 import com.projectx.rest.services.request.FreightRequestByVendorService;
@@ -57,10 +61,23 @@ public class DealServiceTest {
 	@Autowired
 	VehicleDetailsService vehicleDetailsService;
 	
+	@Autowired
+	MobileVerificationService mobileVerificationService;
+	
+	@Autowired
+	EmailVerificationService emailVerificationService;
+	
+	@Autowired
+	AuthenticationService authenticationService;
+	
+	@Autowired
+	TransactionalUpdatesRepository transactionalUpdatesRepository;
+	
 	
 	@Before
 	public void setUp()
 	{
+		
 		dealService.clearTestData();
 		freightRequestByVendorService.clearTestData();
 		freightRequestByCustomerService.clearTestData();
@@ -68,6 +85,9 @@ public class DealServiceTest {
 		vendorDetailsService.clearTestData();
 		quickRegisterService.clearDataForTesting();
 		vehicleDetailsService.clearTestData();
+		mobileVerificationService.clearTestData();
+		emailVerificationService.clearTestData();
+		authenticationService.clearTestData();
 		
 	}
 	
@@ -82,11 +102,15 @@ public class DealServiceTest {
 	@Test
 	public void triggerDeal()
 	{
-		QuickRegisterEntity savedQuickRegisterEntity=quickRegisterService.saveCustomerQuickRegisterEntity(standardEmailMobileCustomer());
+		QuickRegisterEntity savedQuickRegisterEntity=transactionalUpdatesRepository
+				.saveNewQuickRegisterEntity(standardEmailMobileCustomer()).getCustomerQuickRegisterEntity();
+		
 		
 		CustomerDetails customer=customerDetailsService.createCustomerDetailsFromQuickRegisterEntity(savedQuickRegisterEntity);
 
-		QuickRegisterEntity quickRegisterEntity=quickRegisterService.saveCustomerQuickRegisterEntity(standardEmailMobileVendor());
+		QuickRegisterEntity quickRegisterEntity=transactionalUpdatesRepository
+				.saveNewQuickRegisterEntity(standardEmailMobileVendor()).getCustomerQuickRegisterEntity();
+	
 		
 		VendorDetails vendor=vendorDetailsService.createCustomerDetailsFromQuickRegisterEntity(quickRegisterEntity);
 		
@@ -120,7 +144,7 @@ public class DealServiceTest {
 		{
 			assertEquals(1, 1);
 		}
-		deal=dealService.triggerDeal(customerRequest.getRequestId(), vendorRequest.getRequestId(), "ONLINE", 100, "CUST_ONLINE");
+		deal=dealService.triggerDeal(customerRequest.getRequestId(), vendorRequest.getRequestId(), "ONLINE", 100, 1,234L);
 
 		assertEquals(1, dealService.count().intValue());
 		
@@ -133,11 +157,16 @@ public class DealServiceTest {
 	@Test
 	public void exchangeContacts()
 	{
-		QuickRegisterEntity savedQuickRegisterEntity=quickRegisterService.saveCustomerQuickRegisterEntity(standardEmailMobileCustomer());
+	
+		QuickRegisterEntity savedQuickRegisterEntity=transactionalUpdatesRepository
+				.saveNewQuickRegisterEntity(standardEmailMobileCustomer()).getCustomerQuickRegisterEntity();
+		
 		
 		CustomerDetails customer=customerDetailsService.createCustomerDetailsFromQuickRegisterEntity(savedQuickRegisterEntity);
 
-		QuickRegisterEntity quickRegisterEntity=quickRegisterService.saveCustomerQuickRegisterEntity(standardEmailMobileVendor());
+		QuickRegisterEntity quickRegisterEntity=transactionalUpdatesRepository
+				.saveNewQuickRegisterEntity(standardEmailMobileVendor()).getCustomerQuickRegisterEntity();
+
 		
 		VendorDetails vendor=vendorDetailsService.createCustomerDetailsFromQuickRegisterEntity(quickRegisterEntity);
 		
@@ -148,7 +177,7 @@ public class DealServiceTest {
 		
 		FreightRequestByVendor vendorRequest=freightRequestByVendorService.newRequest(standardFreightRequestByVendor(vendor.getVendorId()));
 		
-		DealDetails deal=dealService.triggerDeal(customerRequest.getRequestId(), vendorRequest.getRequestId(), "ONLINE", 100, "CUST_ONLINE");
+		DealDetails deal=dealService.triggerDeal(customerRequest.getRequestId(), vendorRequest.getRequestId(), "ONLINE", 100, 1,234L);
 		
 		assertTrue(dealService.exchangeContact(deal.getDealId(), customerRequest.getRequestId(), vendorRequest.getRequestId()));
 		

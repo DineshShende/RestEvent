@@ -21,6 +21,9 @@ import com.projectx.rest.domain.completeregister.CustomerDetails;
 import com.projectx.rest.exception.repository.completeregister.CustomerDetailsAlreadyPresentException;
 import com.projectx.rest.exception.repository.completeregister.CustomerDetailsNotFoundException;
 import com.projectx.rest.exception.repository.completeregister.ValidationFailedException;
+import com.projectx.rest.repository.quickregister.AuthenticationDetailsRepository;
+import com.projectx.rest.repository.quickregister.EmailVericationDetailsRepository;
+import com.projectx.rest.repository.quickregister.MobileVerificationDetailsRepository;
 
 import static com.projectx.rest.config.Constants.SPRING_PROFILE_ACTIVE_TEST;
 import static com.projectx.rest.fixture.completeregister.CustomerDetailsDataFixtures.*;
@@ -34,10 +37,22 @@ public class CustomerDetailsRepositoryTest {
 	@Autowired
 	CustomerDetailsRepository customerDetailsCustomRepository;
 	
+	@Autowired
+	EmailVericationDetailsRepository emailVericationDetailsRepository;
+	
+	@Autowired
+	MobileVerificationDetailsRepository mobileVerificationDetailsRepository;
+	
+	@Autowired
+	AuthenticationDetailsRepository authenticationDetailsRepository;
+	
 	@Before
 	public void clearTestData()
 	{
 		customerDetailsCustomRepository.deleteAll();
+		emailVericationDetailsRepository.clearTestData();
+		mobileVerificationDetailsRepository.clearTestData();
+		authenticationDetailsRepository.clearLoginDetailsForTesting();
 		
 	}
 	
@@ -138,59 +153,11 @@ public class CustomerDetailsRepositoryTest {
 		
 		CustomerDetails mergeResult=customerDetailsCustomRepository.save(newEntityToMerge);
 		
+		newEntityToMerge.setSecondaryMobile(null);
+		
 		assertEquals(newEntityToMerge, mergeResult);
 	}
 	
-	
-	
-	
-	@Test
-	public void updateMobileVerifiedStatus()
-	{
-		assertEquals(0, customerDetailsCustomRepository.count().intValue());
-		
-		CustomerDetails savedEntity=customerDetailsCustomRepository.save(standardCustomerDetails(standardCustomerFromQuickEntity()));
-		
-		assertEquals(1, customerDetailsCustomRepository.count().intValue());
-		
-		
-		
-		assertEquals(1, customerDetailsCustomRepository
-				.updateMobileVerificationStatus(new UpdateMobileVerificationStatusUpdatedByDTO(savedEntity.getCustomerId(),savedEntity.getMobile(), true,
-						savedEntity.getUpdatedBy(),savedEntity.getCustomerId())).intValue());
-		
-	}
-	
-	
-	@Test
-	public void updateSecondaryMobileVerificationStatus()
-	{
-		assertEquals(0, customerDetailsCustomRepository.count().intValue());
-		
-		CustomerDetails savedEntity=customerDetailsCustomRepository.save(standardCustomerDetails(standardCustomerFromQuickEntity()));
-		
-		assertEquals(1, customerDetailsCustomRepository.count().intValue());
-		
-		assertEquals(1, customerDetailsCustomRepository
-				.updateSecondaryMobileVerificationStatus(new UpdateMobileVerificationStatusUpdatedByDTO(savedEntity.getCustomerId(),
-						savedEntity.getSecondaryMobile(), true,savedEntity.getUpdatedBy(),savedEntity.getCustomerId())).intValue());
-		
-	}
-	
-	@Test
-	public void updateEmailVerificationStatus()
-	{
-		assertEquals(0, customerDetailsCustomRepository.count().intValue());
-		
-		CustomerDetails savedEntity=customerDetailsCustomRepository.save(standardCustomerDetails(standardCustomerFromQuickEntity()));
-		
-		assertEquals(1, customerDetailsCustomRepository.count().intValue());
-		
-		assertEquals(1, customerDetailsCustomRepository
-				.updateEmailVerificationStatus(new UpdateEmailVerificationStatusUpdatedByDTO(savedEntity.getCustomerId(),savedEntity.getEmail(), 
-						true,savedEntity.getUpdatedBy(),savedEntity.getCustomerId())).intValue());
-		
-	}
 	
 
 }

@@ -13,8 +13,6 @@ import com.projectx.rest.exception.repository.quickregister.ResourceAlreadyPrese
 @Repository
 public interface MobileVerificationDetailsRepository {
 
-	MobileVerificationDetails save(MobileVerificationDetails mobileVerificationDetails) throws ResourceAlreadyPresentException,ValidationFailedException;
-	
 	MobileVerificationDetails geByEntityIdTypeAndMobileType(Long customerId,Integer customerType,Integer mobileType) throws MobileVerificationDetailsNotFoundException;
 	
 	MobileVerificationDetails getByMobile(Long mobile) throws MobileVerificationDetailsNotFoundException;

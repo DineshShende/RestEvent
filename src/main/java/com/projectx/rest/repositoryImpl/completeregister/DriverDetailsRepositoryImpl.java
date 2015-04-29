@@ -67,30 +67,7 @@ public class DriverDetailsRepositoryImpl implements DriverDetailsRepository {
 		
 	}
 
-	/*
-	@Override
-	public DriverDetails update(DriverDetails driverDetails) throws DriverDetailsUpdateFailedException,ValidationFailedException{
-
-		HttpEntity<DriverDetails> entity=new HttpEntity<DriverDetails>(driverDetails);
-		
-		
-		ResponseEntity<DriverDetails> savedEntity=null;
-		
-		try{
-			savedEntity=restTemplate.exchange(env.getProperty("data.url")+"/driver/update", HttpMethod.POST,
-					entity, DriverDetails.class);
-			
-		}catch(RestClientException e)
-		{
-			throw new ValidationFailedException();
-		}
-		if(savedEntity.getStatusCode()==HttpStatus.OK)
-			return savedEntity.getBody();
-		else
-			throw new DriverDetailsUpdateFailedException();
-	}
-	*/
-
+	
 	@Override
 	public Integer updateMobileAndMobileVerificationStatus(Long driverId,
 			Long mobile, Boolean status,Integer updatedBy,Long updatedById) {

@@ -12,6 +12,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -69,11 +70,13 @@ public class FreightRequestByCustomerControllerWACTest {
 	}
 	
 	@Before
+	@After
 	public void cleanUp()
 	{
+		
 		freightRequestByCustomerService.clearTestData();
 		freightRequestByVendorService.clearTestData();
-		vehicleDetailsService.clearTestData();		
+		vehicleDetailsService.clearTestData();
 	}
 	
 	@Test

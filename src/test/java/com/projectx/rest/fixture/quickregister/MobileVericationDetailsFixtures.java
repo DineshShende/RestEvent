@@ -40,6 +40,12 @@ public class MobileVericationDetailsFixtures {
 				CUST_RESEND_COUNT, CUST_DATE, CUST_DATE, CUST_UPDATED_BY,CUST_UPDATED_BY,CUST_ID,CUST_ID);
 	}
 	
+	public static MobileVerificationDetails standardCustomerMobileVerificationDetailsNull()
+	{
+		return new MobileVerificationDetails(standardMobileVerificationDetailsKey(), CUST_MOBILE, null, CUST_RESEND_COUNT,
+				CUST_RESEND_COUNT, CUST_DATE, CUST_DATE, CUST_UPDATED_BY,CUST_UPDATED_BY,CUST_ID,CUST_ID);
+	}
+	
 	
 	public static CustomerMobileVerificationDetailsByCustomerIdTypeAndMobileTypeDTO standardCustomerMobileVerificationDetailsByCustomerIdAndMobileDTO()
 	{
@@ -77,16 +83,12 @@ public class MobileVericationDetailsFixtures {
 	
 	public static String standardJsonUpdateMobilePinUpdatedByDTOMVC(CustomerIdTypeMobileTypeRequestedByDTO dto)
 	{
-		//return "{\"customerId\":"+CUST_ID+",\"customerType\":"+ENTITY_TYPE_CUSTOMER+",\"mobileType\":"+CUST_MOBILE_TYPE_PRIMARY+",\"updatedBy\":\""+CUST_UPDATED_BY+"\"}";
-		
 		return gson.toJson(dto);
 	}
 	
 	
 	public static String standardJsonVerifyMobilePinDTO()
 	{
-		//return "{\"customerId\":"+CUST_ID+",\"customerType\":"+ENTITY_TYPE_CUSTOMER+",\"mobileType\":"+MOB_TYPE_PRIMARY+",\"mobilePin\":"+CUST_MOBILEPIN+"}";
-		   
 		return gson.toJson(standardJsonVerifyMobilePinDTO()); 
 	}
 

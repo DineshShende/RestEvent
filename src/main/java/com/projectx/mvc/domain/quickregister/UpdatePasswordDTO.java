@@ -16,6 +16,9 @@ public class UpdatePasswordDTO {
 	private String password;
 	
 	@NotNull
+	private String oldPassword;
+	
+	@NotNull
 	private Boolean isForcefulChangePassword;
 
 	@NotNull
@@ -29,19 +32,20 @@ public class UpdatePasswordDTO {
 	}
 
 
-
-
 	public UpdatePasswordDTO(Long customerId, Integer customerType,
-			String password, Boolean isForcefulChangePassword,
-			Integer requestedBy,Long requestedById) {
+			String password, String oldPassword,
+			Boolean isForcefulChangePassword, Integer requestedBy,
+			Long requestedById) {
 		super();
 		this.customerId = customerId;
 		this.customerType = customerType;
 		this.password = password;
+		this.oldPassword = oldPassword;
 		this.isForcefulChangePassword = isForcefulChangePassword;
 		this.requestedBy = requestedBy;
-		this.requestedById=requestedById;
+		this.requestedById = requestedById;
 	}
+
 
 
 
@@ -107,18 +111,30 @@ public class UpdatePasswordDTO {
 	}
 
 
+	
+
+	public String getOldPassword() {
+		return oldPassword;
+	}
+
+
+	public void setOldPassword(String oldPassword) {
+		this.oldPassword = oldPassword;
+	}
+
+
+
 
 
 	@Override
 	public String toString() {
 		return "UpdatePasswordDTO [customerId=" + customerId
 				+ ", customerType=" + customerType + ", password=" + password
+				+ ", oldPassword=" + oldPassword
 				+ ", isForcefulChangePassword=" + isForcefulChangePassword
 				+ ", requestedBy=" + requestedBy + ", requestedById="
 				+ requestedById + "]";
 	}
-
-
 
 
 	@Override

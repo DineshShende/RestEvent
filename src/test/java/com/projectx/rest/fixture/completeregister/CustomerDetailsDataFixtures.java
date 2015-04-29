@@ -45,16 +45,6 @@ public class CustomerDetailsDataFixtures {
 	static Gson gson=new Gson();
 	
 	
-	/*
-	public static CustomerDetails standardCustomerDetails()
-	{
-		return new CustomerDetails(CUST_ID, CUST_FIRSTNAME, CUST_LASTNAME, CUST_DOB, standardAddress(), CUST_MOBILE, CUST_ISMOBILE_VERIFIED,
-				CUST_EMAIL, CUST_ISEMAIL_VERIFIED, CUST_LANG, CUST_BUSINESS_DOMAIN, CUST_NAME_OF_FIRM, standardAddress(),CUST_SEC_MOBILE , 
-				CUST_ISMOBILE_VERIFIED, 
-				CUST_SEC_EMAIL, CUST_DATE, CUST_DATE, CUST_UPDATED_BY);
-	}
-*/
-	
 	public static CustomerDetails standardCustomerFromQuickEntity()
 	{
 		return new CustomerDetails(standardEmailMobileCustomer().getCustomerId(), standardEmailMobileCustomer().getFirstName(),null,

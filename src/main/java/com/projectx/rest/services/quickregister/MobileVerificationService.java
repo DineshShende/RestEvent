@@ -10,9 +10,6 @@ import com.projectx.rest.exception.repository.quickregister.ResourceNotFoundExce
 
 public interface MobileVerificationService {
 	
-	MobileVerificationDetails saveDetails(MobileVerificationDetails mobileVerificationDetails) 
-			throws ResourceAlreadyPresentException,ValidationFailedException;
-	
 	MobileVerificationDetails getByEntityIdTypeAndMobileType(Long customerId,Integer customerType,Integer mobileType)
 				throws ResourceAlreadyPresentException;
 	

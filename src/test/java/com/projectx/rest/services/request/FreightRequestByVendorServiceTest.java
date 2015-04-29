@@ -15,6 +15,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.projectx.rest.config.Application;
 import com.projectx.rest.domain.request.FreightRequestByVendor;
+import com.projectx.rest.domain.request.FreightRequestByVendorDTO;
 import com.projectx.rest.repository.async.RetriggerDetailsRepository;
 
 import static com.projectx.rest.fixture.request.FreightRequestByCustomerDataFixture.*;
@@ -46,7 +47,7 @@ public class FreightRequestByVendorServiceTest {
 	{
 		assertEquals(0, retriggerDetailsRepository.findAll().size());
 		
-		List<FreightRequestByVendor> result=freightRequestByVendorService.getMatchingVendorReqFromCustomerReq(standardFreightRequestByCustomerFullTruckLoad());
+		List<FreightRequestByVendorDTO> result=freightRequestByVendorService.getMatchingVendorReqFromCustomerReq(standardFreightRequestByCustomerFullTruckLoad());
 		
 		//assertEquals(1, retriggerDetailsRepository.findAll().size());
 	}

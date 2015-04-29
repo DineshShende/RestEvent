@@ -23,16 +23,6 @@ public interface CustomerDetailsService {
 	
 	CustomerDetails findById(Long customerId);
 	
-	/*
-	Boolean verifyMobileDetails(Long customerId,Integer customerType,Integer mobileType,Integer mobilePin,String updatedBy);
-	
-	Boolean verifyEmailDetails(Long customerId,Integer customerType,Integer emailType,String emailHash,String requestedBy);
-	
-	Boolean sendMobileVerificationDetails(Long customerId,Integer customerType,Integer mobileType,String updatedBy);
-	
-	Boolean sendEmailVerificationDetails(Long customerId,Integer customerType,Integer emailType,String requestedBy);
-	*/
-	
 	void clearTestData();
 	
 	Integer count();

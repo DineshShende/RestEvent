@@ -1,6 +1,7 @@
 package com.projectx.rest.repositoryImpl.completeregister;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
@@ -42,58 +43,12 @@ public class TransactionalDetailsRepositoryImpl implements
 	
 	@Autowired
 	Environment env;
-
-
 	
-	@Override
-	public CustomerDetails updateCustomerDetails(CustomerDetails customerDetails) 
-			throws CustomerDetailsTransactionalUpdateFailedException,ValidationFailedException {
-
-		HttpEntity<CustomerDetails> entity=new HttpEntity<CustomerDetails>(customerDetails);
-		
-		ResponseEntity<CustomerDetails> result=null;
-		
-		try{
-			result=restTemplate.exchange(env.getProperty("data.url")+"/transactional/updateCustomerDetails",
-					HttpMethod.POST, entity, CustomerDetails.class);
-			
-		}catch(RestClientException e)
-		{
-			throw new ValidationFailedException();
-		}
-		
-		if(result.getStatusCode()==HttpStatus.OK)
-			return result.getBody();
-		else
-			throw new CustomerDetailsTransactionalUpdateFailedException();
-
-		
-	}
-
-	@Override
-	public VendorDetails updateVendorDetails(VendorDetails vendorDetails) throws VendorDetailsTransactionalUpdateFailedException,
-																					ValidationFailedException			
-	{
-
-		HttpEntity<VendorDetails> entity=new HttpEntity<VendorDetails>(vendorDetails);
-		
-		ResponseEntity<VendorDetails> result=null;
-		
-		try{
-			result=restTemplate.exchange(env.getProperty("data.url")+"/transactional/updateVendorDetails",
-					HttpMethod.POST, entity, VendorDetails.class);
-			
-		}catch(RestClientException e)
-		{
-			throw new ValidationFailedException();
-		}
-		
-		if(result.getStatusCode()==HttpStatus.OK)
-			return result.getBody();
-		else
-			throw new VendorDetailsTransactionalUpdateFailedException();
-
-	}
+	@Value("${UPDATE_EMAIL_IN_DETAILS_ENTITY_AND_AUTHENTICATION_FAILED}")
+	private String UPDATE_EMAIL_IN_DETAILS_ENTITY_AND_AUTHENTICATION_FAILED;
+	
+	@Value("${UPDATE_MOBILE_IN_DETAILS_ENTITY_AND_AUTHENTICATION_FAILED}")
+	private String UPDATE_MOBILE_IN_DETAILS_ENTITY_AND_AUTHENTICATION_FAILED;
 
 	@Override
 	public Boolean updateMobileInDetailsEnityAndAuthenticationDetails (
@@ -119,7 +74,7 @@ public class TransactionalDetailsRepositoryImpl implements
 		if(result.getStatusCode()==HttpStatus.OK)
 			return result.getBody();
 		else
-			throw new UpdateMobileInDetailsAndAuthentionDetailsFailedException();
+			throw new UpdateMobileInDetailsAndAuthentionDetailsFailedException(UPDATE_MOBILE_IN_DETAILS_ENTITY_AND_AUTHENTICATION_FAILED);
 
 
 	}
@@ -148,7 +103,7 @@ public class TransactionalDetailsRepositoryImpl implements
 		if(result.getStatusCode()==HttpStatus.OK)
 			return result.getBody();
 		else
-			throw new UpdateEmailInDetailsAndAuthenticationDetailsFailedException();
+			throw new UpdateEmailInDetailsAndAuthenticationDetailsFailedException(UPDATE_EMAIL_IN_DETAILS_ENTITY_AND_AUTHENTICATION_FAILED);
 	}
 
 	@Override
@@ -198,7 +153,8 @@ public class TransactionalDetailsRepositoryImpl implements
 			return result.getBody();
 		else
 			throw new DeleteQuickCreateDetailsEntityFailedException();
-
+		//TODO cause of failure
+		
 	}
 
 

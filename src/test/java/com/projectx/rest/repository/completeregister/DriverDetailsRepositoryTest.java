@@ -20,11 +20,15 @@ import com.projectx.rest.domain.completeregister.Address;
 import com.projectx.rest.domain.completeregister.DriverDetails;
 import com.projectx.rest.domain.quickregister.MobileVerificationDetails;
 import com.projectx.rest.domain.quickregister.MobileVerificationDetailsKey;
+import com.projectx.rest.domain.quickregister.QuickRegisterEntity;
 import com.projectx.rest.exception.repository.completeregister.DriverDetailsAlreadyPresentException;
 import com.projectx.rest.exception.repository.completeregister.DriverDetailsNotFoundException;
 import com.projectx.rest.exception.repository.completeregister.DriverDetailsUpdateFailedException;
 import com.projectx.rest.exception.repository.quickregister.MobileVerificationDetailsNotFoundException;
+import com.projectx.rest.repository.quickregister.AuthenticationDetailsRepository;
+import com.projectx.rest.repository.quickregister.EmailVericationDetailsRepository;
 import com.projectx.rest.repository.quickregister.MobileVerificationDetailsRepository;
+import com.projectx.rest.repository.quickregister.QuickRegisterRepository;
 
 
 @RunWith(SpringJUnit4ClassRunner.class)   
@@ -37,7 +41,20 @@ public class DriverDetailsRepositoryTest {
 	DriverDetailsRepository driverDetailsRepository;
 	
 	@Autowired
+	TransactionalUpdatesRepository transactionalUpdatesRepository;
+	
+	@Autowired
 	MobileVerificationDetailsRepository mobileVerificationDetailsRepository;
+	
+	@Autowired
+	EmailVericationDetailsRepository emailVericationDetailsRepository;
+	
+	@Autowired
+	AuthenticationDetailsRepository authenticationDetailsRepository;
+	
+	@Autowired
+	QuickRegisterRepository quickRegisterRepository;
+	
 	
 	private Integer UPDATED_BY=1;
 	
@@ -52,6 +69,9 @@ public class DriverDetailsRepositoryTest {
 	{
 		driverDetailsRepository.clearTestData();
 		mobileVerificationDetailsRepository.clearTestData();
+		authenticationDetailsRepository.clearLoginDetailsForTesting();
+		emailVericationDetailsRepository.clearTestData();
+		quickRegisterRepository.clearCustomerQuickRegister();
 	}
 	
 	@Test
@@ -82,11 +102,12 @@ public class DriverDetailsRepositoryTest {
 	{
 		assertEquals(0, driverDetailsRepository.count().intValue());
 		
-		mobileVerificationDetailsRepository
-		.save(new MobileVerificationDetails(new MobileVerificationDetailsKey(234L, ENTITY_TYPE_PRIMARY,ENTITY_TYPE_CUSTOMER), DRIVER_MOBILE,
-				null, ZERO_COUNT,ZERO_COUNT, new Date(), new Date(),
+		transactionalUpdatesRepository.saveNewQuickRegisterEntity(new QuickRegisterEntity(234L, "firstName", "lastName", "email", 
+				DRIVER_MOBILE,413133,
+				false, false, ENTITY_TYPE_CUSTOMER, new Date(), new Date(),
 				UPDATED_BY,UPDATED_BY,234L,234L));
-	
+		
+			
 		assertEquals(1, mobileVerificationDetailsRepository.count().intValue());
 		
 		DriverDetails savedEntity=null;
@@ -248,11 +269,12 @@ public class DriverDetailsRepositoryTest {
 		
 		assertEquals(1, mobileVerificationDetailsRepository.count().intValue());
 		
+		transactionalUpdatesRepository.saveNewQuickRegisterEntity(new QuickRegisterEntity(234L, "firstName", "lastName", "email", 
+				DRIVER_MOBILE_UPDATED,413133,
+				false, false, ENTITY_TYPE_CUSTOMER, new Date(), new Date(),
+				UPDATED_BY,UPDATED_BY,234L,234L));
 		
-		mobileVerificationDetailsRepository
-			.save(new MobileVerificationDetails(new MobileVerificationDetailsKey(234L, ENTITY_TYPE_PRIMARY, ENTITY_TYPE_CUSTOMER), 
-					DRIVER_MOBILE_UPDATED, null, ZERO_COUNT,ZERO_COUNT, new Date(), new Date(),
-					UPDATED_BY,UPDATED_BY,234L,234L));
+		
 		
 		assertNotNull(mobileVerificationDetailsRepository.getByMobile(standardDriverDetails().getMobile()));
 		

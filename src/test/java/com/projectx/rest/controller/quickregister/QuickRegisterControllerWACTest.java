@@ -26,6 +26,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import com.projectx.rest.config.Application;
+import com.projectx.rest.services.quickregister.AuthenticationService;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
@@ -35,6 +36,9 @@ public class QuickRegisterControllerWACTest {
 	
 	@Autowired
 	private WebApplicationContext  wac;
+	
+	@Autowired
+	AuthenticationService authenticationService;
 	
 	MockMvc mockMvc;
 	
@@ -49,9 +53,8 @@ public class QuickRegisterControllerWACTest {
 	public void clearTestData() throws Exception
 	{
 		this.mockMvc.perform(get("/customer/quickregister/cleartestdata"));
-		this.mockMvc.perform(get("/customer/quickregister/cleartestdata"));
-		this.mockMvc.perform(get("/customer/quickregister/cleartestdata"));
-		this.mockMvc.perform(get("/customer/quickregister/cleartestdata"));
+		
+		authenticationService.clearTestData();
 	}
 	
 

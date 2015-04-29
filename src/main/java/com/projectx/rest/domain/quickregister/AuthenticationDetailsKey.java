@@ -61,8 +61,7 @@ public class AuthenticationDetailsKey {
 		if (customerId == null) {
 			if (other.customerId != null)
 				return false;
-		} else if (!customerId.equals(other.customerId))
-			return false;
+		}
 		if (customerType == null) {
 			if (other.customerType != null)
 				return false;

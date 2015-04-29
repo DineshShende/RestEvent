@@ -6,6 +6,7 @@ import static com.projectx.rest.fixture.completeregister.VehicleDetailsDataFixtu
 
 import java.util.List;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,6 +28,7 @@ public class VehicleDetailsRepositoryTest {
 	@Autowired
 	VehicleDetailsRepository vehicleDetailsRepository;
 	
+	@After
 	@Before
 	public  void setUp()
 	{

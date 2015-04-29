@@ -20,6 +20,11 @@ public class RetriggerDetailsDataFixtures {
 		return new RetriggerDetails("vendorRequest", gson.toJson(standardFreightRequestByVendor()));
 	}
 	
+	public static RetriggerDetails standardRetriggerDetailsWithError()
+	{
+		return new RetriggerDetails(null, gson.toJson(standardFreightRequestByVendor()));
+	}
+	
 	public static String standardJsonRetrigger(RetriggerDetails retriggerDetails)
 	{
 		return gson.toJson(standardRetriggerDetails());

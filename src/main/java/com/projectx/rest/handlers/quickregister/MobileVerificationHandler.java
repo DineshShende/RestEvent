@@ -15,6 +15,7 @@ import com.projectx.rest.domain.quickregister.MobileVerificationDetails;
 import com.projectx.rest.domain.quickregister.MobileVerificationDetailsKey;
 import com.projectx.rest.domain.quickregister.QuickRegisterEntity;
 import com.projectx.rest.exception.repository.completeregister.ValidationFailedException;
+import com.projectx.rest.exception.repository.quickregister.EmailVerificationDetailNotFoundException;
 import com.projectx.rest.exception.repository.quickregister.MobileVerificationDetailsNotFoundException;
 import com.projectx.rest.exception.repository.quickregister.QuickRegisterEntityNotFoundException;
 import com.projectx.rest.exception.repository.quickregister.ResourceAlreadyPresentException;
@@ -108,7 +109,7 @@ public class MobileVerificationHandler implements MobileVerificationService {
 	
 	@Override
 	public Boolean verifyMobilePinUpdateStatusAndSendPassword(Long customerId,Integer customerType,Integer mobileType, Integer mobilePin,
-			Integer requestedBy,Long requestedById)throws ResourceNotFoundException,ValidationFailedException				
+			Integer requestedBy,Long requestedById)throws EmailVerificationDetailNotFoundException,ValidationFailedException				
 	{
 	
 				
@@ -174,11 +175,11 @@ public class MobileVerificationHandler implements MobileVerificationService {
 
 	@Override
 	public Boolean verifyMobilePin(Long customerId,Integer customerType,Integer mobileType, Integer mobilePin,Integer requestedBy,Long requestedById) 
-			throws ResourceNotFoundException{
+			throws MobileVerificationDetailsNotFoundException{
 		
 		MobileVerificationDetails mobileVerificationDetails=getByEntityIdTypeAndMobileType(customerId,customerType, mobileType);
 		
-		if(mobileVerificationDetails.getMobilePin().equals(mobilePin) && mobileVerificationDetails.getMobileVerificationAttempts()<MAX_MOBILE_VERIFICATION_ATTEMPTS)
+		if(mobileVerificationDetails.getMobilePin()!=null && mobileVerificationDetails.getMobilePin().equals(mobilePin) && mobileVerificationDetails.getMobileVerificationAttempts()<MAX_MOBILE_VERIFICATION_ATTEMPTS)
 		{
 			return true;
 												
@@ -285,15 +286,6 @@ public class MobileVerificationHandler implements MobileVerificationService {
 				updateMobilePinAndMobileVerificationAttemptsAndResendCount(customerId,customerType, mobileType, mobilePin, 0, 0,updatedBy,updatedById);
 	}
 
-
-	@Override
-	public MobileVerificationDetails saveDetails(
-			MobileVerificationDetails mobileVerificationDetails) throws ResourceAlreadyPresentException,ValidationFailedException{
-		
-		MobileVerificationDetails verificationDetails=customerMobileVerificationDetailsRepository.save(mobileVerificationDetails);
-		
-		return verificationDetails;
-	}
 
 	@Override
 	public MobileVerificationDetails getByEntityIdTypeAndMobileType(

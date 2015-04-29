@@ -19,16 +19,7 @@ public interface CustomerDetailsRepository {
 	 CustomerDetails save( CustomerDetails customerDetails) throws CustomerDetailsAlreadyPresentException,ValidationFailedException;
 	 
 	 CustomerDetails findOne(Long customerId) throws CustomerDetailsNotFoundException;
-		 
-	 Integer updateMobileVerificationStatus(UpdateMobileVerificationStatusUpdatedByDTO verificationStatusDTO)
-	 	throws CustomerDetailsAlreadyPresentException,ValidationFailedException;
-	 
-	 Integer updateSecondaryMobileVerificationStatus(UpdateMobileVerificationStatusUpdatedByDTO verificationStatusDTO)
-	 	throws CustomerDetailsAlreadyPresentException,ValidationFailedException;
-	 
-	 Integer updateEmailVerificationStatus(UpdateEmailVerificationStatusUpdatedByDTO verificationStatusDTO)
-	 	throws CustomerDetailsAlreadyPresentException, ValidationFailedException;
-	 
+	
 	 Boolean deleteAll();
 	 
 	 Long count();

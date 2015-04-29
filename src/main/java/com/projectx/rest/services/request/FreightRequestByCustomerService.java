@@ -26,6 +26,8 @@ public interface FreightRequestByCustomerService {
 	
 	List<FreightRequestByCustomer> getMatchingCustReqForVendorReq(FreightRequestByVendor freightRequestByVendor,String allocationStatus);
 	
+	void getMatchingCustReqForVendorReqAndProceedWithHandShake(FreightRequestByVendor freightRequestByVendor);
+	
 	Boolean deleteRequestById(Long requestId);
 	
 	Boolean clearTestData();

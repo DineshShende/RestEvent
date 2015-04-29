@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 
 import com.projectx.rest.domain.request.FreightRequestByCustomer;
 import com.projectx.rest.domain.request.FreightRequestByVendor;
+import com.projectx.rest.domain.request.FreightRequestByVendorDTO;
 import com.projectx.rest.exception.repository.completeregister.ValidationFailedException;
 import com.projectx.rest.exception.repository.quickregister.ResourceAlreadyPresentException;
 import com.projectx.rest.exception.repository.quickregister.ResourceNotFoundException;
@@ -18,7 +19,7 @@ public interface FreightRequestByVendorRepository {
 	FreightRequestByVendor save(FreightRequestByVendor freightRequestByVendor) 
 						throws ResourceAlreadyPresentException,ValidationFailedException;
 	
-	FreightRequestByVendor getById(Long requestId)throws ResourceNotFoundException;
+	FreightRequestByVendorDTO getById(Long requestId)throws ResourceNotFoundException;
 	
 	Boolean deleteById(Long requestId);
 	
@@ -29,7 +30,7 @@ public interface FreightRequestByVendorRepository {
 	Integer updateReservationStatusWithReservedFor(Long freightRequestByVendorId,String oldStatus,String reservationStatus
 			,Long reservedFor,Integer updatedBy,Long updatedById);
 	
-	List<FreightRequestByVendor> findByVendor(Long vendorId) ;
+	List<FreightRequestByVendorDTO> findByVendor(Long vendorId) ;
 	
-	List<FreightRequestByVendor> getMatchingVendorReqFromCustomerReq(FreightRequestByCustomer freightRequestByCustomer); 
+	List<FreightRequestByVendorDTO> getMatchingVendorReqFromCustomerReq(FreightRequestByCustomer freightRequestByCustomer); 
 }

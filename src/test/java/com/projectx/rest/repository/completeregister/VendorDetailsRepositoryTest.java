@@ -19,6 +19,8 @@ import com.projectx.rest.domain.completeregister.VendorDetails;
 import com.projectx.rest.domain.quickregister.MobileVerificationDetails;
 import com.projectx.rest.domain.quickregister.MobileVerificationDetailsKey;
 import com.projectx.rest.exception.repository.completeregister.VendorDetailsNotFoundException;
+import com.projectx.rest.repository.quickregister.AuthenticationDetailsRepository;
+import com.projectx.rest.repository.quickregister.QuickRegisterRepository;
 import com.projectx.rest.services.quickregister.EmailVerificationService;
 import com.projectx.rest.services.quickregister.MobileVerificationService;
 
@@ -41,9 +43,19 @@ public class VendorDetailsRepositoryTest {
 	@Autowired
 	EmailVerificationService emailVerificationService;
 	
+	@Autowired
+	AuthenticationDetailsRepository authenticationDetailsRepository;
+	
+	@Autowired
+	QuickRegisterRepository quickRegisterRepository;
+	
 	@Before
 	public void setUp()
 	{
+		quickRegisterRepository.clearCustomerQuickRegister();
+		mobileVerificationService.clearTestData();
+		emailVerificationService.clearTestData();
+		authenticationDetailsRepository.clearLoginDetailsForTesting();
 		vendorDetailsRepository.clearTestData();
 	}
 	
@@ -103,44 +115,6 @@ public class VendorDetailsRepositoryTest {
 	
 	
 	@Test
-	public void updateEmailVerificationStatus()
-	{
-		assertEquals(0,vendorDetailsRepository.count().intValue());
-		
-		VendorDetails savedEntity=vendorDetailsRepository.save(standardVendor());
-		
-			
-		assertEquals(1,vendorDetailsRepository.count().intValue());
-		
-		assertEquals(1,vendorDetailsRepository
-				.updateEmailVerificationStatus(new UpdateEmailVerificationStatusUpdatedByDTO(savedEntity.getVendorId(),standardVendor().getEmail(), true,
-						savedEntity.getUpdatedBy(),savedEntity.getVendorId())).intValue());
-	
-		assertEquals(1,vendorDetailsRepository.count().intValue());
-		
-		assertTrue(vendorDetailsRepository.findOne(savedEntity.getVendorId()).getIsEmailVerified());
-	}
-	
-	@Test
-	public void updateMobileVerificationStatus()
-	{
-		assertEquals(0,vendorDetailsRepository.count().intValue());
-		
-		VendorDetails savedEntity=vendorDetailsRepository.save(standardVendor());
-		
-		assertEquals(1,vendorDetailsRepository.count().intValue());
-		
-		assertEquals(1,vendorDetailsRepository
-				.updateMobileVerificationStatus(new UpdateMobileVerificationStatusUpdatedByDTO(savedEntity.getVendorId(),
-						savedEntity.getMobile() ,true,savedEntity.getUpdatedBy(),savedEntity.getVendorId())).intValue());
-	
-		assertEquals(1,vendorDetailsRepository.count().intValue());
-		
-		assertTrue(vendorDetailsRepository.findOne(savedEntity.getVendorId()).getIsMobileVerified());
-	}
-	
-	
-	@Test
 	public void updateAddress()
 	{
 		assertEquals(0,vendorDetailsRepository.count().intValue());
@@ -155,7 +129,7 @@ public class VendorDetailsRepositoryTest {
 		savedEntity.getFirmAddress().setState(standardAddressUpdated().getState());
 		savedEntity.getFirmAddress().setPincode(standardAddressUpdated().getPincode());
 		
-		VendorDetails updatedEntity=vendorDetailsRepository.update(savedEntity);
+		VendorDetails updatedEntity=vendorDetailsRepository.save(savedEntity);
 		
 		assertEquals(savedEntity.getFirmAddress().getAddressId(), updatedEntity.getFirmAddress().getAddressId());
 		

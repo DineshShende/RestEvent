@@ -74,53 +74,11 @@ public class CustomerDetailsHandler implements CustomerDetailsService {
 			throws CustomerDetailsTransactionalUpdateFailedException,ValidationFailedException
 	{
 		
-		CustomerDetails resultEntity=transactionalUpdatesService.updateCustomerDetails(customerDetails);
+		CustomerDetails resultEntity=customerDetailsRepository.save(customerDetails);
 				
 		return resultEntity;
 	}
 
-	
-/*
-	@Override
-	public Boolean verifyMobileDetails(Long customerId, Integer customerType,
-			 Integer mobileType,Integer mobilePin,String updatedBy)throws ResourceNotFoundException,ValidationFailedException {
-		
-		Boolean verificationStatus=mobileVerificationService
-				.verifyMobilePinUpdateStatusAndSendPassword(customerId, customerType, mobileType, mobilePin,updatedBy);
-		
-		return verificationStatus;
-	}
-
-	
-	@Override
-	public Boolean verifyEmailDetails(Long customerId, Integer customerType,
-			Integer emailType,  String emailHash,String requestedBy)throws ResourceNotFoundException {
-		
-		Boolean verificationStatus=emailVerificationService
-				.verifyEmailHashUpdateStatusAndSendPassword(customerId, customerType, emailType, emailHash,requestedBy);
-				
-		return verificationStatus;
-	}
-	
-
-	@Override
-	public Boolean sendMobileVerificationDetails(Long customerId,
-			Integer customerType, Integer mobileType,String updatedBy)throws ResourceNotFoundException {
-
-		Boolean sendStatus=mobileVerificationService.sendMobilePin(customerId, customerType, mobileType,updatedBy);
-		
-		return sendStatus;
-	}
-
-	@Override
-	public Boolean sendEmailVerificationDetails(Long customerId,
-			Integer customerType, Integer emailType,String requestedBy)throws ResourceNotFoundException {
-
-		Boolean sendStatus=emailVerificationService.sendEmailHash(customerId, customerType, emailType,requestedBy);
-		
-		return sendStatus;
-	}
-*/
 	@Override
 	public CustomerDetails setMetaData(CustomerDetails customerDetails,CustomerDetails oldEntity) {
 	

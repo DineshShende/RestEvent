@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import com.projectx.rest.domain.async.RetriggerDetails;
+import com.projectx.rest.domain.comndto.ResponseDTO;
 import com.projectx.rest.domain.quickregister.QuickRegisterEntity;
 import com.projectx.rest.repository.async.RetriggerDetailsRepository;
 
@@ -18,12 +19,13 @@ import com.projectx.rest.repository.async.RetriggerDetailsRepository;
 public class RetriggerDetailsMemRepository implements
 		RetriggerDetailsRepository {
 
-	Map<Long,RetriggerDetails> list=new HashMap<Long,RetriggerDetails>();
+	
+	Map<Long,ResponseDTO<RetriggerDetails>> list=new HashMap<Long,ResponseDTO<RetriggerDetails>>();
 	
 	@Override
 	public RetriggerDetails save(RetriggerDetails retriggerDetails) {
 		
-		list.put(retriggerDetails.getRetriggerId(), retriggerDetails);
+		list.put(retriggerDetails.getRetriggerId(), new ResponseDTO<RetriggerDetails>("",retriggerDetails));
 		
 		return retriggerDetails;
 	}
@@ -36,7 +38,7 @@ public class RetriggerDetailsMemRepository implements
 		
 		for(Long key:list.keySet())
 		{
-			retriggerList.add(list.get(key));
+			//retriggerList.add(list.get(key));
 		}
 		
 		return retriggerList;

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.projectx.mvc.domain.quickregister.ResetPasswordRedirectDTO;
+import com.projectx.rest.domain.comndto.ResponseDTO;
 import com.projectx.rest.domain.quickregister.QuickRegisterEntity;
 import com.projectx.rest.domain.registercommon.ForgetPasswordEntity;
 import com.projectx.rest.exception.repository.quickregister.ResourceNotFoundException;
@@ -24,28 +25,23 @@ public class RegisterCommonController {
 	@Autowired
 	RegisterCommonService registerCommonService;
 	
-	@RequestMapping(value="/test/aws",method=RequestMethod.GET)
-	public String aws()
-	{
-		return "aws";
-	}
-	
+		
 	@RequestMapping(value="/customer/quickregister/resetPasswordRedirect",method=RequestMethod.POST)
-	public ResponseEntity<ForgetPasswordEntity> resetPasswordRedirect(@Valid @RequestBody ResetPasswordRedirectDTO passwordRedirectDTO,
+	public ResponseEntity<ResponseDTO<ForgetPasswordEntity>> resetPasswordRedirect(@Valid @RequestBody ResetPasswordRedirectDTO passwordRedirectDTO,
 			BindingResult bindingResult)
 	{
 		if(bindingResult.hasErrors())
 			return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
 		
-		ResponseEntity<ForgetPasswordEntity> result=null;
+		ResponseEntity<ResponseDTO<ForgetPasswordEntity>> result=null;
 		
 		try{
 			ForgetPasswordEntity quickRegisterEntity=registerCommonService.forgetPassword(passwordRedirectDTO.getEntity(),
 					passwordRedirectDTO.getRequestedBy(),passwordRedirectDTO.getRequestedById());
-			result=new ResponseEntity<ForgetPasswordEntity>(quickRegisterEntity, HttpStatus.OK);
+			result=new ResponseEntity<ResponseDTO<ForgetPasswordEntity>>(new ResponseDTO<ForgetPasswordEntity>("",quickRegisterEntity), HttpStatus.OK);
 		}catch(ResourceNotFoundException e)
 		{
-			result=new ResponseEntity<>(HttpStatus.NO_CONTENT);
+			result=new ResponseEntity<ResponseDTO<ForgetPasswordEntity>>(new ResponseDTO<ForgetPasswordEntity>(e.getMessage(),null), HttpStatus.OK);
 		}
 		
 		return result;

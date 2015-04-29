@@ -57,7 +57,7 @@ public class InformationMapper {
 		{
 			if(quickRegisterEntity!=null)
 			{
-				
+				infoMap.put("entityId", quickRegisterEntity.getCustomerId());
 				infoMap.put("firstName", quickRegisterEntity.getFirstName());
 				infoMap.put("middleName", "");
 				infoMap.put("lastName", quickRegisterEntity.getLastName());
@@ -72,6 +72,7 @@ public class InformationMapper {
 			{	
 				CustomerDetails customerDetails=customerDetailsService.findById(entityId);
 				
+				infoMap.put("entityId", customerDetails.getCustomerId());
 				infoMap.put("firstName", customerDetails.getFirstName());
 				infoMap.put("middleName", customerDetails.getMiddleName());
 				infoMap.put("lastName", customerDetails.getLastName());
@@ -88,6 +89,7 @@ public class InformationMapper {
 		{
 			if(quickRegisterEntity!=null)
 			{
+				infoMap.put("entityId", quickRegisterEntity.getCustomerId());
 				infoMap.put("firstName", quickRegisterEntity.getFirstName());
 				infoMap.put("middleName", "");
 				infoMap.put("lastName", quickRegisterEntity.getLastName());
@@ -101,6 +103,7 @@ public class InformationMapper {
 			{
 				VendorDetails vendorDetails=vendorDetailsService.findById(entityId);
 				
+				infoMap.put("entityId", vendorDetails.getVendorId());
 				infoMap.put("firstName", vendorDetails.getFirstName());
 				infoMap.put("middleName",vendorDetails.getMiddleName());
 				infoMap.put("lastName", vendorDetails.getLastName());
@@ -108,6 +111,7 @@ public class InformationMapper {
 				infoMap.put("isEmailVerified", vendorDetails.getIsEmailVerified());
 				infoMap.put("mobile", vendorDetails.getMobile());
 				infoMap.put("isMobileVerified", vendorDetails.getIsMobileVerified());
+				//TODO how to decide the state of complete register 
 				infoMap.put("isCompleteRegisterCompleted", "true");
 			}
 		}		

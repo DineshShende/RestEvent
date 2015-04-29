@@ -4,13 +4,19 @@ import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.ConcurrentMap;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.context.request.async.DeferredResult;
 
+import com.projectx.mvc.domain.ivr.KooResponseDTO;
 import com.projectx.rest.domain.ivr.FreightRequestByCustomerStatusDTO;
 import com.projectx.rest.domain.ivr.IVRCallInfoDTO;
 import com.projectx.rest.domain.ivr.KooKooRequestEntity;
@@ -23,7 +29,6 @@ import com.projectx.rest.service.ivr.PreBookService;
 import com.projectx.rest.services.handshake.DealService;
 import com.projectx.rest.services.request.FreightRequestByCustomerService;
 import com.projectx.rest.services.request.FreightRequestByVendorService;
-
 @RestController
 @RequestMapping(value="/outboundcall")
 public class OutBoundCallResponseController {
@@ -93,9 +98,16 @@ public class OutBoundCallResponseController {
 	private String FREIGHTALLOCATIONSTATUS_NEGSECONDSTAGE;
 	
 	
-	@RequestMapping(value="/receiveResponse/{sid}/{mobile}/{option}")
-	public void receiveResponse(@PathVariable("sid") String sid,@PathVariable("mobile") Long mobile,@PathVariable("option") Integer option)
+	@RequestMapping(value="/receiveResponse",method=RequestMethod.POST)
+	public DeferredResult<Boolean> receiveResponse(@Valid @RequestBody KooResponseDTO kooResponseDTO,BindingResult bindingResult)
 	{
+		//if(bindingResult.hasErrors())
+			 
+		DeferredResult<Boolean> result=new DeferredResult<>();
+		
+		String sid=kooResponseDTO.getSid();
+		Long mobile=kooResponseDTO.getMobile();
+		Integer option=kooResponseDTO.getData();
 		
 		KooKooRequestEntity kooKooRequestEntity=trackKookooResponseDTO.get(sid);
 		
@@ -127,6 +139,12 @@ public class OutBoundCallResponseController {
 						IVRCallInfoDTO ivrCallInfoDTO=new IVRCallInfoDTO(questionListWithCounter.getMobile(), 
 								questionListWithCounter.getQuestionList().get(questionListWithCounter.getCounter()));	 
 						 
+						try {
+							Thread.sleep(30000);
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
+						
 						 String sidNew=outBoundCallService.makeOutBoundCall(ivrCallInfoDTO);
 						 
 						 trackKookooResponseDTO.add(sidNew, new KooKooRequestEntity(kooKooRequestEntity.getFreightRequestByCustomerId(),
@@ -161,7 +179,7 @@ public class OutBoundCallResponseController {
 				{
 					
 					dealService.triggerDealAndExchangeContact(kooKooRequestEntity.getFreightRequestByCustomerId(),
-							kooKooRequestEntity.getFreightRequestByVendorId(), "ONLINE", 100, "triggeredBy");
+							kooKooRequestEntity.getFreightRequestByVendorId(), "ONLINE", 100, 0,0L);
 					
 				}	
 				
@@ -196,9 +214,10 @@ public class OutBoundCallResponseController {
 				
 		trackKookooResponseDTO.delete(sid);
 		
-		
+		return result;
 	}
 
+	
 	/*
 	@RequestMapping(value="/trackresponseentity",method=RequestMethod.GET)
 	public Map<String, KooKooRequestEntity> trackresponseentity()

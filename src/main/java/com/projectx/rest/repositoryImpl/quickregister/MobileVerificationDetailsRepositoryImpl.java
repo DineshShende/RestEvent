@@ -1,6 +1,7 @@
 package com.projectx.rest.repositoryImpl.quickregister;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
@@ -37,30 +38,14 @@ public class MobileVerificationDetailsRepositoryImpl implements MobileVerificati
 	
 	@Autowired
 	Environment env;
-
 	
-	@Override
-	public MobileVerificationDetails save(
-			MobileVerificationDetails mobileVerificationDetails) throws ResourceAlreadyPresentException,ValidationFailedException {
-		
-		HttpEntity<MobileVerificationDetails> entity=new HttpEntity<MobileVerificationDetails>(mobileVerificationDetails);
-		
-		ResponseEntity<MobileVerificationDetails> result=null;
-		
-		try{
-			result=restTemplate.exchange(env.getProperty("data.url")+"/customer/quickregister/mobileVerification/saveMobileVerificationDetails",
-					HttpMethod.POST,entity, MobileVerificationDetails.class);
-		}catch(RestClientException e)
-		{
-			throw new ValidationFailedException();
-		}
-		
-		if(result.getStatusCode()==HttpStatus.CREATED)
-			return result.getBody();
-		else
-			throw new ResourceAlreadyPresentException();
-		
-	}
+	@Value("${MOBILEVERIFICATION_DETAILS_NOT_FOUND_BY_ID}")
+	private String MOBILEVERIFICATION_DETAILS_NOT_FOUND_BY_ID;
+	
+	@Value("${MOBILEVERIFICATION_DETAILS_NOT_FOUND_BY_MOBILE}")
+	private String MOBILEVERIFICATION_DETAILS_NOT_FOUND_BY_MOBILE;
+	
+	
 
 	@Override
 	public MobileVerificationDetails geByEntityIdTypeAndMobileType (
@@ -76,7 +61,7 @@ public class MobileVerificationDetailsRepositoryImpl implements MobileVerificati
 		if(result.getStatusCode()==HttpStatus.FOUND)
 				return result.getBody();
 		else
-			throw new MobileVerificationDetailsNotFoundException();
+			throw new MobileVerificationDetailsNotFoundException(MOBILEVERIFICATION_DETAILS_NOT_FOUND_BY_ID);
 	}
 
 	@Override
@@ -160,7 +145,7 @@ public class MobileVerificationDetailsRepositoryImpl implements MobileVerificati
 		if(result.getStatusCode()==HttpStatus.FOUND)
 				return result.getBody();
 		else
-			throw new MobileVerificationDetailsNotFoundException();
+			throw new MobileVerificationDetailsNotFoundException(MOBILEVERIFICATION_DETAILS_NOT_FOUND_BY_MOBILE);
 
 	}
 	

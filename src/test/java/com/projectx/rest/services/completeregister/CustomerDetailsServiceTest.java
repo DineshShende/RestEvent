@@ -23,6 +23,8 @@ import com.projectx.rest.domain.quickregister.MobileVerificationDetailsKey;
 import com.projectx.rest.domain.quickregister.QuickRegisterEntity;
 import com.projectx.rest.exception.repository.quickregister.EmailVerificationDetailNotFoundException;
 import com.projectx.rest.exception.repository.quickregister.MobileVerificationDetailsNotFoundException;
+import com.projectx.rest.repository.completeregister.TransactionalUpdatesRepository;
+import com.projectx.rest.services.quickregister.AuthenticationService;
 import com.projectx.rest.services.quickregister.EmailVerificationService;
 import com.projectx.rest.services.quickregister.MobileVerificationService;
 import com.projectx.rest.services.quickregister.QuickRegisterService;
@@ -47,7 +49,13 @@ public class CustomerDetailsServiceTest {
 	EmailVerificationService emailVerificationService;
 	
 	@Autowired
+	AuthenticationService authenticationService;
+	
+	@Autowired
 	QuickRegisterService quickRegisterService;
+	
+	@Autowired
+	TransactionalUpdatesRepository transactionalUpdatesRepository;
 	
 	
 	
@@ -57,6 +65,8 @@ public class CustomerDetailsServiceTest {
 	private Integer ENTITY_TYPE_PRIMARY=1;
 	private Integer ENTITY_TYPE_SECONDARY=2;
 	
+	private Integer ACTOR_ENTITY_SELF_WEB=1;
+	
 	@Before
 	@After
 	public void setUp()
@@ -65,6 +75,7 @@ public class CustomerDetailsServiceTest {
 		mobileVerificationService.clearTestData();
 		emailVerificationService.clearTestData();
 		quickRegisterService.clearDataForTesting();
+		authenticationService.clearTestData();
 	}
 	
 
@@ -83,7 +94,8 @@ public class CustomerDetailsServiceTest {
 		
 		assertNull(customerDetailsService.createCustomerDetailsFromQuickRegisterEntity(standardEmailMobileCustomer()));
 		
-		QuickRegisterEntity savedQuickRegisterEntity=quickRegisterService.saveCustomerQuickRegisterEntity(standardEmailMobileCustomer());
+		QuickRegisterEntity savedQuickRegisterEntity=transactionalUpdatesRepository
+				.saveNewQuickRegisterEntity(standardEmailMobileCustomer()).getCustomerQuickRegisterEntity();
 		
 		CustomerDetails savedEntity=customerDetailsService.createCustomerDetailsFromQuickRegisterEntity(savedQuickRegisterEntity);
 		
@@ -100,7 +112,8 @@ public class CustomerDetailsServiceTest {
 	{
 		assertEquals(0, customerDetailsService.count().intValue());
 		
-		QuickRegisterEntity savedQuickRegisterEntity=quickRegisterService.saveCustomerQuickRegisterEntity(standardEmailMobileCustomer());
+		QuickRegisterEntity savedQuickRegisterEntity=transactionalUpdatesRepository
+				.saveNewQuickRegisterEntity(standardEmailMobileCustomer()).getCustomerQuickRegisterEntity();
 		
 		CustomerDetails savedEntity=customerDetailsService.createCustomerDetailsFromQuickRegisterEntity(savedQuickRegisterEntity);
 		
@@ -108,36 +121,21 @@ public class CustomerDetailsServiceTest {
 
 		MobileVerificationDetails mobileVerificationDetailsNull=null;
 		
-		try{
-			mobileVerificationDetailsNull=mobileVerificationService.getByEntityIdTypeAndMobileType(savedEntity.getCustomerId(),
-				ENTITY_TYPE_CUSTOMER, ENTITY_TYPE_PRIMARY);
-			
-		}catch(MobileVerificationDetailsNotFoundException e)
-		{
-			assertNull(mobileVerificationDetailsNull);
-		}
 		
 		
 		try{
 			mobileVerificationDetailsNull=mobileVerificationService.getByEntityIdTypeAndMobileType(savedEntity.getCustomerId(),
 				ENTITY_TYPE_CUSTOMER, ENTITY_TYPE_SECONDARY);
 			
+			assertNull(mobileVerificationDetailsNull);
+			
 		}catch(MobileVerificationDetailsNotFoundException e)
 		{
 			assertNull(mobileVerificationDetailsNull);
 		}
 		
 		
-		EmailVerificationDetails emailVerificationDetailsNull=null;
 		
-		try{
-			emailVerificationDetailsNull=emailVerificationService.getByEntityIdTypeAndEmailType(savedEntity.getCustomerId(),
-					ENTITY_TYPE_CUSTOMER, ENTITY_TYPE_PRIMARY);
-			
-		}catch(EmailVerificationDetailNotFoundException e)
-		{
-			assertNull(emailVerificationDetailsNull);
-		}
 		
 		CustomerDetails mergeEntity=customerDetailsService.mergeCustomerDetails(standardCustomerDetails(savedEntity));
 		
@@ -153,6 +151,7 @@ public class CustomerDetailsServiceTest {
 		assertEquals(standardCustomerDetails(savedEntity).getSecondaryMobile(),mobileVerificationService.getByEntityIdTypeAndMobileType(savedEntity.getCustomerId(),
 				ENTITY_TYPE_CUSTOMER, ENTITY_TYPE_SECONDARY).getMobile());
 		
+		EmailVerificationDetails emailVerificationDetailsNull=null;
 		
 		try{
 			emailVerificationDetailsNull=emailVerificationService.getByEntityIdTypeAndEmailType(savedEntity.getCustomerId(),
@@ -232,7 +231,8 @@ public class CustomerDetailsServiceTest {
 	{
 		assertEquals(0, customerDetailsService.count().intValue());
 		
-		QuickRegisterEntity savedQuickRegisterEntity=quickRegisterService.saveCustomerQuickRegisterEntity(standardEmailMobileCustomer());
+		QuickRegisterEntity savedQuickRegisterEntity=transactionalUpdatesRepository
+				.saveNewQuickRegisterEntity(standardEmailMobileCustomer()).getCustomerQuickRegisterEntity();
 		
 		CustomerDetails savedEntity=customerDetailsService.createCustomerDetailsFromQuickRegisterEntity(savedQuickRegisterEntity);
 		
@@ -292,7 +292,7 @@ public class CustomerDetailsServiceTest {
 		
 		assertEquals(standardCustomerDetailsWithNewSecondaryMobile(mergeEntity).getSecondaryMobile(),customerDetailsService.findById(mergeEntity.getCustomerId()).getSecondaryMobile());
 		
-		assertEquals(1, mobileVerificationService.count().intValue());
+		assertEquals(2, mobileVerificationService.count().intValue());
 		
 		assertEquals(1, customerDetailsService.count().intValue());
 		
@@ -509,14 +509,19 @@ public class CustomerDetailsServiceTest {
 		
 		CustomerDetails savedEntity=customerDetailsService.createCustomerDetailsFromQuickRegisterEntity(quickRegisterEntity);
 	
-		MobileVerificationDetails mobileVerificationDetails=
-				mobileVerificationService
-				.getByEntityIdTypeAndMobileType(savedEntity.getCustomerId(), ENTITY_TYPE_CUSTOMER,MOB_TYPE_PRIMARY);
-		
 		assertEquals(false, customerDetailsService.findById(savedEntity.getCustomerId()).getIsMobileVerified());
 		
 		assertEquals(false, mobileVerificationService.verifyMobilePinUpdateStatusAndSendPassword(savedEntity.getCustomerId(),
 				 MOB_TYPE_PRIMARY, ENTITY_TYPE_CUSTOMER, 101010,CUST_UPDATED_BY,savedEntity.getCustomerId()));
+		
+		
+		
+		assertTrue(mobileVerificationService.sendMobilePin(savedEntity.getCustomerId(), ENTITY_TYPE_CUSTOMER,
+				ENTITY_TYPE_PRIMARY, ACTOR_ENTITY_SELF_WEB, savedEntity.getCustomerId()));
+		
+		MobileVerificationDetails mobileVerificationDetails=
+				mobileVerificationService
+				.getByEntityIdTypeAndMobileType(savedEntity.getCustomerId(), ENTITY_TYPE_CUSTOMER,MOB_TYPE_PRIMARY);
 		
 		assertEquals(true, mobileVerificationService.verifyMobilePinUpdateStatusAndSendPassword(savedEntity.getCustomerId(),
 				ENTITY_TYPE_CUSTOMER, MOB_TYPE_PRIMARY, mobileVerificationDetails.getMobilePin(),CUST_UPDATED_BY,savedEntity.getCustomerId()));
@@ -536,15 +541,22 @@ public class CustomerDetailsServiceTest {
 		
 		CustomerDetails mergeEntity=customerDetailsService.mergeCustomerDetails(standardCustomerDetails(savedEntity));
 	
-		EmailVerificationDetails emailVerificationDetails=
-				emailVerificationService
-				.getByEntityIdTypeAndEmailType(mergeEntity.getCustomerId(), ENTITY_TYPE_CUSTOMER, EMAIL_TYPE_PRIMARY);
+		
+		
 		
 		assertEquals(false, customerDetailsService.findById(mergeEntity.getCustomerId()).getIsEmailVerified());
 		
 		
 		assertEquals(false, emailVerificationService.verifyEmailHashUpdateStatusAndSendPassword(mergeEntity.getCustomerId(),
 				ENTITY_TYPE_CUSTOMER,EMAIL_TYPE_PRIMARY, "101010",CUST_UPDATED_BY,mergeEntity.getCustomerId()));
+		
+		assertTrue(emailVerificationService.sendEmailHash(mergeEntity.getCustomerId(), ENTITY_TYPE_CUSTOMER, ENTITY_TYPE_PRIMARY,
+				ACTOR_ENTITY_SELF_WEB, mergeEntity.getCustomerId()));
+		
+		EmailVerificationDetails emailVerificationDetails=
+				emailVerificationService
+				.getByEntityIdTypeAndEmailType(mergeEntity.getCustomerId(), ENTITY_TYPE_CUSTOMER, EMAIL_TYPE_PRIMARY);
+		
 		
 		assertEquals(true, emailVerificationService.verifyEmailHashUpdateStatusAndSendPassword(mergeEntity.getCustomerId(),
 				ENTITY_TYPE_CUSTOMER, EMAIL_TYPE_PRIMARY, emailVerificationDetails.getEmailHash(),CUST_UPDATED_BY,mergeEntity.getCustomerId()));
@@ -633,83 +645,5 @@ public class CustomerDetailsServiceTest {
 
 
 
-/*
-@Test
-public void handleChangeOfMobileWithSecMobileSucessBeforeMerge() throws Exception
-{
-	assertEquals(0, customerDetailsService.count().intValue());
-	
-	QuickRegisterEntity quickRegisterEntity=quickRegisterService
-			.saveNewCustomerQuickRegisterEntity(standardEmailMobileCustomer()).getCustomerQuickRegisterEntity();
-	
-	CustomerDetails savedEntity=customerDetailsService.createCustomerDetailsFromQuickRegisterEntity(quickRegisterEntity);
-	
-	assertEquals(standardCustomerDetailsCopiedFromQuickRegisterEntity(), savedEntity);
-	
-	
-	assertEquals("SUCESS", customerDetailsService.handleChangeOfMobile(standardCustomerDetails(savedEntity),savedEntity , "SUCESS", 2));
 
-	
-	//assertEquals(standardCustomerDetails(savedEntity), mergeEntity);
-	
-	//mergeEntity=customerDetailsService.mergeCustomerDetails(standardCustomerDetailsWithNewMobile(mergeEntity));
-	
-	assertEquals(2, mobileVerificationService.count().intValue());
-	
-	assertEquals(1, customerDetailsService.count().intValue());
-	
-}
-
-
-
-@Test
-public void handleChangeOfMobileWithSecMobileSucess() throws Exception
-{
-	assertEquals(0, customerDetailsService.count().intValue());
-	
-	QuickRegisterEntity quickRegisterEntity=quickRegisterService
-			.saveNewCustomerQuickRegisterEntity(standardEmailMobileCustomer()).getCustomerQuickRegisterEntity();
-	
-	CustomerDetails savedEntity=customerDetailsService.createCustomerDetailsFromQuickRegisterEntity(quickRegisterEntity);
-	
-	assertEquals(standardCustomerDetailsCopiedFromQuickRegisterEntity(), savedEntity);
-	
-	CustomerDetails mergeEntity=customerDetailsService.mergeCustomerDetails(standardCustomerDetails(savedEntity));
-
-	mobileVerificationService.saveCustomerMobileVerificationDetails(new MobileVerificationDetails(new MobileVerificationDetailsKey(231L, 1, 1), 8888888888L, 1234, 0, 0, new Date(), new Date(), "CUST_ONLINE"));
-	
-	assertEquals("SUCESS", customerDetailsService.handleChangeOfMobile(standardCustomerDetailsWithNewSecondaryMobile(mergeEntity),mergeEntity , "SUCESS", 2));
-
-	assertEquals(2, mobileVerificationService.count().intValue());
-	
-	assertEquals(1, customerDetailsService.count().intValue());
-	
-	@Test
-	public void saveAndCheckIfExistMobileVerificationDetails() throws Exception
-	{
-		assertEquals("NOTEXIST",customerDetailsService.checkIfMobileSaved(CUST_ID, CUST_TYPE_CUSTOMER,MOB_TYPE_PRIMARY, CUST_MOBILE));
-		
-		QuickRegisterEntity quickRegisterEntity=quickRegisterService
-				.saveNewCustomerQuickRegisterEntity(standardEmailMobileCustomer()).getCustomerQuickRegisterEntity();
-		
-		CustomerDetails savedEntity=customerDetailsService.createCustomerDetailsFromQuickRegisterEntity(quickRegisterEntity);
-		
-		assertEquals("EXIST",customerDetailsService.checkIfMobileSaved(savedEntity.getCustomerId(), 1,MOB_TYPE_PRIMARY, savedEntity.getMobile()));
-		
-	}
-	
-	@Test
-	public void saveAndCheckIfExistEmailVerificationDetails() throws Exception
-	{
-		assertEquals("NOTEXIST",customerDetailsService.checkIfMobileSaved(CUST_ID, CUST_TYPE_CUSTOMER,MOB_TYPE_PRIMARY, CUST_MOBILE));
-		
-		QuickRegisterEntity quickRegisterEntity=quickRegisterService
-				.saveNewCustomerQuickRegisterEntity(standardEmailMobileCustomer()).getCustomerQuickRegisterEntity();
-		
-		CustomerDetails savedEntity=customerDetailsService.createCustomerDetailsFromQuickRegisterEntity(quickRegisterEntity);
-		
-		assertEquals("EXIST",customerDetailsService.checkIfMobileSaved(savedEntity.getCustomerId(), 1,MOB_TYPE_PRIMARY, savedEntity.getMobile()));
-		
-	}
-	*/
 

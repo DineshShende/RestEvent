@@ -66,16 +66,17 @@ public class QuickRegisterControllerStandAloneTest {
 	                    .contentType(MediaType.APPLICATION_JSON)
 	                    .accept(MediaType.APPLICATION_JSON))
 	            .andDo(print())
-	            .andExpect(status().isFound())
-	            .andExpect(jsonPath("$.firstName").value(standardEmailMobileCustomer().getFirstName()))
-	            .andExpect(jsonPath("$.lastName").value(standardEmailMobileCustomer().getLastName()))
-	            .andExpect(jsonPath("$.mobile").value(standardEmailMobileCustomer().getMobile()))
-	            .andExpect(jsonPath("$.email").value(standardEmailMobileCustomer().getEmail()))
-	            .andExpect(jsonPath("$.isMobileVerified").value(standardEmailMobileCustomer().getIsMobileVerified()))
-	            .andExpect(jsonPath("$.isEmailVerified").value(standardEmailMobileCustomer().getIsEmailVerified()))
-	            .andExpect(jsonPath("$.insertTime").exists())
-				.andExpect(jsonPath("$.updateTime").exists())
-				.andExpect(jsonPath("$.updatedBy").value(standardEmailMobileCustomer().getUpdatedBy()));
+	            .andExpect(status().isOk())
+	            .andExpect(jsonPath("$.result.firstName").value(standardEmailMobileCustomer().getFirstName()))
+	            .andExpect(jsonPath("$.result.lastName").value(standardEmailMobileCustomer().getLastName()))
+	            .andExpect(jsonPath("$.result.mobile").value(standardEmailMobileCustomer().getMobile()))
+	            .andExpect(jsonPath("$.result.email").value(standardEmailMobileCustomer().getEmail()))
+	            .andExpect(jsonPath("$.result.isMobileVerified").value(standardEmailMobileCustomer().getIsMobileVerified()))
+	            .andExpect(jsonPath("$.result.isEmailVerified").value(standardEmailMobileCustomer().getIsEmailVerified()))
+	            .andExpect(jsonPath("$.result.insertTime").exists())
+				.andExpect(jsonPath("$.result.updateTime").exists())
+				.andExpect(jsonPath("$.result.updatedBy").value(standardEmailMobileCustomer().getUpdatedBy()))
+				.andExpect(jsonPath("$.errorMessage").value(""));
 		
 			verify(customerQuickRegisterService,times(1))
 						.getByEntityId(standardEmailMobileCustomer().getCustomerId());

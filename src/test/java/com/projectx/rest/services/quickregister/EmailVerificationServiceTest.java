@@ -72,18 +72,6 @@ public class EmailVerificationServiceTest {
 	}
 
 	
-	@Test
-	public void saveCustomerEmailVerificationEntityAndGetByCustomerIdAndEmail()
-	{
-		EmailVerificationDetails savedEntity=emailVerificationService.saveDetails(standardCustomerEmailVerificationDetails());
-		
-		EmailVerificationDetails fetchedEntity=emailVerificationService.getByEntityIdTypeAndEmailType(
-				savedEntity.getKey().getCustomerId(),savedEntity.getKey().getCustomerType(), 1);
-		
-		assertEquals(savedEntity, fetchedEntity);
-	}
-	
-	
 	@Test 
 	public void verifyEmailHashMobilePinWithEmailMobileCustomer() throws Exception
 	{

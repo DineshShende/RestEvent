@@ -35,7 +35,9 @@ import com.projectx.rest.domain.quickregister.EmailVerificationDetails;
 import com.projectx.rest.domain.quickregister.MobileVerificationDetails;
 import com.projectx.rest.domain.quickregister.MobileVerificationDetailsKey;
 import com.projectx.rest.domain.quickregister.QuickRegisterEntity;
+import com.projectx.rest.repository.completeregister.TransactionalUpdatesRepository;
 import com.projectx.rest.services.completeregister.CustomerDetailsService;
+import com.projectx.rest.services.quickregister.AuthenticationService;
 import com.projectx.rest.services.quickregister.EmailVerificationService;
 import com.projectx.rest.services.quickregister.MobileVerificationService;
 import com.projectx.rest.services.quickregister.QuickRegisterService;
@@ -69,6 +71,12 @@ public class CustomerDetailsWACTest {
 	@Autowired
 	EmailVerificationService emailVerificationService;
 	
+	@Autowired
+	TransactionalUpdatesRepository transactionalUpdatesRepository;
+	
+	@Autowired
+	AuthenticationService authenticationService;
+	
 	@Before
 	public void setUp()
 	{
@@ -85,7 +93,7 @@ public class CustomerDetailsWACTest {
 		this.mockMvc.perform(
 				get("/customer/clearTestData"));				
 	
-		
+		authenticationService.clearTestData();
 		
 	}
 	
@@ -99,7 +107,8 @@ public class CustomerDetailsWACTest {
 	@Test
 	public void createCustomerDetailsFromQuickRegisterEntity() throws Exception
 	{
-		QuickRegisterEntity quickRegisterEntity=quickRegisterService.saveCustomerQuickRegisterEntity(standardEmailMobileCustomer());
+		QuickRegisterEntity quickRegisterEntity=transactionalUpdatesRepository
+				.saveNewQuickRegisterEntity(standardEmailMobileCustomer()).getCustomerQuickRegisterEntity();
 		
 		this.mockMvc.perform(
 				post("/customer/createFromQuickRegister")
@@ -233,153 +242,6 @@ public class CustomerDetailsWACTest {
 	
 	}
 	
-	/*
-	@Test
-	public void verifySecondaryMobileDetails() throws Exception
-	{
-		QuickRegisterEntity quickRegisterEntity=quickRegisterService
-				.saveNewCustomerQuickRegisterEntity(standardEmailMobileCustomer()).getCustomerQuickRegisterEntity();
-		
-		
-		CustomerDetails newEntity=customerDetailsService.createCustomerDetailsFromQuickRegisterEntity(quickRegisterEntity);
-		
-		CustomerDetails customerDetails=customerDetailsService.mergeCustomerDetails(standardCustomerDetails(newEntity));
-		
-		MobileVerificationDetails mobileVerificationDetails=
-				new MobileVerificationDetails(new MobileVerificationDetailsKey(customerDetails.getCustomerId(), 1, 2),
-						standardCustomerDetails(newEntity).getSecondaryMobile(), 123456, 0, 0, new Date(), new Date(), CUST_UPDATED_BY);
-		
-		mobileVerificationDetails=mobileVerificationService.saveDetails(mobileVerificationDetails);
-		
-				
-		
-		VerifyMobileDTO verifyMobileDTO=new VerifyMobileDTO(customerDetails.getCustomerId(), 1,
-				mobileVerificationDetails.getKey().getMobileType(), mobileVerificationDetails.getMobilePin(),CUST_UPDATED_BY);
-		
-		this.mockMvc.perform(
-				post("/customer/verifyMobileDetails")
-				.content(standardJsonVerifyMobileDetails(verifyMobileDTO))
-				.contentType(MediaType.APPLICATION_JSON)
-				.accept(MediaType.APPLICATION_JSON))
-		.andDo(print())
-		.andExpect(status().isOk())
-		.andExpect(content().string("true"));
-		
-	
-	}
-	
-	
-	@Test
-	public void verifyMobileDetails() throws Exception
-	{
 
-	
-		QuickRegisterEntity quickRegisterEntity=quickRegisterService
-				.saveNewCustomerQuickRegisterEntity(standardEmailMobileCustomer()).getCustomerQuickRegisterEntity();
-		
-		
-		CustomerDetails newEntity=customerDetailsService.createCustomerDetailsFromQuickRegisterEntity(quickRegisterEntity);
-		
-		CustomerDetails customerDetails=customerDetailsService.mergeCustomerDetails(standardCustomerDetails(newEntity));
-	
-		MobileVerificationDetails mobileVerificationDetails=
-				mobileVerificationService
-				.getByEntityIdTypeAndMobileType(customerDetails.getCustomerId(), 1, MOB_TYPE_PRIMARY);
-		
-		VerifyMobileDTO verifyMobileDTO=new VerifyMobileDTO(customerDetails.getCustomerId(), 1, 
-				mobileVerificationDetails.getKey().getMobileType(), mobileVerificationDetails.getMobilePin(),CUST_UPDATED_BY);
-		
-		this.mockMvc.perform(
-				post("/customer/verifyMobileDetails")
-				.content(standardJsonVerifyMobileDetails(verifyMobileDTO))
-				.contentType(MediaType.APPLICATION_JSON)
-				.accept(MediaType.APPLICATION_JSON))
-		.andDo(print())
-		.andExpect(status().isOk())
-		.andExpect(content().string("true"));
-		
-	
-	}
-	
-	@Test
-	public void verifyEmailDetails() throws Exception
-	{
-
-	
-		QuickRegisterEntity quickRegisterEntity=quickRegisterService
-				.saveNewCustomerQuickRegisterEntity(standardEmailMobileCustomer()).getCustomerQuickRegisterEntity();
-		
-		
-		CustomerDetails newEntity=customerDetailsService.createCustomerDetailsFromQuickRegisterEntity(quickRegisterEntity);
-		
-		EmailVerificationDetails emailVerificationDetails=
-				emailVerificationService
-				.getByEntityIdTypeAndEmailType(newEntity.getCustomerId(), 1, EMAIL_TYPE_PRIMARY);
-		
-		VerifyEmailDTO verifyEmailDTO=new VerifyEmailDTO(newEntity.getCustomerId(),1, EMAIL_TYPE_PRIMARY,
-				emailVerificationDetails.getEmailHash(),CUST_UPDATED_BY);
-		
-		this.mockMvc.perform(
-				post("/customer/verifyEmailDetails")
-				.content(standardJsonVerifyEmailDetails(verifyEmailDTO))
-				.contentType(MediaType.APPLICATION_JSON)
-				.accept(MediaType.APPLICATION_JSON))
-		.andDo(print())
-		.andExpect(status().isOk())
-		.andExpect(content().string("true"));
-		
-	
-	}
-
-	@Test
-	public void sendMobileVerificationDetails() throws Exception
-	{
-		
-		QuickRegisterEntity quickRegisterEntity=quickRegisterService
-				.saveNewCustomerQuickRegisterEntity(standardEmailMobileCustomer()).getCustomerQuickRegisterEntity();
-		
-		
-		CustomerDetails newEntity=customerDetailsService.createCustomerDetailsFromQuickRegisterEntity(quickRegisterEntity);
-		
-		CustomerIdTypeMobileTypeUpdatedByDTO customerIdTypeMobileDTO=new CustomerIdTypeMobileTypeUpdatedByDTO
-				(newEntity.getCustomerId(), 1, MOB_TYPE_PRIMARY,CUST_UPDATED_BY);
-		
-		this.mockMvc.perform(
-				post("/customer/sendMobileVerificationDetails")
-				.content(standardJsonCustomerIdTypeMobileUpdatedBy(customerIdTypeMobileDTO))
-				.contentType(MediaType.APPLICATION_JSON)
-				.accept(MediaType.APPLICATION_JSON))
-		.andDo(print())
-		.andExpect(status().isOk())
-		.andExpect(content().string("true"));
-		
-		
-	}
-	
-	@Test
-	public void sendEmailVerificationDetails() throws Exception
-	{
-		
-		QuickRegisterEntity quickRegisterEntity=quickRegisterService
-				.saveNewCustomerQuickRegisterEntity(standardEmailMobileCustomer()).getCustomerQuickRegisterEntity();
-		
-		
-		CustomerDetails newEntity=customerDetailsService.createCustomerDetailsFromQuickRegisterEntity(quickRegisterEntity);
-		
-		CustomerIdTypeEmailTypeUpdatedByDTO customerIdTypeEmailDTO=new CustomerIdTypeEmailTypeUpdatedByDTO
-				(newEntity.getCustomerId(), 1, EMAIL_TYPE_PRIMARY,CUST_UPDATED_BY);
-		
-		this.mockMvc.perform(
-				post("/customer/sendEmailVerificationDetails")
-				.content(standardJsonCustomerIdTypeEmailUpdatedBy(customerIdTypeEmailDTO))
-				.contentType(MediaType.APPLICATION_JSON)
-				.accept(MediaType.APPLICATION_JSON))
-		.andDo(print())
-		.andExpect(status().isOk())
-		.andExpect(content().string("true"));
-		
-		
-	}
-	*/
 
 }

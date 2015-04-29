@@ -313,10 +313,6 @@ public class QuickRegisterDataFixture {
 	
 	public static String standardJsonCustomerIdUpdatedByDTO(CustomerIdTypeUpdatedByDTO dto)
 	{
-		//System.out.println("{\"customerId\":"+CUST_ID+",\"customerType\":"+ENTITY_TYPE_CUSTOMER+",\"requestedBy\":\""+CUST_UPDATED_BY+"\"}");
-		
-		//return "{\"customerId\":"+CUST_ID+",\"customerType\":"+ENTITY_TYPE_CUSTOMER+",\"requestedBy\":\""+CUST_UPDATED_BY+"\"}";
-		
 		return gson.toJson(dto);
 	}
 

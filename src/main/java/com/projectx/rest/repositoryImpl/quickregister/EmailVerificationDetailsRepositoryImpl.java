@@ -5,6 +5,7 @@ import java.util.Date;
 import javax.xml.ws.http.HTTPException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
@@ -39,30 +40,15 @@ public class EmailVerificationDetailsRepositoryImpl implements EmailVericationDe
 	@Autowired
 	Environment env;
 
+	@Value("${EMAILVERIFICATION_DETAILS_NOT_FOUND_BY_ID}")
+	private String EMAILVERIFICATION_DETAILS_NOT_FOUND_BY_ID;
+	
+	@Value("${EMAILVERIFICATION_DETAILS_NOT_FOUND_BY_EMAIL}")
+	private String EMAILVERIFICATION_DETAILS_NOT_FOUND_BY_EMAIL;
 	
 	
-	@Override
-	public EmailVerificationDetails save(
-			EmailVerificationDetails mobileVerificationDetails) throws ResourceAlreadyPresentException,ValidationFailedException{
-		
-		HttpEntity<EmailVerificationDetails> entity=new HttpEntity<EmailVerificationDetails>(mobileVerificationDetails);
-		
-		ResponseEntity<EmailVerificationDetails> result=null;
-		
-		try{
-			result=restTemplate.exchange(env.getProperty("data.url")+"/customer/quickregister/emailVerification/saveEmailVerificationDetails", HttpMethod.POST,
-					entity, EmailVerificationDetails.class);
-		}catch(RestClientException e)
-		{
-			throw new ValidationFailedException();
-		}
-		
-		if(result.getStatusCode()==HttpStatus.CREATED)
-			return result.getBody();
-		else
-			throw new ResourceAlreadyPresentException();
-	}
-
+	
+	
 	@Override
 	public EmailVerificationDetails getByEntityIdTypeAndEmailType(
 			Long customerId,Integer customerType, Integer emailType) throws EmailVerificationDetailNotFoundException{
@@ -78,7 +64,7 @@ public class EmailVerificationDetailsRepositoryImpl implements EmailVericationDe
 		if(result.getStatusCode()==HttpStatus.FOUND)
 			return result.getBody();
 		else
-			throw new EmailVerificationDetailNotFoundException();
+			throw new EmailVerificationDetailNotFoundException(EMAILVERIFICATION_DETAILS_NOT_FOUND_BY_ID);
 
 		
 	}
@@ -162,7 +148,7 @@ public class EmailVerificationDetailsRepositoryImpl implements EmailVericationDe
 		if(result.getStatusCode()==HttpStatus.FOUND)
 			return result.getBody();
 		else
-			throw new EmailVerificationDetailNotFoundException();
+			throw new EmailVerificationDetailNotFoundException(EMAILVERIFICATION_DETAILS_NOT_FOUND_BY_EMAIL);
 		
 		
 	}
