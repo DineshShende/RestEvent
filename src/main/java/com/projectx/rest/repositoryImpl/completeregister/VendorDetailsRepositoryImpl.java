@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -15,6 +16,7 @@ import org.springframework.web.client.RestTemplate;
 
 import com.projectx.data.domain.completeregister.UpdateEmailVerificationStatusUpdatedByDTO;
 import com.projectx.data.domain.completeregister.UpdateMobileVerificationStatusUpdatedByDTO;
+import com.projectx.rest.domain.comndto.ResponseDTO;
 import com.projectx.rest.domain.completeregister.DocumentDetails;
 import com.projectx.rest.domain.completeregister.VendorDetails;
 import com.projectx.rest.exception.repository.completeregister.ValidationFailedException;
@@ -44,11 +46,11 @@ public class VendorDetailsRepositoryImpl implements VendorDetailsRepository {
 	
 		HttpEntity<VendorDetails> entity=new HttpEntity<VendorDetails>(vendorDetails);
 		
-		ResponseEntity<VendorDetails> result=null;
+		ResponseEntity<ResponseDTO<VendorDetails>> result=null;
 		
 		try{
 			result=restTemplate.exchange(env.getProperty("data.url")+"/vendor/save",HttpMethod.POST,
-					entity, VendorDetails.class);
+					entity, new ParameterizedTypeReference<ResponseDTO<VendorDetails>>() {});
 			
 		}catch(RestClientException e)
 		{
@@ -56,9 +58,9 @@ public class VendorDetailsRepositoryImpl implements VendorDetailsRepository {
 		}
 		
 		if(result.getStatusCode()==HttpStatus.CREATED)
-			return result.getBody();
+			return result.getBody().getResult();
 		else
-			throw new VendorDetailsAlreadyPresentException();
+			throw new VendorDetailsAlreadyPresentException(result.getBody().getErrorMessage());
 		
 	}
 

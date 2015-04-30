@@ -76,4 +76,12 @@ public class DriverDetailsHandler implements DriverDetailsService {
 		return driverDetailsRepository.clearTestData();
 	}
 
+	@Override
+	public DriverDetails getDriverByLicenceNumber(String licenceNumber) {
+		
+		DriverDetails fetchedDriver=driverDetailsRepository.findByLicenceNumber(licenceNumber);
+		
+		return fetchedDriver;
+	}
+
 }

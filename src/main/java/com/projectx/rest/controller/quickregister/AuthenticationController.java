@@ -69,16 +69,8 @@ public class AuthenticationController {
 	@Value("${AUTHENTICATION_DETAILS_OLD_NEW_PASSWORD_DOES_NOT_MATCH}")
 	private String AUTHENTICATION_DETAILS_OLD_NEW_PASSWORD_DOES_NOT_MATCH;//="AUTHENTICATION_DETAILS_OLD_NEW_PASSWORD_DOES_NOT_MATCH";
 	
-	@Value("${Hi}")
-	private String Hi;
-	
-	@RequestMapping(value="/test")
-	public String test()
-	{
-		return AUTHENTICATION_DETAILS_OLD_NEW_PASSWORD_DOES_NOT_MATCH;
-	}
-	
-	
+
+
 	@RequestMapping(value="/verifyLoginDetails",method=RequestMethod.POST)
 	public ResponseEntity<ResponseDTO<AuthenticationDetailsAng>> verifyLoginDetails(@Valid @RequestBody LoginVerificationDTO loginVerificationDTO,
 			BindingResult bindingResult)

@@ -13,6 +13,8 @@ public interface DriverDetailsService {
 	
 	DriverDetails getDriverById(Long driverId);
 	
+	DriverDetails getDriverByLicenceNumber(String licenceNumber);
+	
 	Boolean deleteDriver(Long driverId);
 	
 	Integer updateMobileAndVerificationStatus(Long driverId,Long mobile,Boolean status,Integer updatedBy,Long updatedById);

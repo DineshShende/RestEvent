@@ -17,9 +17,11 @@ import com.projectx.data.domain.quickregister.CustomerIdTypeMobileTypeRequestedB
 import com.projectx.mvc.domain.completeregister.EntityIdDTO;
 import com.projectx.mvc.domain.completeregister.VerifyEmailDTO;
 import com.projectx.mvc.domain.completeregister.VerifyMobileDTO;
+import com.projectx.rest.domain.comndto.ResponseDTO;
 import com.projectx.rest.domain.completeregister.VendorDetails;
 import com.projectx.rest.domain.quickregister.QuickRegisterEntity;
 import com.projectx.rest.exception.repository.completeregister.ValidationFailedException;
+import com.projectx.rest.exception.repository.completeregister.VendorDetailsAlreadyPresentException;
 import com.projectx.rest.exception.repository.completeregister.VendorDetailsNotFoundException;
 import com.projectx.rest.exception.repository.completeregister.VendorDetailsTransactionalUpdateFailedException;
 import com.projectx.rest.exception.repository.quickregister.DeleteQuickCreateDetailsEntityFailedException;
@@ -38,53 +40,25 @@ public class VendorDetailsController {
 	@Autowired
 	QuickRegisterService quickRegisterService;
 	
-	@RequestMapping(value="/createFromQuickRegister",method=RequestMethod.POST)
-	public ResponseEntity<VendorDetails> createCustomerDetailsFromQuickRegisterEntity(@Valid @RequestBody EntityIdDTO entityIdDTO,
-			BindingResult bindingResult)
-	{
-		if(bindingResult.hasErrors())
-			return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
-		
-		ResponseEntity<VendorDetails> result=null;
-		QuickRegisterEntity quickRegisterEntity=null;
-		
-		try{
-			quickRegisterEntity=quickRegisterService.getByEntityId(entityIdDTO.getEntityId());
-		}catch(ResourceNotFoundException e)
-		{
-			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-		}
-		
-		
-		try{
-			VendorDetails savedEntity=vendorDetailsService.createCustomerDetailsFromQuickRegisterEntity(quickRegisterEntity);
-			result=new ResponseEntity<VendorDetails>(savedEntity, HttpStatus.OK);
-		}catch(DeleteQuickCreateDetailsEntityFailedException e)
-		{
-			result=new ResponseEntity<>(HttpStatus.ALREADY_REPORTED);
-		}
-				
-		return result;
-	}
 	
 	@RequestMapping(value="/update",method=RequestMethod.POST)
-	public ResponseEntity<VendorDetails> update(@Valid @RequestBody VendorDetails vendorDetails,BindingResult bindingResult)
+	public ResponseEntity<ResponseDTO<VendorDetails>> update(@Valid @RequestBody VendorDetails vendorDetails,BindingResult bindingResult)
 	{
 		if(bindingResult.hasErrors())
 			return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
 		
-		ResponseEntity<VendorDetails> result=null;
+		ResponseEntity<ResponseDTO<VendorDetails>> result=null;
 		
 		try{
 			VendorDetails savedEntity=vendorDetailsService.updateVendorDetails(vendorDetails);
-			result=new ResponseEntity<VendorDetails>(savedEntity, HttpStatus.OK);
+			result=new ResponseEntity<ResponseDTO<VendorDetails>>(new ResponseDTO<VendorDetails>("",savedEntity), HttpStatus.OK);
 		}catch(ValidationFailedException e)
 		{
-			result=new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+			 return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
 		}
-		catch(VendorDetailsTransactionalUpdateFailedException e)
+		catch(VendorDetailsAlreadyPresentException e)
 		{
-			result=new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
+			return new ResponseEntity<ResponseDTO<VendorDetails>>(new ResponseDTO<VendorDetails>(e.getMessage(),null), HttpStatus.OK);
 		}
 		
 		return result;

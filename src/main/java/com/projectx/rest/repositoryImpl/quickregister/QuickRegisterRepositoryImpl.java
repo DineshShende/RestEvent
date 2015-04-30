@@ -35,6 +35,7 @@ import com.projectx.rest.exception.repository.completeregister.ValidationFailedE
 import com.projectx.rest.exception.repository.quickregister.QuickRegisterDetailsAlreadyPresentException;
 import com.projectx.rest.exception.repository.quickregister.QuickRegisterEntityNotFoundException;
 import com.projectx.rest.exception.repository.quickregister.QuickRegisterEntityNotSavedException;
+import com.projectx.rest.exception.repository.quickregister.ResourceAlreadyPresentException;
 import com.projectx.rest.exception.repository.quickregister.ResourceNotFoundException;
 import com.projectx.rest.repository.quickregister.QuickRegisterRepository;
 
@@ -126,8 +127,10 @@ public class QuickRegisterRepositoryImpl implements
 				HttpMethod.POST,new HttpEntity<UpdateEmailMobileVerificationStatus>(mobileVerificationStatus),
 									new ParameterizedTypeReference<ResponseDTO<Integer>>() {});
 		
-		
-		return updateStatus.getBody().getResult();
+		if(updateStatus.getStatusCode()==HttpStatus.OK)
+			return updateStatus.getBody().getResult();
+		else
+			throw new ResourceAlreadyPresentException(updateStatus.getBody().getErrorMessage());
 	}
 
 	@Override
@@ -142,7 +145,10 @@ public class QuickRegisterRepositoryImpl implements
 									new ParameterizedTypeReference<ResponseDTO<Integer>>() {});
 		
 		
-		return updateStatus.getBody().getResult();
+		if(updateStatus.getStatusCode()==HttpStatus.OK)
+			return updateStatus.getBody().getResult();
+		else
+			throw new ResourceAlreadyPresentException(updateStatus.getBody().getErrorMessage());
 		
 	}
 	

@@ -23,6 +23,8 @@ public interface VehicleDetailsRepository {
 	
 	VehicleDetails findByRegistrationNumber(String registrationNumber) throws VehicleDetailsNotFoundException;
 	
+	VehicleDetails findByChassisNumber(String chassisNumber) throws VehicleDetailsNotFoundException;
+	
 	Integer count();
 	
 	Boolean clearTestData();

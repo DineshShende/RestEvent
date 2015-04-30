@@ -7,6 +7,7 @@ import javax.validation.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -20,6 +21,7 @@ import ch.qos.logback.core.pattern.util.RestrictedEscapeUtil;
 
 import com.projectx.data.domain.completeregister.DriverList;
 import com.projectx.data.domain.completeregister.UpdateMobileVerificationStatusUpdatedByDTO;
+import com.projectx.rest.domain.comndto.ResponseDTO;
 import com.projectx.rest.domain.completeregister.CustomerDetails;
 import com.projectx.rest.domain.completeregister.DriverDetails;
 import com.projectx.rest.exception.repository.completeregister.DriverDetailsAlreadyPresentException;
@@ -48,11 +50,11 @@ public class DriverDetailsRepositoryImpl implements DriverDetailsRepository {
 		HttpEntity<DriverDetails> entity=new HttpEntity<DriverDetails>(driverDetails);
 		
 		
-		ResponseEntity<DriverDetails> savedEntity=null;
+		ResponseEntity<ResponseDTO<DriverDetails>> savedEntity=null;
 		
 		try{
 			savedEntity=restTemplate.exchange(env.getProperty("data.url")+"/driver", HttpMethod.POST,
-					entity, DriverDetails.class);
+					entity, new ParameterizedTypeReference<ResponseDTO<DriverDetails>>() {});
 			
 		}catch(RestClientException e)
 		{
@@ -60,9 +62,9 @@ public class DriverDetailsRepositoryImpl implements DriverDetailsRepository {
 		}
 				
 		if(savedEntity.getStatusCode()==HttpStatus.CREATED)		
-			return savedEntity.getBody();
+			return savedEntity.getBody().getResult();
 		else
-			throw new DriverDetailsAlreadyPresentException();
+			throw new DriverDetailsAlreadyPresentException(savedEntity.getBody().getErrorMessage());
 
 		
 	}
@@ -78,18 +80,21 @@ public class DriverDetailsRepositoryImpl implements DriverDetailsRepository {
 		HttpEntity<UpdateMobileVerificationStatusUpdatedByDTO> entity=
 				new HttpEntity<UpdateMobileVerificationStatusUpdatedByDTO>(mobileVerificationStatusDTO);
 		
-		ResponseEntity<Integer> result=null;
+		ResponseEntity<ResponseDTO<Integer>> result=null;
 		
 		try{
 			result=restTemplate.exchange(env.getProperty("data.url")+"/driver/updateMobileAndMobileVerificationStatus",
-					HttpMethod.POST,entity, Integer.class);
+					HttpMethod.POST,entity, new ParameterizedTypeReference<ResponseDTO<Integer>>() {});
 
 		}catch(RestClientException e)
 		{
 			throw new ValidationFailedException();
 		}
 		
-		return result.getBody();
+		if(result.getStatusCode()==HttpStatus.OK)
+			return result.getBody().getResult();
+		else
+			throw new DriverDetailsUpdateFailedException(result.getBody().getErrorMessage());
 		
 	}
 
@@ -153,6 +158,14 @@ public class DriverDetailsRepositoryImpl implements DriverDetailsRepository {
 
 
 		
+	}
+
+
+	@Override
+	public DriverDetails findByLicenceNumber(String licenceNumber)
+			throws DriverDetailsNotFoundException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 

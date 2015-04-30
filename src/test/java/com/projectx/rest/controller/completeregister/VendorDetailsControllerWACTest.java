@@ -99,37 +99,7 @@ public class VendorDetailsControllerWACTest {
 	}
 
 	
-	@Test
-	public void createFromQuickRegister() throws Exception {
 		
-		QuickRegisterEntity quickRegisterEntity=transactionalUpdatesRepository
-				.saveNewQuickRegisterEntity(standardEmailMobileVendor()).getCustomerQuickRegisterEntity();
-		
-		
-		
-		this.mockMvc.perform(
-				post("/vendor/createFromQuickRegister")
-				.content(standardJsonEntityIdDTO(standardEntityIdDTO(quickRegisterEntity.getCustomerId())))
-				.contentType(MediaType.APPLICATION_JSON)
-				.accept(MediaType.APPLICATION_JSON))
-		.andDo(print())
-		.andExpect(status().isOk())
-		.andExpect(jsonPath("$.firstName").value(standardVendorCreatedFromQuickRegister().getFirstName()))
-	    .andExpect(jsonPath("$.lastName").value(standardVendorCreatedFromQuickRegister().getLastName()))
-	    .andExpect(jsonPath("$.firmAddressId").doesNotExist())
-	    .andExpect(jsonPath("$.mobile").value(standardVendorCreatedFromQuickRegister().getMobile()))
-	    .andExpect(jsonPath("$.email").value(standardVendorCreatedFromQuickRegister().getEmail()))
-	    .andExpect(jsonPath("$.isMobileVerified").value(standardVendorCreatedFromQuickRegister().getIsMobileVerified()))
-	    .andExpect(jsonPath("$.isEmailVerified").value(standardVendorCreatedFromQuickRegister().getIsEmailVerified()))
-	    .andExpect(jsonPath("$.language").doesNotExist())
-	    .andExpect(jsonPath("$.businessDomain").doesNotExist())
-	    .andExpect(jsonPath("$.dateOfBirth").doesNotExist())
-	    .andExpect(jsonPath("$.insertTime").exists())
-		.andExpect(jsonPath("$.updateTime").exists())
-		.andExpect(jsonPath("$.updatedBy").value(standardVendorCreatedFromQuickRegister().getUpdatedBy()));
-	
-	}
-	
 
 	@Test
 	public void update() throws Exception {
@@ -141,24 +111,25 @@ public class VendorDetailsControllerWACTest {
 				.accept(MediaType.APPLICATION_JSON))
 		.andDo(print())
 		.andExpect(status().isOk())
-		.andExpect(jsonPath("$.firstName").value(standardVendor().getFirstName()))
-	    .andExpect(jsonPath("$.lastName").value(standardVendor().getLastName()))
-	    .andExpect(jsonPath("$.firmAddress.customerType").value(standardAddress().getCustomerType()))
-	    .andExpect(jsonPath("$.firmAddress.addressLine").value(standardAddress().getAddressLine()))
-	    .andExpect(jsonPath("$.firmAddress.city").value(standardAddress().getCity()))
-	    .andExpect(jsonPath("$.firmAddress.district").value(standardAddress().getDistrict()))
-	    .andExpect(jsonPath("$.firmAddress.state").value(standardAddress().getState()))
-	    .andExpect(jsonPath("$.firmAddress.pincode").value(standardAddress().getPincode()))
-	    .andExpect(jsonPath("$.mobile").value(standardVendor().getMobile()))
-	    .andExpect(jsonPath("$.email").value(standardVendor().getEmail()))
-	    .andExpect(jsonPath("$.isMobileVerified").value(standardVendor().getIsMobileVerified()))
-	    .andExpect(jsonPath("$.isEmailVerified").value(standardVendor().getIsEmailVerified()))
-	    .andExpect(jsonPath("$.laguage").value(standardVendor().getLaguage()))
+		.andExpect(jsonPath("$.result.firstName").value(standardVendor().getFirstName()))
+	    .andExpect(jsonPath("$.result.lastName").value(standardVendor().getLastName()))
+	    .andExpect(jsonPath("$.result.firmAddress.customerType").value(standardAddress().getCustomerType()))
+	    .andExpect(jsonPath("$.result.firmAddress.addressLine").value(standardAddress().getAddressLine()))
+	    .andExpect(jsonPath("$.result.firmAddress.city").value(standardAddress().getCity()))
+	    .andExpect(jsonPath("$.result.firmAddress.district").value(standardAddress().getDistrict()))
+	    .andExpect(jsonPath("$.result.firmAddress.state").value(standardAddress().getState()))
+	    .andExpect(jsonPath("$.result.firmAddress.pincode").value(standardAddress().getPincode()))
+	    .andExpect(jsonPath("$.result.mobile").value(standardVendor().getMobile()))
+	    .andExpect(jsonPath("$.result.email").value(standardVendor().getEmail()))
+	    .andExpect(jsonPath("$.result.isMobileVerified").value(standardVendor().getIsMobileVerified()))
+	    .andExpect(jsonPath("$.result.isEmailVerified").value(standardVendor().getIsEmailVerified()))
+	    .andExpect(jsonPath("$.result.laguage").value(standardVendor().getLaguage()))
 	    
-	    .andExpect(jsonPath("$.dateOfBirth").exists())
-	    .andExpect(jsonPath("$.insertTime").exists())
-		.andExpect(jsonPath("$.updateTime").exists())
-		.andExpect(jsonPath("$.updatedBy").value(standardVendorCreatedFromQuickRegister().getUpdatedBy()));
+	    .andExpect(jsonPath("$.result.dateOfBirth").exists())
+	    .andExpect(jsonPath("$.result.insertTime").exists())
+		.andExpect(jsonPath("$.result.updateTime").exists())
+		.andExpect(jsonPath("$.result.updatedBy").value(standardVendorCreatedFromQuickRegister().getUpdatedBy()))
+		.andExpect(jsonPath("$.errorMessage").value(""));
 	
 		
 		

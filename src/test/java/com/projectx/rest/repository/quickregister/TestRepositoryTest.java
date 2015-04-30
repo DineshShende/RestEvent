@@ -24,7 +24,7 @@ public class TestRepositoryTest {
 	@Test
 	public void test() {
 	
-		testRepository.test();
+		//testRepository.test();
 	}
 
 	

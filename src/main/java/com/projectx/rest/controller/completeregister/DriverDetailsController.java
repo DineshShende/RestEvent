@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.projectx.rest.domain.comndto.ResponseDTO;
 import com.projectx.rest.domain.completeregister.DriverDetails;
 import com.projectx.rest.exception.repository.completeregister.DriverDetailsAlreadyPresentException;
 import com.projectx.rest.exception.repository.completeregister.DriverDetailsNotFoundException;
@@ -29,23 +30,23 @@ public class DriverDetailsController {
 	DriverDetailsService driverDetailsService;
 	
 	@RequestMapping(method=RequestMethod.POST)
-	public ResponseEntity<DriverDetails> addDriver(@Valid @RequestBody DriverDetails driverDetails,BindingResult  bindingResult)
+	public ResponseEntity<ResponseDTO<DriverDetails>> addDriver(@Valid @RequestBody DriverDetails driverDetails,BindingResult  bindingResult)
 	{
 		if(bindingResult.hasErrors())
 			return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
 		
-		ResponseEntity<DriverDetails> result=null;
+		ResponseEntity<ResponseDTO<DriverDetails>> result=null;
 		
 		try{
 			DriverDetails savedDriver=driverDetailsService.save(driverDetails);
-			result=new ResponseEntity<DriverDetails>(savedDriver, HttpStatus.CREATED);
+			result=new ResponseEntity<ResponseDTO<DriverDetails>>(new ResponseDTO<DriverDetails>("",savedDriver), HttpStatus.CREATED);
 		}catch(ValidationFailedException e)
 		{
 			result=new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
 		}
 		catch(DriverDetailsAlreadyPresentException e)
 		{
-			result=new ResponseEntity<>(HttpStatus.ALREADY_REPORTED);
+			result=new ResponseEntity<ResponseDTO<DriverDetails>>(new ResponseDTO<DriverDetails>(e.getMessage(),null), HttpStatus.ALREADY_REPORTED);
 		}
 		
 		return result;
@@ -60,6 +61,22 @@ public class DriverDetailsController {
 		ResponseEntity<DriverDetails> result=null;
 		try{
 			DriverDetails savedDriver=driverDetailsService.getDriverById(driverId);
+			result=new ResponseEntity<DriverDetails>(savedDriver, HttpStatus.FOUND);
+		}catch(DriverDetailsNotFoundException e)
+		{
+			result=new ResponseEntity<>(HttpStatus.NO_CONTENT);
+		}
+		
+		return result;
+		
+	}
+	
+	@RequestMapping(value="/getByLicenceNumber/{licenceNumber}")
+	public ResponseEntity<DriverDetails> getByLicenceNumber(@PathVariable String licenceNumber)
+	{
+		ResponseEntity<DriverDetails> result=null;
+		try{
+			DriverDetails savedDriver=driverDetailsService.getDriverByLicenceNumber(licenceNumber);
 			result=new ResponseEntity<DriverDetails>(savedDriver, HttpStatus.FOUND);
 		}catch(DriverDetailsNotFoundException e)
 		{

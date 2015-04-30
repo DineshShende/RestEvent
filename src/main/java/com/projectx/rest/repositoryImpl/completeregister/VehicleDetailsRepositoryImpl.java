@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -15,6 +16,7 @@ import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import com.projectx.data.domain.completeregister.VehicleList;
+import com.projectx.rest.domain.comndto.ResponseDTO;
 import com.projectx.rest.domain.completeregister.DriverDetails;
 import com.projectx.rest.domain.completeregister.VehicleDetails;
 import com.projectx.rest.exception.repository.completeregister.ValidationFailedException;
@@ -41,11 +43,11 @@ public class VehicleDetailsRepositoryImpl implements VehicleDetailsRepository {
 		
 		HttpEntity<VehicleDetails> entity=new HttpEntity<VehicleDetails>(vehicleDetails);
 		
-		ResponseEntity<VehicleDetails> result=null;
+		ResponseEntity<ResponseDTO<VehicleDetails>> result=null;
 		
 		try{
 			result=restTemplate.exchange(env.getProperty("data.url")+"/vehicle",
-					HttpMethod.POST,entity, VehicleDetails.class);
+					HttpMethod.POST,entity,new ParameterizedTypeReference<ResponseDTO<VehicleDetails>>() {});
 
 		}catch(RestClientException e)
 		{
@@ -53,9 +55,9 @@ public class VehicleDetailsRepositoryImpl implements VehicleDetailsRepository {
 		}
 		
 		if(result.getStatusCode()==HttpStatus.CREATED)
-			return result.getBody();
+			return result.getBody().getResult();
 		else
-			throw new VehicleDetailsAlreadyPresentException();
+			throw new VehicleDetailsAlreadyPresentException(result.getBody().getErrorMessage());
 		
 		
 	}
@@ -132,6 +134,19 @@ public class VehicleDetailsRepositoryImpl implements VehicleDetailsRepository {
 		
 		return result;
 		
+	}
+
+	@Override
+	public VehicleDetails findByChassisNumber(String chassisNumber)
+			throws VehicleDetailsNotFoundException {
+		
+		ResponseEntity<VehicleDetails> result=restTemplate.exchange(env.getProperty("data.url")+"/vehicle/getByChassisNumber/"+chassisNumber, 
+				HttpMethod.GET, null, VehicleDetails.class);
+		
+		if(result.getStatusCode()==HttpStatus.FOUND)		
+			return result.getBody();
+		else
+			throw new VehicleDetailsNotFoundException();
 	}
 
 

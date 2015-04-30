@@ -17,8 +17,10 @@ import com.projectx.data.domain.quickregister.CustomerIdTypeMobileTypeRequestedB
 import com.projectx.mvc.domain.completeregister.EntityIdDTO;
 import com.projectx.mvc.domain.completeregister.VerifyEmailDTO;
 import com.projectx.mvc.domain.completeregister.VerifyMobileDTO;
+import com.projectx.rest.domain.comndto.ResponseDTO;
 import com.projectx.rest.domain.completeregister.CustomerDetails;
 import com.projectx.rest.domain.quickregister.QuickRegisterEntity;
+import com.projectx.rest.exception.repository.completeregister.CustomerDetailsAlreadyPresentException;
 import com.projectx.rest.exception.repository.completeregister.CustomerDetailsNotFoundException;
 import com.projectx.rest.exception.repository.completeregister.CustomerDetailsTransactionalUpdateFailedException;
 import com.projectx.rest.exception.repository.completeregister.ValidationFailedException;
@@ -37,51 +39,20 @@ public class CustomerDetailsController {
 	@Autowired
 	QuickRegisterService quickRegisterService;
 	
-	//Can be removed from here
-	@RequestMapping(value="/createFromQuickRegister",method=RequestMethod.POST)
-	public ResponseEntity<CustomerDetails> createCustomerDetailsFromQuickRegisterEntity(@Valid @RequestBody EntityIdDTO entityIdDTO,
-			BindingResult bindingResult)
-	{
-		if(bindingResult.hasErrors())
-			return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
-		
-		ResponseEntity<CustomerDetails> result=null;
-		QuickRegisterEntity entity=null;
-		
-		try{
-			entity=quickRegisterService.getByEntityId(entityIdDTO.getEntityId());
-			
-		}catch(ResourceNotFoundException e)
-		{
-			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-		}
-		
-		try{
-			CustomerDetails savedEntity=customerDetailsService.createCustomerDetailsFromQuickRegisterEntity(entity);
-			result=new ResponseEntity<CustomerDetails>(savedEntity, HttpStatus.OK);
-		}catch(DeleteQuickCreateDetailsEntityFailedException e)
-		{
-			result=new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
-		}
-		return result;
-	}
-	
-	
-	
 	@RequestMapping(method=RequestMethod.POST)
-	public ResponseEntity<CustomerDetails> merge(@Valid @RequestBody CustomerDetails customerDetails,BindingResult  bindingResult)
+	public ResponseEntity<ResponseDTO<CustomerDetails>> merge(@Valid @RequestBody CustomerDetails customerDetails,BindingResult  bindingResult)
 	{
 		if(bindingResult.hasErrors())
 			return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
 		
-		ResponseEntity<CustomerDetails> result=null;
+		ResponseEntity<ResponseDTO<CustomerDetails>> result=null;
 		
 		try{
 			CustomerDetails savedEntity=customerDetailsService.mergeCustomerDetails(customerDetails);
-			result=new ResponseEntity<CustomerDetails>(savedEntity, HttpStatus.OK);
-		}catch(CustomerDetailsTransactionalUpdateFailedException e)
+			result=new ResponseEntity<ResponseDTO<CustomerDetails>>(new ResponseDTO<CustomerDetails>("",savedEntity), HttpStatus.OK);
+		}catch(CustomerDetailsAlreadyPresentException e)
 		{
-			result=new ResponseEntity<>(HttpStatus.NOT_MODIFIED);
+			result=new ResponseEntity<ResponseDTO<CustomerDetails>>(new ResponseDTO<CustomerDetails>(e.getMessage(),null), HttpStatus.OK);
 		}
 		
 		return result;

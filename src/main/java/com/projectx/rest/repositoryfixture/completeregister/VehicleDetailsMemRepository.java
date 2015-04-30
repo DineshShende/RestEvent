@@ -90,4 +90,11 @@ public class VehicleDetailsMemRepository implements VehicleDetailsRepository {
 		return true;
 	}
 
+	@Override
+	public VehicleDetails findByChassisNumber(String chassisNumber)
+			throws VehicleDetailsNotFoundException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

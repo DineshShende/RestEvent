@@ -24,6 +24,8 @@ public interface DriverDetailsRepository {
 	
 	DriverDetails findOne(Long driverId) throws DriverDetailsNotFoundException;
 	
+	DriverDetails findByLicenceNumber(String licenceNumber) throws DriverDetailsNotFoundException;
+	
 	Boolean deleteById(Long driverId);
 	
 	Integer count();

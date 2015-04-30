@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -18,6 +19,7 @@ import com.projectx.data.domain.quickregister.CustomerIdTypeEmailTypeDTO;
 import com.projectx.data.domain.quickregister.CustomerIdTypeEmailTypeUpdatedByDTO;
 import com.projectx.data.domain.quickregister.CustomerIdTypeMobileTypeDTO;
 import com.projectx.data.domain.quickregister.CustomerIdTypeMobileTypeRequestedByDTO;
+import com.projectx.rest.domain.comndto.ResponseDTO;
 import com.projectx.rest.domain.completeregister.CustomerDetails;
 import com.projectx.rest.domain.completeregister.VendorDetails;
 import com.projectx.rest.domain.quickregister.CustomerQuickRegisterEmailMobileVerificationEntity;
@@ -44,12 +46,6 @@ public class TransactionalDetailsRepositoryImpl implements
 	@Autowired
 	Environment env;
 	
-	@Value("${UPDATE_EMAIL_IN_DETAILS_ENTITY_AND_AUTHENTICATION_FAILED}")
-	private String UPDATE_EMAIL_IN_DETAILS_ENTITY_AND_AUTHENTICATION_FAILED;
-	
-	@Value("${UPDATE_MOBILE_IN_DETAILS_ENTITY_AND_AUTHENTICATION_FAILED}")
-	private String UPDATE_MOBILE_IN_DETAILS_ENTITY_AND_AUTHENTICATION_FAILED;
-
 	@Override
 	public Boolean updateMobileInDetailsEnityAndAuthenticationDetails (
 			Long entityId, Integer entityType, Integer mobileType,Integer updatedBy,Long updatedById) 
@@ -60,11 +56,11 @@ public class TransactionalDetailsRepositoryImpl implements
 		
 		HttpEntity<CustomerIdTypeMobileTypeRequestedByDTO> entity=new HttpEntity<CustomerIdTypeMobileTypeRequestedByDTO>(customerIdTypeMobileTypeDTO);
 		
-		ResponseEntity<Boolean> result=null;
+		ResponseEntity<ResponseDTO<Boolean>> result=null;
 		
 		try{
 			result=restTemplate.exchange(env.getProperty("data.url")+"/transactional/updateMobileInDetailsEnityAndAuthenticationDetails",
-					HttpMethod.POST, entity, Boolean.class);
+					HttpMethod.POST, entity, new ParameterizedTypeReference<ResponseDTO<Boolean>>() {});
 			
 		}catch(RestClientException e)
 		{
@@ -72,9 +68,9 @@ public class TransactionalDetailsRepositoryImpl implements
 		}
 		
 		if(result.getStatusCode()==HttpStatus.OK)
-			return result.getBody();
+			return result.getBody().getResult();
 		else
-			throw new UpdateMobileInDetailsAndAuthentionDetailsFailedException(UPDATE_MOBILE_IN_DETAILS_ENTITY_AND_AUTHENTICATION_FAILED);
+			throw new UpdateMobileInDetailsAndAuthentionDetailsFailedException(result.getBody().getErrorMessage());
 
 
 	}
@@ -89,11 +85,11 @@ public class TransactionalDetailsRepositoryImpl implements
 		
 		HttpEntity<CustomerIdTypeEmailTypeUpdatedByDTO> entity=new HttpEntity<CustomerIdTypeEmailTypeUpdatedByDTO>(customerIdTypeEmailTypeDTO);
 		
-		ResponseEntity<Boolean> result=null;
+		ResponseEntity<ResponseDTO<Boolean>> result=null;
 		
 		try{
 			result=restTemplate.exchange(env.getProperty("data.url")+"/transactional/updateEmailInDetailsEnityAndAuthenticationDetails",
-					HttpMethod.POST, entity, Boolean.class);
+					HttpMethod.POST, entity, new ParameterizedTypeReference<ResponseDTO<Boolean>>() {});
 
 		}catch(RestClientException e)
 		{
@@ -101,9 +97,9 @@ public class TransactionalDetailsRepositoryImpl implements
 		}
 		
 		if(result.getStatusCode()==HttpStatus.OK)
-			return result.getBody();
+			return result.getBody().getResult();
 		else
-			throw new UpdateEmailInDetailsAndAuthenticationDetailsFailedException(UPDATE_EMAIL_IN_DETAILS_ENTITY_AND_AUTHENTICATION_FAILED);
+			throw new UpdateEmailInDetailsAndAuthenticationDetailsFailedException(result.getBody().getErrorMessage());
 	}
 
 	@Override
@@ -112,21 +108,22 @@ public class TransactionalDetailsRepositoryImpl implements
 		
 		HttpEntity<QuickRegisterEntity> entity=new HttpEntity<QuickRegisterEntity>(quickRegisterEntity);
 		
-		ResponseEntity<CustomerQuickRegisterEmailMobileVerificationEntity> result=null;
+		ResponseEntity<ResponseDTO<CustomerQuickRegisterEmailMobileVerificationEntity>> result=null;
 		
 		try
 		{
 			result=restTemplate.exchange(env.getProperty("data.url")+"/transactional/saveNewQuickRegisterEntity",
-					HttpMethod.POST, entity, CustomerQuickRegisterEmailMobileVerificationEntity.class);
+					HttpMethod.POST, entity, 
+					new ParameterizedTypeReference<ResponseDTO<CustomerQuickRegisterEmailMobileVerificationEntity>>() {});
 		}catch(RestClientException e)
 		{
 			throw new ValidationFailedException();
 		}
 						
 		if(result.getStatusCode()==HttpStatus.CREATED)
-			return result.getBody();
+			return result.getBody().getResult();
 		else
-			throw new QuickRegisterDetailsAlreadyPresentException();
+			throw new QuickRegisterDetailsAlreadyPresentException(result.getBody().getErrorMessage());
 
 		
 	}
@@ -137,11 +134,11 @@ public class TransactionalDetailsRepositoryImpl implements
 
 		HttpEntity<QuickRegisterEntity> entity=new HttpEntity<QuickRegisterEntity>(quickRegisterEntity);
 		
-		ResponseEntity<CustomerOrVendorDetailsDTO> result=null;
+		ResponseEntity<ResponseDTO<CustomerOrVendorDetailsDTO>> result=null;
 		
 		try{
 			result=restTemplate.exchange(env.getProperty("data.url")+"/transactional/deleteQuickRegisterEntityCreateDetails",
-					HttpMethod.POST, entity, CustomerOrVendorDetailsDTO.class);
+					HttpMethod.POST, entity, new ParameterizedTypeReference<ResponseDTO<CustomerOrVendorDetailsDTO>>() {});
 			
 		}catch(RestClientException e)
 		{
@@ -150,10 +147,10 @@ public class TransactionalDetailsRepositoryImpl implements
 		
 		
 		if(result.getStatusCode()==HttpStatus.CREATED)
-			return result.getBody();
+			return result.getBody().getResult();
 		else
-			throw new DeleteQuickCreateDetailsEntityFailedException();
-		//TODO cause of failure
+			throw new DeleteQuickCreateDetailsEntityFailedException(result.getBody().getErrorMessage());
+
 		
 	}
 

@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -18,6 +19,7 @@ import org.springframework.web.client.RestTemplate;
 import com.projectx.data.domain.completeregister.UpdateAddressDTO;
 import com.projectx.data.domain.completeregister.UpdateEmailVerificationStatusUpdatedByDTO;
 import com.projectx.data.domain.completeregister.UpdateMobileVerificationStatusUpdatedByDTO;
+import com.projectx.rest.domain.comndto.ResponseDTO;
 import com.projectx.rest.domain.completeregister.CustomerDetails;
 import com.projectx.rest.domain.completeregister.VendorDetails;
 import com.projectx.rest.exception.repository.completeregister.CustomerDetailsAlreadyPresentException;
@@ -48,20 +50,20 @@ public class CustomerDetailsRepositoryImpl implements CustomerDetailsRepository 
 		HttpEntity<CustomerDetails> httpEntity=new HttpEntity<CustomerDetails>(customerDetails);
 		
 		
-		ResponseEntity<CustomerDetails> savedEntity=null;
+		ResponseEntity<ResponseDTO<CustomerDetails>> savedEntity=null;
 		
 		try{
 			savedEntity=restTemplate.exchange(env.getProperty("data.url")+"/customer/completeregister", HttpMethod.POST,
-				httpEntity, CustomerDetails.class);
+				httpEntity,  new ParameterizedTypeReference<ResponseDTO<CustomerDetails>>() {});
 		}catch(RestClientException e)
 		{
 			throw new ValidationFailedException("Validation Failed for :"+customerDetails);
 		}
 		
 		if(savedEntity.getStatusCode()==HttpStatus.CREATED)
-				return savedEntity.getBody();
+				return savedEntity.getBody().getResult();
 		else
-			throw new CustomerDetailsAlreadyPresentException();
+			throw new CustomerDetailsAlreadyPresentException(savedEntity.getBody().getErrorMessage());
 		
 	}
 

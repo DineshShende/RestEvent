@@ -82,17 +82,6 @@ public class AuthenticationControllerWACTest {
 		
 	}
 	
-	@Test
-	public void test() throws Exception
-	{
-		this.mockMvc.perform(
-	            get("/customer/quickregister/test")
-	               )
-
-	            .andDo(print())
-	            .andExpect(status().isOk());
-
-	}
 	
 	@Test
 	public void verifyLoginDetails() throws Exception

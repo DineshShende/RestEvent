@@ -12,6 +12,7 @@ import com.projectx.rest.domain.async.RetriggerDetails;
 import com.projectx.rest.domain.completeregister.DriverDetails;
 import com.projectx.rest.domain.quickregister.AuthenticationDetails;
 import com.projectx.rest.domain.quickregister.AuthenticationDetailsKey;
+import com.projectx.rest.exception.repository.completeregister.DriverDetailsNotFoundException;
 import com.projectx.rest.repository.completeregister.DriverDetailsRepository;
 
 @Component
@@ -96,6 +97,13 @@ public class DriverDetailsMemRepository implements DriverDetailsRepository {
 
 		list.clear();
 		return true;
+	}
+
+	@Override
+	public DriverDetails findByLicenceNumber(String licenceNumber)
+			throws DriverDetailsNotFoundException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

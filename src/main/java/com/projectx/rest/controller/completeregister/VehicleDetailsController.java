@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.projectx.rest.domain.comndto.ResponseDTO;
 import com.projectx.rest.domain.completeregister.VehicleDetails;
 import com.projectx.rest.exception.repository.completeregister.ValidationFailedException;
 import com.projectx.rest.exception.repository.completeregister.VehicleDetailsAlreadyPresentException;
@@ -28,20 +29,20 @@ public class VehicleDetailsController {
 	VehicleDetailsService vehicleDetailsService;
 	
 	@RequestMapping(method=RequestMethod.POST)
-	public ResponseEntity<VehicleDetails> addVehicle(@Valid @RequestBody VehicleDetails vehicleDetails,BindingResult bindingResult)
+	public ResponseEntity<ResponseDTO<VehicleDetails>> addVehicle(@Valid @RequestBody VehicleDetails vehicleDetails,BindingResult bindingResult)
 	{
 		if(bindingResult.hasErrors())
 			return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
 		
 		try{
 			VehicleDetails savedVehicle=vehicleDetailsService.addVehicle(vehicleDetails);
-			return new ResponseEntity<VehicleDetails>(savedVehicle, HttpStatus.CREATED);
+			return new ResponseEntity<ResponseDTO<VehicleDetails>>(new ResponseDTO<VehicleDetails>("",savedVehicle), HttpStatus.CREATED);
 		}catch(ValidationFailedException e)
 		{
 			return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
 		}catch(VehicleDetailsAlreadyPresentException e)
 		{
-			return new ResponseEntity<>(HttpStatus.ALREADY_REPORTED);
+			return new ResponseEntity<ResponseDTO<VehicleDetails>>(new ResponseDTO<VehicleDetails>(e.getMessage(),null),HttpStatus.ALREADY_REPORTED);
 		}
 		
 				
