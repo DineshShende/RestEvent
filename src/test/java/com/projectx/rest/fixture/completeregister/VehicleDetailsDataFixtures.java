@@ -18,7 +18,7 @@ public static String VEHICLE_TYPE_NAME="VehcileTypeName";
 	
 	public static Long VEHICLE_BRAND_ID=267L;
 	
-	public static String VEHICLE_BRAND_NAME="Tata tempo";
+	public static String VEHICLE_BRAND_NAME="Tata Tempo";
 	
 	public static String VEHICLE_MODEL_NUMBER="407";
 	

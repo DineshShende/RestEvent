@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -16,6 +17,7 @@ import org.springframework.web.client.RestTemplate;
 
 import com.projectx.data.domain.request.FreightRequestByVendorList;
 import com.projectx.data.domain.request.UpdateReservationStatus;
+import com.projectx.rest.domain.comndto.ResponseDTO;
 import com.projectx.rest.domain.completeregister.CustomerDetails;
 import com.projectx.rest.domain.request.FreightRequestByCustomer;
 import com.projectx.rest.domain.request.FreightRequestByVendor;
@@ -45,12 +47,12 @@ public class FreightRequestByVendorRepositoryImpl implements
 
 		HttpEntity<FreightRequestByVendor> entity=new HttpEntity<FreightRequestByVendor>(freightRequestByVendor);
 		
-		ResponseEntity<FreightRequestByVendor> result=null;
+		ResponseEntity<ResponseDTO<FreightRequestByVendor>> result=null;
 		
 		try{
 		
 			result=restTemplate.exchange(env.getProperty("data.url")+"/request/freightRequestByVendor",HttpMethod.POST,
-					entity, FreightRequestByVendor.class);
+					entity, new ParameterizedTypeReference<ResponseDTO<FreightRequestByVendor>>() {});
 
 		}catch(RestClientException e)
 		{
@@ -58,9 +60,9 @@ public class FreightRequestByVendorRepositoryImpl implements
 		}
 		
 		if(result.getStatusCode()==HttpStatus.CREATED)
-			return result.getBody();
+			return result.getBody().getResult();
 		else
-			throw new ResourceAlreadyPresentException();
+			throw new ResourceNotFoundException(result.getBody().getErrorMessage());
 
 		
 		
@@ -84,10 +86,13 @@ public class FreightRequestByVendorRepositoryImpl implements
 	@Override
 	public Boolean deleteById(Long requestId) {
 		
-		ResponseEntity<Boolean> result=restTemplate.exchange(env.getProperty("data.url")+"/request/freightRequestByVendor/deleteById/"+requestId,
-				HttpMethod.GET,null,Boolean.class);
+		ResponseEntity<ResponseDTO<Boolean>> result=restTemplate.exchange(env.getProperty("data.url")+"/request/freightRequestByVendor/deleteById/"+requestId,
+				HttpMethod.GET,null,new ParameterizedTypeReference<ResponseDTO<Boolean>>() {});
 		
-		return result.getBody();
+		if(result.getStatusCode()==HttpStatus.OK && result.getBody().getErrorMessage().equals(""))
+				return result.getBody().getResult();
+		else
+			throw new ResourceNotFoundException(result.getBody().getErrorMessage());
 		
 	}
 

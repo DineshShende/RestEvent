@@ -4,6 +4,7 @@ package com.projectx.rest.controller.quickregister;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.projectx.data.domain.quickregister.CustomerIdTypeEmailTypeDTO;
 import com.projectx.data.domain.quickregister.CustomerIdTypeEmailTypeUpdatedByDTO;
+import com.projectx.data.domain.quickregister.SendResendResetEmailHashDTO;
 import com.projectx.mvc.domain.quickregister.UpdateEmailHashDTO;
 import com.projectx.mvc.domain.quickregister.VerifyEmailHashDTO;
 import com.projectx.rest.domain.comndto.ResponseDTO;
@@ -34,7 +36,17 @@ public class EmailVerificationController {
 	EmailVerificationService emailVerificationService; 
 	
 	@Autowired
-	HandleVerificationService handleCustomerVerification; 
+	HandleVerificationService handleCustomerVerification;
+	
+	@Value("${SEND_REQUEST}")
+	private Integer SEND_REQUEST;
+	
+	@Value("${RESEND_REQUEST}")
+	private Integer RESEND_REQUEST;
+	
+	@Value("${RESET_REQUEST}")
+	private Integer RESET_REQUEST;
+			
 	
 	@RequestMapping(value="/verifyEmailHash",method=RequestMethod.POST)
 	public ResponseEntity<ResponseDTO<Boolean>> verifyEmailHash(@Valid @RequestBody VerifyEmailHashDTO verifyEmail,BindingResult bindingResult)
@@ -59,16 +71,33 @@ public class EmailVerificationController {
 		return result;
 	}
 	
-	@RequestMapping(value="/sendEmailHash",method=RequestMethod.POST)
-	public ResponseEntity<ResponseDTO<Boolean>> sendEmailHash(@Valid @RequestBody CustomerIdTypeEmailTypeUpdatedByDTO updateEmailHash,BindingResult  bindingResult)
+	@RequestMapping(value="/sendOrResendOrResetEmailHash",method=RequestMethod.POST)
+	public ResponseEntity<ResponseDTO<Boolean>> sendEmailHash(@Valid @RequestBody SendResendResetEmailHashDTO updateEmailHash,BindingResult  bindingResult)
 	{
 		if(bindingResult.hasErrors())
 			return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
 		
 		try{
-			Boolean result=emailVerificationService
+			Boolean result=null;
+			
+			if(updateEmailHash.getSendOrResendOrResetFlag().equals(SEND_REQUEST))
+			{
+				result=emailVerificationService
 					.sendEmailHash(updateEmailHash.getCustomerId(),updateEmailHash.getCustomerType(),updateEmailHash.getEmailType(),
 							updateEmailHash.getRequestedBy(),updateEmailHash.getRequestedById());
+			}
+			else if(updateEmailHash.getSendOrResendOrResetFlag().equals(RESEND_REQUEST))
+			{
+				result= emailVerificationService.reSendEmailHash(updateEmailHash.getCustomerId(),updateEmailHash.getCustomerType(),
+						updateEmailHash.getEmailType(),updateEmailHash.getRequestedBy(),updateEmailHash.getRequestedById());
+			}
+			else if(updateEmailHash.getSendOrResendOrResetFlag().equals(RESET_REQUEST))
+			{
+				result=emailVerificationService
+						.reSetEmailHash(updateEmailHash.getCustomerId(),updateEmailHash.getCustomerType(),updateEmailHash.getEmailType(),
+								updateEmailHash.getRequestedBy(),updateEmailHash.getRequestedById());
+			}
+			
 			return new ResponseEntity<ResponseDTO<Boolean>>(new ResponseDTO<Boolean>("",result), HttpStatus.OK);
 			
 		}catch(ResourceNotFoundException e)
@@ -78,7 +107,7 @@ public class EmailVerificationController {
 		
 	}
 
-	
+	/*
 	@RequestMapping(value="/resetEmailHash",method=RequestMethod.POST)
 	public ResponseEntity<ResponseDTO<Boolean>> updateEmailHash(@Valid @RequestBody CustomerIdTypeEmailTypeUpdatedByDTO updateEmailHash,BindingResult  bindingResult)
 	{
@@ -117,7 +146,7 @@ public class EmailVerificationController {
 		
 		
 	}
-	
+	*/
 
 
 	@RequestMapping(value="/getEmailVerificationDetails",method=RequestMethod.POST)

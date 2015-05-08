@@ -89,16 +89,16 @@ public class FreightRequestByVendorControllerWACTest {
 	                    .accept(MediaType.APPLICATION_JSON))
 	            .andDo(print())
 	            .andExpect(status().isCreated())
-	            .andExpect(jsonPath("$.vehicleRegistrationNumber").value(standardFreightRequestByVendor().getVehicleRegistrationNumber()))
-	            .andExpect(jsonPath("$.source").value(standardFreightRequestByVendor().getSource()))
-	            .andExpect(jsonPath("$.destination").value(standardFreightRequestByVendor().getDestination()))
-	            .andExpect(jsonPath("$.driverId").exists())
-	            .andExpect(jsonPath("$.availableTime").value(standardFreightRequestByVendor().getAvailableTime()))
-	            .andExpect(jsonPath("$.pickupRangeInKm").value(standardFreightRequestByVendor().getPickupRangeInKm()))
-	            .andExpect(jsonPath("$.updatedBy").value(standardFreightRequestByVendor().getUpdatedBy()))
-	            .andExpect(jsonPath("$.availableDate").exists())
-	            .andExpect(jsonPath("$.insertTime").exists())
-	            .andExpect(jsonPath("$.updateTime").exists())
+	            .andExpect(jsonPath("$.result.vehicleRegistrationNumber").value(standardFreightRequestByVendor().getVehicleRegistrationNumber()))
+	            .andExpect(jsonPath("$.result.source").value(standardFreightRequestByVendor().getSource()))
+	            .andExpect(jsonPath("$.result.destination").value(standardFreightRequestByVendor().getDestination()))
+	            .andExpect(jsonPath("$.result.driverId").exists())
+	            .andExpect(jsonPath("$.result.availableTime").value(standardFreightRequestByVendor().getAvailableTime()))
+	            .andExpect(jsonPath("$.result.pickupRangeInKm").value(standardFreightRequestByVendor().getPickupRangeInKm()))
+	            .andExpect(jsonPath("$.result.updatedBy").value(standardFreightRequestByVendor().getUpdatedBy()))
+	            .andExpect(jsonPath("$.result.availableDate").exists())
+	            .andExpect(jsonPath("$.result.insertTime").exists())
+	            .andExpect(jsonPath("$.result.updateTime").exists())
 	            ;
 				
 		
@@ -147,7 +147,9 @@ public class FreightRequestByVendorControllerWACTest {
 	            
 	            .andDo(print())
 	            .andExpect(status().isOk())
-	            .andExpect(content().string("true"));
+	            .andExpect(jsonPath("$.result").value(true))
+	            .andExpect(jsonPath("$.errorMessage").value(""));
+	            
 	    
 	}
 	

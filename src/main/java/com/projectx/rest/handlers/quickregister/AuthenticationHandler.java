@@ -287,6 +287,17 @@ public class AuthenticationHandler implements AuthenticationService {
 				customerIdDTO.getUpdatedBy(),customerIdDTO.getUpdatedById());
 	}
 
+	@Override
+	public Boolean sendPassword(CustomerIdTypeUpdatedByDTO customerIdDTO,
+			Integer emailOrMobile) throws ResourceAlreadyPresentException {
+		
+		Boolean status=sendOrResendOrResetDefaultPassword(customerIdDTO.getCustomerId(),customerIdDTO.getCustomerType(), 
+				false, false,emailOrMobile,customerIdDTO.getUpdatedBy(),customerIdDTO.getUpdatedById());
+		
+		return status;
+		
+	}
+	
 
 	@Override
 	public Boolean updatePassword(UpdatePasswordAndPasswordTypeDTO updatePasswordDTO) throws ValidationFailedException
@@ -326,6 +337,9 @@ public class AuthenticationHandler implements AuthenticationService {
 		return customerAuthenticationDetailsRepository.clearLoginDetailsForTesting();
 		 
 	}
+
+
+
 
 
 }

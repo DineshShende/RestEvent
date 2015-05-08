@@ -26,6 +26,7 @@ import com.projectx.mvc.domain.quickregister.CustomerIdTypeUpdatedByDTO;
 import com.projectx.mvc.domain.quickregister.LoginVerificationDTO;
 import com.projectx.mvc.domain.quickregister.LoginVerificationWithDefaultEmailPasswordDTO;
 import com.projectx.mvc.domain.quickregister.ResetPasswordRedirectDTO;
+import com.projectx.mvc.domain.quickregister.SendResendResetPasswordDTO;
 import com.projectx.mvc.domain.quickregister.UpdatePasswordDTO;
 import com.projectx.rest.domain.comndto.ResponseDTO;
 import com.projectx.rest.domain.quickregister.AuthenticationDetails;
@@ -69,6 +70,15 @@ public class AuthenticationController {
 	@Value("${AUTHENTICATION_DETAILS_OLD_NEW_PASSWORD_DOES_NOT_MATCH}")
 	private String AUTHENTICATION_DETAILS_OLD_NEW_PASSWORD_DOES_NOT_MATCH;//="AUTHENTICATION_DETAILS_OLD_NEW_PASSWORD_DOES_NOT_MATCH";
 	
+	@Value("${SEND_REQUEST}")
+	private Integer SEND_REQUEST;
+	
+	@Value("${RESEND_REQUEST}")
+	private Integer RESEND_REQUEST;
+	
+	@Value("${RESET_REQUEST}")
+	private Integer RESET_REQUEST;
+
 
 
 	@RequestMapping(value="/verifyLoginDetails",method=RequestMethod.POST)
@@ -146,7 +156,7 @@ public class AuthenticationController {
 		
 	}
 
-	
+	/*
 	@RequestMapping(value="/resetPassword",method=RequestMethod.POST)
 	public ResponseEntity<ResponseDTO<Boolean>> resetPassword(@Valid @RequestBody CustomerIdTypeEmailOrMobileOptionUpdatedBy customerIdDTO,BindingResult bindingResult)
 	{
@@ -163,28 +173,45 @@ public class AuthenticationController {
 		}catch(AuthenticationDetailsNotFoundException  | QuickRegisterEntityNotFoundException | CustomerDetailsNotFoundException 
 				|VendorDetailsNotFoundException e)
 		{
-			result=new ResponseEntity<ResponseDTO<Boolean>>(new ResponseDTO<Boolean>(e.getMessage(),null),HttpStatus.NO_CONTENT);
+			result=new ResponseEntity<ResponseDTO<Boolean>>(new ResponseDTO<Boolean>(e.getMessage(),null),HttpStatus.OK);
 		}
 			
 		return result;
 	}
+	*/
 	
-	@RequestMapping(value="/resendPassword",method=RequestMethod.POST)
-	public ResponseEntity<Boolean> resendPassword(@Valid @RequestBody CustomerIdTypeEmailOrMobileOptionUpdatedBy customerIdDTO,BindingResult bindingResult)
+	@RequestMapping(value="/sendOrResendOrResetPassword",method=RequestMethod.POST)
+	public ResponseEntity<ResponseDTO<Boolean>> resendPassword(@Valid @RequestBody SendResendResetPasswordDTO customerIdDTO,BindingResult bindingResult)
 	{
 		if(bindingResult.hasErrors())
 			return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
 		
-		ResponseEntity<Boolean> result=null;
+		ResponseEntity<ResponseDTO<Boolean>> result=null;
 		
 		try{
-			Boolean status=authenticationService.resendPassword(new CustomerIdTypeUpdatedByDTO(customerIdDTO.getCustomerId(),
-					customerIdDTO.getCustomerType(), customerIdDTO.getUpdatedBy(),customerIdDTO.getUpdatedById()),customerIdDTO.getEmailOrMobile());
-			result=new ResponseEntity<Boolean>(status, HttpStatus.OK);
+			
+			Boolean status=null;
+			
+			if(customerIdDTO.getSendOrResendOrResetFlag().equals(RESEND_REQUEST))
+			{
+				status=authenticationService.resendPassword(new CustomerIdTypeUpdatedByDTO(customerIdDTO.getCustomerId(),
+						customerIdDTO.getCustomerType(), customerIdDTO.getUpdatedBy(),customerIdDTO.getUpdatedById()),customerIdDTO.getEmailOrMobile());
+			}else if(customerIdDTO.getSendOrResendOrResetFlag().equals(SEND_REQUEST))
+			{
+				status=authenticationService.sendPassword(new CustomerIdTypeUpdatedByDTO(customerIdDTO.getCustomerId(),
+						customerIdDTO.getCustomerType(), customerIdDTO.getUpdatedBy(),customerIdDTO.getUpdatedById()),customerIdDTO.getEmailOrMobile());
+				
+			}else if(customerIdDTO.getSendOrResendOrResetFlag().equals(RESET_REQUEST))
+			{
+				status=authenticationService.resetPassword(new CustomerIdTypeUpdatedByDTO(customerIdDTO.getCustomerId(),
+						customerIdDTO.getCustomerType(), customerIdDTO.getUpdatedBy(),customerIdDTO.getUpdatedById()),customerIdDTO.getEmailOrMobile());
+			}
+			
+			result=new ResponseEntity<ResponseDTO<Boolean>>(new ResponseDTO<Boolean>("",status), HttpStatus.OK);
 		}catch(AuthenticationDetailsNotFoundException  | QuickRegisterEntityNotFoundException | CustomerDetailsNotFoundException 
 				|VendorDetailsNotFoundException e)
 		{
-			result=new ResponseEntity<>(HttpStatus.NO_CONTENT);
+			result=new ResponseEntity<ResponseDTO<Boolean>>(new ResponseDTO<Boolean>(e.getMessage(),null), HttpStatus.OK);
 		}
 			
 		return result;
@@ -199,8 +226,14 @@ public class AuthenticationController {
 		
 		
 		
-		AuthenticationDetails authenticationDetails=
-				authenticationService.getByEntityIdType(updatePasswordDTO.getCustomerId(), updatePasswordDTO.getCustomerType());
+		AuthenticationDetails authenticationDetails=null;
+		
+		try{
+			authenticationDetails=authenticationService.getByEntityIdType(updatePasswordDTO.getCustomerId(), updatePasswordDTO.getCustomerType());
+		}catch(AuthenticationDetailsNotFoundException e)
+		{
+			return new ResponseEntity<ResponseDTO<Boolean>>(new ResponseDTO<Boolean>(e.getMessage(),null), HttpStatus.OK);
+		}
 		
 		if(!authenticationDetails.getPassword().equals(updatePasswordDTO.getOldPassword()))
 			return new ResponseEntity<ResponseDTO<Boolean>>(new ResponseDTO<Boolean>(AUTHENTICATION_DETAILS_OLD_NEW_PASSWORD_DOES_NOT_MATCH,null), HttpStatus.OK);

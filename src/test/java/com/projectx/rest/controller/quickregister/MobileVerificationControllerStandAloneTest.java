@@ -49,7 +49,7 @@ public class MobileVerificationControllerStandAloneTest {
 
 	
 	@Test
-	public void addCustomerMobileVerification() throws Exception
+	public void getMobileVerificationDetails() throws Exception
 	{
 		when(mobileVerificationService.getByEntityIdTypeAndMobileType(standardCustomerIdMobileDTO().getCustomerId(),
 				standardCustomerIdMobileDTO().getCustomerType(),standardCustomerIdMobileDTO().getMobileType())).thenReturn(standardCustomerMobileVerificationDetails());
@@ -74,7 +74,7 @@ public class MobileVerificationControllerStandAloneTest {
 		
 	}
 	
-	
+	/*
 	@Test
 	public void reSetMobilePin() throws Exception
 	{
@@ -110,7 +110,7 @@ public class MobileVerificationControllerStandAloneTest {
 	            .andExpect(jsonPath("$.errorMessage").value(""));
 		
 	}
-	
+	*/
 
 
 }

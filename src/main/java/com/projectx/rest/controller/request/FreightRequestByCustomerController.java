@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.async.DeferredResult;
 
+import com.projectx.rest.domain.comndto.ResponseDTO;
 import com.projectx.rest.domain.completeregister.CustomerDetails;
 import com.projectx.rest.domain.ivr.FreightRequestByCustomerStatusDTO;
 import com.projectx.rest.domain.ivr.IVRCallInfoDTO;
@@ -113,22 +114,29 @@ public class FreightRequestByCustomerController {
 	public DeferredResult<Boolean> getMatchingCustomerReqForVendorReq(@Valid @RequestBody FreightRequestByVendor freightRequestByVendor,
 			BindingResult bindingResult)
 	{
-		DeferredResult<Boolean> result=new DeferredResult<Boolean>();
+		DeferredResult<Boolean> result=new DeferredResult<Boolean>(10);
 		
 		freightRequestByCustomerService.getMatchingCustReqForVendorReqAndProceedWithHandShake(freightRequestByVendor);
 		
 		result.onTimeout(()->result.setResult(true));
+		
+		result.onCompletion(()->result.setResult(true));
 				
 		return result;
 	}
 
 	
 	@RequestMapping(value="/deleteById/{requestId}")
-	public ResponseEntity<Boolean> deleteRequestById(@PathVariable Long requestId)
+	public ResponseEntity<ResponseDTO<Boolean>> deleteRequestById(@PathVariable Long requestId)
 	{
-		Boolean result=freightRequestByCustomerService.deleteRequestById(requestId);
+		try{
+			Boolean result=freightRequestByCustomerService.deleteRequestById(requestId);
 		
-		return new ResponseEntity<Boolean>(result, HttpStatus.OK);
+			return new ResponseEntity<ResponseDTO<Boolean>>(new ResponseDTO<Boolean>("",result), HttpStatus.OK);
+		}catch(ResourceNotFoundException e)
+		{
+			return new ResponseEntity<ResponseDTO<Boolean>>(new ResponseDTO<Boolean>(e.getMessage(),null), HttpStatus.OK);
+		}
 	}
 	
 	@RequestMapping(value="/clearTestData")

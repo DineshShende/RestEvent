@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.projectx.rest.domain.comndto.ResponseDTO;
 import com.projectx.rest.domain.request.FreightRequestByCustomer;
 import com.projectx.rest.domain.request.FreightRequestByVendor;
 import com.projectx.rest.domain.request.FreightRequestByVendorDTO;
@@ -34,26 +35,24 @@ public class FreightRequestByVendorController {
 	FreightRequestByCustomerService freightRequestByCustomerService;
 
 	@RequestMapping(method = RequestMethod.POST)
-	public ResponseEntity<FreightRequestByVendor> newRequest(
+	public ResponseEntity<ResponseDTO<FreightRequestByVendor>> newRequest(
 			@Valid @RequestBody FreightRequestByVendor freightRequestByVendor,BindingResult bindingResult) {
 
 		if(bindingResult.hasErrors())
 			return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
 		
-		ResponseEntity<FreightRequestByVendor> result=null;
+		ResponseEntity<ResponseDTO<FreightRequestByVendor>> result=null;
 		
 		try{
 			FreightRequestByVendor savedEntity = freightRequestByVendorService
 				.newRequest(freightRequestByVendor);
 			
-			//freightRequestByCustomerService.getMatchingCustReqForVendorReqAndProceedWithHandShake(savedEntity);
-			
-			result=new ResponseEntity<FreightRequestByVendor>(savedEntity, HttpStatus.CREATED);
+			result=new ResponseEntity<ResponseDTO<FreightRequestByVendor>>(new ResponseDTO<FreightRequestByVendor>("",savedEntity), HttpStatus.CREATED);
 			
 		}
-		catch(ResourceAlreadyPresentException e)
+		catch(ResourceNotFoundException e)
 		{
-			result=new ResponseEntity<>(HttpStatus.ALREADY_REPORTED);
+			result=new ResponseEntity<ResponseDTO<FreightRequestByVendor>>(new ResponseDTO<FreightRequestByVendor>(e.getMessage(),null), HttpStatus.OK);
 		}catch (ValidationFailedException e) {
 			result=new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
 		}
@@ -103,11 +102,18 @@ public class FreightRequestByVendorController {
 	
 	
 	@RequestMapping(value = "/deleteById/{requestId}")
-	public ResponseEntity<Boolean> deleteRequestById(@PathVariable Long requestId) {
+	public ResponseEntity<ResponseDTO<Boolean>> deleteRequestById(@PathVariable Long requestId) {
+		
+		
+		try{
 		Boolean result = freightRequestByVendorService
 				.deleteRequestById(requestId);
 
-		return new ResponseEntity<Boolean>(result, HttpStatus.OK);
+			return new ResponseEntity<ResponseDTO<Boolean>>(new ResponseDTO<Boolean>("",result), HttpStatus.OK);
+		}catch(ResourceNotFoundException e)
+		{
+			return new ResponseEntity<ResponseDTO<Boolean>>(new ResponseDTO<Boolean>(e.getMessage(),null), HttpStatus.OK);
+		}
 	}
 
 	@RequestMapping(value = "/clearTestData")

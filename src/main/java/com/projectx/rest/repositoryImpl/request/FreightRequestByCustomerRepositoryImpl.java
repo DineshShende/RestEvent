@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -17,6 +18,7 @@ import org.springframework.web.client.RestTemplate;
 import com.projectx.data.domain.request.FreightRequestByCustomerList;
 import com.projectx.data.domain.request.FreightRequestByVendorWithRequiredAllocationStatus;
 import com.projectx.data.domain.request.UpdateReservationStatus;
+import com.projectx.rest.domain.comndto.ResponseDTO;
 import com.projectx.rest.domain.completeregister.CustomerDetails;
 import com.projectx.rest.domain.request.FreightRequestByCustomer;
 import com.projectx.rest.domain.request.FreightRequestByVendor;
@@ -80,10 +82,13 @@ public class FreightRequestByCustomerRepositoryImpl implements
 	@Override
 	public Boolean deleteById(Long requestId) {
 
-		ResponseEntity<Boolean> result=restTemplate.exchange(env.getProperty("data.url")+"/request/freightByRequestCustomer/deleteById/"+requestId,
-				HttpMethod.GET,null,Boolean.class);
+		ResponseEntity<ResponseDTO<Boolean>> result=restTemplate.exchange(env.getProperty("data.url")+"/request/freightByRequestCustomer/deleteById/"+requestId,
+				HttpMethod.GET,null,new ParameterizedTypeReference<ResponseDTO<Boolean>>() {});
 		
-		return result.getBody();
+		if(result.getStatusCode()==HttpStatus.OK && result.getBody().getErrorMessage().equals(""))
+				return result.getBody().getResult();
+		else
+			throw new ResourceNotFoundException(result.getBody().getErrorMessage());
 		
 	}
 

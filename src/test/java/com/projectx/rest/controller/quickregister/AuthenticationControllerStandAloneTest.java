@@ -60,7 +60,7 @@ public class AuthenticationControllerStandAloneTest {
 	
 		
 	
-		
+		/*
 	@Test
 	public void resetPassword() throws Exception
 	{
@@ -100,7 +100,7 @@ public class AuthenticationControllerStandAloneTest {
 		
 	}
 	
-	
+	*/
 
 
 }

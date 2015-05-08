@@ -32,6 +32,8 @@ import com.projectx.rest.domain.request.FreightRequestByCustomer;
 import com.projectx.rest.domain.request.FreightRequestByVendor;
 import com.projectx.rest.services.completeregister.CustomerDetailsService;
 import com.projectx.rest.services.completeregister.VehicleDetailsService;
+import com.projectx.rest.services.quickregister.AuthenticationService;
+import com.projectx.rest.services.quickregister.QuickRegisterService;
 import com.projectx.rest.services.request.FreightRequestByCustomerService;
 import com.projectx.rest.services.request.FreightRequestByVendorService;
 
@@ -60,6 +62,12 @@ public class FreightRequestByCustomerControllerWACTest {
 	@Autowired
 	CustomerDetailsService customerDetailsService; 
 	
+	@Autowired
+	QuickRegisterService quickRegisterService;
+	
+	@Autowired
+	AuthenticationService authenticationService;
+	
 	@Before
 	public void setUp() throws Exception
 	{
@@ -77,6 +85,9 @@ public class FreightRequestByCustomerControllerWACTest {
 		freightRequestByCustomerService.clearTestData();
 		freightRequestByVendorService.clearTestData();
 		vehicleDetailsService.clearTestData();
+		customerDetailsService.clearTestData();
+		quickRegisterService.clearDataForTesting();
+		authenticationService.clearTestData();
 	}
 	
 	@Test
@@ -161,7 +172,8 @@ public class FreightRequestByCustomerControllerWACTest {
 	            
 	            .andDo(print())
 	            .andExpect(status().isOk())
-	            .andExpect(content().string("true"));
+	            .andExpect(jsonPath("$.result").value(true))
+	            .andExpect(jsonPath("$.errorMessage").value(""));
 	    
 	}
 	

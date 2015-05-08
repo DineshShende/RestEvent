@@ -56,6 +56,7 @@ public class FreightRequestByVendorRepositotyTest {
 		
 		freightRequestByVendorRepository.clearTestData();
 		vehicleDetailsRepository.clearTestData();
+		freightRequestByCustomerRepository.clearTestData();
 	}
 	
 	
@@ -160,7 +161,18 @@ public class FreightRequestByVendorRepositotyTest {
 	public void getMatchingVendorRequestFullTruckLoad()
 	{
 		
+		freightRequestByVendorRepository.clearTestData();
+		vehicleDetailsRepository.clearTestData();
+		freightRequestByCustomerRepository.clearTestData();
+		
 		FreightRequestByCustomer freightRequestByCustomer=freightRequestByCustomerRepository.save(standardFreightRequestByCustomerFullTruckLoad());
+		
+		try {
+			Thread.sleep(100);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		vehicleDetailsRepository.save(standardVehicleDetails());
 		

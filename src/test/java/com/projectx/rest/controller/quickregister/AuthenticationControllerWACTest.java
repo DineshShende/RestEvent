@@ -27,6 +27,7 @@ import org.springframework.web.context.WebApplicationContext;
 import com.projectx.data.domain.quickregister.UpdatePasswordAndPasswordTypeDTO;
 import com.projectx.mvc.domain.quickregister.LoginVerificationDTO;
 import com.projectx.mvc.domain.quickregister.LoginVerificationWithDefaultEmailPasswordDTO;
+import com.projectx.mvc.domain.quickregister.SendResendResetPasswordDTO;
 import com.projectx.mvc.domain.quickregister.UpdatePasswordDTO;
 import com.projectx.rest.config.Application;
 import com.projectx.rest.domain.quickregister.AuthenticationDetails;
@@ -66,6 +67,16 @@ public class AuthenticationControllerWACTest {
 	
 	@Value("${PASSWORD_TYPE_CHANGED}")
 	private String PASSWORD_TYPE_CHANGED;
+	
+	@Value("${SEND_REQUEST}")
+	private Integer SEND_REQUEST;
+	
+	@Value("${RESEND_REQUEST}")
+	private Integer RESEND_REQUEST;
+	
+	@Value("${RESET_REQUEST}")
+	private Integer RESET_REQUEST;
+
 	
 	@Before
 	public void setUp()
@@ -225,5 +236,84 @@ public class AuthenticationControllerWACTest {
 
 	}
 
+	@Test
+	public void sendPassword() throws Exception
+	{
+		
+		QuickRegisterEntity handledEntity=customerQuickRegisterHandler
+				.handleNewCustomerQuickRegister(standardEmailMobileCustomerDTO()).getCustomer();
 
+		this.mockMvc.perform(
+	            post("/customer/quickregister/sendOrResendOrResetPassword")
+	                    .content(standardJsonSendResendResetPasswordDTO(new SendResendResetPasswordDTO(handledEntity.getCustomerId(),
+	                    		handledEntity.getCustomerType(),1,SEND_REQUEST, 1, handledEntity.getCustomerId())))
+	                    .contentType(MediaType.APPLICATION_JSON)
+	                    .accept(MediaType.APPLICATION_JSON))
+
+	            .andDo(print())
+	            .andExpect(status().isOk())
+	            .andExpect(jsonPath("$.errorMessage").value(""))
+	            .andExpect(jsonPath("$.result").value(true));
+		
+		AuthenticationDetails authenticationDetails=authenticationService.getByEntityIdType(handledEntity.getCustomerId(),
+				handledEntity.getCustomerType());
+		
+		assertEquals(0, authenticationDetails.getResendCount().intValue());
+
+	}
+
+	@Test
+	public void reSendPassword() throws Exception
+	{
+		
+		QuickRegisterEntity handledEntity=customerQuickRegisterHandler
+				.handleNewCustomerQuickRegister(standardEmailMobileCustomerDTO()).getCustomer();
+
+		this.mockMvc.perform(
+	            post("/customer/quickregister/sendOrResendOrResetPassword")
+	                    .content(standardJsonSendResendResetPasswordDTO(new SendResendResetPasswordDTO(handledEntity.getCustomerId(),
+	                    		handledEntity.getCustomerType(),1,RESEND_REQUEST, 1, handledEntity.getCustomerId())))
+	                    .contentType(MediaType.APPLICATION_JSON)
+	                    .accept(MediaType.APPLICATION_JSON))
+
+	            .andDo(print())
+	            .andExpect(status().isOk())
+	            .andExpect(jsonPath("$.errorMessage").value(""))
+	            .andExpect(jsonPath("$.result").value(true));
+		
+		AuthenticationDetails authenticationDetails=authenticationService.getByEntityIdType(handledEntity.getCustomerId(),
+				handledEntity.getCustomerType());
+		
+		assertEquals(1, authenticationDetails.getResendCount().intValue());
+
+	}
+
+	@Test
+	public void reSetPassword() throws Exception
+	{
+		
+		QuickRegisterEntity handledEntity=customerQuickRegisterHandler
+				.handleNewCustomerQuickRegister(standardEmailMobileCustomerDTO()).getCustomer();
+
+		AuthenticationDetails authenticationDetailsOld=authenticationService.getByEntityIdType(handledEntity.getCustomerId(),
+				handledEntity.getCustomerType());
+		
+		this.mockMvc.perform(
+	            post("/customer/quickregister/sendOrResendOrResetPassword")
+	                    .content(standardJsonSendResendResetPasswordDTO(new SendResendResetPasswordDTO(handledEntity.getCustomerId(),
+	                    		handledEntity.getCustomerType(),1,RESET_REQUEST, 1, handledEntity.getCustomerId())))
+	                    .contentType(MediaType.APPLICATION_JSON)
+	                    .accept(MediaType.APPLICATION_JSON))
+
+	            .andDo(print())
+	            .andExpect(status().isOk())
+	            .andExpect(jsonPath("$.errorMessage").value(""))
+	            .andExpect(jsonPath("$.result").value(true));
+		
+		AuthenticationDetails authenticationDetails=authenticationService.getByEntityIdType(handledEntity.getCustomerId(),
+				handledEntity.getCustomerType());
+		
+		assertNotEquals(authenticationDetailsOld.getPassword(), authenticationDetails.getPassword());
+
+	}
 }

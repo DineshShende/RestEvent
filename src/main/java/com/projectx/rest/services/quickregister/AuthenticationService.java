@@ -38,6 +38,8 @@ public interface AuthenticationService {
 	
 	Boolean resendPassword(CustomerIdTypeUpdatedByDTO customerIdDTO,Integer emailOrMobile) throws ResourceAlreadyPresentException;
 	
+	Boolean sendPassword(CustomerIdTypeUpdatedByDTO customerIdDTO,Integer emailOrMobile) throws ResourceAlreadyPresentException;
+	
 	
 	
 	Boolean clearTestData();

@@ -1,12 +1,14 @@
 package com.projectx.rest.fixture.quickregister;
 
 import static com.projectx.rest.fixture.quickregister.QuickRegisterDataFixture.*;
+
 import java.util.Date;
 
 import com.google.gson.Gson;
 import com.projectx.data.domain.quickregister.CustomerEmailVerificationDetailsByCustomerIdTypeAndEmailTypeDTO;
 import com.projectx.data.domain.quickregister.CustomerIdTypeEmailTypeDTO;
 import com.projectx.data.domain.quickregister.CustomerIdTypeEmailTypeUpdatedByDTO;
+import com.projectx.data.domain.quickregister.SendResendResetEmailHashDTO;
 import com.projectx.data.domain.quickregister.UpdateEmailHashAndEmailHashSentTimeAndResendCountDTO;
 import com.projectx.data.domain.quickregister.UpdateEmailHashDTO;
 import com.projectx.mvc.domain.quickregister.VerifyEmailHashDTO;
@@ -113,6 +115,20 @@ public class EmailVerificationDetailsFixtures {
 		return gson.toJson(verifyEmailHashDTO);
 	}
 	
-
+	public static CustomerIdTypeEmailTypeDTO standardCustomerIdTypeEmailTypeDTO(Long customerId,Integer customerType,Integer emailType)
+	{
+		return new CustomerIdTypeEmailTypeDTO(customerId, customerType, emailType);
+	}
+	
+	public static String standardJsonCustomerIdTypeEmailTypeDTO(CustomerIdTypeEmailTypeDTO customerIdTypeEmailTypeDTO)
+	{
+		return gson.toJson(customerIdTypeEmailTypeDTO);
+	}
+	
+	public static String standardJsonSendResendResetEmailHashDTO(Long customerId,Integer customerType,Integer emailType,
+				Integer sendOrResendOrResetFlag,Integer requestedBy,Long requestedById)
+	{
+		return gson.toJson(new SendResendResetEmailHashDTO(customerId, customerType, emailType, sendOrResendOrResetFlag, requestedBy, requestedById));
+	}
 	
 }

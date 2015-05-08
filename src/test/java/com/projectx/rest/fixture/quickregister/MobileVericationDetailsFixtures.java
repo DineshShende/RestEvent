@@ -9,9 +9,11 @@ import com.projectx.data.domain.quickregister.CustomerIdTypeMobileTypeDTO;
 import com.projectx.data.domain.quickregister.CustomerIdTypeMobileTypeRequestedByDTO;
 import com.projectx.data.domain.quickregister.CustomerMobileVerificationDetailsByCustomerIdTypeAndMobileTypeDTO;
 import com.projectx.data.domain.quickregister.MobileDTO;
+import com.projectx.data.domain.quickregister.SendResendResetMobilePinDTO;
 import com.projectx.data.domain.quickregister.UpdateMobilePinAndMobileVerificationAttemptsAndResetCountDTO;
 import com.projectx.data.domain.quickregister.UpdateMobileVerificationAttemptsDTO;
 import com.projectx.mvc.domain.quickregister.VerifyMobileDTO;
+import com.projectx.mvc.domain.quickregister.VerifyMobilePinDTO;
 import com.projectx.rest.domain.quickregister.MobileVerificationDetails;
 import com.projectx.rest.domain.quickregister.MobileVerificationDetailsKey;
 
@@ -87,10 +89,14 @@ public class MobileVericationDetailsFixtures {
 	}
 	
 	
-	public static String standardJsonVerifyMobilePinDTO()
+	public static String standardJsonVerifyMobilePinDTO(VerifyMobilePinDTO verifyMobilePinDTO)
 	{
-		return gson.toJson(standardJsonVerifyMobilePinDTO()); 
+		return gson.toJson(verifyMobilePinDTO); 
 	}
 
+	public static String standardJsonSendResendResetMobilePinDTO(SendResendResetMobilePinDTO verifyMobilePinDTO)
+	{
+		return gson.toJson(verifyMobilePinDTO); 
+	}
 	
 }

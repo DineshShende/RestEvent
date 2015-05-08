@@ -16,6 +16,7 @@ import com.projectx.mvc.domain.quickregister.CustomerIdTypeEmailOrMobileOptionUp
 import com.projectx.mvc.domain.quickregister.CustomerIdTypeUpdatedByDTO;
 import com.projectx.mvc.domain.quickregister.LoginVerificationDTO;
 import com.projectx.mvc.domain.quickregister.LoginVerificationWithDefaultEmailPasswordDTO;
+import com.projectx.mvc.domain.quickregister.SendResendResetPasswordDTO;
 import com.projectx.mvc.domain.quickregister.UpdatePasswordDTO;
 import com.projectx.rest.domain.quickregister.AuthenticationDetails;
 import com.projectx.rest.domain.quickregister.AuthenticationDetailsAng;
@@ -263,6 +264,12 @@ public class AuthenticationDetailsDataFixtures {
 	
 		return gson.toJson(dto);
 
+	}
+	
+	public static String standardJsonSendResendResetPasswordDTO(SendResendResetPasswordDTO dto)
+	{
+		
+		return gson.toJson(dto);
 	}
 	
 	

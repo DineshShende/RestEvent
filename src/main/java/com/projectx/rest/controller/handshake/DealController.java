@@ -49,10 +49,6 @@ public class DealController {
 	@RequestMapping(value="/triggerdeal",method=RequestMethod.POST)
 	public ResponseEntity<DealInfoAndVendorContactDetailsDTO> triggerDeal(@RequestBody TriggerDealDTO triggerDealDTO)
 	{
-		//return new ResponseEntity<DealInfoAndVendorContactDetailsDTO>(new DealInfoAndVendorContactDetailsDTO(1L, "firstName", "lastName",
-		//		1L, "city", "state", 123456), HttpStatus.OK);
-		
-		
 		//TODO Need to do in one transaction
 		
 		Integer customerReqUpdate=freightRequestByCustomerService.updateAllocationStatus(triggerDealDTO.getFreightRequestByCustomerId(), FREIGHTSTATUS_NEW, FREIGHTSTATUS_BOOKED,
@@ -80,7 +76,7 @@ public class DealController {
 					
 				DealInfoAndVendorContactDetailsDTO contactDetailsDTO=
 						new DealInfoAndVendorContactDetailsDTO(dealDetails.getDealId(),
-								vendorDetails.getFirmName(), vendorDetails.getLastName(), vendorDetails.getMobile(),
+								vendorDetails.getFirstName(), vendorDetails.getLastName(), vendorDetails.getMobile(),
 								vendorDetails.getFirmAddress().getCity(), vendorDetails.getFirmAddress().getState(),
 								vendorDetails.getFirmAddress().getPincode());
 				return new ResponseEntity<DealInfoAndVendorContactDetailsDTO>(contactDetailsDTO, HttpStatus.OK);
